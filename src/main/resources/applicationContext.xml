@@ -8,5 +8,5 @@
         http://www.springframework.org/schema/context/spring-context.xsd">
 
 	<import resource="spring/resource-context.xml" />
-	<context:component-scan base-package="com.aotemon.api.test.resources" />
+	<context:component-scan base-package="cc.lkme.api.test.resources" />
 </beans>

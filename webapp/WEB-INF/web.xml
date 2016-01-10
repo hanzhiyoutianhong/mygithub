@@ -13,7 +13,6 @@
 
 	<listener>
 		<listener-class>org.springframework.web.context.ContextLoaderListener</listener-class>
-		<!-- <listener-class>com.weibo.api.servlet.ContextLoaderListener</listener-class> -->
 	</listener>
 
 	<filter>
@@ -34,17 +33,13 @@
 	</filter-mapping>
 
 	<servlet>
-		<servlet-name>aotemonServlet</servlet-name>
+		<servlet-name>linkedmeServlet</servlet-name>
 		<servlet-class>com.sun.jersey.spi.container.servlet.ServletContainer</servlet-class>
-		<!-- <servlet-class>com.weibo.api.servlet.WeiboServlet</servlet-class> -->
-		
-		<!-- <init-param> <param-name>com.sun.jersey.spi.container.ContainerRequestFilters</param-name> 
-			<param-value>com.weibo.api.roam.filter.AuthFilter</param-value> </init-param> -->
 		<load-on-startup>1</load-on-startup>
 	</servlet>
 
 	<servlet-mapping>
-		<servlet-name>aotemonServlet</servlet-name>
+		<servlet-name>linkedmeServlet</servlet-name>
 		<url-pattern>/*</url-pattern>
 	</servlet-mapping>
 
