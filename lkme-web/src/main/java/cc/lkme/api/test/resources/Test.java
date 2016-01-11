@@ -38,7 +38,7 @@ public class Test {
         HttpClient client = new HttpClient();
         
         //get request
-        HttpMethod method = new GetMethod("http://localhost:8080/three/test/getJson?input=receive");
+        HttpMethod method = new GetMethod("http://localhost:8080/test/getJson?input=receive");
         try {
             client.executeMethod(method);
             System.out.println(method.getStatusLine());
@@ -53,7 +53,7 @@ public class Test {
         method.releaseConnection();
 
         //post
-        PostMethod postMethod = new PostMethod("http://localhost:8080/three/test/update");
+        PostMethod postMethod = new PostMethod("http://localhost:8080/test/update");
         try {
             postMethod.addParameter("input", "send");
             client.executeMethod(postMethod);

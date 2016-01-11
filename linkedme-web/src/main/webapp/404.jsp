@@ -3,7 +3,7 @@
 <html>
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-<title>Aotemon API</title>
+<title>lkme-web API</title>
 </head>
 <body>
 	<p>Sorry, that page doesnot exist!</p>
