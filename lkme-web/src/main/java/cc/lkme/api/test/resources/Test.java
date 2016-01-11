@@ -25,13 +25,19 @@ public class Test {
     @Produces({MediaType.APPLICATION_JSON})
     public String getTestJson(@QueryParam("input") String param) {
         return "{\"hello\":\"linkedME\",\"input\":\"" + param + "\"}";
+
     }
+
+
 
     @Path("/update")
     @POST
     @Produces({MediaType.APPLICATION_JSON})
     public String update(@FormParam("input") String param) {
         return "{\"hello\":\"linkedME\",\"data\":\"" + param + "\"}";
+
+
+
     }
 
     public static void main(String[] args) {
