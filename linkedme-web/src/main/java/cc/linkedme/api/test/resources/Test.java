@@ -14,14 +14,14 @@ import java.io.IOException;
 @Path("test")
 @Component
 public class Test {
-    @Path("/getJson")
+    @Path("/getJson.json")
     @GET
     @Produces({MediaType.APPLICATION_JSON})
     public String getTestJson(@QueryParam("input") String param) {
         return "{\"hello\":\"linkedME\",\"input\":\"" + param + "\"}";
     }
 
-    @Path("/update")
+    @Path("/update.json")
     @POST
     @Produces({MediaType.APPLICATION_JSON})
     public String update(@FormParam("input") String param) {
