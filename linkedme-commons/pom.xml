@@ -11,5 +11,14 @@
 
     <artifactId>linkedme-commons</artifactId>
 
+    <dependencies>
+        <dependency>
+            <groupId>org.yaml</groupId>
+            <artifactId>snakeyaml</artifactId>
+            <version>1.12</version>
+        </dependency>
+    </dependencies>
+
+
 
 </project>

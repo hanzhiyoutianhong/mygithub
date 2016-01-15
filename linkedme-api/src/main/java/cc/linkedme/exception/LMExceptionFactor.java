@@ -1,4 +1,4 @@
-package com.microquation.linkedme.exception;
+package cc.linkedme.exception;
 
 import java.io.Serializable;
 

@@ -1,4 +1,4 @@
-package cc.linkedme.commons.util;
+package cc.linkedme.commons;
 
 
 import java.security.MessageDigest;

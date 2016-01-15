@@ -1,4 +1,4 @@
-package com.microquation.linkedme.exception;
+package cc.linkedme.exception;
 
 /**
  * Created by qipo on 15/9/29.
