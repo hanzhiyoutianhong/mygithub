@@ -8,6 +8,19 @@
         http://www.springframework.org/schema/context/spring-context.xsd">
 
 	<import resource="spring/resource-context.xml" />
-	<context:component-scan base-package="cc.lkme.api.test.resources" />
+	<context:component-scan base-package="cc.linkedme.api.lkme.web" />
+
+	<bean class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">
+		<property name="locations">
+			<list>
+				<value>classpath:regexes.yaml</value>
+				<value>classpath:jdbc.properties</value>
+				<value>classpath:redis.properties</value>
+			</list>
+		</property>
+	</bean>
+
+
+
 
 </beans>

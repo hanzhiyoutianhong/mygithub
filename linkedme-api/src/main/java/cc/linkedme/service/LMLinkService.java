@@ -27,4 +27,6 @@ public interface LMLinkService {
 
     void updateRejectInstallLink(String linkClickId);
 
+    String deepLink(String linkClickId);
+
 }

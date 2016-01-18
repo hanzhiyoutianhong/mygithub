@@ -15,6 +15,12 @@ public class LMLinkServiceImpl implements LMLinkService {
 
     private LMLinkDao lmLinkDao;
 
+    public String deepLink(String linkClickId) {
+        String result = null;
+
+        return result;
+    }
+
 
     public void addLink(LMLinkEntity lmLinkEntity) {
         lmLinkDao.addLink(lmLinkEntity);

@@ -1,4 +1,4 @@
-package cc.lkme.api.test.resources;
+package cc.linkedme.api.lkme.web;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -37,8 +37,9 @@ public class Test {
     @Path("/getJson.json")
     @GET
     @Produces({MediaType.APPLICATION_JSON})
-    public String getTestJson(@QueryParam("input") String param) {
-        return "{\"hello\":\"linkedME\",\"input\":\"" + param + "\"}";
+    public String getTestJson(@QueryParam("input") String param,
+                              @QueryParam("input1") String param1) {
+        return "{\"hello\":\"linkedME\",\"input\":\"" + param + "\"input1\":\"" + param1 + "\"}";
     }
 
     @Path("/update.json")
@@ -50,7 +51,7 @@ public class Test {
 
     public static void main(String[] args) {
         HttpClient client = new HttpClient();
-        
+
         //get request
         HttpMethod method = new GetMethod("http://localhost:8080/test/getJson?input=receive");
         try {
