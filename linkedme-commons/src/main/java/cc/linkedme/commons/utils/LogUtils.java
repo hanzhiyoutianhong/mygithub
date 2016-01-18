@@ -8,13 +8,14 @@ import com.alibaba.fastjson.JSONObject;
  */
 public class LogUtils {
 
-    public static long MEMORYCACHE_FIRE_TIME=200; //MC操作超时
-    public static long DATABASE_FIRE_TIME=500; //DB操作超时
-    public static long REDIS_FIRE_TIME=300; //Redis操作超时
+    public static long MEMORYCACHE_FIRE_TIME = 200; //MC操作超时
+    public static long DATABASE_FIRE_TIME = 500; //DB操作超时
+    public static long REDIS_FIRE_TIME = 300; //Redis操作超时
 
 
     /**
      * 格式化request和response
+     *
      * @param request
      * @param response
      * @return

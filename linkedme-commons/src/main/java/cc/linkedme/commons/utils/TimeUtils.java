@@ -26,7 +26,7 @@ public class TimeUtils {
     }
 
     public static Long getCurrentTimesMills() {
-        return  System.currentTimeMillis();
+        return System.currentTimeMillis();
     }
 
     /**

@@ -64,7 +64,7 @@ public class LMPreferenceHelper {
         co.setDeviceFingerprintId(deviceFingerprintId);
         co.setAppVersion(appVersion);
         int temp = adTrackingEnabled ? 1 : 0;
-        co.setAdTrackingEnabled((byte)temp);
+        co.setAdTrackingEnabled((byte) temp);
         co.setGoogleAdvertsId(googleAdvertsId);
         temp = isReferrable ? 1 : 0;
         co.setIsReferrable((byte) temp);
@@ -79,9 +79,9 @@ public class LMPreferenceHelper {
         co.setLinkIdentifier(linkIdentifier);
         co.setIosBundleId(iosBundleId);
         temp = lat_val ? 1 : 0;
-        co.setLatVal((byte)temp);
+        co.setLatVal((byte) temp);
         temp = debug ? 1 : 0;
-        co.setDebug((byte)temp);
+        co.setDebug((byte) temp);
         co.setSessionId(sessionId);
         co.setIp(ip);
         co.setRetryNumber(retryNumber);
@@ -89,7 +89,6 @@ public class LMPreferenceHelper {
 
         return co;
     }
-
 
 
     public static LMClientInstallEntity initLMClientInstallEntity(String identityId, String appKey, String hardwareId, String googleAdvertisingId, boolean isHardwareIdReal,
@@ -105,9 +104,9 @@ public class LMPreferenceHelper {
         ci.setHardwareId(hardwareId);
         ci.setGoogleAdvertisingId(googleAdvertisingId);
         int temp = isHardwareIdReal ? 1 : 0;
-        ci.setIsHardwareIdReal((byte)temp);
+        ci.setIsHardwareIdReal((byte) temp);
         temp = adTrackingEnabled ? 1 : 0;
-        ci.setAdTrackingEnabled((byte)temp);
+        ci.setAdTrackingEnabled((byte) temp);
         temp = isReferrable ? 1 : 0;
         ci.setIsReferrable((byte) temp);
         ci.setAppVersion(appVersion);
@@ -126,13 +125,13 @@ public class LMPreferenceHelper {
         ci.setBluetooth((byte) temp);
         ci.setBluetoothVersoin(bluetoothVersion);
         temp = latVal ? 1 : 0;
-        ci.setLatVal((byte)temp);
+        ci.setLatVal((byte) temp);
         temp = hasNfc ? 1 : 0;
-        ci.setHasNfc((byte)temp);
+        ci.setHasNfc((byte) temp);
         temp = hasTelephone ? 1 : 0;
-        ci.setHasTelephone((byte)temp);
+        ci.setHasTelephone((byte) temp);
         temp = wifi ? 1 : 0;
-        ci.setWifi((byte)temp);
+        ci.setWifi((byte) temp);
         ci.setUriScheme(uriScheme);
         ci.setRetryNumber(retryNumber);
         ci.setIosBundleId(iosBundleId);
@@ -141,7 +140,7 @@ public class LMPreferenceHelper {
         ci.setUniversalLink(universalLink);
         ci.setSpotlightIdentifier(spotlightIdentifier);
         temp = debug ? 1 : 0;
-        ci.setDebug((byte)temp);
+        ci.setDebug((byte) temp);
         ci.setIp(ip);
         ci.setTimestamp(timestamp);
 

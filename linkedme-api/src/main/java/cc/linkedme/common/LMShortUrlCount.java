@@ -10,7 +10,7 @@ import java.util.Set;
  * Created by qipo on 15/9/6.
  */
 public class LMShortUrlCount {
-    public static Map<String,String> shortUrlCountMap = new HashMap<String, String>();
+    public static Map<String, String> shortUrlCountMap = new HashMap<String, String>();
 
     /**
      * construction function
@@ -33,6 +33,7 @@ public class LMShortUrlCount {
 
     /**
      * get the short url count of clickID
+     *
      * @param ckickID
      * @return
      */
@@ -58,6 +59,7 @@ public class LMShortUrlCount {
 
     /**
      * get the app count
+     *
      * @return
      */
 

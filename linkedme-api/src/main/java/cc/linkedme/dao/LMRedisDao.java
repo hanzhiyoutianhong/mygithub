@@ -95,5 +95,4 @@ public interface LMRedisDao {
     void deleteObject(Object key);
 
 
-
 }

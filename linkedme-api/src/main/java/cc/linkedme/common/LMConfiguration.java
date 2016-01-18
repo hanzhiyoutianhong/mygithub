@@ -13,7 +13,7 @@ public class LMConfiguration {
     private static final String KEY_APP_ID = "app_id";
 
     private static final String KEY_APP_VERSION = "app_version";
-    private static final String KEY_CLICK_ID= "click_id";
+    private static final String KEY_CLICK_ID = "click_id";
     private static final String KEY_DEBUG = "debug";
     private static final String KEY_DEVICE_FINGERPRINT_ID = "device_fingerprint_id";
     private static final String KEY_IS_REFERRABLE = "is_referrable";
@@ -55,7 +55,8 @@ public class LMConfiguration {
     private static final String KEY_DEEPLINK_PATH = "deeplink_path";
 
     //Android
-    private static final String KEY_BLUETOOTH = "bluetooth";;
+    private static final String KEY_BLUETOOTH = "bluetooth";
+    ;
     private static final String KEY_BLUETOOTH_VERSION = "bluetooth_version";
     private static final String KEY_HAS_NFC = "has_nfc";
     private static final String KEY_HAS_TELEPHONE = "has_telephone";
@@ -94,7 +95,6 @@ public class LMConfiguration {
 //    private static final String KEY_TEST_DOMAIN = "http://182.92.108.111/l/";
 //    private static final String KEY_TEST_DOMAIN = "http://192.168.11.177:8888/l/";
     private static final String KEY_TEST_DOMAIN = "http://lkme.cc/l/";
-
 
 
 //

@@ -1,12 +1,12 @@
 /**
  * Copyright 2012 Twitter, Inc
- *
+ * <p>
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- *
- *      http://www.apache.org/licenses/LICENSE-2.0
- *
+ * <p>
+ * http://www.apache.org/licenses/LICENSE-2.0
+ * <p>
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -38,7 +38,7 @@ public class Parser {
      * construction function
      */
 
-    public Parser() throws Exception{
+    public Parser() throws Exception {
         this(Parser.class.getClassLoader().getResourceAsStream(REGEX_YAML_PATH));
     }
 
@@ -68,21 +68,21 @@ public class Parser {
     private void initialize(InputStream regexYaml) {
         Yaml yaml = new Yaml(new SafeConstructor());
         @SuppressWarnings("unchecked")
-        Map<String,List<Map<String,String>>> regexConfig = (Map<String,List<Map<String,String>>>) yaml.load(regexYaml);
+        Map<String, List<Map<String, String>>> regexConfig = (Map<String, List<Map<String, String>>>) yaml.load(regexYaml);
 
-        List<Map<String,String>> uaParserConfigs = regexConfig.get("user_agent_parsers");
+        List<Map<String, String>> uaParserConfigs = regexConfig.get("user_agent_parsers");
         if (uaParserConfigs == null) {
             throw new IllegalArgumentException("user_agent_parsers is missing from yaml");
         }
         uaParser = UserAgentParser.fromList(uaParserConfigs);
 
-        List<Map<String,String>> osParserConfigs = regexConfig.get("os_parsers");
+        List<Map<String, String>> osParserConfigs = regexConfig.get("os_parsers");
         if (osParserConfigs == null) {
             throw new IllegalArgumentException("os_parsers is missing from yaml");
         }
         osParser = OSParser.fromList(osParserConfigs);
 
-        List<Map<String,String>> deviceParserConfigs = regexConfig.get("device_parsers");
+        List<Map<String, String>> deviceParserConfigs = regexConfig.get("device_parsers");
         if (deviceParserConfigs == null) {
             throw new IllegalArgumentException("device_parsers is missing from yaml");
         }

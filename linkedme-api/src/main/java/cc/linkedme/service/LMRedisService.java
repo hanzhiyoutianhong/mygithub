@@ -39,5 +39,4 @@ public interface LMRedisService {
     boolean exists(final String key);
 
 
-
 }

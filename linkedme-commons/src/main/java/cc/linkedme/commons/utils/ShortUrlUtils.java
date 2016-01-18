@@ -13,16 +13,16 @@ public class ShortUrlUtils {
             'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o', 'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z',
             'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z'};
 
-    public static int sixTwoValue(char c){
+    public static int sixTwoValue(char c) {
         for (int i = 0; i < shortUrlCoder.length; i++) {
-            if( c == shortUrlCoder[i] ){
+            if (c == shortUrlCoder[i]) {
                 return i;
             }
         }
         return -1;
     }
 
-    public static String turnTenToSixTwo(long number){
+    public static String turnTenToSixTwo(long number) {
         String result;
 
         StringBuilder tempStringBuilder = new StringBuilder(0);
@@ -49,7 +49,7 @@ public class ShortUrlUtils {
         return result;
     }
 
-    public static long turnSixTwoToTen(String sixTwoStr){
+    public static long turnSixTwoToTen(String sixTwoStr) {
         if (!StringUtils.isNotEmpty(sixTwoStr)) {
             sixTwoStr = "0";
         }
@@ -57,7 +57,7 @@ public class ShortUrlUtils {
         long multiple = 1;
         Character c;
 
-        for (int i = 0; i < sixTwoStr.length(); i++){
+        for (int i = 0; i < sixTwoStr.length(); i++) {
             c = sixTwoStr.charAt(sixTwoStr.length() - i - 1);
             result += sixTwoValue(c) * multiple;
             multiple = multiple * 62;
@@ -80,7 +80,7 @@ public class ShortUrlUtils {
         return MD5Utils.MD5ThirtyTwo(buffer.toString());
     }
 
-    public static long linkAlgorithm(String md5){
+    public static long linkAlgorithm(String md5) {
         Long first = Long.valueOf(md5.substring(0, 8), 16);
         Long second = Long.valueOf(md5.substring(8, 16), 16);
         Long third = Long.valueOf(md5.substring(16, 24), 16);

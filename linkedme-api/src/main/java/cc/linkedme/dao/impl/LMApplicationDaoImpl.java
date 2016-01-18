@@ -19,7 +19,6 @@ public class LMApplicationDaoImpl implements LMApplicationDao {
     public static final String QUERY_ALL_APPLICATION = "SELECT * FROM application";
 
 
-
     public void addApplication(LMApplicationEntity app) {
         Object[] values = {app.getAppName(), app.getAppKeyLive(), app.getAppSecretLive(), app.getAppKeyTest(), app.getAppSecretTest(), app.getAccountId(), app.getUrlScheme(), app.getIosStoreUrl(), app.getIosCustomUrl(), app.getIosNotUrl(), app.getIosBundleId(), app.getIosTeamId(), app.getPackageName(), app.getAdroidCustomUrl(), app.getAndroidNotUrl(), app.getDesktopUrl(), app.getTimestamp()};
         jdbcTemplate.update(INSERT_APPLICATION, values);

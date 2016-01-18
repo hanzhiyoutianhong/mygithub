@@ -26,7 +26,7 @@ public class LMApplicationServiceImpl implements LMApplicationService {
     public List<LMApplicationEntity> getAllApplication() {
         List<LMApplicationEntity> resultList;
         try {
-             resultList = addApplicationDao.getAllApplication();
+            resultList = addApplicationDao.getAllApplication();
         } catch (Exception e) {
             throw new LMException(LMExceptionFactor.LM_FAILURE_DB_OP, this.getClass().getName() + ".getAllAppIdUrlScheme");
         }
@@ -43,7 +43,7 @@ public class LMApplicationServiceImpl implements LMApplicationService {
             throw new LMException(LMExceptionFactor.LM_FAILURE_DB_OP, this.getClass().getName() + ".getOneAppIdUrlScheme");
         }
 
-        return  lmAppIDUrlSchemeEntity;
+        return lmAppIDUrlSchemeEntity;
     }
 
     /**

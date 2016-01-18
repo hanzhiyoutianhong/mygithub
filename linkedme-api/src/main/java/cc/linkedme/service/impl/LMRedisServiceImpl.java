@@ -36,7 +36,7 @@ public class LMRedisServiceImpl implements LMRedisService {
         lmRedisDao.deleteMap(name, hashKeys);
     }
 
-    public void setObject(Object key, Object value, long expire){
+    public void setObject(Object key, Object value, long expire) {
         lmRedisDao.setObject(key, value, expire);
     }
 

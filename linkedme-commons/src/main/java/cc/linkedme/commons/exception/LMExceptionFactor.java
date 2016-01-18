@@ -1,4 +1,4 @@
-package cc.linkedme.exception;
+package cc.linkedme.commons.exception;
 
 import java.io.Serializable;
 
@@ -61,6 +61,26 @@ public class LMExceptionFactor implements Serializable {
      * 无短连接
      */
     public static final LMExceptionFactor LM_NOT_SHORT_URL = new LMExceptionFactor(20007, "don't have the short url", "无短连接");
+
+    /**
+     * ip限制
+     */
+    public static final LMExceptionFactor LM_IP_LIMIT = new LMExceptionFactor(20008, "IP limit!", "IP限制，不能请求该资源!");
+
+    /**
+     * 任务过多，系统繁忙
+     */
+    public static final LMExceptionFactor LM_SYSTEM_BUSY = new LMExceptionFactor(20009, "too many pending tasks, system is busy!", "任务过多，系统繁忙!");
+
+    /**
+     * 非法请求
+     */
+    public static final LMExceptionFactor LM_ILLEGAL_REQUEST = new LMExceptionFactor(20010, "Illegal Request!", "非法请求!");
+
+    /**
+     * 接口不存在
+     */
+    public static final LMExceptionFactor LM_API_NOT_EXIST = new LMExceptionFactor(20011, "Api not found!", "接口不存在!");
 
     /**
      * get and set

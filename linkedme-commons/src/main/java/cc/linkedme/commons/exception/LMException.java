@@ -1,4 +1,4 @@
-package cc.linkedme.exception;
+package cc.linkedme.commons.exception;
 
 /**
  * Created by qipo on 15/9/29.
