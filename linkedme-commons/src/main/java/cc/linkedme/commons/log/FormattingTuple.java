@@ -1,8 +1,5 @@
 package cc.linkedme.commons.log;
 
-/**
- * 存放 {@link cc.linkedme.commons.util.MessageFormatter} 格式化后的结果。
- */
 final class FormattingTuple {
 
     static final FormattingTuple NULL = new FormattingTuple(null);

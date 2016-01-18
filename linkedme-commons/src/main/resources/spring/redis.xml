@@ -1,0 +1,103 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:wfc="http://www.springframework.org/schema/wfc"
+       xmlns:context="http://www.springframework.org/schema/context"
+       xsi:schemaLocation="
+        http://www.springframework.org/schema/beans 
+        http://www.springframework.org/schema/beans/spring-beans.xsd
+        http://www.springframework.org/schema/context
+        http://www.springframework.org/schema/context/spring-context.xsd
+        http://www.springframework.org/schema/wfc
+        http://www.springframework.org/schema/wfc.xsd ">
+
+    <bean id="mgetTest" class="com.aotemon.api.test.resources.MgetTest"
+          autowire="byName"></bean>
+    <bean id="mgetShardingSupport" class="com.wrshine.commons.shard.ShardingSupportHash">
+        <property name="clients" ref="jedisClientMap"/>
+        <property name="hashAlg" value="crc32"/>
+        <property name="hashGene" value="256"/>
+        <property name="tablePerDb" value="64"/>
+    </bean>
+
+    <bean id="jedisClientMap" class="java.util.HashMap">
+        <constructor-arg>
+            <map>
+                <entry key="0" value-ref="jedisClient_0"/>
+                <entry key="1" value-ref="jedisClient_1"/>
+                <entry key="2" value-ref="jedisClient_2"/>
+                <entry key="3" value-ref="jedisClient_3"/>
+            </map>
+        </constructor-arg>
+    </bean>
+
+    <bean id="jedisClient_0" class="com.wrshine.commons.redis.JedisMSServer"
+          init-method="init">
+        <property name="masterConfig">
+            <bean parent="jedisPoolConfig">
+                <property name="serverPortDb" value="10.75.5.44:11965"></property>
+            </bean>
+        </property>
+        <property name="slaveConfig">
+            <bean parent="jedisPoolConfig">
+                <property name="serverPortDb" value="10.75.5.44:11965"></property>
+            </bean>
+        </property>
+    </bean>
+    <bean id="jedisClient_1" class="com.wrshine.commons.redis.JedisMSServer"
+          init-method="init">
+        <property name="masterConfig">
+            <bean parent="jedisPoolConfig">
+                <property name="serverPortDb" value="10.75.5.44:11966"></property>
+            </bean>
+        </property>
+        <property name="slaveConfig">
+            <bean parent="jedisPoolConfig">
+                <property name="serverPortDb" value="10.75.5.44:11966"></property>
+            </bean>
+        </property>
+    </bean>
+    <bean id="jedisClient_2" class="com.wrshine.commons.redis.JedisMSServer"
+          init-method="init">
+        <property name="masterConfig">
+            <bean parent="jedisPoolConfig">
+                <property name="serverPortDb" value="10.75.5.44:11967"></property>
+            </bean>
+        </property>
+        <property name="slaveConfig">
+            <bean parent="jedisPoolConfig">
+                <property name="serverPortDb" value="10.75.5.44:11967"></property>
+            </bean>
+        </property>
+    </bean>
+    <bean id="jedisClient_3" class="com.wrshine.commons.redis.JedisMSServer"
+          init-method="init">
+        <property name="masterConfig">
+            <bean parent="jedisPoolConfig">
+                <property name="serverPortDb" value="10.75.5.44:11968"></property>
+            </bean>
+        </property>
+        <property name="slaveConfig">
+            <bean parent="jedisPoolConfig">
+                <property name="serverPortDb" value="10.75.5.44:11968"></property>
+            </bean>
+        </property>
+    </bean>
+
+    <bean id="jedisPoolConfig" class="com.wrshine.commons.redis.RedisConfig"
+          abstract="true">
+        <property name="minPoolSize" value="6"/>
+        <property name="maxPoolSize" value="30"/>
+        <property name="whenExhaustedAction" value="1"/>
+        <property name="maxWait" value="500"/>
+        <property name="lifo" value="false"/>
+
+        <property name="testOnBorrow" value="false"/>
+        <property name="testOnReturn" value="false"/>
+        <property name="testWhileIdle" value="true"/>
+        <property name="numTestsPerEvictionRun" value="-2"/>
+        <property name="timeBetweenEvictionRunsMillis" value="30000"/>
+        <property name="softMinEvictableIdleTimeMillis" value="3600000"/>
+        <property name="minEvictableIdleTimeMillis" value="-1"/>
+    </bean>
+
+</beans>

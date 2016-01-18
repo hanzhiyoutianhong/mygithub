@@ -8,7 +8,7 @@
     <modelVersion>4.0.0</modelVersion>
     <artifactId>linkedme-web</artifactId>
     <packaging>war</packaging>
-    <name>linkedme-web Maven Webapp</name>
+    <name>linkedme-web</name>
     <url>http://maven.apache.org</url>
     <dependencies>
         <dependency>
@@ -63,6 +63,11 @@
             <groupId>com.sun.jersey</groupId>
             <artifactId>jersey-client</artifactId>
             <version>${jersey.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>cc.linkedme</groupId>
+            <artifactId>linkedme-commons</artifactId>
+            <version>0.0.1-SNAPSHOT</version>
         </dependency>
     </dependencies>
 

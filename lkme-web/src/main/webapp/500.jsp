@@ -1,5 +1,6 @@
 <%@ page contentType="text/html;charset=utf-8"%>
 <%@ page isErrorPage="true"%>
+<%@ page import="cc.linkedme.commons.log.ApiLogger" %>
 <%
     response.setStatus(500);
     String orginal_uri = (String)request.getAttribute("javax.servlet.forward.request_uri");

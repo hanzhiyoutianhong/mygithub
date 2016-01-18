@@ -8,10 +8,16 @@
     <modelVersion>4.0.0</modelVersion>
     <artifactId>lkme-web</artifactId>
     <packaging>war</packaging>
-    <name>lkme-web Maven Webapp</name>
+    <name>lkme-web</name>
     <url>http://maven.apache.org</url>
 
     <dependencies>
+        <dependency>
+            <groupId>cc.linkedme</groupId>
+            <artifactId>linkedme-commons</artifactId>
+            <version>0.0.1-SNAPSHOT</version>
+        </dependency>
+
         <dependency>
             <groupId>junit</groupId>
             <artifactId>junit</artifactId>
