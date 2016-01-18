@@ -49,7 +49,7 @@ public class LMLinkServiceImpl implements LMLinkService {
         return rowResult;
     }
 
-    public void updateInstallLink(String clickId){
+    public void updateInstallLink(String clickId) {
         try {
             lmLinkDao.updateInstallLink(clickId);
         } catch (Exception e) {

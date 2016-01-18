@@ -85,7 +85,7 @@ public class Test {
         postMethod.releaseConnection();
 
     }
-    
+
     public static final ThreadPoolExecutor DOWN_STREAM_REDIS_POOL = new TraceableThreadExecutor(50, 50, 0L, TimeUnit.SECONDS, new LinkedBlockingQueue<Runnable>(1000), new ThreadPoolExecutor.DiscardOldestPolicy());
     @Autowired
     private ShardingSupport<JedisPort> mgetShardingSupport;
