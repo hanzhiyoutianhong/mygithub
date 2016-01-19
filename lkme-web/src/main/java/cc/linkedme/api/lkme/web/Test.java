@@ -34,7 +34,7 @@ import cc.linkedme.commons.thread.TraceableThreadExecutor;
 @Path("test")
 @Component
 public class Test {
-    @Path("/getJson.json")
+    @Path("/getJson")
     @GET
     @Produces({MediaType.APPLICATION_JSON})
     public String getTestJson(@QueryParam("input") String param,
@@ -42,7 +42,7 @@ public class Test {
         return "{\"hello\":\"linkedME\",\"input\":\"" + param + "\"input1\":\"" + param1 + "\"}";
     }
 
-    @Path("/update.json")
+    @Path("/update")
     @POST
     @Produces({MediaType.APPLICATION_JSON})
     public String update(@FormParam("input") String param) {
@@ -85,9 +85,12 @@ public class Test {
         postMethod.releaseConnection();
 
     }
+
+
+    //Redis test code
     
     public static final ThreadPoolExecutor DOWN_STREAM_REDIS_POOL = new TraceableThreadExecutor(50, 50, 0L, TimeUnit.SECONDS, new LinkedBlockingQueue<Runnable>(1000), new ThreadPoolExecutor.DiscardOldestPolicy());
-    @Autowired
+
     private ShardingSupport<JedisPort> mgetShardingSupport;
 
     public ShardingSupport<JedisPort> getMgetShardingSupport() {

@@ -30,7 +30,7 @@
         </constructor-arg>
     </bean>
 
-    <bean id="jedisClient_0" class="com.wrshine.commons.redis.JedisMSServer"
+    <bean id="jedisClient_0" class="cc.linkedme.commons.redis.JedisMSServer"
           init-method="init">
         <property name="masterConfig">
             <bean parent="jedisPoolConfig">
@@ -43,7 +43,7 @@
             </bean>
         </property>
     </bean>
-    <bean id="jedisClient_1" class="com.wrshine.commons.redis.JedisMSServer"
+    <bean id="jedisClient_1" class="cc.linkedme.commons.redis.JedisMSServer"
           init-method="init">
         <property name="masterConfig">
             <bean parent="jedisPoolConfig">
@@ -56,7 +56,7 @@
             </bean>
         </property>
     </bean>
-    <bean id="jedisClient_2" class="com.wrshine.commons.redis.JedisMSServer"
+    <bean id="jedisClient_2" class="cc.linkedme.commons.redis.JedisMSServer"
           init-method="init">
         <property name="masterConfig">
             <bean parent="jedisPoolConfig">
@@ -69,7 +69,7 @@
             </bean>
         </property>
     </bean>
-    <bean id="jedisClient_3" class="com.wrshine.commons.redis.JedisMSServer"
+    <bean id="jedisClient_3" class="cc.linkedme.commons.redis.JedisMSServer"
           init-method="init">
         <property name="masterConfig">
             <bean parent="jedisPoolConfig">
@@ -83,7 +83,7 @@
         </property>
     </bean>
 
-    <bean id="jedisPoolConfig" class="com.wrshine.commons.redis.RedisConfig"
+    <bean id="jedisPoolConfig" class="cc.linkedme.commons.redis.RedisConfig"
           abstract="true">
         <property name="minPoolSize" value="6"/>
         <property name="maxPoolSize" value="30"/>
