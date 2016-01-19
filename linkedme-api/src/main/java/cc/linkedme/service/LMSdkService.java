@@ -6,7 +6,6 @@ package cc.linkedme.service;
 public interface LMSdkService {
 
     /**
-     *
      * @param linkedMeKey
      * @param hardwareId
      * @param isHardwareIdReal
@@ -40,14 +39,13 @@ public interface LMSdkService {
      */
 
     String install(String linkedMeKey, String hardwareId, String isHardwareIdReal, String adTrackingEnabled, String brand,
-            String carrier, String iOSBundleId, String isReferable, String os, String osVersion,
-            String appVersion, String sdk, String update, String uriScheme, String iOSTeamId,
-            String universalLinkUrl, String spotlightIdentifier, String latVal, String wifi, String hasNFC,
-            String hasTelephone, String bluetooth, String screenDpi, String screenHeight, String screenWidth,
-            String retryNumber, String ip, String sessionId, String debug);
+                   String carrier, String iOSBundleId, String isReferable, String os, String osVersion,
+                   String appVersion, String sdk, String update, String uriScheme, String iOSTeamId,
+                   String universalLinkUrl, String spotlightIdentifier, String latVal, String wifi, String hasNFC,
+                   String hasTelephone, String bluetooth, String screenDpi, String screenHeight, String screenWidth,
+                   String retryNumber, String ip, String sessionId, String debug);
 
     /**
-     *
      * @param linkedMeKey
      * @param identifyId
      * @param deviceFingerprintId
@@ -71,12 +69,11 @@ public interface LMSdkService {
      */
 
     String open(String linkedMeKey, String identifyId, String deviceFingerprintId, String adTrackingEnabled, String linkIdentifier,
-                       String isReferable, String os, String osVersion, String appVersion, String sdk,
-                       String update, String uriScheme, String iOSBundleId, String iOSTeamId, String spotlightIdentifier,
-                       String universalLinkUrl, String latVal, String retryNumber, String debug);
+                String isReferable, String os, String osVersion, String appVersion, String sdk,
+                String update, String uriScheme, String iOSBundleId, String iOSTeamId, String spotlightIdentifier,
+                String universalLinkUrl, String latVal, String retryNumber, String debug);
 
     /**
-     *
      * @param linkedMeKey
      * @param identifyId
      * @param deviceFingerprintId
@@ -90,7 +87,6 @@ public interface LMSdkService {
                  String retryNumber);
 
     /**
-     *
      * @param linkedMeKey
      * @param identifyId
      * @param deviceFingerprintId
@@ -118,7 +114,6 @@ public interface LMSdkService {
                String sessionId, String retryNumber, String debug);
 
     /**
-     *
      * @param linkClickId
      * @return
      */

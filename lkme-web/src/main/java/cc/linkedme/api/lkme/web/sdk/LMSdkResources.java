@@ -4,6 +4,7 @@ import cc.linkedme.service.LMSdkService;
 
 import com.google.common.base.Strings;
 import org.springframework.stereotype.Component;
+
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 import javax.ws.rs.*;
@@ -67,11 +68,11 @@ public class LMSdkResources {
         String sessionId = httpSession.getId().substring(8, 24);
 
         String result = lmSdkService.install(linkedMeKey, hardwareId, isHardwareIdReal, adTrackingEnabled, brand,
-                                                                carrier, iOSBundleId, isReferable, os, osVersion,
-                                                                appVersion, sdk, update, uri_scheme, iOSTeamId,
-                                                                universalLinkUrl, spotlightIdentifier, latVal, wifi, hasNFC,
-                                                                hasTelephone, bluetooth, screenDpi, screenHeight, screenWidth,
-                                                                retryNumber, ip, sessionId, debug);
+                carrier, iOSBundleId, isReferable, os, osVersion,
+                appVersion, sdk, update, uri_scheme, iOSTeamId,
+                universalLinkUrl, spotlightIdentifier, latVal, wifi, hasNFC,
+                hasTelephone, bluetooth, screenDpi, screenHeight, screenWidth,
+                retryNumber, ip, sessionId, debug);
         return result;
     }
 
@@ -98,9 +99,9 @@ public class LMSdkResources {
                        @FormParam("retry_number") String retryNumber,
                        @FormParam("debug") String debug) {
         String result = lmSdkService.open(linkedMeKey, identifyId, deviceFingerprintId, adTrackingEnabled, linkIdentifier,
-                                                        isReferable, os, osVersion, appVersion,sdk,
-                                                        update, uriScheme, iOSBundleId, iOSTeamId, spotlightIdentifier,
-                                                        universalLinkUrl, latVal, retryNumber, debug);
+                isReferable, os, osVersion, appVersion, sdk,
+                update, uriScheme, iOSBundleId, iOSTeamId, spotlightIdentifier,
+                universalLinkUrl, latVal, retryNumber, debug);
 
         return result;
 
@@ -111,18 +112,18 @@ public class LMSdkResources {
     @GET
     @Produces({MediaType.APPLICATION_JSON})
     public String close(@QueryParam("linkedme_key") String linkedMeKey,
-                          @QueryParam("identity_id") String identifyId,
-                          @QueryParam("device_fingerprint_id") String deviceFingerprintId,
-                          @QueryParam("sdk") String sdk,
-                          @QueryParam("session_id") String sessionId,
-                          @QueryParam("retry_number") String retryNumber,
-                          @Context HttpServletRequest request) {
+                        @QueryParam("identity_id") String identifyId,
+                        @QueryParam("device_fingerprint_id") String deviceFingerprintId,
+                        @QueryParam("sdk") String sdk,
+                        @QueryParam("session_id") String sessionId,
+                        @QueryParam("retry_number") String retryNumber,
+                        @Context HttpServletRequest request) {
         if (Strings.isNullOrEmpty(linkedMeKey)) {
 
         }
 
         String result = lmSdkService.close(linkedMeKey, identifyId, deviceFingerprintId, sdk, sessionId,
-                                            retryNumber);
+                retryNumber);
         return result;
     }
 
@@ -130,28 +131,28 @@ public class LMSdkResources {
     @POST
     @Produces({MediaType.APPLICATION_JSON})
     public String url(@FormParam("Linkedme_key") String linkedMeKey,
-                       @FormParam("identity_id") String identifyId,
-                       @QueryParam("device_fingerprint_id") String deviceFingerprintId,
-                       @FormParam("type") String type,
-                       @FormParam("tags") String tags,
-                       @FormParam("channel") String channel,
-                       @FormParam("feature") String feature,
-                       @FormParam("stage") String stage,
-                       @FormParam("alias") String alias,
-                       @FormParam("sdk") String sdk,
-                       @FormParam("data") String data,
-                       @FormParam("update") String update,
-                       @FormParam("source") String source,
-                       @FormParam("deeplink_path") String deepLinkPath,
-                       @FormParam("duration") String duration,
-                       @FormParam("session_id") String sessionId,
-                       @FormParam("retry_number") String retryNumber,
-                       @FormParam("debug") String debug) {
+                      @FormParam("identity_id") String identifyId,
+                      @QueryParam("device_fingerprint_id") String deviceFingerprintId,
+                      @FormParam("type") String type,
+                      @FormParam("tags") String tags,
+                      @FormParam("channel") String channel,
+                      @FormParam("feature") String feature,
+                      @FormParam("stage") String stage,
+                      @FormParam("alias") String alias,
+                      @FormParam("sdk") String sdk,
+                      @FormParam("data") String data,
+                      @FormParam("update") String update,
+                      @FormParam("source") String source,
+                      @FormParam("deeplink_path") String deepLinkPath,
+                      @FormParam("duration") String duration,
+                      @FormParam("session_id") String sessionId,
+                      @FormParam("retry_number") String retryNumber,
+                      @FormParam("debug") String debug) {
 
         String result = lmSdkService.url(linkedMeKey, identifyId, deviceFingerprintId, type, tags,
-                                            channel, feature, stage, alias, sdk,
-                                            data, update, source, deepLinkPath, duration,
-                                            sessionId, retryNumber, debug);
+                channel, feature, stage, alias, sdk,
+                data, update, source, deepLinkPath, duration,
+                sessionId, retryNumber, debug);
         return result;
 
     }

@@ -99,9 +99,9 @@ public class LMCookieHelper {
 
         Cookie cookie = new Cookie(name, value);
 
-        if(maxAge != 0){
+        if (maxAge != 0) {
             cookie.setMaxAge(maxAge);
-        } else{
+        } else {
             cookie.setMaxAge(COOKIE_EXPIRE_MAX_VALUE);
         }
 

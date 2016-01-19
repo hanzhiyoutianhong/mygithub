@@ -26,7 +26,7 @@ public class LMLinkResources {
     @GET
     @Produces({MediaType.APPLICATION_JSON})
     public String deepLink(@QueryParam("link_click_id") String linkClickId,
-                          @Context HttpServletRequest request) {
+                           @Context HttpServletRequest request) {
 
         if (Strings.isNullOrEmpty(linkClickId)) {
 
@@ -36,10 +36,6 @@ public class LMLinkResources {
         return result;
 
     }
-
-
-
-    
 
 
 }

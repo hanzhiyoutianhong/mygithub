@@ -12,7 +12,7 @@
 
     <bean id="mgetTest" class="com.aotemon.api.test.resources.MgetTest"
           autowire="byName"></bean>
-    <bean id="mgetShardingSupport" class="com.wrshine.commons.shard.ShardingSupportHash">
+    <bean id="mgetShardingSupport" class="cc.linkedme.commons.shard.ShardingSupportHash">
         <property name="clients" ref="jedisClientMap"/>
         <property name="hashAlg" value="crc32"/>
         <property name="hashGene" value="256"/>
