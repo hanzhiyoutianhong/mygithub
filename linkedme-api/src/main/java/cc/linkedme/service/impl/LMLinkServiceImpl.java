@@ -43,7 +43,6 @@ public class LMLinkServiceImpl implements LMLinkService {
         try {
             rowResult = lmLinkDao.getOneLink(linkClickId);
         } catch (Exception e) {
-
             throw new LMException(LMExceptionFactor.LM_FAILURE_DB_OP, this.getClass().getName() + ".getOneLink");
         }
         return rowResult;

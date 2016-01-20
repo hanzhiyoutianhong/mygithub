@@ -1,71 +1,106 @@
 package cc.linkedme.service.impl;
 
-import cc.linkedme.commons.utils.TimeUtils;
+import cc.linkedme.common.params.LMCloseParams;
+import cc.linkedme.common.params.LMInstallParams;
+import cc.linkedme.common.params.LMOpenParams;
+import cc.linkedme.common.params.LMUrlParams;
+import cc.linkedme.commons.log.ApiLogger;
+import cc.linkedme.exception.LMException;
+import cc.linkedme.exception.LMExceptionFactor;
 import cc.linkedme.service.LMSdkService;
 
 /**
  * Created by LinkedME00 on 16/1/15.
  */
 public class LMSdkServiceImpl implements LMSdkService {
-    public String install(String linkedMeKey, String hardwareId, String isHardwareIdReal, String adTrackingEnabled, String brand,
-                          String carrier, String iOSBundleId, String isReferable, String os, String osVersion,
-                          String appVersion, String sdk, String update, String uriScheme, String iOSTeamId,
-                          String universalLinkUrl, String spotlightIdentifier, String latVal, String wifi, String hasNFC,
-                          String hasTelephone, String bluetooth, String screenDpi, String screenHeight, String screenWidth,
-                          String retryNumber, String ip, String sessionId, String debug) {
+
+
+    public String install(LMInstallParams lmInstallParams) {
         String result = null;
 
-        //hardware_id equals identify_id, and identify_id and link_click_id are in the redis
+        try {
 
-        //browser_fingerprint_id equals device_fingerprint_id
+            //hardware_id equals identify_id, and identify_id and link_click_id are in the redis
 
-        //add the info into mysql
+            //browser_fingerprint_id equals device_fingerprint_id
 
-        //log
+            //add the info into mysql
+
+        } catch(Exception e) {
+            //error log
+            ApiLogger.error("");
+            throw new LMException(LMExceptionFactor.LM_FAILURE_DB_OP, this.getClass().getName() + ".install");
+
+        }
+
+        //info log
+        ApiLogger.info("");
+
 
         return result;
     }
 
-    public String open(String linkedMeKey, String identifyId, String deviceFingerprintId, String adTrackingEnabled, String linkIdentifier,
-                       String isReferable, String os, String osVersion, String appVersion, String sdk,
-                       String update, String uriScheme, String iOSBundleId, String iOSTeamId, String spotlightIdentifier,
-                       String universalLinkUrl, String latVal, String retryNumber, String debug) {
+    public String open(LMOpenParams lmOpenParams) {
         String result = null;
 
-        //get the linkIdentifier by redis
+        try {
 
-        //add the info into mysql
+            //get the linkIdentifier by redis
 
-        //log
+            //add the info into mysql
+
+        } catch(Exception e) {
+            //error log
+            ApiLogger.error("");
+            throw new LMException(LMExceptionFactor.LM_FAILURE_DB_OP, this.getClass().getName() + ".open");
+
+        }
+
+        //info log
+        ApiLogger.info("");
 
         return result;
     }
 
-    public String close(String linkedMeKey, String identifyId, String deviceFingerprintId, String sdk, String sessionId,
-                        String retryNumber) {
+    public String close(LMCloseParams lmCloseParams) {
 
         String result = null;
 
-        int timestamp = TimeUtils.getTimestamp();
+        try {
 
-        //add this into mysql
+            //add this into mysql
 
-        //log
+        } catch(Exception e) {
+            //error log
+            ApiLogger.error("");
+            throw new LMException(LMExceptionFactor.LM_FAILURE_DB_OP, this.getClass().getName() + ".close");
+
+        }
+
+        //info log
+        ApiLogger.info("");
 
         return result;
     }
 
-    public String url(String linkedMeKey, String identifyId, String deviceFingerprintId, String type, String tags,
-                      String channel, String feature, String stage, String alias, String sdk,
-                      String data, String update, String source, String deepLinkPath, String duration,
-                      String sessionId, String retryNumber, String debug) {
+    public String url(LMUrlParams lmUrlParams) {
         String result = null;
 
-        //generate a link by parameters
+        try {
 
-        //add this into the redis
+            //generate a link by parameters
 
-        //log
+            //add this into the redis
+
+        } catch(Exception e) {
+            //error log
+            ApiLogger.error("");
+            throw new LMException(LMExceptionFactor.LM_FAILURE_DB_OP, this.getClass().getName() + ".url");
+
+        }
+
+        //info log
+        ApiLogger.info("");
 
         return result;
     }
@@ -73,7 +108,19 @@ public class LMSdkServiceImpl implements LMSdkService {
     public String preInstall(String linkClickId) {
         String result = null;
 
-        //set identify_id for browser,
+        try {
+
+            //set identify_id for browser,
+
+        } catch(Exception e) {
+            //error log
+            ApiLogger.error("");
+            throw new LMException(LMExceptionFactor.LM_FAILURE_DB_OP, this.getClass().getName() + ".preInstall");
+        }
+
+        //info log
+        ApiLogger.info("");
+
 
         return result;
     }
