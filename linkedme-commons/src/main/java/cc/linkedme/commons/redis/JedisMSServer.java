@@ -24,15 +24,15 @@ import cc.linkedme.commons.redis.clients.jedis.exceptions.JedisException;
  *         <p>
  *         <pre>
  *
- *                                                                 JedisMSServer 与 JedisPort的关系是组装会更好，但是因为上层应用已经是普遍是注入JedisPort，而非JedisClient（JedisPort实现的接口）,
- *                                                                 为避免太多变动，所以本次暂时不改这个地方，待上线稳定后，再来一次全面修改 fishermen 2012.9.10
+ *                                                                         JedisMSServer 与 JedisPort的关系是组装会更好，但是因为上层应用已经是普遍是注入JedisPort，而非JedisClient（JedisPort实现的接口）,
+ *                                                                         为避免太多变动，所以本次暂时不改这个地方，待上线稳定后，再来一次全面修改 fishermen 2012.9.10
  *
- *                                                                 (1) master 写，而slave只读。
- *                                                                 (2) 写的时候只写master，无论什么情况都不写slave，而读的时候，优先读slave，slave不可用的时候读master。
- *                                                                 (3) 再提供方法 如， hgetFromMaster等，优先读取master（主要解决的事master slave的同步延迟场景无法适应cas的问题，比如有些场景是get,process,set，这些场景直接通过get master 能够拿到比较实时的结果）
- *                                                                 (4) master是必设的，如果没有，那么init的时候直接报错，不让加载成功。如果想把slave配置成master而不想可写的话，通过setMaster(slaveServer), setReadOnly(true)。而无论什么情况,slave.setReadonly(true)，不受readonly的影响。
+ *                                                                         (1) master 写，而slave只读。
+ *                                                                         (2) 写的时候只写master，无论什么情况都不写slave，而读的时候，优先读slave，slave不可用的时候读master。
+ *                                                                         (3) 再提供方法 如， hgetFromMaster等，优先读取master（主要解决的事master slave的同步延迟场景无法适应cas的问题，比如有些场景是get,process,set，这些场景直接通过get master 能够拿到比较实时的结果）
+ *                                                                         (4) master是必设的，如果没有，那么init的时候直接报错，不让加载成功。如果想把slave配置成master而不想可写的话，通过setMaster(slaveServer), setReadOnly(true)。而无论什么情况,slave.setReadonly(true)，不受readonly的影响。
  *
- *                                                                 </pre>
+ *                                                                         </pre>
  */
 public class JedisMSServer extends JedisPort {
 

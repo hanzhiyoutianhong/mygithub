@@ -23,10 +23,8 @@
             <map>
                 <entry key="0" value-ref="jedisClient_0"/>
                 <entry key="1" value-ref="jedisClient_1"/>
-                <!--
                 <entry key="2" value-ref="jedisClient_2"/>
                 <entry key="3" value-ref="jedisClient_3"/>
-                -->
             </map>
         </constructor-arg>
     </bean>
@@ -35,12 +33,12 @@
           init-method="init">
         <property name="masterConfig">
             <bean parent="jedisPoolConfig">
-                <property name="serverPortDb" value="192.168.21.242:6379"></property>
+                <property name="serverPortDb" value="123.57.140.107:6379"></property>
             </bean>
         </property>
         <property name="slaveConfig">
             <bean parent="jedisPoolConfig">
-                <property name="serverPortDb" value="192.168.21.242:6379"></property>
+                <property name="serverPortDb" value="123.57.140.107:6380"></property>
             </bean>
         </property>
     </bean>
@@ -48,26 +46,25 @@
           init-method="init">
         <property name="masterConfig">
             <bean parent="jedisPoolConfig">
-                <property name="serverPortDb" value="192.168.21.242:6380"></property>
+                <property name="serverPortDb" value="123.57.140.107:6379"></property>
             </bean>
         </property>
         <property name="slaveConfig">
             <bean parent="jedisPoolConfig">
-                <property name="serverPortDb" value="192.168.21.242:6380"></property>
+                <property name="serverPortDb" value="123.57.140.107:6380"></property>
             </bean>
         </property>
     </bean>
-    <!-- jedis Client_2 and Client_3 stopping
     <bean id="jedisClient_2" class="cc.linkedme.commons.redis.JedisMSServer"
           init-method="init">
         <property name="masterConfig">
             <bean parent="jedisPoolConfig">
-                <property name="serverPortDb" value="10.75.5.44:11967"></property>
+                <property name="serverPortDb" value="123.57.140.107:6379"></property>
             </bean>
         </property>
         <property name="slaveConfig">
             <bean parent="jedisPoolConfig">
-                <property name="serverPortDb" value="10.75.5.44:11967"></property>
+                <property name="serverPortDb" value="123.57.140.107:6380"></property>
             </bean>
         </property>
     </bean>
@@ -75,17 +72,16 @@
           init-method="init">
         <property name="masterConfig">
             <bean parent="jedisPoolConfig">
-                <property name="serverPortDb" value="10.75.5.44:11968"></property>
+                <property name="serverPortDb" value="123.57.140.107:6379"></property>
             </bean>
         </property>
         <property name="slaveConfig">
             <bean parent="jedisPoolConfig">
-                <property name="serverPortDb" value="10.75.5.44:11968"></property>
+                <property name="serverPortDb" value="123.57.140.107:6380"></property>
             </bean>
         </property>
     </bean>
 
-    -->
 
     <bean id="jedisPoolConfig" class="cc.linkedme.commons.redis.RedisConfig"
           abstract="true">
