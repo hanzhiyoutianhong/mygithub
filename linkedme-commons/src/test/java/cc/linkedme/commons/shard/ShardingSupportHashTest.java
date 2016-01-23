@@ -17,7 +17,7 @@ public class ShardingSupportHashTest {
         ctx.start();
         System.out.println("context init sucess!");
         sh = (ShardingSupportHash<JedisPort>) ctx.getBean("mgetShardingSupport");
-        key = "abcd";
+        key = "abcde2";
         id = 12345L;
     }
 

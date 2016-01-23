@@ -71,10 +71,10 @@ public class LMSdkResources {
         httpSession.setMaxInactiveInterval(1);  //set expire time
         String sessionId = httpSession.getId().substring(8, 24);
 
-        LMInstallParams lmInstallParams = new LMInstallParams(linkedMeKey, debug, retryNumber, hardwareId, googleAdvertisingId,
-                                                                isHardwareIdReal, adTrackingEnabled, brand, carrier, iOSBundleId,
-                                                                isReferable, os, osVersion, appVersion, sdk,
-                                                                update, uriScheme, iOSTeamId, universalLinkUrl, spotlightIdentifier,
+        LMInstallParams lmInstallParams = new LMInstallParams(linkedMeKey, sdk, debug, retryNumber, hardwareId,
+                                                                googleAdvertisingId, isHardwareIdReal, adTrackingEnabled, brand, carrier,
+                                                                iOSBundleId, isReferable, os, osVersion, appVersion,
+                                                                update,  uriScheme, iOSTeamId, universalLinkUrl, spotlightIdentifier,
                                                                 latVal, wifi, hasNfc, hasTelephone, bluetooth,
                                                                 screenDpi, screenHeight, screenWidth);
         String result = lmSdkService.install(lmInstallParams);
@@ -104,9 +104,9 @@ public class LMSdkResources {
                        @FormParam("retry_number") String retryNumber,
                        @FormParam("debug") String debug) {;
 
-        LMOpenParams lmOpenParams = new LMOpenParams(linkedMeKey, retryNumber, debug, identifyId, deviceFingerprintId,
-                                                        adTrackingEnabled, linkIdentifier, isReferable, os, osVersion,
-                                                        appVersion, sdk, update, uriScheme, iOSBundleId,
+        LMOpenParams lmOpenParams = new LMOpenParams(linkedMeKey, sdk, retryNumber, debug, identifyId,
+                                                        deviceFingerprintId, adTrackingEnabled, linkIdentifier, isReferable, os,
+                                                        osVersion, appVersion, update, uriScheme, iOSBundleId,
                                                         iOSTeamId, spotlightIdentifier, universalLinkUrl, latVal);
 
         String result = lmSdkService.open(lmOpenParams);
@@ -130,8 +130,8 @@ public class LMSdkResources {
 
         }
 
-        LMCloseParams lmCloseParams = new LMCloseParams(linkedMeKey, retryNumber, null, identifyId, deviceFingerprintId, sdk, sessionId);
-
+        LMCloseParams lmCloseParams = new LMCloseParams(linkedMeKey, sdk, retryNumber, null, identifyId,
+                                                            deviceFingerprintId, sessionId);
         String result = lmSdkService.close(lmCloseParams);
         return result;
     }
@@ -158,7 +158,10 @@ public class LMSdkResources {
                       @FormParam("retry_number") String retryNumber,
                       @FormParam("debug") String debug) {
 
-        LMUrlParams lmUrlParams = new LMUrlParams(linkedMeKey, retryNumber, debug, identifyId, deviceFingerprintId, type, tags, channel, feature, stage, alias, sdk, data, update, source, deepLinkPath, duration, sessionId);
+        LMUrlParams lmUrlParams = new LMUrlParams(linkedMeKey, sdk, retryNumber, debug, identifyId,
+                                                    deviceFingerprintId, type, tags, channel, feature,
+                                                    stage, alias, data, update, source,
+                                                    deepLinkPath, duration, sessionId);
 
         String result = lmSdkService.url(lmUrlParams);
         return result;

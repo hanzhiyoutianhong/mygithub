@@ -1,7 +1,5 @@
 package cc.linkedme.common.params;
 
-import cc.linkedme.common.params.LMBaseParams;
-
 /**
  * Created by LinkedME00 on 16/1/20.
  */
@@ -15,7 +13,6 @@ public class LMOpenParams extends LMBaseParams {
     public String os;
     public String osVersion;
     public String appVersion;
-    public String sdk;
     public String update;
     public String uriScheme;
     public String iOSBundleId;
@@ -28,7 +25,10 @@ public class LMOpenParams extends LMBaseParams {
      * construction function
      */
 
-    public LMOpenParams(String linkedMeKey, String retryNumber, String debug, String identifyId, String deviceFingerprintId, String adTrackingEnabled, String linkIdentifier, String isReferable, String os, String osVersion, String appVersion, String sdk, String update, String uriScheme, String iOSBundleId, String iOSTeamId, String spotlightIdentifier, String universalLinkUrl, String latVal) {
+    public LMOpenParams(String linkedMeKey, String sdk, String retryNumber, String debug, String identifyId,
+                        String deviceFingerprintId, String adTrackingEnabled, String linkIdentifier, String isReferable, String os,
+                        String osVersion, String appVersion, String update, String uriScheme, String iOSBundleId,
+                        String iOSTeamId, String spotlightIdentifier, String universalLinkUrl, String latVal) {
         super(linkedMeKey, sdk, retryNumber, debug);
         this.identifyId = identifyId;
         this.deviceFingerprintId = deviceFingerprintId;
@@ -38,7 +38,6 @@ public class LMOpenParams extends LMBaseParams {
         this.os = os;
         this.osVersion = osVersion;
         this.appVersion = appVersion;
-        this.sdk = sdk;
         this.update = update;
         this.uriScheme = uriScheme;
         this.iOSBundleId = iOSBundleId;
@@ -114,14 +113,6 @@ public class LMOpenParams extends LMBaseParams {
 
     public void setAppVersion(String appVersion) {
         this.appVersion = appVersion;
-    }
-
-    public String getSdk() {
-        return sdk;
-    }
-
-    public void setSdk(String sdk) {
-        this.sdk = sdk;
     }
 
     public String getUpdate() {

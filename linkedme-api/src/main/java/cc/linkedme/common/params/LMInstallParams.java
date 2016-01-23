@@ -1,7 +1,5 @@
 package cc.linkedme.common.params;
 
-import cc.linkedme.common.params.LMBaseParams;
-
 /**
  * Created by LinkedME00 on 16/1/20.
  */
@@ -17,7 +15,6 @@ public class LMInstallParams extends LMBaseParams {
     public String os;
     public String osVersion;
     public String appVersion;
-    public String sdk;
     public String update;
     public String uriScheme;
     public String iOSTeamId;
@@ -36,7 +33,12 @@ public class LMInstallParams extends LMBaseParams {
      * construction function
      */
 
-    public LMInstallParams(String linkedMeKey, String debug, String retryNumber, String hardwareId, String googleAdvertisingId, String isHardwareIdReal, String adTrackingEnabled, String brand, String carrier, String iOSBundleId, String isReferable, String os, String osVersion, String appVersion, String sdk, String update, String uriScheme, String iOSTeamId, String universalLinkUrl, String spotlightIdentifier, String latVal, String wifi, String hasNfc, String hasTelephone, String bluetooth, String screenDpi, String screenHeight, String screenWidth) {
+    public LMInstallParams(String linkedMeKey, String sdk, String debug, String retryNumber, String hardwareId,
+                           String googleAdvertisingId, String isHardwareIdReal, String adTrackingEnabled, String brand, String carrier,
+                           String iOSBundleId, String isReferable, String os, String osVersion, String appVersion,
+                           String update, String uriScheme, String iOSTeamId, String universalLinkUrl, String spotlightIdentifier,
+                           String latVal, String wifi, String hasNfc, String hasTelephone, String bluetooth,
+                           String screenDpi, String screenHeight, String screenWidth) {
         super(linkedMeKey, sdk, debug, retryNumber);
         this.hardwareId = hardwareId;
         this.googleAdvertisingId = googleAdvertisingId;
@@ -49,7 +51,6 @@ public class LMInstallParams extends LMBaseParams {
         this.os = os;
         this.osVersion = osVersion;
         this.appVersion = appVersion;
-        this.sdk = sdk;
         this.update = update;
         this.uriScheme = uriScheme;
         this.iOSTeamId = iOSTeamId;
@@ -68,7 +69,6 @@ public class LMInstallParams extends LMBaseParams {
     /**
      * get and set function
      */
-
     public String getHardwareId() {
         return hardwareId;
     }
@@ -155,14 +155,6 @@ public class LMInstallParams extends LMBaseParams {
 
     public void setAppVersion(String appVersion) {
         this.appVersion = appVersion;
-    }
-
-    public String getSdk() {
-        return sdk;
-    }
-
-    public void setSdk(String sdk) {
-        this.sdk = sdk;
     }
 
     public String getUpdate() {
