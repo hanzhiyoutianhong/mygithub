@@ -1,7 +1,5 @@
 package cc.linkedme.common.params;
 
-import cc.linkedme.common.params.LMBaseParams;
-
 /**
  * Created by LinkedME00 on 16/1/20.
  */
@@ -16,7 +14,6 @@ public class LMUrlParams extends LMBaseParams {
     public String feature;
     public String stage;
     public String alias;
-    public String sdk;
     public String data;
     public String update;
     public String source;
@@ -28,7 +25,10 @@ public class LMUrlParams extends LMBaseParams {
      * construction function
      */
 
-    public LMUrlParams(String linkedMeKey, String retryNumber, String debug, String identifyId, String deviceFingerprintId, String type, String tags, String channel, String feature, String stage, String alias, String sdk, String data, String update, String source, String deepLinkPath, String duration, String sessionId) {
+    public LMUrlParams(String linkedMeKey, String sdk, String retryNumber, String debug, String identifyId,
+                       String deviceFingerprintId, String type, String tags, String channel, String feature,
+                       String stage, String alias, String data, String update, String source,
+                       String deepLinkPath, String duration, String sessionId) {
         super(linkedMeKey, sdk, retryNumber, debug);
         this.identifyId = identifyId;
         this.deviceFingerprintId = deviceFingerprintId;
@@ -38,7 +38,6 @@ public class LMUrlParams extends LMBaseParams {
         this.feature = feature;
         this.stage = stage;
         this.alias = alias;
-        this.sdk = sdk;
         this.data = data;
         this.update = update;
         this.source = source;
@@ -113,14 +112,6 @@ public class LMUrlParams extends LMBaseParams {
 
     public void setAlias(String alias) {
         this.alias = alias;
-    }
-
-    public String getSdk() {
-        return sdk;
-    }
-
-    public void setSdk(String sdk) {
-        this.sdk = sdk;
     }
 
     public String getData() {

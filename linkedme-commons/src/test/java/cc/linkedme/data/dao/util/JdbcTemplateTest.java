@@ -1,7 +1,5 @@
 package cc.linkedme.data.dao.util;
 
-import static org.junit.Assert.*;
-
 import org.junit.Test;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
 
