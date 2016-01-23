@@ -12,7 +12,7 @@ public class ShardingSupportHashTest {
     private static long id;
 
     static {
-        ClassPathXmlApplicationContext ctx = new ClassPathXmlApplicationContext(new String[] {"classpath:spring/redis.xml"});
+        ClassPathXmlApplicationContext ctx = new ClassPathXmlApplicationContext(new String[]{"classpath:spring/redis.xml"});
 //        ApplicationContext app = new ClassPathXmlApplicationContext("classpath:spring/redis.xml");
         ctx.start();
         System.out.println("context init sucess!");

@@ -40,7 +40,7 @@
             <value>false</value>
         </property>
         <property name="acquireRetryAttempts">
-            <value>30</value>
+            <value>10</value>
         </property>
         <property name="acquireRetryDelay">
             <value>1000</value>
@@ -56,60 +56,56 @@
         </property>
     </bean>
 
-    <wfc:mysql id="datasources_comment_0_m" parent="dataSource" strategy="master">
+    <wfc:mysql id="datasources_test_0_m" parent="dataSource"
+               strategy="master">
         <property name="jdbcUrl">
             <value>${master_0.jdbcUrl}</value>
         </property>
     </wfc:mysql>
-    <wfc:mysql id="datasources_comment_0_s" parent="dataSource" strategy="slave">
+    <wfc:mysql id="datasources_test_0_s" parent="dataSource"
+               strategy="slave">
         <property name="jdbcUrl">
             <value>${slave_0.jdbcUrl}</value>
         </property>
     </wfc:mysql>
-    
-    <bean id="xxxDao" class="cc.linkedme.xxx.xxxDaoImpl">
-		<property name="tableContainer">
-			<bean class="cc.linkedme.data.dao.strategy.TableContainer">
-				<property name="tablesItems">
-					<map>
-						<entry key="comment" value-ref="comment" />
-					</map>
-				</property>
-			</bean>
-		</property>
-	</bean>
-	
-	<bean id="comment" class="cc.linkedme.data.dao.strategy.TableItem">
-		<property name="itemName" value="comment" />
-		<property name="dbNamePrefix" value="comment" />
-		<property name="dbCount" value="32" />
-		<property name="tableNamePrefix" value="comment" />
-		<property name="tableNamePostFix" value="yymmdd" /> <!-- 默认是索引 -->
-		<property name="tableCount" value="1" />            <!-- 这个参数和tableNamePostFix有关系，如果是日期就不用了。 -->
-		<property name="sqls">
-			<map>
-				<entry key="GET_CONTENT" value="select id, content from $db$.$tb$ where id=?" />
-				<entry key="GET_CONTENTS" value="select id, content from $db$.$tb$ where id in " />
-				<entry key="SAVE_CONTENT" value="insert into $db$.$tb$ (id, content) values(?, ?)" />
-				<entry key="UPDATE_CONTENT" value="update $db$.$tb$ set content=? where id=?" />
-			</map>
-		</property>
-		<property name="jdbcTemplates">
-			<list>
-				<ref bean="comment_jdbctemplate_0" />
-			</list>
-		</property>
-	</bean>
-	
-	<bean id="comment_jdbctemplate_0" class="cc.linkedme.data.dao.util.JdbcTemplate">
-		<property name="dataSource">
-			<ref bean="datasources_comment_0_m" />
-		</property>
-		<property name="dataSourceSlaves">
-			<list>
-				<ref bean="datasources_comment_0_s" />
-			</list>
-		</property>
-	</bean>
-	
+
+    <bean id="tableContainer" class="com.wrshine.data.dao.strategy.TableContainer">
+        <property name="tablesItems">
+            <map>
+                <entry key="test" value-ref="test"/>
+            </map>
+        </property>
+    </bean>
+
+    <bean id="test" class="com.wrshine.data.dao.strategy.TableItem">
+        <property name="itemName" value="user_info"/>
+        <property name="dbNamePrefix" value="test"/>
+        <property name="dbCount" value="1"/>
+        <property name="tableNamePrefix" value="user_info"/>
+        <property name="tableCount" value="1"/>
+        <property name="sqls">
+            <map>
+                <entry key="ADD_USER" value="insert into $db$.$tb$ (name, age) values(?,?)"/>
+                <entry key="GET_USER" value="select name, age from $db$.$tb$ where name=?"/>
+                <entry key="DELETE_USER" value="delete from $db$.$tb$ where name=? and age=?"/>
+            </map>
+        </property>
+        <property name="jdbcTemplates">
+            <list>
+                <ref bean="test_jdbctemplate_0"/>
+            </list>
+        </property>
+    </bean>
+
+    <bean id="test_jdbctemplate_0" class="com.wrshine.data.dao.util.JdbcTemplate">
+        <property name="dataSource">
+            <ref bean="datasources_test_0_m"/>
+        </property>
+        <property name="dataSourceSlaves">
+            <list>
+                <ref bean="datasources_test_0_s"/>
+            </list>
+        </property>
+    </bean>
+
 </beans>
