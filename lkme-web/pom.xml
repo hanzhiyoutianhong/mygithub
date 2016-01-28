@@ -1,27 +1,35 @@
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-                             xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
-            <parent>
-                <artifactId>linkedme</artifactId>
-                <groupId>cc.linkedme</groupId>
-                <version>0.0.1-SNAPSHOT</version>
-            </parent>
-            <modelVersion>4.0.0</modelVersion>
-            <artifactId>lkme-web</artifactId>
-            <packaging>war</packaging>
-            <name>lkme-web</name>
-            <url>http://maven.apache.org</url>
+<project
+        xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 
-            <dependencies>
-                <dependency>
-                    <groupId>cc.linkedme</groupId>
-                    <artifactId>linkedme-commons</artifactId>
-                    <version>0.0.1-SNAPSHOT</version>
-                </dependency>
+    <parent>
+        <artifactId>linkedme</artifactId>
+        <groupId>cc.linkedme</groupId>
+        <version>0.0.1-SNAPSHOT</version>
+    </parent>
 
+    <modelVersion>4.0.0</modelVersion>
+    <artifactId>lkme-web</artifactId>
+    <packaging>war</packaging>
+    <name>lkme-web</name>
+    <url>http://maven.apache.org</url>
 
-                <dependency>
+    <dependencies>
+        <dependency>
+            <groupId>cc.linkedme</groupId>
+            <artifactId>linkedme-commons</artifactId>
+            <version>0.0.1-SNAPSHOT</version>
+        </dependency>
 
-                <groupId>com.sun.jersey.contribs</groupId>
+        <dependency>
+            <groupId>com.sun.jersey</groupId>
+            <artifactId>jersey-server</artifactId>
+            <version>${jersey.version}</version>
+        </dependency>
+
+        <dependency>
+
+            <groupId>com.sun.jersey.contribs</groupId>
             <artifactId>jersey-multipart</artifactId>
             <version>${jersey.version}</version>
         </dependency>
