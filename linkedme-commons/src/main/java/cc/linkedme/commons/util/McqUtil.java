@@ -5,9 +5,9 @@ import java.util.concurrent.atomic.AtomicInteger;
 import com.wrshine.commons.log.ApiLogger;
 
 public class McqUtil {
-    
+
     public static AtomicInteger processorId = new AtomicInteger(0);
-    
+
     /**
      * 系统是否启动成功，启动成功方可开始处理消息
      */
@@ -24,7 +24,7 @@ public class McqUtil {
             while (!systemInitSuccess && total++ < 90) {
                 safeSleep(2000); // sleep 1s
                 msg = new StringBuilder(64).append(mcqProcessName + " wait for system init! systemInitSuccess:")
-                                .append(systemInitSuccess).append("\tcount:").append(total).toString();
+                        .append(systemInitSuccess).append("\tcount:").append(total).toString();
                 ApiLogger.info(msg);
                 System.out.println(msg);
             }
@@ -33,11 +33,11 @@ public class McqUtil {
             ApiLogger.error("Error:when waitForInit", e);
         }
     }
-    
-    public static void safeSleep(int millis){
+
+    public static void safeSleep(int millis) {
         try {
             Thread.sleep(millis);
-        } catch (InterruptedException e) {          
+        } catch (InterruptedException e) {
         }
     }
 
@@ -47,5 +47,5 @@ public class McqUtil {
     public static void setSystemInitSuccess() {
         systemInitSuccess = true;
     }
-    
+
 }

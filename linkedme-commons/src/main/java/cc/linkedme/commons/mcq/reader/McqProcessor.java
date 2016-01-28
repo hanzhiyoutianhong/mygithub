@@ -31,7 +31,6 @@ public abstract class McqProcessor implements StartReadingAble {
     private Map<String, Boolean> stopClient = new ConcurrentHashMap<String, Boolean>();
 
 
-
     private static final String OPENAPI_MCQ_WRITE_KEY = "openapi_bj";
 
     protected Map<String, List<VikaCacheClient>> mcqReaders;
@@ -79,7 +78,6 @@ public abstract class McqProcessor implements StartReadingAble {
 
         startExtWork();
     }
-
 
 
     protected void writeMsgForApi(String msg) {
@@ -183,7 +181,8 @@ public abstract class McqProcessor implements StartReadingAble {
         }
     }
 
-    protected void startExtWork() {}
+    protected void startExtWork() {
+    }
 
     protected abstract String getRawReadKey();
 
@@ -368,11 +367,9 @@ public abstract class McqProcessor implements StartReadingAble {
     }
 
 
-
     public ReaderMcqClientList getReaderMcqClientList() {
         return readerMcqClientList;
     }
-
 
 
     public void setReaderMcqClientList(ReaderMcqClientList readerMcqClientList) {
@@ -442,7 +439,6 @@ public abstract class McqProcessor implements StartReadingAble {
     }
 
     /**
-     * 
      * @param serverPort
      * @param client
      */

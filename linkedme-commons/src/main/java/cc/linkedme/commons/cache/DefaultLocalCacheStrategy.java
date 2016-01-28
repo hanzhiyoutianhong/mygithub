@@ -2,9 +2,9 @@
  * $RCSfile$
  * $Revision: $
  * $Date: $
- *
+ * <p>
  * Copyright (C) 2005-2008 Jive Software. All rights reserved.
- *
+ * <p>
  * This software is published under the terms of the GNU Public License (GPL),
  * a copy of which is included in this distribution, or a commercial license
  * agreement with Jive.
@@ -44,7 +44,7 @@ public class DefaultLocalCacheStrategy implements CacheFactoryStrategy {
     public void stopCluster() {
     }
 
-	public Cache createCache(String name) {
+    public Cache createCache(String name) {
         // Get cache configuration from system properties or default (hardcoded) values
         long maxSize = CacheFactory.getMaxCacheSize(name);
         long lifetime = CacheFactory.getMaxCacheLifetime(name);
@@ -85,28 +85,27 @@ public class DefaultLocalCacheStrategy implements CacheFactoryStrategy {
             lockKey = ((String) key).intern();
         }
 
-		return new LocalLock(lockKey);
+        return new LocalLock(lockKey);
     }
 
-	private void acquireLock(Object key) {
-		ReentrantLock lock = lookupLockForAcquire(key);
-		lock.lock();
-	}
+    private void acquireLock(Object key) {
+        ReentrantLock lock = lookupLockForAcquire(key);
+        lock.lock();
+    }
 
-	private void releaseLock(Object key) {
-		ReentrantLock lock = lookupLockForRelease(key);
-		lock.unlock();
-	}
+    private void releaseLock(Object key) {
+        ReentrantLock lock = lookupLockForRelease(key);
+        lock.unlock();
+    }
 
-	private ReentrantLock lookupLockForAcquire(Object key) {
-        synchronized(key) {
+    private ReentrantLock lookupLockForAcquire(Object key) {
+        synchronized (key) {
             LockAndCount lac = locks.get(key);
             if (lac == null) {
                 lac = new LockAndCount(new ReentrantLock());
                 lac.count = 1;
                 locks.put(key, lac);
-            }
-            else {
+            } else {
                 lac.count++;
             }
 
@@ -114,8 +113,8 @@ public class DefaultLocalCacheStrategy implements CacheFactoryStrategy {
         }
     }
 
-	private ReentrantLock lookupLockForRelease(Object key) {
-        synchronized(key) {
+    private ReentrantLock lookupLockForRelease(Object key) {
+        synchronized (key) {
             LockAndCount lac = locks.get(key);
             if (lac == null) {
                 throw new IllegalStateException("No lock found for object " + key);
@@ -123,8 +122,7 @@ public class DefaultLocalCacheStrategy implements CacheFactoryStrategy {
 
             if (lac.count <= 1) {
                 locks.remove(key);
-            }
-            else {
+            } else {
                 lac.count--;
             }
 
@@ -134,37 +132,37 @@ public class DefaultLocalCacheStrategy implements CacheFactoryStrategy {
 
 
     private class LocalLock implements Lock {
-		private final Object key;
+        private final Object key;
 
-		LocalLock(Object key) {
-			this.key = key;
-		}
+        LocalLock(Object key) {
+            this.key = key;
+        }
 
-		public void lock(){
-			acquireLock(key);
-		}
+        public void lock() {
+            acquireLock(key);
+        }
 
-		public void	unlock() {
-			releaseLock(key);
-		}
+        public void unlock() {
+            releaseLock(key);
+        }
 
-        public void	lockInterruptibly(){
-			throw new UnsupportedOperationException();
-		}
+        public void lockInterruptibly() {
+            throw new UnsupportedOperationException();
+        }
 
-		public Condition newCondition(){
-			throw new UnsupportedOperationException();
-		}
+        public Condition newCondition() {
+            throw new UnsupportedOperationException();
+        }
 
-		public boolean 	tryLock() {
-			throw new UnsupportedOperationException();
-		}
+        public boolean tryLock() {
+            throw new UnsupportedOperationException();
+        }
 
-		public boolean 	tryLock(long time, TimeUnit unit) {
-			throw new UnsupportedOperationException();
-		}
+        public boolean tryLock(long time, TimeUnit unit) {
+            throw new UnsupportedOperationException();
+        }
 
-	}
+    }
 
     private static class LockAndCount {
         final ReentrantLock lock;

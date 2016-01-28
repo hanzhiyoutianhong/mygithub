@@ -2,9 +2,9 @@
  * $RCSfile$
  * $Revision$
  * $Date$
- *
+ * <p>
  * Copyright (C) 2004-2008 Jive Software. All rights reserved.
- *
+ * <p>
  * This software is published under the terms of the GNU Public License (GPL),
  * a copy of which is included in this distribution, or a commercial license
  * agreement with Jive.
@@ -19,23 +19,23 @@ package com.wrshine.commons.cache;
  * interface, which allows the cache to determine object size much more quickly.
  * These restrictions allow a cache to never grow larger than a specified number
  * of bytes and to optionally be distributed over a cluster of servers.<p>
- *
+ * <p>
  * If the cache does grow too large, objects will be removed such that those
  * that are accessed least frequently are removed first. Because expiration
  * happens automatically, the cache makes <b>no</b> gaurantee as to how long
  * an object will remain in cache after it is put in.<p>
- *
+ * <p>
  * Optionally, a maximum lifetime for all objects can be specified. In that
  * case, objects will be deleted from cache after that amount of time, even
  * if they are frequently accessed. This feature is useful if objects put in
  * cache represent data that should be periodically refreshed; for example,
  * information from a database.<p>
- *
+ * <p>
  * All cache operations are thread safe.<p>
  *
  * @see Cacheable
  */
-public interface Cache<K,V> extends java.util.Map<K,V> {
+public interface Cache<K, V> extends java.util.Map<K, V> {
 
     /**
      * Returns the name of the cache.
@@ -103,7 +103,7 @@ public interface Cache<K,V> extends java.util.Map<K,V> {
      * Returns the number of cache hits. A cache hit occurs every
      * time the get method is called and the cache contains the requested
      * object.<p>
-     *
+     * <p>
      * Keeping track of cache hits and misses lets one measure how efficient
      * the cache is; the higher the percentage of hits, the more efficient.
      *
@@ -115,7 +115,7 @@ public interface Cache<K,V> extends java.util.Map<K,V> {
      * Returns the number of cache misses. A cache miss occurs every
      * time the get method is called and the cache does not contain the
      * requested object.<p>
-     *
+     * <p>
      * Keeping track of cache hits and misses lets one measure how efficient
      * the cache is; the higher the percentage of hits, the more efficient.
      *

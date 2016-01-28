@@ -2,9 +2,9 @@
  * $RCSfile$
  * $Revision$
  * $Date$
- *
+ * <p>
  * Copyright (C) 2004-2008 Jive Software. All rights reserved.
- *
+ * <p>
  * This software is published under the terms of the GNU Public License (GPL),
  * a copy of which is included in this distribution, or a commercial license
  * agreement with Jive.

@@ -4,7 +4,6 @@ import java.util.concurrent.atomic.AtomicBoolean;
 
 /**
  * Mcq Base Manager
- * 
  */
 public class McqBaseManager {
 
@@ -12,7 +11,7 @@ public class McqBaseManager {
      * 是否从队列读取消息
      */
     public static AtomicBoolean IS_ALL_READ = new AtomicBoolean(true);
-    
+
     /**
      * 停止所有队列读取消息
      */
@@ -33,5 +32,5 @@ public class McqBaseManager {
         sb.append(IS_ALL_READ.get());
         return sb.toString();
     }
-    
+
 }

@@ -83,10 +83,10 @@ public class MemCacheTemplate<T> implements CacheAble<T> {
     private TraceableThreadExecutor updateL1CacheExecutor;
 
     public void init() {
-        if (asyncWriteL1 || asyncWriteExtL1){
+        if (asyncWriteL1 || asyncWriteExtL1) {
             updateL1CacheExecutor = new TraceableThreadExecutor(1, 1, 0L, TimeUnit.MILLISECONDS,
                     new LinkedBlockingQueue<Runnable>(300), new ThreadPoolExecutor.DiscardPolicy());
-            if (master != null){
+            if (master != null) {
                 StatLog.registerExecutor("updateL1CacheExecutor_" + master.toString().split(",")[0].split(":")[1], updateL1CacheExecutor);
             }
         }
@@ -110,7 +110,7 @@ public class MemCacheTemplate<T> implements CacheAble<T> {
 
         if (value != null) {
 
-            ApiLogger.info("get cache  key:"+key +"  success");
+            ApiLogger.info("get cache  key:" + key + "  success");
 
             return value;
         }
@@ -262,7 +262,7 @@ public class MemCacheTemplate<T> implements CacheAble<T> {
     }
 
     @Override
-    public boolean set(final String key,final T value, Date expdate) {
+    public boolean set(final String key, final T value, Date expdate) {
         if (expdate != null && expdate.getTime() > maxLowerExpireDate.getTime() && expdate.getTime() < maxUpperExpireDate.getTime()) {
             ApiLogger.warn("MemCacheTemplate set invalid expdate, expdate'minute:" + (expdate.getTime() / 1000 / 60) + ", so use maxLowerExpire:" + maxLowerExpire);
             expdate = maxLowerExpireDate;
@@ -339,14 +339,14 @@ public class MemCacheTemplate<T> implements CacheAble<T> {
         boolean result = true;
         if (mcList != null) {
             for (final MemcacheClient client : mcList) {
-                if (async && updateL1CacheExecutor != null){
+                if (async && updateL1CacheExecutor != null) {
                     updateL1CacheExecutor.execute(new Runnable() {
                         @Override
                         public void run() {
                             set(key, value, expdate, client);
                         }
                     });
-                }else {
+                } else {
                     boolean success = set(key, value, expdate, client);
                     if (success == false) {
                         result = false;
@@ -375,14 +375,14 @@ public class MemCacheTemplate<T> implements CacheAble<T> {
                 if (get(key, client) == null) { // not IfExist 
                     continue;
                 }
-                if (async && updateL1CacheExecutor != null){
+                if (async && updateL1CacheExecutor != null) {
                     updateL1CacheExecutor.execute(new Runnable() {
                         @Override
                         public void run() {
                             set(key, value, expdate, client);
                         }
                     });
-                }else {
+                } else {
                     boolean success = set(key, value, expdate, client);
                     if (success == false) {
                         result = false;
@@ -455,14 +455,14 @@ public class MemCacheTemplate<T> implements CacheAble<T> {
         boolean result = true;
         if (mcList != null) {
             for (final MemcacheClient client : mcList) {
-                if (async && updateL1CacheExecutor != null){
+                if (async && updateL1CacheExecutor != null) {
                     updateL1CacheExecutor.execute(new Runnable() {
                         @Override
                         public void run() {
                             client.delete(key);
                         }
                     });
-                }else {
+                } else {
                     boolean success = client.delete(key);
                     if (success == false) {
                         result = false;
@@ -663,7 +663,7 @@ public class MemCacheTemplate<T> implements CacheAble<T> {
                 .getSwitcherManagerFactory().getSwitcherManager()
                 .registerSwitcher(switchName, false);
 
-        ApiLogger.info("create SWITCH :"+CLIENT_GLOBAL_HOT_SWITCHER +"  switchName:"+switchName);
+        ApiLogger.info("create SWITCH :" + CLIENT_GLOBAL_HOT_SWITCHER + "  switchName:" + switchName);
     }
 
     public void setAsyncWriteL1(boolean asyncWriteL1) {
@@ -720,7 +720,7 @@ public class MemCacheTemplate<T> implements CacheAble<T> {
 
                 localCache = CacheFactory.createCache(switchName, 2000L);
 
-                ApiLogger.info("create Cache :"+localCache+"  switchName:"+switchName);
+                ApiLogger.info("create Cache :" + localCache + "  switchName:" + switchName);
             }
 
             return true;
@@ -740,7 +740,7 @@ public class MemCacheTemplate<T> implements CacheAble<T> {
 
         if (isHot) {
 
-            ApiLogger.info("get cache  key:"+key +"  hot");
+            ApiLogger.info("get cache  key:" + key + "  hot");
 
             T res = (T) localCache.get(key);
 
@@ -752,12 +752,9 @@ public class MemCacheTemplate<T> implements CacheAble<T> {
     }
 
     /**
-     *
      * @param value
      * @param key
      * @param <T>
-     *
-     *
      */
     private <T> void putLocalCache(T value, String key) {
 
@@ -769,7 +766,7 @@ public class MemCacheTemplate<T> implements CacheAble<T> {
 
             if (null != value) {
 
-                ApiLogger.info("put cache  key:"+key+"  hot");
+                ApiLogger.info("put cache  key:" + key + "  hot");
 
                 localCache.put(key, value);
             }
@@ -778,11 +775,11 @@ public class MemCacheTemplate<T> implements CacheAble<T> {
 
     }
 
-	public boolean isForceWriteAll() {
-		return forceWriteAll;
-	}
+    public boolean isForceWriteAll() {
+        return forceWriteAll;
+    }
 
-	public void setForceWriteAll(boolean forceWriteAll) {
-		this.forceWriteAll = forceWriteAll;
-	}
+    public void setForceWriteAll(boolean forceWriteAll) {
+        this.forceWriteAll = forceWriteAll;
+    }
 }

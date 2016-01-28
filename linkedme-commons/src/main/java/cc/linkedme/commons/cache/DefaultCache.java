@@ -2,9 +2,9 @@
  * $RCSfile$
  * $Revision: 3144 $
  * $Date: 2005-12-01 14:20:11 -0300 (Thu, 01 Dec 2005) $
- *
+ * <p>
  * Copyright (C) 2004-2008 Jive Software. All rights reserved.
- *
+ * <p>
  * This software is published under the terms of the GNU Public License (GPL),
  * a copy of which is included in this distribution, or a commercial license
  * agreement with Jive.
@@ -26,7 +26,7 @@ import org.apache.log4j.Logger;
  * they were originally added to cache. When objects are added to cache, they
  * are first wrapped by a CacheObject which maintains the following pieces
  * of information:<ul>
- *
+ * <p>
  * <li> The size of the object (in bytes).
  * <li> A pointer to the node in the linked list that maintains accessed
  * order for the object. Keeping a reference to the node lets us avoid
@@ -34,7 +34,7 @@ import org.apache.log4j.Logger;
  * <li> A pointer to the node in the linked list that maintains the age
  * of the object in cache. Keeping a reference to the node lets us avoid
  * linear scans of the linked list.</ul><p>
- *
+ * <p>
  * To get an object from cache, a hash lookup is performed to get a reference
  * to the CacheObject that wraps the real object we are looking for.
  * The object is subsequently moved to the front of the accessed linked list
@@ -43,10 +43,10 @@ import org.apache.log4j.Logger;
  *
  * @author Matt Tucker
  */
-@SuppressWarnings({"unchecked","rawtypes"})
+@SuppressWarnings({"unchecked", "rawtypes"})
 public class DefaultCache<K, V> implements Cache<K, V> {
 
-	private static Logger log = Logger.getLogger("warn");
+    private static Logger log = Logger.getLogger("warn");
     /**
      * The map the keys and values are stored in.
      */
@@ -83,7 +83,7 @@ public class DefaultCache<K, V> implements Cache<K, V> {
      * Maintain the number of cache hits and misses. A cache hit occurs every
      * time the get method is called and the cache contains the requested
      * object. A cache miss represents the opposite occurence.<p>
-     *
+     * <p>
      * Keeping track of cache hits and misses lets one measure how efficient
      * the cache is; the higher the percentage of hits, the more efficient.
      */
@@ -98,11 +98,11 @@ public class DefaultCache<K, V> implements Cache<K, V> {
      * Create a new default cache and specify the maximum size of for the cache in
      * bytes, and the maximum lifetime of objects.
      *
-     * @param name a name for the cache.
-     * @param maxSize the maximum size of the cache in bytes. -1 means the cache
-     *      has no max size.
+     * @param name        a name for the cache.
+     * @param maxSize     the maximum size of the cache in bytes. -1 means the cache
+     *                    has no max size.
      * @param maxLifetime the maximum amount of time objects can exist in
-     *      cache before being deleted. -1 means objects never expire.
+     *                    cache before being deleted. -1 means objects never expire.
      */
     public DefaultCache(String name, long maxSize, long maxLifetime) {
         this.name = name;
@@ -196,26 +196,26 @@ public class DefaultCache<K, V> implements Cache<K, V> {
     }
 
     public synchronized void removeLast(int count) {
-    	for (int i = 0; i < 10; i++) {
-	    	Object key = lastAccessedList.getLast().object;
-	        DefaultCache.CacheObject<V> cacheObject = map.get(key);
-	        // If the object is not in cache, stop trying to remove it.
-	        if (cacheObject == null) {
-	            return;
-	        }
-	        // remove from the hash map
-	        map.remove(key);
-	        // remove from the cache order list
-	        cacheObject.lastAccessedListNode.remove();
-	        cacheObject.ageListNode.remove();
-	        // remove references to linked list nodes
-	        cacheObject.ageListNode = null;
-	        cacheObject.lastAccessedListNode = null;
-	        // removed the object, so subtract its size from the total.
-	        cacheSize -= cacheObject.size;
-    	}
+        for (int i = 0; i < 10; i++) {
+            Object key = lastAccessedList.getLast().object;
+            DefaultCache.CacheObject<V> cacheObject = map.get(key);
+            // If the object is not in cache, stop trying to remove it.
+            if (cacheObject == null) {
+                return;
+            }
+            // remove from the hash map
+            map.remove(key);
+            // remove from the cache order list
+            cacheObject.lastAccessedListNode.remove();
+            cacheObject.ageListNode.remove();
+            // remove references to linked list nodes
+            cacheObject.ageListNode = null;
+            cacheObject.lastAccessedListNode = null;
+            // removed the object, so subtract its size from the total.
+            cacheSize -= cacheObject.size;
+        }
     }
-    
+
     public synchronized void clear() {
         Object[] keys = map.keySet().toArray();
         for (int i = 0; i < keys.length; i++) {
@@ -261,7 +261,7 @@ public class DefaultCache<K, V> implements Cache<K, V> {
      * Wraps a cached object collection to return a view of its inner objects
      */
     @SuppressWarnings("hiding")
-	private final class CacheObjectCollection<V> implements Collection<V> {
+    private final class CacheObjectCollection<V> implements Collection<V> {
         private Collection<DefaultCache.CacheObject<V>> cachedObjects;
 
         private CacheObjectCollection(Collection<DefaultCache.CacheObject<V>> cachedObjects) {
@@ -295,15 +295,14 @@ public class DefaultCache<K, V> implements Cache<K, V> {
                 }
 
                 public V next() {
-                    if(it.hasNext()) {
+                    if (it.hasNext()) {
                         DefaultCache.CacheObject<V> object = it.next();
-                        if(object == null) {
+                        if (object == null) {
                             return null;
                         } else {
                             return object.object;
                         }
-                    }
-                    else {
+                    } else {
                         throw new NoSuchElementException();
                     }
                 }
@@ -324,7 +323,7 @@ public class DefaultCache<K, V> implements Cache<K, V> {
             return array;
         }
 
-		public <V>V[] toArray(V[] a) {
+        public <V> V[] toArray(V[] a) {
             Iterator<V> it = (Iterator<V>) iterator();
             int i = 0;
             while (it.hasNext()) {
@@ -335,8 +334,8 @@ public class DefaultCache<K, V> implements Cache<K, V> {
 
         public boolean containsAll(Collection<?> c) {
             Iterator<?> it = c.iterator();
-            while(it.hasNext()) {
-                if(!contains(it.next())) {
+            while (it.hasNext()) {
+                if (!contains(it.next())) {
                     return false;
                 }
             }
@@ -377,7 +376,7 @@ public class DefaultCache<K, V> implements Cache<K, V> {
     }
 
     public void putAll(Map<? extends K, ? extends V> map) {
-        for (Iterator<? extends K> i = map.keySet().iterator(); i.hasNext();) {
+        for (Iterator<? extends K> i = map.keySet().iterator(); i.hasNext(); ) {
             K key = i.next();
             V value = map.get(key);
             put(key, value);
@@ -389,14 +388,14 @@ public class DefaultCache<K, V> implements Cache<K, V> {
         // maximum defined age.
         deleteExpiredEntries();
 
-        if(value == null) {
+        if (value == null) {
             return containsNullValue();
         }
 
         Iterator<V> it = values().iterator();
-        while(it.hasNext()) {
-            if(value.equals(it.next())) {
-                 return true;
+        while (it.hasNext()) {
+            if (value.equals(it.next())) {
+                return true;
             }
         }
         return false;
@@ -404,8 +403,8 @@ public class DefaultCache<K, V> implements Cache<K, V> {
 
     private boolean containsNullValue() {
         Iterator<V> it = values().iterator();
-        while(it.hasNext()) {
-            if(it.next() == null) {
+        while (it.hasNext()) {
+            if (it.next() == null) {
                 return true;
             }
         }
@@ -459,7 +458,7 @@ public class DefaultCache<K, V> implements Cache<K, V> {
      * Returns the number of cache hits. A cache hit occurs every
      * time the get method is called and the cache contains the requested
      * object.<p>
-     *
+     * <p>
      * Keeping track of cache hits and misses lets one measure how efficient
      * the cache is; the higher the percentage of hits, the more efficient.
      *
@@ -473,7 +472,7 @@ public class DefaultCache<K, V> implements Cache<K, V> {
      * Returns the number of cache misses. A cache miss occurs every
      * time the get method is called and the cache does not contain the
      * requested object.<p>
-     *
+     * <p>
      * Keeping track of cache hits and misses lets one measure how efficient
      * the cache is; the higher the percentage of hits, the more efficient.
      *
@@ -555,27 +554,22 @@ public class DefaultCache<K, V> implements Cache<K, V> {
     private int calculateSize(Object object) {
         // If the object is Cacheable, ask it its size.
         if (object instanceof Cacheable) {
-            return ((Cacheable)object).getCachedSize();
+            return ((Cacheable) object).getCachedSize();
         }
         // Check for other common types of objects put into cache.
         else if (object instanceof String) {
-            return CacheSizes.sizeOfString((String)object);
-        }
-        else if (object instanceof Long) {
+            return CacheSizes.sizeOfString((String) object);
+        } else if (object instanceof Long) {
             return CacheSizes.sizeOfLong();
-        }
-        else if (object instanceof Integer) {
+        } else if (object instanceof Integer) {
             return CacheSizes.sizeOfObject() + CacheSizes.sizeOfInt();
-        }
-        else if (object instanceof Boolean) {
+        } else if (object instanceof Boolean) {
             return CacheSizes.sizeOfObject() + CacheSizes.sizeOfBoolean();
-        }
-        else if (object instanceof long[]) {
-            long[] array = (long[])object;
+        } else if (object instanceof long[]) {
+            long[] array = (long[]) object;
             return CacheSizes.sizeOfObject() + array.length * CacheSizes.sizeOfLong();
-        }
-        else if (object instanceof byte[]) {
-            byte [] array = (byte[])object;
+        } else if (object instanceof byte[]) {
+            byte[] array = (byte[]) object;
             return CacheSizes.sizeOfObject() + array.length;
         }
         // Default behavior -- serialize the object to determine its size.
@@ -587,11 +581,10 @@ public class DefaultCache<K, V> implements Cache<K, V> {
                 ObjectOutputStream outObj = new ObjectOutputStream(out);
                 outObj.writeObject(object);
                 size = out.size();
-                if(null != outObj){
-                	outObj.close();
+                if (null != outObj) {
+                    outObj.close();
                 }
-            }
-            catch (IOException ioe) {
+            } catch (IOException ioe) {
                 log.error(ioe);
             }
             return size;
@@ -650,24 +643,24 @@ public class DefaultCache<K, V> implements Cache<K, V> {
 
         // See if the cache size is within 3% of being too big. If so, clean out
         // cache until it's 10% free.
-        int desiredSize = (int)(maxCacheSize * .97);
+        int desiredSize = (int) (maxCacheSize * .97);
         if (cacheSize >= desiredSize) {
             // First, delete any old entries to see how much memory that frees.
             deleteExpiredEntries();
-            desiredSize = (int)(maxCacheSize * .90);
+            desiredSize = (int) (maxCacheSize * .90);
             if (cacheSize > desiredSize) {
                 long t = System.currentTimeMillis();
                 do {
                     // Get the key and invoke the remove method on it.
                     // remove(lastAccessedList.getLast().object);
-                	// tim: shrink more items one time, change remove(object) to remove(count)
+                    // tim: shrink more items one time, change remove(object) to remove(count)
                     removeLast(100);
                 } while (cacheSize > desiredSize);
                 t = System.currentTimeMillis() - t;
                 if (t > 100)
-                	log.warn("Local cache " + name + " was full, shrinked to 90% in " + t + "ms.");
+                    log.warn("Local cache " + name + " was full, shrinked to 90% in " + t + "ms.");
             }
-        }        
+        }
     }
 
     /**
@@ -709,7 +702,7 @@ public class DefaultCache<K, V> implements Cache<K, V> {
          * A count of the number of times the object has been read from cache.
          */
         @SuppressWarnings("unused")
-		public int readCount = 0;
+        public int readCount = 0;
 
         /**
          * Creates a new cache object wrapper. The size of the Cacheable object

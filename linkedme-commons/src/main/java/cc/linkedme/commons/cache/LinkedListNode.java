@@ -2,9 +2,9 @@
  * $RCSfile$
  * $Revision$
  * $Date$
- *
+ * <p>
  * Copyright (C) 2004-2008 Jive Software. All rights reserved.
- *
+ * <p>
  * This software is published under the terms of the GNU Public License (GPL),
  * a copy of which is included in this distribution, or a commercial license
  * agreement with Jive.
@@ -16,12 +16,12 @@ package com.wrshine.commons.cache;
  * Doubly linked node in a LinkedList. Most LinkedList implementations keep the
  * equivalent of this class private. We make it public so that references
  * to each node in the list can be maintained externally.
- * <p/>
+ * <p>
  * Exposing this class lets us make remove operations very fast. Remove is
  * built into this class and only requires two reference reassignments. If
  * remove existed in the main LinkedList class, a linear scan would have to
  * be performed to find the correct node to delete.
- * <p/>
+ * <p>
  * The linked list implementation was specifically written for the Jive
  * cache system. While it can be used as a general purpose linked list, for
  * most applications, it is more suitable to use the linked list that is part
@@ -41,7 +41,7 @@ public class LinkedListNode {
      * maintains a timestamp of when a Cacheable object was first added to
      * cache. Timestamps are stored as long values and represent the number
      * of milleseconds passed since January 1, 1970 00:00:00.000 GMT.<p>
-     * <p/>
+     * <p>
      * The creation timestamp is used in the case that the cache has a
      * maximum lifetime set. In that case, when
      * [current time] - [creation time] > [max lifetime], the object will be

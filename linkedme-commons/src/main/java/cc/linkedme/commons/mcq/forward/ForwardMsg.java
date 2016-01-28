@@ -13,18 +13,23 @@ public class ForwardMsg {
     public String getType() {
         return type;
     }
+
     public String getMsg() {
         return msg;
     }
+
     public long getFlag() {
         return flag;
     }
+
     public void setType(String type) {
         this.type = type;
     }
+
     public void setMsg(String msg) {
         this.msg = msg;
     }
+
     public void setFlag(long flag) {
         this.flag = flag;
     }

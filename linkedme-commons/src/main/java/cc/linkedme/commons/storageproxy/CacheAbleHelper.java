@@ -40,6 +40,7 @@ public abstract class CacheAbleHelper<V> implements CacheAble<V> {
 
     /**
      * 统计监控的名称
+     *
      * @return
      */
     protected abstract String getMonitorName();

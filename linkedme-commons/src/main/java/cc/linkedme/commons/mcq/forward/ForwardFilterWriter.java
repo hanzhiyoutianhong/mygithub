@@ -15,6 +15,7 @@ public class ForwardFilterWriter implements BaseWriter {
     public void writeMsg(String msg) {
         writer.writeMsg(msg);
     }
+
     @Override
     public void writeMsg(long hashKey, String msg) {
         writer.writeMsg(hashKey, msg);
@@ -24,11 +25,12 @@ public class ForwardFilterWriter implements BaseWriter {
     public void writeMsg(byte[] msg) {
         writer.writeMsg(msg);
     }
+
     @Override
     public void writeMsg(long hashKey, byte[] msg) {
         writer.writeMsg(hashKey, msg);
     }
-    
+
     public boolean needForward(long flag) {
         return filter.needForward(flag);
     }
@@ -36,12 +38,15 @@ public class ForwardFilterWriter implements BaseWriter {
     public BaseWriter getWriter() {
         return writer;
     }
+
     public ForwardFilter getFilter() {
         return filter;
     }
+
     public void setWriter(BaseWriter writer) {
         this.writer = writer;
     }
+
     public void setFilter(ForwardFilter filter) {
         this.filter = filter;
     }

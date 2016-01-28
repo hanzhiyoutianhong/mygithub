@@ -18,7 +18,6 @@ import com.wrshine.commons.thread.TraceableThreadExecutor;
 import com.wrshine.commons.util.Constants;
 
 /**
- * 
  * cache set backe 进行并行化处理，队列中最多放10000个批回写任务，超过则丢
  *
  * @version V1.0 created at: 2011-6-27 下午06:34:45
@@ -28,23 +27,23 @@ public class StorageProxyHelper<T> {
     public static Switcher dirtyCacheSwitcher = SwitcherManagerFactoryLoader.getSwitcherManagerFactory().getSwitcherManager().getSwitcher("feature.status.cache.dirty");
 
     public static ThreadPoolExecutor proxyPool = new TraceableThreadExecutor(48, 48, 0L, TimeUnit.MILLISECONDS, new LinkedBlockingQueue<Runnable>(), new AbortPolicy());
-    
+
     private static int MAX_COUNT_IN_QUEUE = 10000;
-    
+
     private static SwitcherManager swManager;
-    
-    private static Switcher dirtyDataWriteSwitcher; 
-    
-    static{
+
+    private static Switcher dirtyDataWriteSwitcher;
+
+    static {
         StatLog.registerExecutor("store_proxy_pool", proxyPool);
         swManager = SwitcherManagerFactoryLoader.getSwitcherManagerFactory().getSwitcherManager();
         dirtyDataWriteSwitcher = swManager.registerSwitcher("feature.storageproxy.dirtydata.writeback", false);
     }
-    
+
 
     @SuppressWarnings("unchecked")
-    public static Future<Boolean> submit(StorageAble storage, Map<String, ? extends Object> kvs){
-        if(proxyPool.getQueue().size() < MAX_COUNT_IN_QUEUE){
+    public static Future<Boolean> submit(StorageAble storage, Map<String, ? extends Object> kvs) {
+        if (proxyPool.getQueue().size() < MAX_COUNT_IN_QUEUE) {
             ProxyRecacheTask task = new ProxyRecacheTask(storage, kvs);
             return proxyPool.submit(task);
         }
@@ -52,9 +51,9 @@ public class StorageProxyHelper<T> {
         ApiLogger.warn("Stop cache values which are from db to cache");
         return null;
     }
-    
-    public static Future<Boolean> submit(StorageAble preferStorage, Map<String, ? extends Object> kvs, String[] leftKeys, StorageAble backupStorage){
-        if(proxyPool.getQueue().size() < MAX_COUNT_IN_QUEUE){
+
+    public static Future<Boolean> submit(StorageAble preferStorage, Map<String, ? extends Object> kvs, String[] leftKeys, StorageAble backupStorage) {
+        if (proxyPool.getQueue().size() < MAX_COUNT_IN_QUEUE) {
             ProxyRecacheTask task = new ProxyRecacheTask(preferStorage, kvs, leftKeys, backupStorage);
             return proxyPool.submit(task);
         }
@@ -62,40 +61,40 @@ public class StorageProxyHelper<T> {
         ApiLogger.warn("Stop cache values which are from db to cache");
         return null;
     }
-    
-    
-    private static class ProxyRecacheTask<T> implements Callable<Boolean>{
+
+
+    private static class ProxyRecacheTask<T> implements Callable<Boolean> {
         private StorageAble<T> preferStorage;
         private Map<String, T> kvs;
         private String[] leftKeys;
         private StorageAble<T> backupStorage;
-        
-        private ProxyRecacheTask(StorageAble<T> storage, Map<String, T> kvs){
+
+        private ProxyRecacheTask(StorageAble<T> storage, Map<String, T> kvs) {
             this.preferStorage = storage;
             this.kvs = kvs;
         }
-        
-        private ProxyRecacheTask(StorageAble<T> storage, Map<String, T> kvs, String[] leftKeys, StorageAble<T> backupStorage){
+
+        private ProxyRecacheTask(StorageAble<T> storage, Map<String, T> kvs, String[] leftKeys, StorageAble<T> backupStorage) {
             this.preferStorage = storage;
             this.kvs = kvs;
             this.leftKeys = leftKeys;
             this.backupStorage = backupStorage;
         }
-        
+
         @Override
         public Boolean call() throws Exception {
             Map<String, T> values2 = null;
-            if(leftKeys != null && backupStorage != null){
+            if (leftKeys != null && backupStorage != null) {
                 values2 = backupStorage.getMulti(leftKeys);
-                if(values2 != null){
+                if (values2 != null) {
                     kvs.putAll(values2);
                 }
             }
-            
-            for(Map.Entry<String, T> entry: kvs.entrySet()){
+
+            for (Map.Entry<String, T> entry : kvs.entrySet()) {
                 String key = entry.getKey();
                 T value = entry.getValue();
-                if(value != null){
+                if (value != null) {
                     boolean isDirty = false;
                     boolean isContentMissed = false;
                     boolean isUserTypeMissed = false;
@@ -113,7 +112,7 @@ public class StorageProxyHelper<T> {
 //                        isContentMissed = MetaItemPBUtil.isContentMissed(item);
 //                        isUserTypeMissed = MetaItemPBUtil.isUserTypeMissed(item);
 //                      }
-                    }
+                }
 //                    if((isContentMissed || isUserTypeMissed) && dirtyDataWriteSwitcher.isClose()){
 //                        continue;
 //                    } else if (isDirty && dirtyCacheSwitcher.isOpen()) {

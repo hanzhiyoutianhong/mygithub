@@ -2,9 +2,9 @@
  * $RCSfile$
  * $Revision: 3144 $
  * $Date: 2005-12-01 14:20:11 -0300 (Thu, 01 Dec 2005) $
- *
+ * <p>
  * Copyright (C) 2004-2008 Jive Software. All rights reserved.
- *
+ * <p>
  * This software is published under the terms of the GNU Public License (GPL),
  * a copy of which is included in this distribution, or a commercial license
  * agreement with Jive.
@@ -25,7 +25,7 @@ public interface CacheFactoryStrategy {
     /**
      * Returns true if the cluster has been started. When running in local
      * mode a true value should be returned.<p>
-     *
+     * <p>
      * An error should be logged when the cluster fails to be started.
      *
      * @return true if the cluster has been started.
@@ -80,7 +80,7 @@ public interface CacheFactoryStrategy {
      * @return the maximum number of cluster members allowed or 0 if clustering is not allowed.
      */
     int getMaxClusterNodes();
-    
+
     /**
      * Returns a byte[] that uniquely identifies this senior cluster member or <tt>null</tt>
      * when not in a cluster.
@@ -97,21 +97,21 @@ public interface CacheFactoryStrategy {
      */
     byte[] getClusterMemberID();
 
- 
+
     /**
      * Updates the statistics of the specified caches and publishes them into
      * a cache for statistics. The statistics cache is already known to the application
      * but this could change in the future (?). When not in cluster mode then
      * do nothing.<p>
-     *
+     * <p>
      * The statistics cache must contain a long array of 5 positions for each cache
      * with the following content:
      * <ol>
-     *  <li>cache.getCacheSize()</li>
-     *  <li>cache.getMaxCacheSize()</li>
-     *  <li>cache.size()</li>
-     *  <li>cache.getCacheHits()</li>
-     *  <li>cache.getCacheMisses()</li>
+     * <li>cache.getCacheSize()</li>
+     * <li>cache.getMaxCacheSize()</li>
+     * <li>cache.size()</li>
+     * <li>cache.getCacheHits()</li>
+     * <li>cache.getCacheMisses()</li>
      * </ol>
      *
      * @param caches caches to get their stats and publish them in a statistics cache.
@@ -124,7 +124,7 @@ public interface CacheFactoryStrategy {
      * the server is running on cluster mode or not. When not running as part of a cluster then
      * the lock will be unrelated to the cache and will only be visible in this JVM.
      *
-     * @param key the object that defines the visibility or scope of the lock.
+     * @param key   the object that defines the visibility or scope of the lock.
      * @param cache the cache used for holding the lock.
      * @return an existing lock on the specified key or creates a new one if none was found.
      */

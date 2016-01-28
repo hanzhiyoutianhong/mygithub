@@ -2,9 +2,9 @@
  * $RCSfile$
  * $Revision$
  * $Date$
- *
+ * <p>
  * Copyright (C) 2004-2008 Jive Software. All rights reserved.
- *
+ * <p>
  * This software is published under the terms of the GNU Public License (GPL),
  * a copy of which is included in this distribution, or a commercial license
  * agreement with Jive.
@@ -19,7 +19,7 @@ import java.util.Collection;
  * Utility class for determining the sizes in bytes of commonly used objects.
  * Classes implementing the Cacheable interface should use this class to
  * determine their size.
- * length: Length(reference) + Length(object/primaryData) 
+ * length: Length(reference) + Length(object/primaryData)
  *
  * @author Matt Tucker
  */
@@ -33,7 +33,7 @@ public class CacheSizes {
      */
     public static int sizeOfObject() {
         //return 4;
-    	return 12;
+        return 12;
     }
 
     /**
@@ -102,7 +102,7 @@ public class CacheSizes {
      */
     public static int sizeOfDate() {
         //return 12;
-    	return 20;
+        return 20;
     }
 
     /**
@@ -121,12 +121,12 @@ public class CacheSizes {
         // Add in size of each value
         Object[] values = map.values().toArray();
         for (int i = 0; i < values.length; i++) {
-            size += sizeOfString((String)values[i]);
+            size += sizeOfString((String) values[i]);
         }
         Object[] keys = map.keySet().toArray();
         // Add in each key
         for (int i = 0; i < keys.length; i++) {
-            size += sizeOfString((String)keys[i]);
+            size += sizeOfString((String) keys[i]);
         }
         return size;
     }
@@ -149,13 +149,11 @@ public class CacheSizes {
         for (int i = 0; i < values.length; i++) {
             Object obj = values[i];
             if (obj instanceof String) {
-                size += sizeOfString((String)obj);
-            }
-            else if (obj instanceof Long) {
+                size += sizeOfString((String) obj);
+            } else if (obj instanceof Long) {
                 size += sizeOfLong() + sizeOfObject();
-            }
-            else {
-                size += ((Cacheable)obj).getCachedSize();
+            } else {
+                size += ((Cacheable) obj).getCachedSize();
             }
         }
         return size;
