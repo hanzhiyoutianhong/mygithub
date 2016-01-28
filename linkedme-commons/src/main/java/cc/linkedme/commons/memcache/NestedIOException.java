@@ -17,7 +17,7 @@
  * @author Kevin A. Burton <burton@peerfear.org>
  * @version 2.0
  */
-package com.wrshine.commons.memcache;
+package cc.linkedme.commons.memcache;
 
 import java.io.IOException;
 

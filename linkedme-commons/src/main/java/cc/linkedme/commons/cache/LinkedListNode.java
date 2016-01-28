@@ -10,7 +10,7 @@
  * agreement with Jive.
  */
 
-package com.wrshine.commons.cache;
+package cc.linkedme.commons.cache;
 
 /**
  * Doubly linked node in a LinkedList. Most LinkedList implementations keep the

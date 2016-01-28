@@ -1,4 +1,4 @@
-package com.wrshine.commons.storageproxy;
+package cc.linkedme.commons.storageproxy;
 
 import java.util.Arrays;
 import java.util.Date;
@@ -10,14 +10,14 @@ import java.util.Set;
 
 import org.springframework.util.StringUtils;
 
-import com.wrshine.commons.log.ApiLogger;
-import com.wrshine.commons.log.StatLog;
-import com.wrshine.commons.memcache.CasValue;
-import com.wrshine.commons.switcher.Switcher;
-import com.wrshine.commons.switcher.SwitcherManager;
-import com.wrshine.commons.switcher.SwitcherManagerFactoryLoader;
-import com.wrshine.commons.util.Constants;
-import com.wrshine.commons.util.UseTimeStasticsMonitor;
+import cc.linkedme.commons.log.ApiLogger;
+import cc.linkedme.commons.log.StatLog;
+import cc.linkedme.commons.memcache.CasValue;
+import cc.linkedme.commons.switcher.Switcher;
+import cc.linkedme.commons.switcher.SwitcherManager;
+import cc.linkedme.commons.switcher.SwitcherManagerFactoryLoader;
+import cc.linkedme.commons.util.Constants;
+import cc.linkedme.commons.util.UseTimeStasticsMonitor;
 
 public class StorageProxy<T> extends StorageAble<T> {
     private static Switcher dirtyCacheSwitcher;

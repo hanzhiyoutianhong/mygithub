@@ -1,9 +1,9 @@
-package com.wrshine.commons.mcq.forward;
+package cc.linkedme.commons.mcq.forward;
 
 import java.util.List;
 import java.util.Map;
 
-import com.wrshine.commons.log.ApiLogger;
+import cc.linkedme.commons.log.ApiLogger;
 
 public class MsgForwarder {
 

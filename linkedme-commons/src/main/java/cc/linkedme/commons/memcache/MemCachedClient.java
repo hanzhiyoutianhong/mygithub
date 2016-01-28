@@ -1,18 +1,18 @@
 /**
  *
  */
-package com.wrshine.commons.memcache;
+package cc.linkedme.commons.memcache;
 
 import com.google.common.collect.Sets;
-import com.wrshine.commons.client.balancer.util.SystemTimer;
-import com.wrshine.commons.log.ApiLogger;
-import com.wrshine.commons.profile.ProfileType;
-import com.wrshine.commons.profile.ProfileUtil;
-import com.wrshine.commons.switcher.Switcher;
-import com.wrshine.commons.switcher.SwitcherManagerFactoryLoader;
-import com.wrshine.commons.util.QuickLZ;
-import com.wrshine.commons.util.UseTimeStasticsMonitor;
-import com.wrshine.commons.util.Util;
+import cc.linkedme.commons.client.balancer.util.SystemTimer;
+import cc.linkedme.commons.log.ApiLogger;
+import cc.linkedme.commons.profile.ProfileType;
+import cc.linkedme.commons.profile.ProfileUtil;
+import cc.linkedme.commons.switcher.Switcher;
+import cc.linkedme.commons.switcher.SwitcherManagerFactoryLoader;
+import cc.linkedme.commons.util.QuickLZ;
+import cc.linkedme.commons.util.UseTimeStasticsMonitor;
+import cc.linkedme.commons.util.Util;
 
 import org.apache.commons.lang.ArrayUtils;
 import org.apache.log4j.Logger;

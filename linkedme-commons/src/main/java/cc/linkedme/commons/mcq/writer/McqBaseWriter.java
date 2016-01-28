@@ -1,16 +1,16 @@
-package com.wrshine.commons.mcq.writer;
+package cc.linkedme.commons.mcq.writer;
 
 import java.util.List;
 import java.util.Random;
 import java.util.zip.CRC32;
 
-import com.wrshine.commons.json.JsonWrapper;
-import com.wrshine.commons.log.ApiLogger;
-import com.wrshine.commons.log.StatLog;
-import com.wrshine.commons.mcq.BaseWriter;
-import com.wrshine.commons.mcq.CommonConst;
-import com.wrshine.commons.memcache.VikaCacheClient;
-import com.wrshine.commons.util.Util;
+import cc.linkedme.commons.json.JsonWrapper;
+import cc.linkedme.commons.log.ApiLogger;
+import cc.linkedme.commons.log.StatLog;
+import cc.linkedme.commons.mcq.BaseWriter;
+import cc.linkedme.commons.memcache.VikaCacheClient;
+import cc.linkedme.commons.util.Util;
+import cc.linkedme.commons.mcq.CommonConst;
 
 public class McqBaseWriter implements BaseWriter {
 

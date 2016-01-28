@@ -10,7 +10,7 @@
  * agreement with Jive.
  */
 
-package com.wrshine.commons.cache;
+package cc.linkedme.commons.cache;
 
 /**
  * General purpose cache. It stores objects associated with unique keys in

@@ -10,7 +10,7 @@
  * agreement with Jive.
  */
 
-package com.wrshine.commons.cache;
+package cc.linkedme.commons.cache;
 
 /**
  * Interface that defines the necessary behavior for objects added to a Cache.

@@ -1,4 +1,4 @@
-package com.wrshine.commons.util;
+package cc.linkedme.commons.util;
 
 import org.apache.commons.collections.CollectionUtils;
 import org.springframework.util.Assert;

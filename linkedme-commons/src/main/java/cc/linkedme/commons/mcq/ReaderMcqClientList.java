@@ -1,10 +1,10 @@
-package com.wrshine.commons.mcq;
+package cc.linkedme.commons.mcq;
 
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.collections.MapUtils;
 import org.apache.log4j.Logger;
 
-import com.wrshine.commons.memcache.VikaCacheClient;
+import cc.linkedme.commons.memcache.VikaCacheClient;
 
 import java.util.HashMap;
 import java.util.HashSet;

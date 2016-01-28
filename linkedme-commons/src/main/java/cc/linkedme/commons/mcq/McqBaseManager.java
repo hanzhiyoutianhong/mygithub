@@ -1,4 +1,4 @@
-package com.wrshine.commons.mcq;
+package cc.linkedme.commons.mcq;
 
 import java.util.concurrent.atomic.AtomicBoolean;
 

@@ -1,4 +1,4 @@
-package com.wrshine.commons.storageproxy;
+package cc.linkedme.commons.storageproxy;
 
 import java.util.*;
 
@@ -6,10 +6,10 @@ import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang.ArrayUtils;
 import org.apache.commons.lang.StringUtils;
 
-import com.wrshine.commons.memcache.CacheAble;
-import com.wrshine.commons.memcache.CasValue;
-import com.wrshine.commons.util.Constants;
-import com.wrshine.commons.util.UseTimeStasticsMonitor;
+import cc.linkedme.commons.memcache.CacheAble;
+import cc.linkedme.commons.memcache.CasValue;
+import cc.linkedme.commons.util.Constants;
+import cc.linkedme.commons.util.UseTimeStasticsMonitor;
 
 public abstract class CacheAbleHelper<V> implements CacheAble<V> {
     private static final String CacheableHelperMonitor = "CacheableHelperMonitor";

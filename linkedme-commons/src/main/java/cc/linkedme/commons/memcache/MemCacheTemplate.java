@@ -1,7 +1,7 @@
 /**
  *
  */
-package com.wrshine.commons.memcache;
+package cc.linkedme.commons.memcache;
 
 import java.util.ArrayList;
 import java.util.Date;
@@ -13,13 +13,13 @@ import java.util.concurrent.ThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicInteger;
 
-import com.wrshine.commons.cache.CacheFactory;
-import com.wrshine.commons.cache.CacheWrapper;
-import com.wrshine.commons.log.ApiLogger;
-import com.wrshine.commons.log.StatLog;
-import com.wrshine.commons.switcher.Switcher;
-import com.wrshine.commons.switcher.SwitcherManagerFactoryLoader;
-import com.wrshine.commons.thread.TraceableThreadExecutor;
+import cc.linkedme.commons.cache.CacheFactory;
+import cc.linkedme.commons.cache.CacheWrapper;
+import cc.linkedme.commons.log.ApiLogger;
+import cc.linkedme.commons.log.StatLog;
+import cc.linkedme.commons.switcher.Switcher;
+import cc.linkedme.commons.switcher.SwitcherManagerFactoryLoader;
+import cc.linkedme.commons.thread.TraceableThreadExecutor;
 
 /**
  * <b> To get MemCacheTemplate from m-s memcache. </b>

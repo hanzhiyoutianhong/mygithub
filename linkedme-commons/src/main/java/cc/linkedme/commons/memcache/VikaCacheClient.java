@@ -1,12 +1,12 @@
-package com.wrshine.commons.memcache;
+package cc.linkedme.commons.memcache;
 
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.DisposableBean;
 
-import com.wrshine.commons.log.ApiLogger;
-import com.wrshine.commons.util.ResourceInfo;
-import com.wrshine.commons.util.TimeStatUtil;
+import cc.linkedme.commons.log.ApiLogger;
+import cc.linkedme.commons.util.ResourceInfo;
+import cc.linkedme.commons.util.TimeStatUtil;
 
 import java.util.Arrays;
 import java.util.Date;

@@ -1,4 +1,4 @@
-package com.wrshine.commons.storageproxy;
+package cc.linkedme.commons.storageproxy;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -9,13 +9,13 @@ import java.util.concurrent.ThreadPoolExecutor;
 import java.util.concurrent.ThreadPoolExecutor.AbortPolicy;
 import java.util.concurrent.TimeUnit;
 
-import com.wrshine.commons.log.ApiLogger;
-import com.wrshine.commons.log.StatLog;
-import com.wrshine.commons.switcher.Switcher;
-import com.wrshine.commons.switcher.SwitcherManager;
-import com.wrshine.commons.switcher.SwitcherManagerFactoryLoader;
-import com.wrshine.commons.thread.TraceableThreadExecutor;
-import com.wrshine.commons.util.Constants;
+import cc.linkedme.commons.log.ApiLogger;
+import cc.linkedme.commons.log.StatLog;
+import cc.linkedme.commons.switcher.Switcher;
+import cc.linkedme.commons.switcher.SwitcherManager;
+import cc.linkedme.commons.switcher.SwitcherManagerFactoryLoader;
+import cc.linkedme.commons.thread.TraceableThreadExecutor;
+import cc.linkedme.commons.util.Constants;
 
 /**
  * cache set backe 进行并行化处理，队列中最多放10000个批回写任务，超过则丢

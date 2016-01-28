@@ -9,7 +9,7 @@
  * a copy of which is included in this distribution, or a commercial license
  * agreement with Jive.
  */
-package com.wrshine.commons.cache;
+package cc.linkedme.commons.cache;
 
 import java.io.IOException;
 import java.io.ObjectOutputStream;

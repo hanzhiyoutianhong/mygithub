@@ -1,4 +1,4 @@
-package com.wrshine.commons.util;
+package cc.linkedme.commons.util;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -9,9 +9,9 @@ import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicLong;
 
-import com.wrshine.commons.json.JsonBuilder;
-import com.wrshine.commons.log.ApiLogger;
-import com.wrshine.commons.log.LogCollectorFactory;
+import cc.linkedme.commons.json.JsonBuilder;
+import cc.linkedme.commons.log.ApiLogger;
+import cc.linkedme.commons.log.LogCollectorFactory;
 
 /**
  * Cache命中率和访问次数统计类

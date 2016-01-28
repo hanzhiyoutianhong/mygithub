@@ -1,4 +1,4 @@
-package com.wrshine.commons.mcq.reader;
+package cc.linkedme.commons.mcq.reader;
 
 /**
  * startReading 接口。

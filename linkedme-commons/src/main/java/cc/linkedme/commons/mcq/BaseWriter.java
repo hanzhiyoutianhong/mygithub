@@ -1,4 +1,4 @@
-package com.wrshine.commons.mcq;
+package cc.linkedme.commons.mcq;
 
 /**
  * Base Writer(implements mcq or others)

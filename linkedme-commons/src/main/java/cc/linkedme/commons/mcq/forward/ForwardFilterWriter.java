@@ -1,6 +1,6 @@
-package com.wrshine.commons.mcq.forward;
+package cc.linkedme.commons.mcq.forward;
 
-import com.wrshine.commons.mcq.BaseWriter;
+import cc.linkedme.commons.mcq.BaseWriter;
 
 public class ForwardFilterWriter implements BaseWriter {
     private BaseWriter writer;

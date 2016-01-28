@@ -1,16 +1,16 @@
 /**
  *
  */
-package com.wrshine.commons.memcache;
+package cc.linkedme.commons.memcache;
 
 import java.io.IOException;
 import java.net.UnknownHostException;
 import java.nio.channels.SocketChannel;
 
-import com.wrshine.commons.log.ApiLogger;
-import com.wrshine.commons.memcache.SockIOPool.SockIO;
-import com.wrshine.commons.switcher.ResourceSwitcherSupport;
-import com.wrshine.commons.switcher.Switcher;
+import cc.linkedme.commons.log.ApiLogger;
+import cc.linkedme.commons.memcache.SockIOPool.SockIO;
+import cc.linkedme.commons.switcher.ResourceSwitcherSupport;
+import cc.linkedme.commons.switcher.Switcher;
 
 public class SwitcherSupportSockIO extends SockIO {
 

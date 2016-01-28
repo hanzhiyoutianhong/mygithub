@@ -1,4 +1,4 @@
-package com.wrshine.commons.cache;
+package cc.linkedme.commons.cache;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -13,10 +13,10 @@ import java.util.concurrent.locks.ReentrantLock;
 
 import org.apache.commons.lang.StringUtils;
 
-import com.wrshine.commons.log.ApiLogger;
-import com.wrshine.commons.switcher.Switcher;
-import com.wrshine.commons.switcher.SwitcherManager;
-import com.wrshine.commons.switcher.SwitcherManagerFactoryLoader;
+import cc.linkedme.commons.log.ApiLogger;
+import cc.linkedme.commons.switcher.Switcher;
+import cc.linkedme.commons.switcher.SwitcherManager;
+import cc.linkedme.commons.switcher.SwitcherManagerFactoryLoader;
 
 /**
  * 时间片取样统计的localcahe实现

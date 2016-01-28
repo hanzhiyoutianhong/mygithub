@@ -1,7 +1,7 @@
 /**
  *
  */
-package com.wrshine.commons.memcache;
+package cc.linkedme.commons.memcache;
 
 import java.io.BufferedInputStream;
 import java.io.BufferedOutputStream;
@@ -35,8 +35,8 @@ import java.util.zip.CRC32;
 
 import org.apache.log4j.Logger;
 
-import com.wrshine.commons.client.balancer.util.SystemTimer;
-import com.wrshine.commons.log.ApiLogger;
+import cc.linkedme.commons.client.balancer.util.SystemTimer;
+import cc.linkedme.commons.log.ApiLogger;
 
 /**
  * This class is a connection pool for maintaning a pool of persistent

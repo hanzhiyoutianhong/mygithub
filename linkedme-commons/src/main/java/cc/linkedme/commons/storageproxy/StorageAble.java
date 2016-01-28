@@ -1,10 +1,10 @@
-package com.wrshine.commons.storageproxy;
+package cc.linkedme.commons.storageproxy;
 
 import org.apache.commons.lang.ArrayUtils;
 
-import com.wrshine.commons.log.StatLog;
-import com.wrshine.commons.memcache.CasValue;
-import com.wrshine.commons.util.Constants;
+import cc.linkedme.commons.log.StatLog;
+import cc.linkedme.commons.memcache.CasValue;
+import cc.linkedme.commons.util.Constants;
 
 import java.util.Date;
 import java.util.HashMap;

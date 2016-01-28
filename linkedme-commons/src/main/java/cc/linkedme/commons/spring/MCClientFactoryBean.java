@@ -1,12 +1,12 @@
 /**
  *
  */
-package com.wrshine.commons.spring;
+package cc.linkedme.commons.spring;
 
 import org.apache.commons.lang.StringUtils;
 
-import com.wrshine.commons.log.ApiLogger;
-import com.wrshine.commons.memcache.VikaCacheClient;
+import cc.linkedme.commons.log.ApiLogger;
+import cc.linkedme.commons.memcache.VikaCacheClient;
 
 public class MCClientFactoryBean extends CacheableObjectFactoryBean<VikaCacheClient> {
 

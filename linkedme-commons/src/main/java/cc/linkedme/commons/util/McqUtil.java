@@ -1,8 +1,8 @@
-package com.wrshine.commons.util;
+package cc.linkedme.commons.util;
 
 import java.util.concurrent.atomic.AtomicInteger;
 
-import com.wrshine.commons.log.ApiLogger;
+import cc.linkedme.commons.log.ApiLogger;
 
 public class McqUtil {
 

@@ -10,7 +10,7 @@
  * agreement with Jive.
  */
 
-package com.wrshine.commons.cache;
+package cc.linkedme.commons.cache;
 
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;

@@ -1,12 +1,12 @@
-package com.wrshine.commons.mcq;
+package cc.linkedme.commons.mcq;
 
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 import org.springframework.util.Assert;
 
-import com.wrshine.commons.memcache.VikaCacheClient;
-import com.wrshine.commons.util.HostUtils;
+import cc.linkedme.commons.memcache.VikaCacheClient;
+import cc.linkedme.commons.util.HostUtils;
 
 import java.net.UnknownHostException;
 import java.util.ArrayList;

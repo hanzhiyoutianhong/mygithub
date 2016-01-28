@@ -1,4 +1,4 @@
-package com.wrshine.commons.memcache;
+package cc.linkedme.commons.memcache;
 
 import java.util.ArrayList;
 import java.util.Date;
@@ -8,9 +8,9 @@ import java.util.Map;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicInteger;
 
-import com.wrshine.commons.log.ApiLogger;
-import com.wrshine.commons.storageproxy.StorageAble;
-import com.wrshine.commons.util.ApiUtil;
+import cc.linkedme.commons.log.ApiLogger;
+import cc.linkedme.commons.storageproxy.StorageAble;
+import cc.linkedme.commons.util.ApiUtil;
 
 public class MemCacheStorage<T> extends StorageAble<T> implements CacheAble<T> {
 

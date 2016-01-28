@@ -1,4 +1,4 @@
-package com.wrshine.commons.mcq.forward;
+package cc.linkedme.commons.mcq.forward;
 
 public class ForwardMsg {
     private String type;

@@ -1,4 +1,4 @@
-package com.wrshine.commons.util;
+package cc.linkedme.commons.util;
 
 public class QuickLZ {
     // The port is compatible with the C version with following settings:

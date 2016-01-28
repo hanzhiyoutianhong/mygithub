@@ -1,4 +1,4 @@
-package com.wrshine.commons.memcache;
+package cc.linkedme.commons.memcache;
 
 import java.util.Date;
 import java.util.Map;

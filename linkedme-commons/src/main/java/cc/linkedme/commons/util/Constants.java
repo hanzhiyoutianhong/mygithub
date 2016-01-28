@@ -1,4 +1,4 @@
-package com.wrshine.commons.util;
+package cc.linkedme.commons.util;
 
 import java.util.Date;
 import java.util.concurrent.atomic.AtomicLong;

@@ -1,7 +1,7 @@
 /**
  *
  */
-package com.wrshine.commons.spring;
+package cc.linkedme.commons.spring;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -10,9 +10,9 @@ import java.util.List;
 import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.BeanUtils;
 
-import com.wrshine.commons.log.ApiLogger;
-import com.wrshine.commons.memcache.VikaCacheClient;
-import com.wrshine.commons.spring.MCClientFactoryBean.MCConfigStrategy;
+import cc.linkedme.commons.log.ApiLogger;
+import cc.linkedme.commons.memcache.VikaCacheClient;
+import cc.linkedme.commons.spring.MCClientFactoryBean.MCConfigStrategy;
 
 /**
  * 用于将mc端口列表直接转换成mc实例List<br/>

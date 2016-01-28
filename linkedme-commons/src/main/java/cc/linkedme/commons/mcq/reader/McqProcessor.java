@@ -1,19 +1,19 @@
-package com.wrshine.commons.mcq.reader;
+package cc.linkedme.commons.mcq.reader;
 
 import org.apache.commons.collections.MapUtils;
 import org.apache.log4j.Logger;
 
-import com.wrshine.commons.log.ApiLogger;
-import com.wrshine.commons.log.StatLog;
-import com.wrshine.commons.mcq.McqBaseManager;
-import com.wrshine.commons.mcq.ReaderMcqClientList;
-import com.wrshine.commons.mcq.McqClientList.ClientStatus;
-import com.wrshine.commons.mcq.forward.MsgForwarder;
-import com.wrshine.commons.memcache.MemCacheStorage;
-import com.wrshine.commons.memcache.VikaCacheClient;
-import com.wrshine.commons.profile.ProfileType;
-import com.wrshine.commons.profile.ProfileUtil;
-import com.wrshine.commons.util.McqUtil;
+import cc.linkedme.commons.log.ApiLogger;
+import cc.linkedme.commons.log.StatLog;
+import cc.linkedme.commons.mcq.McqBaseManager;
+import cc.linkedme.commons.mcq.ReaderMcqClientList;
+import cc.linkedme.commons.mcq.McqClientList.ClientStatus;
+import cc.linkedme.commons.mcq.forward.MsgForwarder;
+import cc.linkedme.commons.memcache.MemCacheStorage;
+import cc.linkedme.commons.memcache.VikaCacheClient;
+import cc.linkedme.commons.profile.ProfileType;
+import cc.linkedme.commons.profile.ProfileUtil;
+import cc.linkedme.commons.util.McqUtil;
 
 import java.util.ArrayList;
 import java.util.List;
