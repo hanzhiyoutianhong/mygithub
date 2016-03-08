@@ -1,4 +1,4 @@
-package cc.linkedme.common.params;
+package cc.linkedme.data.model.params;
 
 /**
  * Created by LinkedME00 on 16/1/20.
@@ -14,9 +14,9 @@ public class LMCloseParams extends LMBaseParams {
      * construction function
      */
 
-    public LMCloseParams(String linkedMeKey, String sdk, String retryNumber, String debug, String identifyId,
+    public LMCloseParams(String linkedmeKey, String sdkVersion, int retryTimes, int debug, String identifyId,
                          String deviceFingerprintId,  String sessionId) {
-        super(linkedMeKey, sdk, retryNumber, debug);
+        super("", deviceFingerprintId, linkedmeKey, sdkVersion, retryTimes, debug);
         this.identifyId = identifyId;
         this.deviceFingerprintId = deviceFingerprintId;
         this.sessionId = sessionId;

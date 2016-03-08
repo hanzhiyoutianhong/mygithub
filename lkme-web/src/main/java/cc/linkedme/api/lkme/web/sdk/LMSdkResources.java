@@ -1,9 +1,9 @@
 package cc.linkedme.api.lkme.web.sdk;
 
-import cc.linkedme.common.params.LMCloseParams;
-import cc.linkedme.common.params.LMInstallParams;
-import cc.linkedme.common.params.LMOpenParams;
-import cc.linkedme.common.params.LMUrlParams;
+import cc.linkedme.data.model.params.LMCloseParams;
+import cc.linkedme.data.model.params.LMInstallParams;
+import cc.linkedme.data.model.params.LMOpenParams;
+import cc.linkedme.data.model.params.LMUrlParams;
 import cc.linkedme.service.LMSdkService;
 
 import com.google.common.base.Strings;
@@ -102,7 +102,7 @@ public class LMSdkResources {
                        @FormParam("universal_link_url") String universalLinkUrl,
                        @FormParam("lat_val") String latVal,
                        @FormParam("retry_number") String retryNumber,
-                       @FormParam("debug") String debug) {;
+                       @FormParam("debug") String debug) {
 
         LMOpenParams lmOpenParams = new LMOpenParams(linkedMeKey, sdk, retryNumber, debug, identifyId,
                                                         deviceFingerprintId, adTrackingEnabled, linkIdentifier, isReferable, os,
@@ -139,29 +139,24 @@ public class LMSdkResources {
     @Path("/url")
     @POST
     @Produces({MediaType.APPLICATION_JSON})
-    public String url(@FormParam("Linkedme_key") String linkedMeKey,
-                      @FormParam("identity_id") String identifyId,
-                      @QueryParam("device_fingerprint_id") String deviceFingerprintId,
-                      @FormParam("type") String type,
+    public String url(@FormParam("linkedme_key") String linkedmeKey,
+                      @FormParam("identity_id") String identityId,
+                      @FormParam("device_fingerprint_id") String deviceFingerPrintId,
                       @FormParam("tags") String tags,
+                      @FormParam("alias") String alias,
                       @FormParam("channel") String channel,
                       @FormParam("feature") String feature,
                       @FormParam("stage") String stage,
-                      @FormParam("alias") String alias,
-                      @FormParam("sdk") String sdk,
-                      @FormParam("data") String data,
-                      @FormParam("update") String update,
+                      @FormParam("campaign") String campaign,
+                      @FormParam("params") String params,
                       @FormParam("source") String source,
-                      @FormParam("deeplink_path") String deepLinkPath,
-                      @FormParam("duration") String duration,
+                      @FormParam("sdk_version") String sdkVersion,
                       @FormParam("session_id") String sessionId,
-                      @FormParam("retry_number") String retryNumber,
-                      @FormParam("debug") String debug) {
+                      @FormParam("retry_times") int retryTimes,
+                      @FormParam("debug") int debug) {
 
-        LMUrlParams lmUrlParams = new LMUrlParams(linkedMeKey, sdk, retryNumber, debug, identifyId,
-                                                    deviceFingerprintId, type, tags, channel, feature,
-                                                    stage, alias, data, update, source,
-                                                    deepLinkPath, duration, sessionId);
+        LMUrlParams lmUrlParams = new LMUrlParams(linkedmeKey, identityId, deviceFingerPrintId, sdkVersion, retryTimes, debug, tags, alias,
+                channel, feature, stage, campaign, params, source, sessionId);
 
         String result = lmSdkService.url(lmUrlParams);
         return result;

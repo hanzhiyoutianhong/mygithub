@@ -1,9 +1,10 @@
 package cc.linkedme.service;
 
-import cc.linkedme.common.params.LMCloseParams;
-import cc.linkedme.common.params.LMInstallParams;
-import cc.linkedme.common.params.LMOpenParams;
-import cc.linkedme.common.params.LMUrlParams;
+
+import cc.linkedme.data.model.params.LMCloseParams;
+import cc.linkedme.data.model.params.LMInstallParams;
+import cc.linkedme.data.model.params.LMOpenParams;
+import cc.linkedme.data.model.params.LMUrlParams;
 
 /**
  * Created by LinkedME00 on 16/1/15.

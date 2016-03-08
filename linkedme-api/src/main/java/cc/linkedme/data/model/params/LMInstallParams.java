@@ -1,4 +1,4 @@
-package cc.linkedme.common.params;
+package cc.linkedme.data.model.params;
 
 /**
  * Created by LinkedME00 on 16/1/20.

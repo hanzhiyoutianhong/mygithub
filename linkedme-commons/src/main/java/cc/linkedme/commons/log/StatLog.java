@@ -165,9 +165,6 @@ public class StatLog implements Runnable {
 
     /**
      * 判断某个key是否是cache 统计key
-     * 
-     * @param key
-     * @return
      */
     public static boolean isCacheStatkey(String keySuffix) {
         if (keySuffix == null) {
@@ -179,7 +176,6 @@ public class StatLog implements Runnable {
     /**
      * print stat info on the screen, this method will block until total is reached,
      * 
-     * @param total, -1 for infinity
      * @param interval how long (second) to print a stat log
      */
     public static StatLog printStat(long interval) {

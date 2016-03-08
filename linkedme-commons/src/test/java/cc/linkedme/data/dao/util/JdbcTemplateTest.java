@@ -1,7 +1,5 @@
 package cc.linkedme.data.dao.util;
 
-import static org.junit.Assert.*;
-
 import java.sql.ResultSet;
 import java.sql.SQLException;
 

@@ -9,14 +9,16 @@ public class LMException extends RuntimeException {
     private String description;
 
     public LMException(LMExceptionFactor factor) {
-        this.factor = factor;
-        this.description = null;
+        if(factor != null) {
+            this.factor = factor;
+            this.description = factor.getErrorMessageEn();
+        }
     }
 
     public LMException(LMExceptionFactor factor, Object message) {
         this.factor = factor;
         if (message == null) {
-            description = factor.getErrorMessageCn();
+            description = factor.getErrorMessageEn();
         } else {
             description = message.toString();
         }
@@ -41,5 +43,13 @@ public class LMException extends RuntimeException {
 
     public void setDescription(String description) {
         this.description = description;
+    }
+
+    public LMExceptionFactor getFactor() {
+        return factor;
+    }
+
+    public void setFactor(LMExceptionFactor factor) {
+        this.factor = factor;
     }
 }
