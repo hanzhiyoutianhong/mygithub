@@ -9,6 +9,8 @@ public class WfcNamespaceHandler extends NamespaceHandlerSupport {
      */
     @Override
     public void init() {
+        registerBeanDefinitionParser("mc", new WfcDefinitionParser(MCClientFactoryBean.class));
+        registerBeanDefinitionParser("mclist", new WfcDefinitionParser(MCClientListFactoryBean.class));
         registerBeanDefinitionParser("mysql", new WfcDefinitionParser(MysqlClientFactoryBean.class));
     }
 

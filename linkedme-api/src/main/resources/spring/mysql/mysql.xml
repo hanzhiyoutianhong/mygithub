@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:wfc="http://www.springframework.org/schema/wfc"
+       xmlns:context="http://www.springframework.org/schema/context"
+       xsi:schemaLocation="
+       http://www.springframework.org/schema/beans
+       http://www.springframework.org/schema/beans/spring-beans.xsd
+       http://www.springframework.org/schema/context
+       http://www.springframework.org/schema/context/spring-context.xsd
+       http://www.springframework.org/schema/wfc
+       http://www.springframework.org/schema/wfc.xsd ">
+
+    <bean
+        class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">
+        <property name="locations">
+            <list>
+                <value>classpath:jdbc.properties</value>
+            </list>
+        </property>
+    </bean>
+
+    <bean id="dataSource" abstract="true">
+        <property name="driverClass">
+            <value>com.mysql.jdbc.Driver</value>
+        </property>
+        <property name="minPoolSize">
+            <value>${minPoolSize}</value>
+        </property>
+        <property name="maxPoolSize">
+            <value>${maxPoolSize}</value>
+        </property>
+        <property name="idleConnectionTestPeriod">
+            <value>25</value>
+        </property>
+        <property name="maxIdleTime">
+            <value>${maxIdleTime}</value>
+        </property>
+        <property name="breakAfterAcquireFailure">
+            <value>false</value>
+        </property>
+        <property name="acquireRetryAttempts">
+            <value>10</value>
+        </property>
+        <property name="acquireRetryDelay">
+            <value>1000</value>
+        </property>
+        <property name="maxConnectionAge">
+            <value>7200</value>
+        </property>
+        <property name="user">
+            <value>${user}</value>
+        </property>
+        <property name="password">
+            <value>${pwd}</value>
+        </property>
+    </bean>
+
+    <wfc:mysql id="datasources_deeplink_0_m" parent="dataSource"
+               strategy="master">
+        <property name="jdbcUrl" value="${deeplink.datasource.master_0.jdbcUrl}"/>
+    </wfc:mysql>
+    <wfc:mysql id="datasources_deeplink_0_s" parent="dataSource"
+               strategy="slave">
+        <property name="jdbcUrl" value="${deeplink.datasource.slave_0.jdbcUrl}"/>
+    </wfc:mysql>
+
+    <bean id="deeplink_jdbctemplate_0" class="cc.linkedme.data.dao.util.JdbcTemplate">
+        <property name="dataSource">
+            <ref bean="datasources_deeplink_0_m"/>
+        </property>
+        <property name="dataSourceSlaves">
+            <list>
+                <ref bean="datasources_deeplink_0_s"/>
+            </list>
+        </property>
+    </bean>
+
+</beans>

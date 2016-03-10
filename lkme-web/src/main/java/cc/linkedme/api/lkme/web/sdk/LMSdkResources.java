@@ -1,5 +1,6 @@
 package cc.linkedme.api.lkme.web.sdk;
 
+import cc.linkedme.commons.json.JsonBuilder;
 import cc.linkedme.data.model.params.LMCloseParams;
 import cc.linkedme.data.model.params.LMInstallParams;
 import cc.linkedme.data.model.params.LMOpenParams;
@@ -9,6 +10,7 @@ import cc.linkedme.service.LMSdkService;
 import com.google.common.base.Strings;
 import org.springframework.stereotype.Component;
 
+import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 import javax.ws.rs.*;
@@ -19,15 +21,8 @@ import javax.ws.rs.core.MediaType;
 @Component
 public class LMSdkResources {
 
+    @Resource
     private LMSdkService lmSdkService;
-
-    public LMSdkService getLmSdkService() {
-        return lmSdkService;
-    }
-
-    public void setLmSdkService(LMSdkService lmSdkService) {
-        this.lmSdkService = lmSdkService;
-    }
 
     @Path("/install")
     @GET
@@ -71,14 +66,14 @@ public class LMSdkResources {
         httpSession.setMaxInactiveInterval(1);  //set expire time
         String sessionId = httpSession.getId().substring(8, 24);
 
-        LMInstallParams lmInstallParams = new LMInstallParams(linkedMeKey, sdk, debug, retryNumber, hardwareId,
-                                                                googleAdvertisingId, isHardwareIdReal, adTrackingEnabled, brand, carrier,
-                                                                iOSBundleId, isReferable, os, osVersion, appVersion,
-                                                                update,  uriScheme, iOSTeamId, universalLinkUrl, spotlightIdentifier,
-                                                                latVal, wifi, hasNfc, hasTelephone, bluetooth,
-                                                                screenDpi, screenHeight, screenWidth);
-        String result = lmSdkService.install(lmInstallParams);
-        return result;
+//        LMInstallParams lmInstallParams = new LMInstallParams(linkedMeKey, sdk, debug, retryNumber, hardwareId,
+//                                                                googleAdvertisingId, isHardwareIdReal, adTrackingEnabled, brand, carrier,
+//                                                                iOSBundleId, isReferable, os, osVersion, appVersion,
+//                                                                update,  uriScheme, iOSTeamId, universalLinkUrl, spotlightIdentifier,
+//                                                                latVal, wifi, hasNfc, hasTelephone, bluetooth,
+//                                                                screenDpi, screenHeight, screenWidth);
+//        String result = lmSdkService.install(lmInstallParams);
+        return "";
     }
 
     @Path("/open")
@@ -104,14 +99,14 @@ public class LMSdkResources {
                        @FormParam("retry_number") String retryNumber,
                        @FormParam("debug") String debug) {
 
-        LMOpenParams lmOpenParams = new LMOpenParams(linkedMeKey, sdk, retryNumber, debug, identifyId,
-                                                        deviceFingerprintId, adTrackingEnabled, linkIdentifier, isReferable, os,
-                                                        osVersion, appVersion, update, uriScheme, iOSBundleId,
-                                                        iOSTeamId, spotlightIdentifier, universalLinkUrl, latVal);
+//        LMOpenParams lmOpenParams = new LMOpenParams(linkedMeKey, sdk, retryNumber, debug, identifyId,
+//                                                        deviceFingerprintId, adTrackingEnabled, linkIdentifier, isReferable, os,
+//                                                        osVersion, appVersion, update, uriScheme, iOSBundleId,
+//                                                        iOSTeamId, spotlightIdentifier, universalLinkUrl, latVal);
+//
+//        String result = lmSdkService.open(lmOpenParams);
 
-        String result = lmSdkService.open(lmOpenParams);
-
-        return result;
+        return "";
 
     }
 
@@ -130,10 +125,10 @@ public class LMSdkResources {
 
         }
 
-        LMCloseParams lmCloseParams = new LMCloseParams(linkedMeKey, sdk, retryNumber, null, identifyId,
-                                                            deviceFingerprintId, sessionId);
-        String result = lmSdkService.close(lmCloseParams);
-        return result;
+//        LMCloseParams lmCloseParams = new LMCloseParams(linkedMeKey, sdk, retryNumber, null, identifyId,
+//                                                            deviceFingerprintId, sessionId);
+//        String result = lmSdkService.close(lmCloseParams);
+        return "";
     }
 
     @Path("/url")
@@ -158,8 +153,10 @@ public class LMSdkResources {
         LMUrlParams lmUrlParams = new LMUrlParams(linkedmeKey, identityId, deviceFingerPrintId, sdkVersion, retryTimes, debug, tags, alias,
                 channel, feature, stage, campaign, params, source, sessionId);
 
-        String result = lmSdkService.url(lmUrlParams);
-        return result;
+        String url = lmSdkService.url(lmUrlParams);
+        JsonBuilder resultJson = new JsonBuilder();
+        resultJson.append("url", url);
+        return resultJson.flip().toString();
 
     }
 

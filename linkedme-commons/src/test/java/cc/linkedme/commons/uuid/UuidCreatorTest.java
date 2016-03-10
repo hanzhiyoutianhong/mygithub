@@ -18,6 +18,6 @@ public class UuidCreatorTest {
 
     @Test
     public void testNextId() {
-        System.out.println(uuidCreator.nextId());
+        System.out.println(uuidCreator.nextId(0));
     }
 }

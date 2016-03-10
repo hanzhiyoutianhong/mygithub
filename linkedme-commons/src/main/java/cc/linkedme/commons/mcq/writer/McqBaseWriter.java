@@ -2,9 +2,7 @@ package cc.linkedme.commons.mcq.writer;
 
 import java.util.List;
 import java.util.Random;
-import java.util.zip.CRC32;
 
-import cc.linkedme.commons.json.JsonWrapper;
 import cc.linkedme.commons.log.ApiLogger;
 import cc.linkedme.commons.log.StatLog;
 import cc.linkedme.commons.mcq.BaseWriter;
@@ -79,7 +77,9 @@ public class McqBaseWriter implements BaseWriter {
         }
 
         /*
-         * 1、对每条消息轮询所有的mcq，如果处理成功则直接返回。 2、如果处理失败，则尝试写入下一个mcq。 3、如果所有的mcq均写入失败，则不做处理。
+         * 1、对每条消息轮询所有的mcq，如果处理成功则直接返回。
+         * 2、如果处理失败，则尝试写入下一个mcq。
+         * 3、如果所有的mcq均写入失败，则不做处理。
          */
         boolean writeRs = false;
         for (int i = 0; i < writers.size(); i++) {
@@ -103,94 +103,6 @@ public class McqBaseWriter implements BaseWriter {
             ApiLogger.info(new StringBuilder(128).append("Info: save msg to mq false, key=").append(key).append(",mq=")
                     .append(mqWriter.getServerPort()).append(",msg").append(msg));
         }
-        if (!writeRs) {
-            ApiLogger.error(new StringBuilder(128).append("Write mcq false, key=").append(key).append(", msg=").append(msg));
-            throw new IllegalArgumentException(
-                    new StringBuilder(128).append("Write mcq false, key=").append(key).append(", msg=").append(msg).toString());
-        }
-    }
-
-    /**
-     * 按照fromUid进行hash写入，如果写入失败，尝试写入到下一台MCQ
-     */
-    @Deprecated
-    public void writeMsg2(String msg) {
-        writeMsg2(writeKey, msg);
-        // TODO randomKey = fromUid;
-        // writeMsg(randomKey, writeKey, msg, Util.toBytes(msg).length);
-    }
-
-    protected void writeMsg2(String key, String msg) {
-        if (distinctBySize && mcq512BWriters != null && mcq512BWriters.size() > 0) {
-            if (msg != null && Util.toBytes(msg).length < distinctBoundary) {
-                writeMsg2(mcq512BWriters, key, msg);
-            } else {
-                writeMsg2(mcqWriters, key, msg);
-            }
-            return;
-        }
-        writeMsg2(mcqWriters, key, msg);
-    }
-
-    protected void writeMsg2(List<VikaCacheClient> writers, String key, Object msg) {
-        if (writers == null || writers.size() == 0) {
-            return;
-        }
-
-        CRC32 crc32 = new CRC32();
-        JsonWrapper wrapper = null;
-        try {
-            wrapper = new JsonWrapper((String) msg);
-        } catch (Exception e) {
-            ApiLogger.error(new StringBuilder(128).append("[ERROR MSG FORMAT]:msg=").append(msg));
-        }
-
-        Long msgType = null;
-        if (wrapper != null) {
-            msgType = wrapper.getLong("type");
-        }
-
-        int randomKey = 0;
-        if (null != msgType && msgType == 100) {
-            JsonWrapper info = wrapper.getNode("info");
-            long fromUid = info.getLong("fromuid");
-            if (0L == fromUid) {// 兼容分组的消息
-                fromUid = info.getLong("uid");
-            }
-            crc32.reset();
-            crc32.update((fromUid + "").getBytes());
-            randomKey = (int) (crc32.getValue() % writers.size());
-        } else {
-            randomKey = random.nextInt(writers.size());
-        }
-
-        boolean writeRs = false;
-        /*
-         * 1、对每条消息轮询所有的mcq，如果处理成功则直接返回。 2、如果处理失败，则尝试写入下一个mcq。 3、如果所有的mcq均写入失败，则不做处理。
-         */
-        for (int i = 0; i < writers.size(); i++) {
-            int index = new Long((i + randomKey) % writers.size()).intValue();
-            VikaCacheClient mqWriter = writers.get(index);
-
-            try {
-                if (mqWriter.set(key, msg)) {
-                    writeRs = true;
-                    StatLog.inc(getMQWriteKey(mqWriter.getServerPort(), key));
-                    if (ApiLogger.isDebugEnabled()) {
-                        ApiLogger.debug(new StringBuilder(256).append("mcq=").append(mqWriter.getServerPort()).append(", key=").append(key)
-                                .append(", mq=").append(msg));
-                    }
-                    break;
-                }
-            } catch (Exception e) {
-                ApiLogger.warn(new StringBuilder(128).append("Warn: save msg to one mq false [try next], key=").append(key).append(", mq=")
-                        .append(mqWriter.getServerPort()).append(",msg").append(msg), e);
-            }
-            StatLog.inc(getMQWriteErrorKey(mqWriter.getServerPort(), key));
-            ApiLogger.info(new StringBuilder(128).append("Info: save msg to mq false, key=").append(key).append(",mq=")
-                    .append(mqWriter.getServerPort()).append(",msg").append(msg));
-        }
-
         if (!writeRs) {
             ApiLogger.error(new StringBuilder(128).append("Write mcq false, key=").append(key).append(", msg=").append(msg));
             throw new IllegalArgumentException(

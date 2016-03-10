@@ -20,7 +20,7 @@ import java.util.concurrent.atomic.AtomicInteger;
  * mcq 处理mcq，为每个mcq建立独立线程进行读取。写mcq，随机选择mcq写入，如果写失败，轮询下一个，直到尝试完所有的mcq
  */
 public abstract class McqProcessor implements StartReadingAble {
-    protected String readKey = null;
+    protected String readKey = "linkedme";
     protected Map<String, List<VikaCacheClient>> mcqReaders;
     protected List<Thread> readThreads = new ArrayList<Thread>();
     protected Random random = new Random();

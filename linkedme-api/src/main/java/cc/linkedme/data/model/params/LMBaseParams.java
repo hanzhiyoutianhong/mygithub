@@ -15,10 +15,10 @@ public class LMBaseParams {
      * construction function
      */
 
-    public LMBaseParams(String identityId, String deviceFingerPrintId, String linkedmeKey, String sdkVersion, int retryTimes, int debug) {
+    public LMBaseParams(String linkedmeKey, String identityId, String deviceFingerPrintId, String sdkVersion, int retryTimes, int debug) {
+        this.linkedmeKey = linkedmeKey;
         this.identityId = identityId;
         this.deviceFingerPrintId = deviceFingerPrintId;
-        this.linkedmeKey = linkedmeKey;
         this.sdkVersion = sdkVersion;
         this.retryTimes = retryTimes;
         this.debug = debug;

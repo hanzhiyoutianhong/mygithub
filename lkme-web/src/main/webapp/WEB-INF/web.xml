@@ -33,6 +33,7 @@
         <url-pattern>/*</url-pattern>
     </filter-mapping>
 
+<!--
     <filter>
         <filter-name>authFilter</filter-name>
         <filter-class>org.springframework.web.filter.DelegatingFilterProxy</filter-class>
@@ -45,6 +46,13 @@
         <filter-name>authFilter</filter-name>
         <url-pattern>/*</url-pattern>
     </filter-mapping>
+-->
+
+    <servlet>
+        <servlet-name>init</servlet-name>
+        <servlet-class>cc.linkedme.commons.spring.McqProcessorInitListener</servlet-class>
+        <load-on-startup>3</load-on-startup> <!--tomcat启动后执行-->
+    </servlet>
 
     <servlet>
         <servlet-name>lkmeServlet</servlet-name>

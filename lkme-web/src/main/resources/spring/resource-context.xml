@@ -5,17 +5,7 @@
        xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.0.xsd
     http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-3.0.xsd">
 
-    <!--install-->
-    <bean id="lmSdkService" class="cc.linkedme.service.impl.LMSdkServiceImpl">
-    </bean>
-    <bean id="lmSdkResources" class="cc.linkedme.api.lkme.web.sdk.LMSdkResources">
-        <property name="lmSdkService" ref="lmSdkService"/>
-    </bean>
-    <bean id="lmLinkService" class="cc.linkedme.service.impl.LMLinkServiceImpl">
-    </bean>
-    <bean id="lmLinkResources" class="cc.linkedme.api.lkme.web.link.LMLinkResources">
-        <property name="lmLinkService" ref="lmLinkService"/>
-    </bean>
+    <bean id="lmSdkService" class="cc.linkedme.service.impl.LMSdkServiceImpl" />
 
 </beans>
 

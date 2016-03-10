@@ -4,16 +4,21 @@ import cc.linkedme.commons.log.ApiLogger;
 import cc.linkedme.commons.mcq.reader.McqProcessor;
 import cc.linkedme.commons.util.ApiUtil;
 import cc.linkedme.commons.util.UseTimeStasticsMonitor;
+import cc.linkedme.data.model.DeepLink;
+import cc.linkedme.mcq.MsgUtils;
+import cc.linkedme.service.DeepLinkService;
 import net.sf.json.JSONObject;
 
+import javax.annotation.Resource;
 import java.util.LinkedList;
 
 /**
  * process packet from mcq
  */
-public class MsgProcessor extends McqProcessor {
+public class MsgMcqProcessor extends McqProcessor {
     public static final UseTimeStasticsMonitor McqProcMonitor = new UseTimeStasticsMonitor(
             "McqProcMonitor"); // mcq处理统计
+
     /**
      * 是否更新db
      */
@@ -24,12 +29,16 @@ public class MsgProcessor extends McqProcessor {
      */
     private boolean updateMc = true;
 
-    public static final boolean debug = false;
+    private static final boolean debug = false;
+
+    @Resource
+    private DeepLinkService deepLinkService;
+
 
     //处理收到的消息
     @Override
     protected void handleMsq(final String msg) {
-        //System.out.println("handleMsq msg:" + msg);
+        System.out.println("handleMsq msg:" + msg);
         String logMsg = new StringBuilder(256).append("key:").append(getReadKey()).append(" updateDb:")
             .append(updateDb).append(" updateMc:").append(updateMc).append(" MsgProcessor recv:").append(msg).toString();
         ApiLogger.info(logMsg);
@@ -60,7 +69,7 @@ public class MsgProcessor extends McqProcessor {
         JSONObject msgJson = JSONObject.fromObject(mcqMsg);
         int type = msgJson.getInt("type");
         JSONObject info = msgJson.getJSONObject("info");
-        if(type == 1) {
+        if(MsgUtils.isDeeplinkMsgType(type)) {
             //deepLink消息
             processDeepLinkMsg(type, info);
         } else {
@@ -71,24 +80,28 @@ public class MsgProcessor extends McqProcessor {
 
     private int processDeepLinkMsg(int type, JSONObject info) {
         int result = ApiUtil.MQ_PROCESS_ABORT; // 默认为丢弃
-        if(type == 10) {
+        DeepLink deepLink = MsgUtils.toDeepLinkObj(info);
+        if(type == 11) {
             //add deepLink
-        } else if(type == 11) {
-            //delete deepLink
+            addDeepLink(deepLink);
         } else if(type == 12) {
+            //delete deepLink
+        } else if(type == 13) {
             //update deepLink
         }
         return result;
     }
 
-    protected int addDeepLink(JSONObject info) {
+    protected int addDeepLink(DeepLink deepLink) {
+        int result = 0;
         if(updateDb) {
-            
+            result = deepLinkService.addDeepLink(deepLink);
         }
+
         if(updateMc) {
             
         }
-        return 0;
+        return result;
     }
     
     public void saveErrorMsg(String msg) {
@@ -112,6 +125,22 @@ public class MsgProcessor extends McqProcessor {
     @Override
     protected void startExtWork() {
         // 调整为需要时加载的方式
+    }
+
+    public boolean isUpdateDb() {
+        return updateDb;
+    }
+
+    public void setUpdateDb(boolean updateDb) {
+        this.updateDb = updateDb;
+    }
+
+    public boolean isUpdateMc() {
+        return updateMc;
+    }
+
+    public void setUpdateMc(boolean updateMc) {
+        this.updateMc = updateMc;
     }
 
 }
