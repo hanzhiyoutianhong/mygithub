@@ -14,8 +14,7 @@ import org.apache.commons.lang.ArrayUtils;
 
 public class ArrayUtil {
 
-    private ArrayUtil() {
-    }
+    private ArrayUtil() {}
 
     public static Long[] toLongArr(String[] strArr) {
         Long[] longArr = new Long[strArr.length];
@@ -131,10 +130,9 @@ public class ArrayUtil {
         }
 
         StringBuilder b = new StringBuilder();
-        for (int i = 0; ; i++) {
+        for (int i = 0;; i++) {
             b.append(String.valueOf(arrs[i]));
-            if (i == iMax)
-                return b.toString();
+            if (i == iMax) return b.toString();
             b.append(split);
         }
     }
@@ -149,10 +147,9 @@ public class ArrayUtil {
         }
 
         StringBuilder b = new StringBuilder();
-        for (int i = 0; ; i++) {
+        for (int i = 0;; i++) {
             b.append(arrs[i]);
-            if (i == iMax)
-                return b.toString();
+            if (i == iMax) return b.toString();
             b.append(",");
         }
     }
@@ -173,7 +170,7 @@ public class ArrayUtil {
                 set.add(str);
             }
         }
-        return set.toArray(new String[]{});
+        return set.toArray(new String[] {});
     }
 
     public static void reverse(long[][] b) {
@@ -198,13 +195,14 @@ public class ArrayUtil {
      * @return
      */
     public static long[] reverseCopy(long[] original, int newLength) {
-        //System.out.println("temp length:" + temp.length);
+        // System.out.println("temp length:" + temp.length);
         long[] result = new long[newLength];
         int originalLimit = original.length - newLength;
         for (int i = original.length - 1, resultIdx = 0; i >= originalLimit; i--) {
             result[resultIdx++] = original[i];
         }
-        //System.out.println("result length:" + result.length + ", result" + Arrays.toString(result));
+        // System.out.println("result length:" + result.length + ", result" +
+        // Arrays.toString(result));
         return result;
     }
 
@@ -216,7 +214,7 @@ public class ArrayUtil {
         }
 
         /*
-         * if removeLength > 2 use removeSet  
+         * if removeLength > 2 use removeSet
          */
         long[] temp = new long[sourceLength];
         int i = 0;
@@ -232,7 +230,7 @@ public class ArrayUtil {
             }
         } else {
             for (long source : sourceArray) {
-                if (!arrayContains(removeArray, source)) { // not contains so push 
+                if (!arrayContains(removeArray, source)) { // not contains so push
                     temp[i++] = source;
                 }
             }
@@ -309,7 +307,7 @@ public class ArrayUtil {
      * @return
      */
     public static long[] intersectionOrder(long[] arr1, long[] arr2) {
-        //鑾峰彇浜ら泦鑰屼笉鎵撲贡arr1鐨勯『搴�
+        // 鑾峰彇浜ら泦鑰屼笉鎵撲贡arr1鐨勯『搴�
         HashSet<Long> tempSet = new HashSet<Long>();
         for (int i = 0; i < arr2.length; i++) {
             tempSet.add(arr2[i]);
@@ -322,7 +320,7 @@ public class ArrayUtil {
                 count++;
             }
         }
-        //鎴彇鎺夊浣欑殑
+        // 鎴彇鎺夊浣欑殑
         return Arrays.copyOf(tmpResult, count);
     }
 
@@ -348,7 +346,7 @@ public class ArrayUtil {
      * @return
      */
     public static long[] addTo(long[] arr, long id) {
-        return addTo(arr, new long[]{id});
+        return addTo(arr, new long[] {id});
     }
 
     public static long[] addTo(long[] arr, long id, int limit) {
@@ -425,7 +423,7 @@ public class ArrayUtil {
             else
                 return mid; // key found
         }
-        return -(low + 1);  // key not found
+        return -(low + 1); // key not found
     }
 
     public static <T> int binarySearchForInsert(List<? extends Comparable<? super T>> list, T key) {
@@ -454,4 +452,4 @@ public class ArrayUtil {
         return position >= 0 ? position : Math.abs(position + 1);
     }
 }
- 
+

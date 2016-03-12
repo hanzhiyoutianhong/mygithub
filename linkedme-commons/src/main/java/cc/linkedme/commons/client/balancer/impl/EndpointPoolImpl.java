@@ -70,13 +70,12 @@ public class EndpointPoolImpl<R> implements EndpointPool<R> {
         this.endpointFactory = endpointFactory;
         this.endpointFactory.addListener(endpointManager);
 
-        //start check hostAddress changed event
+        // start check hostAddress changed event
         HostAddressWatcherImpl.getInstance().register(getConfig().getHostname(), endpointManager);
 
         Set<String> ips = HostAddressWatcherImpl.getInstance().register(getConfig().getHostname(), endpointFactory);
 
-        if (ips != null && !ips.isEmpty()
-                && !ClientBalancerUtil.isEqualSet(new HashSet<String>(endpointFactory.getIpAddresses()), ips)) {
+        if (ips != null && !ips.isEmpty() && !ClientBalancerUtil.isEqualSet(new HashSet<String>(endpointFactory.getIpAddresses()), ips)) {
             // TODO 目前这种方式不是最好的，需要一个地方来确保ips的一致性(防止极端情况下dns解析不一致的问题)，需要再改一下
             endpointFactory.onHostAddressChanged(getConfig().getHostname(), ips);
         }
@@ -144,11 +143,13 @@ public class EndpointPoolImpl<R> implements EndpointPool<R> {
         try {
             if (isAbandoning(endpoint)) {
                 invalidateEndpoint(endpoint, false);
-                ClientBalancerLog.log.info("invalidate endpoint for the ip is abandoned, endpoint={}, reservedIpsForRefresh={}", endpoint, reservedIpsForRefresh);
+                ClientBalancerLog.log.info("invalidate endpoint for the ip is abandoned, endpoint={}, reservedIpsForRefresh={}", endpoint,
+                        reservedIpsForRefresh);
 
             } else if (isExpired(endpoint)) {
                 invalidateEndpoint(endpoint, false);
-                ClientBalancerLog.log.info("invalidate endpoint for the ip is expired, endpoint={}, reservedIpsForRefresh={}", endpoint, reservedIpsForRefresh);
+                ClientBalancerLog.log.info("invalidate endpoint for the ip is expired, endpoint={}, reservedIpsForRefresh={}", endpoint,
+                        reservedIpsForRefresh);
 
             } else {
                 endpoint.refreshLastAccessTime();
@@ -200,16 +201,16 @@ public class EndpointPoolImpl<R> implements EndpointPool<R> {
     }
 
     /**
-     * {@inheritDoc}
-     * dns更新后，连接到offline-ip的endpoint需要清理，连往offline-ip的endpoint有两类：idle + active, 清理办法:1）active的在return时进行invalidate; 2)idle的用全部取一遍；（目前只支持对fifo有效）
+     * {@inheritDoc} dns更新后，连接到offline-ip的endpoint需要清理，连往offline-ip的endpoint有两类：idle + active,
+     * 清理办法:1）active的在return时进行invalidate; 2)idle的用全部取一遍；（目前只支持对fifo有效）
      */
     @Override
     public void removeOfflineIdleEndpoints(Set<String> reservedIps) {
 
-        //set abandonedIps
+        // set abandonedIps
         reservedIpsForRefresh.addAll(reservedIps);
 
-        //循环取endpoints，然后return，利用return时的监测来清理
+        // 循环取endpoints，然后return，利用return时的监测来清理
         int tryCount = 2 * Math.max(endpointFactory.getConfig().getMaxPoolSize(), (getNumActive() + getNumIdle()));
         for (int i = 0; i < tryCount; i++) {
             Endpoint<R> endpoint = null;
@@ -221,7 +222,8 @@ public class EndpointPoolImpl<R> implements EndpointPool<R> {
             }
         }
 
-        ClientBalancerLog.log.info("Refresh endpoints for host:{} updted, latest ips {}", this.endpointFactory.getConfig().getHostname(), reservedIps);
+        ClientBalancerLog.log.info("Refresh endpoints for host:{} updted, latest ips {}", this.endpointFactory.getConfig().getHostname(),
+                reservedIps);
     }
 
     @Override
@@ -263,7 +265,7 @@ public class EndpointPoolImpl<R> implements EndpointPool<R> {
             return;
         }
         this.closed.compareAndSet(false, true);
-        //|| internalPool.isClosed()
+        // || internalPool.isClosed()
         if (internalPool == null) {
             return;
         }
@@ -335,8 +337,7 @@ public class EndpointPoolImpl<R> implements EndpointPool<R> {
      */
     @Override
     public boolean isIdle() {
-        if (getNumActive() < getNumIdle()
-                && getNumIdle() > this.endpointFactory.getConfig().getMinPoolSize()) {
+        if (getNumActive() < getNumIdle() && getNumIdle() > this.endpointFactory.getConfig().getMinPoolSize()) {
             return true;
         }
         if (getNumIdle() > 2 * this.endpointFactory.getConfig().getMinPoolSize()) {
@@ -367,14 +368,10 @@ public class EndpointPoolImpl<R> implements EndpointPool<R> {
             numIdle = getNumIdle();
         }
 
-        return new StringBuilder(64)
-                .append("endpointPool-").append(epPoolIdx.get()).append("-").append(getConfig().getHostname()).append(":").append(getConfig().getPort())
-                .append(" [active=").append(numActive)
-                .append(", idle=").append(numIdle)
-                .append(", keepService=").append(keepService)
-                .append(", healthy=").append(healthy.get())
-                .append(", reservedIpsForRefresh=").append(reservedIpsForRefresh)
-                .append("]").toString();
+        return new StringBuilder(64).append("endpointPool-").append(epPoolIdx.get()).append("-").append(getConfig().getHostname())
+                .append(":").append(getConfig().getPort()).append(" [active=").append(numActive).append(", idle=").append(numIdle)
+                .append(", keepService=").append(keepService).append(", healthy=").append(healthy.get()).append(", reservedIpsForRefresh=")
+                .append(reservedIpsForRefresh).append("]").toString();
     }
 
     /**
@@ -387,7 +384,8 @@ public class EndpointPoolImpl<R> implements EndpointPool<R> {
         if (checkServerState && (!healthy.get() || !keepService.get())) {
             ClientBalancerStatLog.inc(getConfig().getHostnamePort() + SUFFIX_BORROW_FALSE_FOR_STATE);
             ClientBalancerLog.fire(getPoolName() + " : Server cannot supply service");
-            throw new EndpointBalancerException(String.format("Server cannot supply service, for healthy=%s, keepService=%s", healthy, keepService));
+            throw new EndpointBalancerException(
+                    String.format("Server cannot supply service, for healthy=%s, keepService=%s", healthy, keepService));
         }
 
         Endpoint<R> ep = null;
@@ -420,7 +418,7 @@ public class EndpointPoolImpl<R> implements EndpointPool<R> {
      * @return
      */
     private boolean isAbandoning(Endpoint<R> endpoint) {
-        //一般情况下abandonedIps的size都为0，可以略去contains的计算
+        // 一般情况下abandonedIps的size都为0，可以略去contains的计算
         return reservedIpsForRefresh.size() > 0 && !reservedIpsForRefresh.contains(endpoint.ipAddress);
     }
 
@@ -479,13 +477,13 @@ public class EndpointPoolImpl<R> implements EndpointPool<R> {
     }
 
     /**
-     * Atomically sets the value of healthy to the given updated value
-     * if the current value {@code ==} the expected value.
+     * Atomically sets the value of healthy to the given updated value if the current value
+     * {@code ==} the expected value.
      *
      * @param expect the expected value
      * @param update the new value
-     * @return true if successful. False return indicates that
-     * the actual value was not equal to the expected value.
+     * @return true if successful. False return indicates that the actual value was not equal to the
+     *         expected value.
      */
     private boolean compareAndsetHealthy(boolean expect, boolean update) {
         if (!update) {

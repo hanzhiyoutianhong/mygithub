@@ -38,20 +38,20 @@ public class LMSdkServiceImpl implements LMSdkService {
 
         try {
 
-            //hardware_id equals identify_id, and identify_id and link_click_id are in the redis
+            // hardware_id equals identify_id, and identify_id and link_click_id are in the redis
 
-            //browser_fingerprint_id equals device_fingerprint_id
+            // browser_fingerprint_id equals device_fingerprint_id
 
-            //add the info into mysql
+            // add the info into mysql
 
-        } catch(Exception e) {
-            //error log
+        } catch (Exception e) {
+            // error log
             ApiLogger.error("");
             throw new LMException(LMExceptionFactor.LM_FAILURE_DB_OP, this.getClass().getName() + ".install");
 
         }
 
-        //info log
+        // info log
         ApiLogger.info("");
 
 
@@ -63,18 +63,18 @@ public class LMSdkServiceImpl implements LMSdkService {
 
         try {
 
-            //get the linkIdentifier by redis
+            // get the linkIdentifier by redis
 
-            //add the info into mysql
+            // add the info into mysql
 
-        } catch(Exception e) {
-            //error log
+        } catch (Exception e) {
+            // error log
             ApiLogger.error("");
             throw new LMException(LMExceptionFactor.LM_FAILURE_DB_OP, this.getClass().getName() + ".open");
 
         }
 
-        //info log
+        // info log
         ApiLogger.info("");
 
         return result;
@@ -86,16 +86,16 @@ public class LMSdkServiceImpl implements LMSdkService {
 
         try {
 
-            //add this into mysql
+            // add this into mysql
 
-        } catch(Exception e) {
-            //error log
+        } catch (Exception e) {
+            // error log
             ApiLogger.error("");
             throw new LMException(LMExceptionFactor.LM_FAILURE_DB_OP, this.getClass().getName() + ".close");
 
         }
 
-        //info log
+        // info log
         ApiLogger.info("");
 
         return result;
@@ -134,15 +134,15 @@ public class LMSdkServiceImpl implements LMSdkService {
 
         try {
 
-            //set identify_id for browser,
+            // set identify_id for browser,
 
-        } catch(Exception e) {
-            //error log
+        } catch (Exception e) {
+            // error log
             ApiLogger.error("");
             throw new LMException(LMExceptionFactor.LM_FAILURE_DB_OP, this.getClass().getName() + ".preInstall");
         }
 
-        //info log
+        // info log
         ApiLogger.info("");
 
 

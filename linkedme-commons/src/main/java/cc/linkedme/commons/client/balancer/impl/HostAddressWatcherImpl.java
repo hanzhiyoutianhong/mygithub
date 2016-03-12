@@ -20,7 +20,8 @@ import cc.linkedme.commons.client.balancer.util.SystemTimer;
 
 public class HostAddressWatcherImpl implements HostAddressWatcher {
 
-    private static Map<String, Set<HostAddressListener>> hostAddressChangeListeners = new ConcurrentHashMap<String, Set<HostAddressListener>>();
+    private static Map<String, Set<HostAddressListener>> hostAddressChangeListeners =
+            new ConcurrentHashMap<String, Set<HostAddressListener>>();
     private static Map<String, Set<String>> oldHostIps = new ConcurrentHashMap<String, Set<String>>();
 
     private static volatile Thread dnsLookupThread = null;
@@ -90,7 +91,7 @@ public class HostAddressWatcherImpl implements HostAddressWatcher {
             }
         }
         long consumeTime = SystemTimer.currentTimeMillis() - startTime;
-        ClientBalancerLog.log.info("Dns lookup, hostnames.size={}, time={}", new Object[]{hostAddressChangeListeners.size(), consumeTime});
+        ClientBalancerLog.log.info("Dns lookup, hostnames.size={}, time={}", new Object[] {hostAddressChangeListeners.size(), consumeTime});
     }
 
     private void watchHostAddress(String hostname) {
@@ -100,14 +101,15 @@ public class HostAddressWatcherImpl implements HostAddressWatcher {
         }
 
         if (!ClientBalancerUtil.isEqualSet(latestesIpsFromDns, oldHostIps.get(hostname))) {
-            ClientBalancerLog.log.info("Dns changed, hostname={}, newIps={}, oldIps={}", new Object[]{hostname, latestesIpsFromDns, oldHostIps.get(hostname)});
+            ClientBalancerLog.log.info("Dns changed, hostname={}, newIps={}, oldIps={}",
+                    new Object[] {hostname, latestesIpsFromDns, oldHostIps.get(hostname)});
 
             for (HostAddressListener listener : hostAddressChangeListeners.get(hostname)) {
                 listener.onHostAddressChanged(hostname, latestesIpsFromDns);
             }
             oldHostIps.put(hostname, latestesIpsFromDns);
         } else {
-            ClientBalancerLog.log.info("Dns not changed, hostname={}, ips={}", new Object[]{hostname, latestesIpsFromDns});
+            ClientBalancerLog.log.info("Dns not changed, hostname={}, ips={}", new Object[] {hostname, latestesIpsFromDns});
         }
     }
 

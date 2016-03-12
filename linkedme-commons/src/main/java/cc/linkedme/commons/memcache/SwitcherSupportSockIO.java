@@ -19,18 +19,16 @@ public class SwitcherSupportSockIO extends SockIO {
     private static final String RESOURCE_TYPE = "memcache";
 
 
-    public SwitcherSupportSockIO(SockIOPool pool, String host, int timeout,
-                                 int connectTimeout, boolean noDelay) throws IOException,
-            UnknownHostException {
+    public SwitcherSupportSockIO(SockIOPool pool, String host, int timeout, int connectTimeout, boolean noDelay)
+            throws IOException, UnknownHostException {
         super(pool, host, timeout, connectTimeout, noDelay);
         this.initSwitcher(host);
     }
 
     @Override
-    protected void doConnect(String host, int timeout, int connectTimeout, boolean noDelay)
-            throws NumberFormatException, IOException {
+    protected void doConnect(String host, int timeout, int connectTimeout, boolean noDelay) throws NumberFormatException, IOException {
         this.initSwitcher(host);
-        //如果读写开关都关闭则不创建真实连接
+        // 如果读写开关都关闭则不创建真实连接
         if (this.getWriteSwitcher().isClose() && this.getReadSwitcher().isClose()) {
             ApiLogger.warn("Switcher " + host + " read && writer is close. has not real connect.");
         } else {
@@ -85,7 +83,7 @@ public class SwitcherSupportSockIO extends SockIO {
 
     @Override
     boolean isAlive() {
-        //读写开关都关闭时，默认isAlive为true
+        // 读写开关都关闭时，默认isAlive为true
         if (this.getReadSwitcher().isClose() && this.getWriteSwitcher().isClose()) {
             return true;
         } else {

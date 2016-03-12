@@ -4,8 +4,9 @@ import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
 
-public abstract class AbstractValueChangeEventMulticaster<V, L extends ValueChangeListener<V>> implements
-        ValueChangeEventMulticaster<V, L> {
+public abstract class AbstractValueChangeEventMulticaster<V, L extends ValueChangeListener<V>>
+        implements
+            ValueChangeEventMulticaster<V, L> {
 
     protected List<L> listeners;
 

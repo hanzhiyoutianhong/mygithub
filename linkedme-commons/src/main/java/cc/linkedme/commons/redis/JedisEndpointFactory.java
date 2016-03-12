@@ -39,7 +39,9 @@ public class JedisEndpointFactory extends EndpointFactory<Jedis> {
 
         Jedis jedis = null;
         if (config.getSoTimeout() > 0) {
-            jedis = this.enableSwitcher ? new SwitcherSupportJedis(ip, config.getPort(), config.getSoTimeout()) : new WeiboJedis(ip, config.getPort(), config.getSoTimeout());
+            jedis = this.enableSwitcher
+                    ? new SwitcherSupportJedis(ip, config.getPort(), config.getSoTimeout())
+                    : new WeiboJedis(ip, config.getPort(), config.getSoTimeout());
         } else {
             jedis = this.enableSwitcher ? new SwitcherSupportJedis(ip, config.getPort()) : new WeiboJedis(ip, config.getPort());
         }

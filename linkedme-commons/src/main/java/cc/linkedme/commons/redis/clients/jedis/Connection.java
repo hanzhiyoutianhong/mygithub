@@ -119,12 +119,14 @@ public class Connection {
         if (!isConnected()) {
             try {
                 socket = new Socket();
-                //->@wjw_add
+                // ->@wjw_add
                 socket.setReuseAddress(true);
-                socket.setKeepAlive(true);  //Will monitor the TCP connection is valid
-                socket.setTcpNoDelay(true);  //Socket buffer Whetherclosed, to ensure timely delivery of data
-                socket.setSoLinger(true, 0);  //Control calls close () method, the underlying socket is closed immediately
-                //<-@wjw_add
+                socket.setKeepAlive(true); // Will monitor the TCP connection is valid
+                socket.setTcpNoDelay(true); // Socket buffer Whetherclosed, to ensure timely
+                                            // delivery of data
+                socket.setSoLinger(true, 0); // Control calls close () method, the underlying socket
+                                             // is closed immediately
+                // <-@wjw_add
 
                 socket.connect(new InetSocketAddress(host, port), timeout);
                 socket.setSoTimeout(timeout);
@@ -151,8 +153,7 @@ public class Connection {
     }
 
     public boolean isConnected() {
-        return socket != null && socket.isBound() && !socket.isClosed()
-                && socket.isConnected() && !socket.isInputShutdown()
+        return socket != null && socket.isBound() && !socket.isClosed() && socket.isConnected() && !socket.isInputShutdown()
                 && !socket.isOutputShutdown();
     }
 

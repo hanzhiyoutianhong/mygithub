@@ -43,7 +43,7 @@ public class Pipeline extends Queable {
     @Override
     protected <T> Response<T> getResponse(Builder<T> builder) {
         if (currentMulti != null) {
-            super.getResponse(BuilderFactory.STRING); //Expected QUEUED
+            super.getResponse(BuilderFactory.STRING); // Expected QUEUED
 
             Response<T> lr = new Response<T>(builder);
             currentMulti.addResponse(lr);
@@ -60,9 +60,9 @@ public class Pipeline extends Queable {
     }
 
     /**
-     * Syncronize pipeline by reading all responses. This operation close the
-     * pipeline. In order to get return values from pipelined commands, capture
-     * the different Response<?> of the commands you execute.
+     * Syncronize pipeline by reading all responses. This operation close the pipeline. In order to
+     * get return values from pipelined commands, capture the different Response<?> of the commands
+     * you execute.
      */
     public void sync() {
         List<Object> unformatted = client.getAll();
@@ -72,10 +72,9 @@ public class Pipeline extends Queable {
     }
 
     /**
-     * Syncronize pipeline by reading all responses. This operation close the
-     * pipeline. Whenever possible try to avoid using this version and use
-     * Pipeline.sync() as it won't go through all the responses and generate the
-     * right response type (usually it is a waste of time).
+     * Syncronize pipeline by reading all responses. This operation close the pipeline. Whenever
+     * possible try to avoid using this version and use Pipeline.sync() as it won't go through all
+     * the responses and generate the right response type (usually it is a waste of time).
      *
      * @return A list of all the responses in the order you executed them.
      * @see sync
@@ -209,8 +208,7 @@ public class Pipeline extends Queable {
         return getResponse(BuilderFactory.BOOLEAN);
     }
 
-    public Response<String> getrange(String key, long startOffset,
-                                     long endOffset) {
+    public Response<String> getrange(String key, long startOffset, long endOffset) {
         client.getrange(key, startOffset, endOffset);
         return getResponse(BuilderFactory.STRING);
     }
@@ -400,14 +398,12 @@ public class Pipeline extends Queable {
         return getResponse(BuilderFactory.STRING);
     }
 
-    public Response<Long> linsert(String key, LIST_POSITION where,
-                                  String pivot, String value) {
+    public Response<Long> linsert(String key, LIST_POSITION where, String pivot, String value) {
         client.linsert(key, where, pivot, value);
         return getResponse(BuilderFactory.LONG);
     }
 
-    public Response<Long> linsert(byte[] key, LIST_POSITION where,
-                                  byte[] pivot, byte[] value) {
+    public Response<Long> linsert(byte[] key, LIST_POSITION where, byte[] pivot, byte[] value) {
         client.linsert(key, where, pivot, value);
         return getResponse(BuilderFactory.LONG);
     }
@@ -747,26 +743,22 @@ public class Pipeline extends Queable {
         return getResponse(BuilderFactory.LONG);
     }
 
-    public Response<List<String>> sort(String key,
-                                       SortingParams sortingParameters) {
+    public Response<List<String>> sort(String key, SortingParams sortingParameters) {
         client.sort(key, sortingParameters);
         return getResponse(BuilderFactory.STRING_LIST);
     }
 
-    public Response<List<String>> sort(byte[] key,
-                                       SortingParams sortingParameters) {
+    public Response<List<String>> sort(byte[] key, SortingParams sortingParameters) {
         client.sort(key, sortingParameters);
         return getResponse(BuilderFactory.STRING_LIST);
     }
 
-    public Response<List<String>> sort(String key,
-                                       SortingParams sortingParameters, String dstkey) {
+    public Response<List<String>> sort(String key, SortingParams sortingParameters, String dstkey) {
         client.sort(key, sortingParameters, dstkey);
         return getResponse(BuilderFactory.STRING_LIST);
     }
 
-    public Response<List<String>> sort(byte[] key,
-                                       SortingParams sortingParameters, byte[] dstkey) {
+    public Response<List<String>> sort(byte[] key, SortingParams sortingParameters, byte[] dstkey) {
         client.sort(key, sortingParameters, dstkey);
         return getResponse(BuilderFactory.STRING_LIST);
     }
@@ -931,14 +923,12 @@ public class Pipeline extends Queable {
         return getResponse(BuilderFactory.LONG);
     }
 
-    public Response<Long> zinterstore(String dstkey, ZParams params,
-                                      String... sets) {
+    public Response<Long> zinterstore(String dstkey, ZParams params, String... sets) {
         client.zinterstore(dstkey, params, sets);
         return getResponse(BuilderFactory.LONG);
     }
 
-    public Response<Long> zinterstore(byte[] dstkey, ZParams params,
-                                      byte[]... sets) {
+    public Response<Long> zinterstore(byte[] dstkey, ZParams params, byte[]... sets) {
         client.zinterstore(dstkey, params, sets);
         return getResponse(BuilderFactory.LONG);
     }
@@ -953,119 +943,99 @@ public class Pipeline extends Queable {
         return getResponse(BuilderFactory.STRING_ZSET);
     }
 
-    public Response<Set<String>> zrangeByScore(String key, double min,
-                                               double max) {
+    public Response<Set<String>> zrangeByScore(String key, double min, double max) {
         client.zrangeByScore(key, min, max);
         return getResponse(BuilderFactory.STRING_ZSET);
     }
 
-    public Response<Set<String>> zrangeByScore(byte[] key, double min,
-                                               double max) {
+    public Response<Set<String>> zrangeByScore(byte[] key, double min, double max) {
         return zrangeByScore(key, toByteArray(min), toByteArray(max));
     }
 
-    public Response<Set<String>> zrangeByScore(String key, String min,
-                                               String max) {
+    public Response<Set<String>> zrangeByScore(String key, String min, String max) {
         client.zrangeByScore(key, min, max);
         return getResponse(BuilderFactory.STRING_ZSET);
     }
 
-    public Response<Set<String>> zrangeByScore(byte[] key, byte[] min,
-                                               byte[] max) {
+    public Response<Set<String>> zrangeByScore(byte[] key, byte[] min, byte[] max) {
         client.zrangeByScore(key, min, max);
         return getResponse(BuilderFactory.STRING_ZSET);
     }
 
-    public Response<Set<String>> zrangeByScore(String key, double min,
-                                               double max, int offset, int count) {
+    public Response<Set<String>> zrangeByScore(String key, double min, double max, int offset, int count) {
         client.zrangeByScore(key, min, max, offset, count);
         return getResponse(BuilderFactory.STRING_ZSET);
     }
 
-    public Response<Set<String>> zrangeByScore(byte[] key, double min,
-                                               double max, int offset, int count) {
+    public Response<Set<String>> zrangeByScore(byte[] key, double min, double max, int offset, int count) {
         return zrangeByScore(key, toByteArray(min), toByteArray(max), offset, count);
     }
 
-    public Response<Set<String>> zrangeByScore(byte[] key, byte[] min,
-                                               byte[] max, int offset, int count) {
+    public Response<Set<String>> zrangeByScore(byte[] key, byte[] min, byte[] max, int offset, int count) {
         client.zrangeByScore(key, min, max, offset, count);
         return getResponse(BuilderFactory.STRING_ZSET);
     }
 
-    public Response<Set<Tuple>> zrangeByScoreWithScores(String key, double min,
-                                                        double max) {
+    public Response<Set<Tuple>> zrangeByScoreWithScores(String key, double min, double max) {
         client.zrangeByScoreWithScores(key, min, max);
         return getResponse(BuilderFactory.TUPLE_ZSET);
     }
 
-    public Response<Set<Tuple>> zrangeByScoreWithScores(byte[] key, double min,
-                                                        double max) {
+    public Response<Set<Tuple>> zrangeByScoreWithScores(byte[] key, double min, double max) {
         return zrangeByScoreWithScores(key, toByteArray(min), toByteArray(max));
     }
 
-    public Response<Set<Tuple>> zrangeByScoreWithScores(byte[] key, byte[] min,
-                                                        byte[] max) {
+    public Response<Set<Tuple>> zrangeByScoreWithScores(byte[] key, byte[] min, byte[] max) {
         client.zrangeByScoreWithScores(key, min, max);
         return getResponse(BuilderFactory.TUPLE_ZSET);
     }
 
-    public Response<Set<Tuple>> zrangeByScoreWithScores(String key, double min,
-                                                        double max, int offset, int count) {
+    public Response<Set<Tuple>> zrangeByScoreWithScores(String key, double min, double max, int offset, int count) {
         client.zrangeByScoreWithScores(key, min, max, offset, count);
         return getResponse(BuilderFactory.TUPLE_ZSET);
     }
 
-    public Response<Set<Tuple>> zrangeByScoreWithScores(byte[] key, double min,
-                                                        double max, int offset, int count) {
+    public Response<Set<Tuple>> zrangeByScoreWithScores(byte[] key, double min, double max, int offset, int count) {
         client.zrangeByScoreWithScores(key, toByteArray(min), toByteArray(max), offset, count);
         return getResponse(BuilderFactory.TUPLE_ZSET);
     }
 
-    public Response<Set<Tuple>> zrangeByScoreWithScores(byte[] key, byte[] min,
-                                                        byte[] max, int offset, int count) {
+    public Response<Set<Tuple>> zrangeByScoreWithScores(byte[] key, byte[] min, byte[] max, int offset, int count) {
         client.zrangeByScoreWithScores(key, min, max, offset, count);
         return getResponse(BuilderFactory.TUPLE_ZSET);
     }
 
-    public Response<Set<String>> zrevrangeByScore(String key, double max,
-                                                  double min) {
+    public Response<Set<String>> zrevrangeByScore(String key, double max, double min) {
         client.zrevrangeByScore(key, max, min);
         return getResponse(BuilderFactory.STRING_ZSET);
     }
 
-    public Response<Set<String>> zrevrangeByScore(byte[] key, double max,
-                                                  double min) {
+    public Response<Set<String>> zrevrangeByScore(byte[] key, double max, double min) {
         client.zrevrangeByScore(key, toByteArray(max), toByteArray(min));
         return getResponse(BuilderFactory.STRING_ZSET);
     }
 
-    public Response<Set<String>> zrevrangeByScore(String key, String max,
-                                                  String min) {
+    public Response<Set<String>> zrevrangeByScore(String key, String max, String min) {
         client.zrevrangeByScore(key, max, min);
         return getResponse(BuilderFactory.STRING_ZSET);
     }
 
-    public Response<Set<String>> zrevrangeByScore(byte[] key, byte[] max,
-                                                  byte[] min) {
+    public Response<Set<String>> zrevrangeByScore(byte[] key, byte[] max, byte[] min) {
         client.zrevrangeByScore(key, max, min);
         return getResponse(BuilderFactory.STRING_ZSET);
     }
 
-    public Response<Set<String>> zrevrangeByScore(String key, double max,
-                                                  double min, int offset, int count) {
+    public Response<Set<String>> zrevrangeByScore(String key, double max, double min, int offset, int count) {
         client.zrevrangeByScore(key, max, min, offset, count);
         return getResponse(BuilderFactory.STRING_ZSET);
     }
 
-    public Response<Set<String>> zrevrangeByScore(byte[] key, double max,
-                                                  double min, int offset, int count) {
+    public Response<Set<String>> zrevrangeByScore(byte[] key, double max, double min, int offset, int count) {
         client.zrevrangeByScore(key, toByteArray(max), toByteArray(min), offset, count);
         return getResponse(BuilderFactory.STRING_ZSET);
     }
 
-    public Response<Set<String>> zrevrangeByScore(byte[] key, byte[] max,
-                                                  byte[] min, int offset, int count) {
+    public Response<Set<String>> zrevrangeByScore(byte[] key, byte[] max, byte[] min, int offset, int count) {
         client.zrevrangeByScore(key, max, min, offset, count);
         return getResponse(BuilderFactory.STRING_ZSET);
     }
@@ -1075,38 +1045,32 @@ public class Pipeline extends Queable {
         return getResponse(BuilderFactory.BYTE_ARRAY_ZSET);
     }
 
-    public Response<Set<Tuple>> zrevrangeByScoreWithScores(String key,
-                                                           double max, double min) {
+    public Response<Set<Tuple>> zrevrangeByScoreWithScores(String key, double max, double min) {
         client.zrevrangeByScoreWithScores(key, max, min);
         return getResponse(BuilderFactory.TUPLE_ZSET);
     }
 
-    public Response<Set<Tuple>> zrevrangeByScoreWithScores(byte[] key,
-                                                           double max, double min) {
+    public Response<Set<Tuple>> zrevrangeByScoreWithScores(byte[] key, double max, double min) {
         client.zrevrangeByScoreWithScores(key, toByteArray(max), toByteArray(min));
         return getResponse(BuilderFactory.TUPLE_ZSET);
     }
 
-    public Response<Set<Tuple>> zrevrangeByScoreWithScores(byte[] key,
-                                                           byte[] max, byte[] min) {
+    public Response<Set<Tuple>> zrevrangeByScoreWithScores(byte[] key, byte[] max, byte[] min) {
         client.zrevrangeByScoreWithScores(key, max, min);
         return getResponse(BuilderFactory.TUPLE_ZSET);
     }
 
-    public Response<Set<Tuple>> zrevrangeByScoreWithScores(String key,
-                                                           double max, double min, int offset, int count) {
+    public Response<Set<Tuple>> zrevrangeByScoreWithScores(String key, double max, double min, int offset, int count) {
         client.zrevrangeByScoreWithScores(key, max, min, offset, count);
         return getResponse(BuilderFactory.TUPLE_ZSET);
     }
 
-    public Response<Set<Tuple>> zrevrangeByScoreWithScores(byte[] key,
-                                                           double max, double min, int offset, int count) {
+    public Response<Set<Tuple>> zrevrangeByScoreWithScores(byte[] key, double max, double min, int offset, int count) {
         client.zrevrangeByScoreWithScores(key, toByteArray(max), toByteArray(min), offset, count);
         return getResponse(BuilderFactory.TUPLE_ZSET);
     }
 
-    public Response<Set<Tuple>> zrevrangeByScoreWithScores(byte[] key,
-                                                           byte[] max, byte[] min, int offset, int count) {
+    public Response<Set<Tuple>> zrevrangeByScoreWithScores(byte[] key, byte[] max, byte[] min, int offset, int count) {
         client.zrevrangeByScoreWithScores(key, max, min, offset, count);
         return getResponse(BuilderFactory.TUPLE_ZSET);
     }
@@ -1176,14 +1140,12 @@ public class Pipeline extends Queable {
         return getResponse(BuilderFactory.STRING_ZSET);
     }
 
-    public Response<Set<Tuple>> zrevrangeWithScores(String key, int start,
-                                                    int end) {
+    public Response<Set<Tuple>> zrevrangeWithScores(String key, int start, int end) {
         client.zrevrangeWithScores(key, start, end);
         return getResponse(BuilderFactory.TUPLE_ZSET);
     }
 
-    public Response<Set<Tuple>> zrevrangeWithScores(byte[] key, int start,
-                                                    int end) {
+    public Response<Set<Tuple>> zrevrangeWithScores(byte[] key, int start, int end) {
         client.zrevrangeWithScores(key, start, end);
         return getResponse(BuilderFactory.TUPLE_ZSET);
     }
@@ -1218,14 +1180,12 @@ public class Pipeline extends Queable {
         return getResponse(BuilderFactory.LONG);
     }
 
-    public Response<Long> zunionstore(String dstkey, ZParams params,
-                                      String... sets) {
+    public Response<Long> zunionstore(String dstkey, ZParams params, String... sets) {
         client.zunionstore(dstkey, params, sets);
         return getResponse(BuilderFactory.LONG);
     }
 
-    public Response<Long> zunionstore(byte[] dstkey, ZParams params,
-                                      byte[]... sets) {
+    public Response<Long> zunionstore(byte[] dstkey, ZParams params, byte[]... sets) {
         client.zunionstore(dstkey, params, sets);
         return getResponse(BuilderFactory.LONG);
     }
@@ -1250,14 +1210,12 @@ public class Pipeline extends Queable {
         return getResponse(BuilderFactory.STRING);
     }
 
-    public Response<String> brpoplpush(String source, String destination,
-                                       int timeout) {
+    public Response<String> brpoplpush(String source, String destination, int timeout) {
         client.brpoplpush(source, destination, timeout);
         return getResponse(BuilderFactory.STRING);
     }
 
-    public Response<String> brpoplpush(byte[] source, byte[] destination,
-                                       int timeout) {
+    public Response<String> brpoplpush(byte[] source, byte[] destination, int timeout) {
         client.brpoplpush(source, destination, timeout);
         return getResponse(BuilderFactory.STRING);
     }
@@ -1291,7 +1249,7 @@ public class Pipeline extends Queable {
 
     public void multi() {
         client.multi();
-        getResponse(BuilderFactory.STRING); //Expecting OK
+        getResponse(BuilderFactory.STRING); // Expecting OK
         currentMulti = new MultiResponseBuilder();
     }
 

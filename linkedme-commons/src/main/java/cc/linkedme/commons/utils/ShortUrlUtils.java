@@ -9,9 +9,9 @@ import java.util.Stack;
  */
 public class ShortUrlUtils {
 
-    public static final char shortUrlCoder[] = {'0', '1', '2', '3', '4', '5', '6', '7', '8', '9',
-            'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o', 'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z',
-            'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z'};
+    public static final char shortUrlCoder[] = {'0', '1', '2', '3', '4', '5', '6', '7', '8', '9', 'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h',
+            'i', 'j', 'k', 'l', 'm', 'n', 'o', 'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z', 'A', 'B', 'C', 'D', 'E', 'F', 'G',
+            'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z'};
 
     public static int sixTwoValue(char c) {
         for (int i = 0; i < shortUrlCoder.length; i++) {
@@ -66,7 +66,8 @@ public class ShortUrlUtils {
         return result;
     }
 
-    public static String linkIdentifier(String appKey, String type, String tags, String channel, String feature, String stage, String alias, String sdk, String data) {
+    public static String linkIdentifier(String appKey, String type, String tags, String channel, String feature, String stage, String alias,
+            String sdk, String data) {
         StringBuffer buffer = new StringBuffer();
         buffer.append(appKey);
         buffer.append(type);
@@ -89,7 +90,8 @@ public class ShortUrlUtils {
         return result;
     }
 
-    public static String identifyClickId(String appId, String type, String tags, String channel, String campaign, String feature, String stage, String alias, String data, String deepLinkPath) {
+    public static String identifyClickId(String appId, String type, String tags, String channel, String campaign, String feature,
+            String stage, String alias, String data, String deepLinkPath) {
         StringBuffer buffer = new StringBuffer();
         buffer.append(appId);
         buffer.append(type);

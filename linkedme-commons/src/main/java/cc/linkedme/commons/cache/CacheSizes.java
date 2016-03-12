@@ -1,13 +1,10 @@
 /**
- * $RCSfile$
- * $Revision$
- * $Date$
+ * $RCSfile$ $Revision$ $Date$
  * <p>
  * Copyright (C) 2004-2008 Jive Software. All rights reserved.
  * <p>
- * This software is published under the terms of the GNU Public License (GPL),
- * a copy of which is included in this distribution, or a commercial license
- * agreement with Jive.
+ * This software is published under the terms of the GNU Public License (GPL), a copy of which is
+ * included in this distribution, or a commercial license agreement with Jive.
  */
 
 package cc.linkedme.commons.cache;
@@ -16,23 +13,22 @@ import java.util.Map;
 import java.util.Collection;
 
 /**
- * Utility class for determining the sizes in bytes of commonly used objects.
- * Classes implementing the Cacheable interface should use this class to
- * determine their size.
- * length: Length(reference) + Length(object/primaryData)
+ * Utility class for determining the sizes in bytes of commonly used objects. Classes implementing
+ * the Cacheable interface should use this class to determine their size. length: Length(reference)
+ * + Length(object/primaryData)
  *
  * @author Matt Tucker
  */
 public class CacheSizes {
 
     /**
-     * Returns the size in bytes of a basic Object. This method should only
-     * be used for actual Object objects and not classes that extend Object.
+     * Returns the size in bytes of a basic Object. This method should only be used for actual
+     * Object objects and not classes that extend Object.
      *
      * @return the size of an Object.
      */
     public static int sizeOfObject() {
-        //return 4;
+        // return 4;
         return 12;
     }
 
@@ -46,7 +42,7 @@ public class CacheSizes {
         if (string == null) {
             return 0;
         }
-        //return 4 + string.length() * 2;
+        // return 4 + string.length() * 2;
         return 8 + string.length() * 2;
     }
 
@@ -101,13 +97,12 @@ public class CacheSizes {
      * @return the size of a Date.
      */
     public static int sizeOfDate() {
-        //return 12;
+        // return 12;
         return 20;
     }
 
     /**
-     * Returns the size in bytes of a Map object. All keys and
-     * values <b>must be Strings</b>.
+     * Returns the size in bytes of a Map object. All keys and values <b>must be Strings</b>.
      *
      * @param map the Map object to determine the size of.
      * @return the size of the Map object.
@@ -132,8 +127,8 @@ public class CacheSizes {
     }
 
     /**
-     * Returns the size in bytes of a Collection object. Elements are assumed to be
-     * <tt>String</tt>s, <tt>Long</tt>s or <tt>Cacheable</tt> objects.
+     * Returns the size in bytes of a Collection object. Elements are assumed to be <tt>String</tt>
+     * s, <tt>Long</tt>s or <tt>Cacheable</tt> objects.
      *
      * @param list the Collection object to determine the size of.
      * @return the size of the Collection object.

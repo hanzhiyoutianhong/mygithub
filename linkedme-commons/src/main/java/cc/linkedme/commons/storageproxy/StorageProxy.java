@@ -47,8 +47,8 @@ public class StorageProxy<T> extends StorageAble<T> {
     }
 
     /**
-     * return T only if cache available, no read through from db
-     * useful for build vector cache, skip the non-active users.
+     * return T only if cache available, no read through from db useful for build vector cache, skip
+     * the non-active users.
      */
     public T getIfAvailable(String key) {
         if (key == null) {
@@ -60,9 +60,8 @@ public class StorageProxy<T> extends StorageAble<T> {
     }
 
     /**
-     * return T only if cache in master, no read through from db
-     * and other mcs, useful for build vector cache, skip the
-     * non-active users.
+     * return T only if cache in master, no read through from db and other mcs, useful for build
+     * vector cache, skip the non-active users.
      */
     public T getMasterIfAvailable(String key) {
         if (key == null) {
@@ -95,43 +94,46 @@ public class StorageProxy<T> extends StorageAble<T> {
         if (value == null && needSearchBackupStorage(backupStorage, key)) {
             value = backupStorage.get(key);
 
-//            if(value != null 
-//                && value instanceof UserAttentions
-//                && ((UserAttentions)value).getAttentions().length > Constants.MAX_FRIEND_CACHE_SIZE){
-//                setUserFollowers((UserAttentions)value, key);
-//            }else if(value != null){
-//                // FIXME 2011/12/31之前将set改为add，以解决并发问题, by daoru
-//                boolean isDirty = false;
-//                boolean isContentMissed = false;
-//                boolean isUserTypeMissed = false;
-//                if (value instanceof DoubleLongitudeVectorItem) {
-//                    isDirty = ((DoubleLongitudeVectorItem) value).isDirty();
-//                } else if (value instanceof VectorItem) {
-//                    isDirty = ((VectorItem) value).isDirty();
-//                } else if ( value instanceof byte[]){
-//                  String suffix = StorageAble.getKeySuffix(key);
-//                  if (StorageAble.CacheSuffix.META_VECTOR_STATUS_DATE.equals(suffix)
-//                      || StorageAble.CacheSuffix.META_VECTOR_STATUS_LATEST.equals(suffix)
-//                      || StorageAble.CacheSuffix.PAGE_VECTOR_STATUS_DATE.equals(suffix)) {
-//                    MetaItem item = MetaItemPBUtil.toItem((byte[]) value);
-//                    isDirty = MetaItemPBUtil.isDirty(item);
-//                    isContentMissed = MetaItemPBUtil.isContentMissed(item);
-//                    isUserTypeMissed = MetaItemPBUtil.isUserTypeMissed(item);
-//                  }
-//                }
-//                if (isDirty && dirtyCacheSwitcher.isOpen()) {
-//                    preferedStorage.set(key, value, Constants.EXPTIME_VECTOR_DIRTY);
-//                    ApiLogger.warn("StorageProxy cache set dirty value. key:" + key + ", expire: + " + Constants.EXPTIME_VECTOR_DIRTY.getTime());
-//                } else if (isContentMissed && dirtyCacheSwitcher.isOpen()){
-//                    preferedStorage.set(key, value, Constants.EXPTIME_META_VECTOR_CONTENT_MISSED);
-//                    ApiLogger.warn("StorageProxy cache set dirty value. key:" + key + ", expire: + " + Constants.EXPTIME_META_VECTOR_CONTENT_MISSED.getTime());
-//                } else if (isUserTypeMissed && dirtyCacheSwitcher.isOpen()) {
-//                    preferedStorage.set(key, value, Constants.EXPTIME_META_VECTOR_USERTYPE_MISSED);
-//                    ApiLogger.warn("StorageProxy cache set usertype dirty value. key:" + key + ", expire: + " + Constants.EXPTIME_META_VECTOR_USERTYPE_MISSED.getTime());
-//                } else {
-//                    preferedStorage.set(key, value);
-//                }
-//            }
+            // if(value != null
+            // && value instanceof UserAttentions
+            // && ((UserAttentions)value).getAttentions().length > Constants.MAX_FRIEND_CACHE_SIZE){
+            // setUserFollowers((UserAttentions)value, key);
+            // }else if(value != null){
+            // // FIXME 2011/12/31之前将set改为add，以解决并发问题, by daoru
+            // boolean isDirty = false;
+            // boolean isContentMissed = false;
+            // boolean isUserTypeMissed = false;
+            // if (value instanceof DoubleLongitudeVectorItem) {
+            // isDirty = ((DoubleLongitudeVectorItem) value).isDirty();
+            // } else if (value instanceof VectorItem) {
+            // isDirty = ((VectorItem) value).isDirty();
+            // } else if ( value instanceof byte[]){
+            // String suffix = StorageAble.getKeySuffix(key);
+            // if (StorageAble.CacheSuffix.META_VECTOR_STATUS_DATE.equals(suffix)
+            // || StorageAble.CacheSuffix.META_VECTOR_STATUS_LATEST.equals(suffix)
+            // || StorageAble.CacheSuffix.PAGE_VECTOR_STATUS_DATE.equals(suffix)) {
+            // MetaItem item = MetaItemPBUtil.toItem((byte[]) value);
+            // isDirty = MetaItemPBUtil.isDirty(item);
+            // isContentMissed = MetaItemPBUtil.isContentMissed(item);
+            // isUserTypeMissed = MetaItemPBUtil.isUserTypeMissed(item);
+            // }
+            // }
+            // if (isDirty && dirtyCacheSwitcher.isOpen()) {
+            // preferedStorage.set(key, value, Constants.EXPTIME_VECTOR_DIRTY);
+            // ApiLogger.warn("StorageProxy cache set dirty value. key:" + key + ", expire: + " +
+            // Constants.EXPTIME_VECTOR_DIRTY.getTime());
+            // } else if (isContentMissed && dirtyCacheSwitcher.isOpen()){
+            // preferedStorage.set(key, value, Constants.EXPTIME_META_VECTOR_CONTENT_MISSED);
+            // ApiLogger.warn("StorageProxy cache set dirty value. key:" + key + ", expire: + " +
+            // Constants.EXPTIME_META_VECTOR_CONTENT_MISSED.getTime());
+            // } else if (isUserTypeMissed && dirtyCacheSwitcher.isOpen()) {
+            // preferedStorage.set(key, value, Constants.EXPTIME_META_VECTOR_USERTYPE_MISSED);
+            // ApiLogger.warn("StorageProxy cache set usertype dirty value. key:" + key + ", expire:
+            // + " + Constants.EXPTIME_META_VECTOR_USERTYPE_MISSED.getTime());
+            // } else {
+            // preferedStorage.set(key, value);
+            // }
+            // }
         }
 
         return value;
@@ -177,20 +179,26 @@ public class StorageProxy<T> extends StorageAble<T> {
         long preCacheGetTime = t2 - t1;
         long backCacheGetTime = t3 - t2;
         long preCacheSetbackTime = t4 - t3;
-//        if(preCacheGetTime > 50){           
-//            StringBuilder sb = new StringBuilder(128).append("[get] key=").append(key).append(", PreferCache, isMem:")
-//                .append((preferedStorage instanceof MemCacheStorage)).append(", isProxy=").append(preferedStorage instanceof StorageProxy)
-//                .append(", preCacheGetT=").append(preCacheGetTime);
-//            if(backCacheGetTime > 0){
-//                sb.append(", preCacheGetT=").append(preCacheGetTime ).append(", backCacheGetTime=").append( backCacheGetTime)
-//                .append(", preCacheSetbackTime=").append(preCacheSetbackTime);
-//            }
-//            ApiLogger.logForTest(sb, null);
-//        }else if(backCacheGetTime > 50){            
-//            ApiLogger.logForTest(new StringBuilder(64).append("[get] key=").append(key).append(", PreferCache, isMem:").append((preferedStorage instanceof MemCacheStorage))
-//                    .append(", isProxy=").append((preferedStorage instanceof StorageProxy)).append(", preCacheGetT=").append(preCacheGetTime)
-//                    .append(", backCacheGetTime=").append(backCacheGetTime).append(", preCacheSetbackTime=").append(preCacheSetbackTime), null);
-//        } 
+        // if(preCacheGetTime > 50){
+        // StringBuilder sb = new StringBuilder(128).append("[get] key=").append(key).append(",
+        // PreferCache, isMem:")
+        // .append((preferedStorage instanceof MemCacheStorage)).append(",
+        // isProxy=").append(preferedStorage instanceof StorageProxy)
+        // .append(", preCacheGetT=").append(preCacheGetTime);
+        // if(backCacheGetTime > 0){
+        // sb.append(", preCacheGetT=").append(preCacheGetTime ).append(",
+        // backCacheGetTime=").append( backCacheGetTime)
+        // .append(", preCacheSetbackTime=").append(preCacheSetbackTime);
+        // }
+        // ApiLogger.logForTest(sb, null);
+        // }else if(backCacheGetTime > 50){
+        // ApiLogger.logForTest(new StringBuilder(64).append("[get] key=").append(key).append(",
+        // PreferCache, isMem:").append((preferedStorage instanceof MemCacheStorage))
+        // .append(", isProxy=").append((preferedStorage instanceof StorageProxy)).append(",
+        // preCacheGetT=").append(preCacheGetTime)
+        // .append(", backCacheGetTime=").append(backCacheGetTime).append(",
+        // preCacheSetbackTime=").append(preCacheSetbackTime), null);
+        // }
         return value;
     }
 
@@ -205,33 +213,36 @@ public class StorageProxy<T> extends StorageAble<T> {
         if (backupStorage == null) {
             return false;
         }
-//      if(key.endsWith(StorageAble.CacheSuffix.ATTENTION_FOLLOWERS)
-//              && !key.endsWith(firstFollowersSuffix)){
-//          return false;
-//      }
+        // if(key.endsWith(StorageAble.CacheSuffix.ATTENTION_FOLLOWERS)
+        // && !key.endsWith(firstFollowersSuffix)){
+        // return false;
+        // }
         return true;
     }
 
-//    private void setUserFollowers(UserAttentions userAttention, String key){
-//        int indexCount = (userAttention.getAttentions().length - 1) / Constants.MAX_FRIEND_CACHE_SIZE + 1;
-//        String rawKey = StorageAble.getSqlKey(key);             
-//        for(int i = 1; i <= indexCount; i++){
-//            String midKey = Constants.KEY_SEPERATOR + i;
-//            String utKey = StorageAble.getCacheKey(rawKey, StorageAble.Type.attention_uid_followers, midKey);
-//            UserAttentions ut = new UserAttentions();
-//            ut.setCount(userAttention.getCount());          
-//            ut.setUid(userAttention.getUid());
-//            int from = (i - 1) * Constants.MAX_FRIEND_CACHE_SIZE;
-//            int count = i < indexCount ? Constants.MAX_FRIEND_CACHE_SIZE : userAttention.getCount() % Constants.MAX_FRIEND_CACHE_SIZE;
-//            if(count == 0){
-//                count = Constants.MAX_FRIEND_CACHE_SIZE;
-//            }
-//            long[] ats =  new long[count];
-//            System.arraycopy(userAttention.getAttentions(), from, ats, 0, count);
-//            ut.setAttentions(ats);
-//            preferedStorage.set(utKey, (T)ut);
-//        }
-//    }
+    // private void setUserFollowers(UserAttentions userAttention, String key){
+    // int indexCount = (userAttention.getAttentions().length - 1) / Constants.MAX_FRIEND_CACHE_SIZE
+    // + 1;
+    // String rawKey = StorageAble.getSqlKey(key);
+    // for(int i = 1; i <= indexCount; i++){
+    // String midKey = Constants.KEY_SEPERATOR + i;
+    // String utKey = StorageAble.getCacheKey(rawKey, StorageAble.Type.attention_uid_followers,
+    // midKey);
+    // UserAttentions ut = new UserAttentions();
+    // ut.setCount(userAttention.getCount());
+    // ut.setUid(userAttention.getUid());
+    // int from = (i - 1) * Constants.MAX_FRIEND_CACHE_SIZE;
+    // int count = i < indexCount ? Constants.MAX_FRIEND_CACHE_SIZE : userAttention.getCount() %
+    // Constants.MAX_FRIEND_CACHE_SIZE;
+    // if(count == 0){
+    // count = Constants.MAX_FRIEND_CACHE_SIZE;
+    // }
+    // long[] ats = new long[count];
+    // System.arraycopy(userAttention.getAttentions(), from, ats, 0, count);
+    // ut.setAttentions(ats);
+    // preferedStorage.set(utKey, (T)ut);
+    // }
+    // }
 
     /**
      * 如果需要从backup查，则查出的数据再写入prefered cache, getMulti不从本地查也不更新本地cache
@@ -243,12 +254,12 @@ public class StorageProxy<T> extends StorageAble<T> {
             return new HashMap<String, T>(1);
         }
 
-        //getMulti 不使用localCache
-//        if(preferedStorage instanceof LocalCacheStorage){
-//            // this code is problem, why ignore the following code?
-//            ApiLogger.warn("Fatal config error, bad proxy config.");
-//            return backupStorage.getMulti(keys);
-//        }
+        // getMulti 不使用localCache
+        // if(preferedStorage instanceof LocalCacheStorage){
+        // // this code is problem, why ignore the following code?
+        // ApiLogger.warn("Fatal config error, bad proxy config.");
+        // return backupStorage.getMulti(keys);
+        // }
         boolean hit = true;
         long t1 = System.currentTimeMillis();
         long t2 = 0, t3 = 0, t4 = 0;
@@ -286,11 +297,13 @@ public class StorageProxy<T> extends StorageAble<T> {
         }
 
         String debugInfo = null;
-//        if (debug) {
-//            StringBuilder sb = new StringBuilder(128).append("[getMulti] keys[0]=").append(keys[0]).append(", PreferCache, isMem:")
-//                    .append((preferedStorage instanceof MemCacheStorage)).append(", isProxy=").append(preferedStorage instanceof StorageProxy);
-//            debugInfo = sb.toString();
-//        }
+        // if (debug) {
+        // StringBuilder sb = new StringBuilder(128).append("[getMulti]
+        // keys[0]=").append(keys[0]).append(", PreferCache, isMem:")
+        // .append((preferedStorage instanceof MemCacheStorage)).append(",
+        // isProxy=").append(preferedStorage instanceof StorageProxy);
+        // debugInfo = sb.toString();
+        // }
 
         if (Constants.enableProfiling) {
             String keySuffix = StorageAble.getBareKeySuffix(keys[0]);
@@ -307,7 +320,7 @@ public class StorageProxy<T> extends StorageAble<T> {
         }
 
         mcGetsMonitor.end(stamps, debugInfo, hit, false, Constants.OP_CACHE_TIMEOUT);
-        //mvd、mvl中缓存失效穿透到db回中缓存时，要获取用户的类型，回中微博到mvd和mvl。
+        // mvd、mvl中缓存失效穿透到db回中缓存时，要获取用户的类型，回中微博到mvd和mvl。
         return values1;
     }
 
@@ -326,7 +339,8 @@ public class StorageProxy<T> extends StorageAble<T> {
     }
 
     /**
-     * 继续查询的条件：1 如果一条记录都没有去到； 2：如果backup是memcache，而先查的localCache没有查完，也去memcache查 3:如果memcache没有查到一个数据
+     * 继续查询的条件：1 如果一条记录都没有去到； 2：如果backup是memcache，而先查的localCache没有查完，也去memcache查
+     * 3:如果memcache没有查到一个数据
      *
      * @param values
      * @param keySize
@@ -334,25 +348,25 @@ public class StorageProxy<T> extends StorageAble<T> {
      */
     private boolean needSearchBackupStorage(Map<String, T> values, int keySize) {
         boolean needSearch = values == null;
-//            || values.size() == 0 
-//            || (values.size() < keySize 
-//                    && backupStorage != null
-//                    && backupStorage instanceof MemCacheStorage);
-//        if(!needSearch){
-//            if(preferedStorage instanceof MemCacheStorage
-//                    || preferedStorage instanceof StorageProxy){
-//                boolean hasNonNullValue = false;
-//                for(T v : values.values()){
-//                    if(v != null){
-//                        hasNonNullValue = true;
-//                        break;
-//                    }
-//                }
-//                if(!hasNonNullValue){
-//                    needSearch = true;
-//                }
-//            }
-//        }
+        // || values.size() == 0
+        // || (values.size() < keySize
+        // && backupStorage != null
+        // && backupStorage instanceof MemCacheStorage);
+        // if(!needSearch){
+        // if(preferedStorage instanceof MemCacheStorage
+        // || preferedStorage instanceof StorageProxy){
+        // boolean hasNonNullValue = false;
+        // for(T v : values.values()){
+        // if(v != null){
+        // hasNonNullValue = true;
+        // break;
+        // }
+        // }
+        // if(!hasNonNullValue){
+        // needSearch = true;
+        // }
+        // }
+        // }
         return needSearch;
     }
 
@@ -396,7 +410,7 @@ public class StorageProxy<T> extends StorageAble<T> {
         return preCacheResult && bakCacheResult;
     }
 
-    // ----------- fix setCas bug -----------------  
+    // ----------- fix setCas bug -----------------
     @Override
     public boolean cas(String key, CasValue<T> value) {
         boolean preCacheResult = preferedStorage.cas(key, value);

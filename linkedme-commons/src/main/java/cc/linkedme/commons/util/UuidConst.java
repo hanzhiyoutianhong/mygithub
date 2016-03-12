@@ -3,7 +3,7 @@ package cc.linkedme.commons.util;
 public class UuidConst {
 
     public static final long ID_OFFSET = 515483463;
-    public static final long ID_OFFSET_2014 = 1388505600; //2014-01-01 00:00:00
+    public static final long ID_OFFSET_2014 = 1388505600; // 2014-01-01 00:00:00
 
     public static final long SEQ_BIT_LENGTH = 18;
     public static final long IDC_SEQ_BIT_LENGTH = 4 + SEQ_BIT_LENGTH;
@@ -20,13 +20,11 @@ public class UuidConst {
     /**
      * idc 为12、13的发号器分发spec uuid，因为原始所有的idc等字段都用long，此处统一也使用long类型
      */
-    public static final long[] SPEC_IDC_FLAGS = new long[]{12L, 13L};
+    public static final long[] SPEC_IDC_FLAGS = new long[] {12L, 13L};
 
     public static enum BizFlag {
 
-        defaultBiz(0),
-        activity(1),
-        api(2);
+        defaultBiz(0), activity(1), api(2);
 
         private int value;
 

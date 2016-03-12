@@ -33,11 +33,9 @@ public class JsonBuilder implements Serializable {
     }
 
     public JsonBuilder append(String name, String value) {
-        if (name == null)
-            return this;
+        if (name == null) return this;
 
-        if (sb.length() > 1)
-            sb.append(",");
+        if (sb.length() > 1) sb.append(",");
         sb.append("\"").append(name).append("\":");
         if (value != null)
             sb.append("\"").append(JsonUtil.toJsonStr(value)).append("\"");
@@ -48,11 +46,9 @@ public class JsonBuilder implements Serializable {
     }
 
     public JsonBuilder appendStrArr(String name, String[] value) {
-        if (name == null)
-            return this;
+        if (name == null) return this;
 
-        if (sb.length() > 1)
-            sb.append(",");
+        if (sb.length() > 1) sb.append(",");
         sb.append("\"").append(name).append("\":");
         if (value != null) {
             sb.append("[");
@@ -72,11 +68,9 @@ public class JsonBuilder implements Serializable {
     }
 
     public JsonBuilder appendJsonArr(String name, List<JsonBuilder> jsonArr) {
-        if (name == null)
-            return this;
+        if (name == null) return this;
 
-        if (sb.length() > 1)
-            sb.append(",");
+        if (sb.length() > 1) sb.append(",");
         sb.append("\"").append(name).append("\":");
         if (jsonArr != null) {
             sb.append("[");
@@ -98,13 +92,12 @@ public class JsonBuilder implements Serializable {
     /**
      * 附加long数组到buffer中
      *
-     * @param name   待添加的属性名称
+     * @param name 待添加的属性名称
      * @param values long数组
      * @return 如果数组不为空，则返回按照","分割的字符串，否则返回"[]"
      */
     public JsonBuilder appendLongArr(String name, long[] values) {
-        if (name == null)
-            return this;
+        if (name == null) return this;
 
         if (sb.length() > 1) {
             sb.append(",");
@@ -138,11 +131,9 @@ public class JsonBuilder implements Serializable {
     }
 
     public JsonBuilder appendStrArr(String name, long[] values) {
-        if (name == null)
-            return this;
+        if (name == null) return this;
 
-        if (sb.length() > 1)
-            sb.append(",");
+        if (sb.length() > 1) sb.append(",");
         sb.append("\"").append(name).append("\":");
         if (values != null) {
             sb.append("[");
@@ -162,11 +153,9 @@ public class JsonBuilder implements Serializable {
     }
 
     public JsonBuilder appendArr(String name, Jsonable[] values) {
-        if (name == null)
-            return this;
+        if (name == null) return this;
 
-        if (sb.length() > 1)
-            sb.append(",");
+        if (sb.length() > 1) sb.append(",");
         sb.append("\"").append(name).append("\":");
         sb.append(JsonUtil.toJson(values));
 
@@ -176,13 +165,12 @@ public class JsonBuilder implements Serializable {
     /**
      * 附加Long列表到buffer中
      *
-     * @param name   待添加的属性名称
+     * @param name 待添加的属性名称
      * @param values long列表
      * @return 如果List不为空，则返回按照","分割的字符串，否则返回"[]"
      */
     public JsonBuilder appendLongList(String name, List<Long> values) {
-        if (name == null)
-            return this;
+        if (name == null) return this;
 
         if (sb.length() > 1) {
             sb.append(",");
@@ -206,11 +194,9 @@ public class JsonBuilder implements Serializable {
     }
 
     public JsonBuilder appendStringList(String name, List<String> value) {
-        if (name == null)
-            return this;
+        if (name == null) return this;
 
-        if (sb.length() > 1)
-            sb.append(",");
+        if (sb.length() > 1) sb.append(",");
         sb.append("\"").append(name).append("\":");
         if (value != null) {
             sb.append("[");
@@ -230,11 +216,9 @@ public class JsonBuilder implements Serializable {
     }
 
     public JsonBuilder appendObject(String name, String[] value) {
-        if (name == null)
-            return this;
+        if (name == null) return this;
 
-        if (sb.length() > 1)
-            sb.append(",");
+        if (sb.length() > 1) sb.append(",");
         sb.append("\"").append(name).append("\":");
         if (value != null) {
             sb.append("{");
@@ -255,32 +239,27 @@ public class JsonBuilder implements Serializable {
     }
 
     public JsonBuilder append(String name, boolean value) {
-        if (name == null)
-            return this;
+        if (name == null) return this;
 
-        if (sb.length() > 1)
-            sb.append(",");
+        if (sb.length() > 1) sb.append(",");
         sb.append("\"").append(name).append("\":").append(value);
         return this;
     }
 
     public JsonBuilder append(String name, int value) {
-        if (sb.length() > 1)
-            sb.append(",");
+        if (sb.length() > 1) sb.append(",");
         sb.append("\"").append(name).append("\":").append(value);
         return this;
     }
 
     public JsonBuilder append(String name, long value) {
-        if (sb.length() > 1)
-            sb.append(",");
+        if (sb.length() > 1) sb.append(",");
         sb.append("\"").append(name).append("\":").append(value);
         return this;
     }
 
     public JsonBuilder append(String name, double value) {
-        if (sb.length() > 1)
-            sb.append(",");
+        if (sb.length() > 1) sb.append(",");
         sb.append("\"").append(name).append("\":").append(value);
         return this;
     }
@@ -297,11 +276,9 @@ public class JsonBuilder implements Serializable {
      * @return
      */
     public JsonBuilder appendJsonValue(String name, String jsonValue) {
-        if (name == null || jsonValue == null)
-            return this;
+        if (name == null || jsonValue == null) return this;
 
-        if (sb.length() > 1)
-            sb.append(",");
+        if (sb.length() > 1) sb.append(",");
         sb.append("\"").append(name).append("\":").append(jsonValue);
         return this;
     }
@@ -319,10 +296,10 @@ public class JsonBuilder implements Serializable {
 
     @Override
     public String toString() {
-        /* 去掉，因为嵌套插入PostSource调用可能不含{}, 如 "source": "web"
-        if (sb.charAt(sb.length() - 1) != '}')
-			sb.append('}');
-			*/
+        /*
+         * 去掉，因为嵌套插入PostSource调用可能不含{}, 如 "source": "web" if (sb.charAt(sb.length() - 1) != '}')
+         * sb.append('}');
+         */
         return sb.toString();
     }
 

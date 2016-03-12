@@ -114,18 +114,13 @@ public class TableItem implements Serializable {
 
     @Override
     public boolean equals(Object obj) {
-        if (this == obj)
-            return true;
-        if (obj == null)
-            return false;
-        if (getClass() != obj.getClass())
-            return false;
+        if (this == obj) return true;
+        if (obj == null) return false;
+        if (getClass() != obj.getClass()) return false;
         TableItem other = (TableItem) obj;
         if (itemName == null) {
-            if (other.itemName != null)
-                return false;
-        } else if (!itemName.equals(other.itemName))
-            return false;
+            if (other.itemName != null) return false;
+        } else if (!itemName.equals(other.itemName)) return false;
         return true;
     }
 

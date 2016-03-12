@@ -18,8 +18,7 @@ public abstract class BinaryJedisPubSub {
 
     public abstract void onMessage(byte[] channel, byte[] message);
 
-    public abstract void onPMessage(byte[] pattern, byte[] channel,
-                                    byte[] message);
+    public abstract void onPMessage(byte[] pattern, byte[] channel, byte[] message);
 
     public abstract void onSubscribe(byte[] channel, int subscribedChannels);
 

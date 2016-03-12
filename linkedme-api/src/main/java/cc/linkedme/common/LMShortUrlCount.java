@@ -16,8 +16,7 @@ public class LMShortUrlCount {
      * construction function
      */
 
-    public LMShortUrlCount() {
-    }
+    public LMShortUrlCount() {}
 
     /**
      * get and set function

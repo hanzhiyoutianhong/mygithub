@@ -35,8 +35,7 @@ import cc.linkedme.commons.log.ApiLogger;
 public class SwitcherSupportJedis extends WeiboJedis {
 
     /**
-     * redis资源开关统一命名规则
-     * http://redmine.intra.weibo.com/projects/platform/wiki/Switcher
+     * redis资源开关统一命名规则 http://redmine.intra.weibo.com/projects/platform/wiki/Switcher
      */
     public static String REDIS_SWITCHER_PREFIX = "resource.redis.";
 
@@ -46,12 +45,11 @@ public class SwitcherSupportJedis extends WeiboJedis {
 
     private static final String RESOURCE_TYPE = "redis";
     /**
-     * the global write switcher of REDIS client. It's purpose is avoiding the
-     * touchstone system may set dirty value to online's REDIS resources
+     * the global write switcher of REDIS client. It's purpose is avoiding the touchstone system may
+     * set dirty value to online's REDIS resources
      */
-    private static final Switcher REDIS_CLIENT_GLOBAL_WRITE_SWITCHER = SwitcherManagerFactoryLoader
-            .getSwitcherManagerFactory().getSwitcherManager()
-            .registerSwitcher("feature.global.redis.resource.write", true);
+    private static final Switcher REDIS_CLIENT_GLOBAL_WRITE_SWITCHER = SwitcherManagerFactoryLoader.getSwitcherManagerFactory()
+            .getSwitcherManager().registerSwitcher("feature.global.redis.resource.write", true);
 
     public SwitcherSupportJedis(JedisShardInfo shardInfo) {
         super(shardInfo);
@@ -102,12 +100,12 @@ public class SwitcherSupportJedis extends WeiboJedis {
     }
 
 
-    //================ write 操作 =========================
+    // ================ write 操作 =========================
 
 
     @Override
     public String set(final String key, final String value) {
-        //默认返回 OK_REPLY.
+        // 默认返回 OK_REPLY.
         return throwOrReturnValue(false, OK_REPLY, new Callback<String>() {
 
             @Override
@@ -119,7 +117,7 @@ public class SwitcherSupportJedis extends WeiboJedis {
 
     @Override
     public String set(final byte[] key, final byte[] value) {
-        //默认返回 OK_REPLY.
+        // 默认返回 OK_REPLY.
         return throwOrReturnValue(false, OK_REPLY, new Callback<String>() {
 
             @Override
@@ -131,7 +129,7 @@ public class SwitcherSupportJedis extends WeiboJedis {
 
     @Override
     public String getSet(final String key, final String value) {
-        //默认返回 null
+        // 默认返回 null
         return throwOrReturnValue(false, null, new Callback<String>() {
 
             @Override
@@ -144,7 +142,7 @@ public class SwitcherSupportJedis extends WeiboJedis {
 
     @Override
     public byte[] getSet(final byte[] key, final byte[] value) {
-        //默认返回 null
+        // 默认返回 null
         return throwOrReturnValue(false, null, new Callback<byte[]>() {
 
             @Override
@@ -156,7 +154,7 @@ public class SwitcherSupportJedis extends WeiboJedis {
 
     @Override
     public Long setnx(final String key, final String value) {
-        //默认返回 0 表示set失败
+        // 默认返回 0 表示set失败
         return throwOrReturnValue(false, 0L, new Callback<Long>() {
 
             @Override
@@ -168,7 +166,7 @@ public class SwitcherSupportJedis extends WeiboJedis {
 
     @Override
     public Long setnx(final byte[] key, final byte[] value) {
-        //默认返回 0 表示set失败
+        // 默认返回 0 表示set失败
         return throwOrReturnValue(false, 0L, new Callback<Long>() {
 
             @Override
@@ -180,7 +178,7 @@ public class SwitcherSupportJedis extends WeiboJedis {
 
     @Override
     public Long del(final String... keys) {
-        //默认返回 0 表示未被删除
+        // 默认返回 0 表示未被删除
         return throwOrReturnValue(false, 0L, new Callback<Long>() {
 
             @Override
@@ -193,7 +191,7 @@ public class SwitcherSupportJedis extends WeiboJedis {
 
     @Override
     public Long del(final byte[]... keys) {
-        //默认返回 0 表示未被删除
+        // 默认返回 0 表示未被删除
         return throwOrReturnValue(false, 0L, new Callback<Long>() {
 
             @Override
@@ -205,7 +203,7 @@ public class SwitcherSupportJedis extends WeiboJedis {
 
     @Override
     public String rename(final String oldkey, final String newkey) {
-        //默认返回 OK_REPLY
+        // 默认返回 OK_REPLY
         return throwOrReturnValue(false, OK_REPLY, new Callback<String>() {
 
             @Override
@@ -218,7 +216,7 @@ public class SwitcherSupportJedis extends WeiboJedis {
 
     @Override
     public String rename(final byte[] oldkey, final byte[] newkey) {
-        //默认返回 OK_REPLY
+        // 默认返回 OK_REPLY
         return throwOrReturnValue(false, OK_REPLY, new Callback<String>() {
 
             @Override
@@ -231,7 +229,7 @@ public class SwitcherSupportJedis extends WeiboJedis {
 
     @Override
     public Long renamenx(final String oldkey, final String newkey) {
-        //默认返回 0
+        // 默认返回 0
         return throwOrReturnValue(false, 0L, new Callback<Long>() {
 
             @Override
@@ -243,7 +241,7 @@ public class SwitcherSupportJedis extends WeiboJedis {
 
     @Override
     public Long renamenx(final byte[] oldkey, final byte[] newkey) {
-        //默认返回 0
+        // 默认返回 0
         return throwOrReturnValue(false, 0L, new Callback<Long>() {
 
             @Override
@@ -255,7 +253,7 @@ public class SwitcherSupportJedis extends WeiboJedis {
 
     @Override
     public Long move(final String key, final int dbIndex) {
-        //默认返回 0,表示move失败
+        // 默认返回 0,表示move失败
         return throwOrReturnValue(false, 0L, new Callback<Long>() {
 
             @Override
@@ -268,7 +266,7 @@ public class SwitcherSupportJedis extends WeiboJedis {
 
     @Override
     public Long move(final byte[] key, final int dbIndex) {
-        //默认返回 0,表示move失败
+        // 默认返回 0,表示move失败
         return throwOrReturnValue(false, 0L, new Callback<Long>() {
 
             @Override
@@ -281,7 +279,7 @@ public class SwitcherSupportJedis extends WeiboJedis {
 
     @Override
     public String setex(final String key, final int seconds, final String value) {
-        //默认返回 OK_REPLY
+        // 默认返回 OK_REPLY
         return throwOrReturnValue(false, OK_REPLY, new Callback<String>() {
 
             @Override
@@ -293,7 +291,7 @@ public class SwitcherSupportJedis extends WeiboJedis {
 
     @Override
     public String setex(final byte[] key, final int seconds, final byte[] value) {
-        //默认返回 OK_REPLY
+        // 默认返回 OK_REPLY
         return throwOrReturnValue(false, OK_REPLY, new Callback<String>() {
 
             @Override
@@ -305,7 +303,7 @@ public class SwitcherSupportJedis extends WeiboJedis {
 
     @Override
     public String mset(final String... keysvalues) {
-        //默认返回 OK_REPLY
+        // 默认返回 OK_REPLY
         return throwOrReturnValue(false, OK_REPLY, new Callback<String>() {
 
             @Override
@@ -318,7 +316,7 @@ public class SwitcherSupportJedis extends WeiboJedis {
 
     @Override
     public String mset(final byte[]... keysvalues) {
-        //默认返回 OK_REPLY
+        // 默认返回 OK_REPLY
         return throwOrReturnValue(false, OK_REPLY, new Callback<String>() {
 
             @Override
@@ -330,7 +328,7 @@ public class SwitcherSupportJedis extends WeiboJedis {
 
     @Override
     public Long msetnx(final String... keysvalues) {
-        //默认返回 0,表示set失败
+        // 默认返回 0,表示set失败
         return throwOrReturnValue(false, 0L, new Callback<Long>() {
 
             @Override
@@ -343,7 +341,7 @@ public class SwitcherSupportJedis extends WeiboJedis {
 
     @Override
     public Long msetnx(final byte[]... keysvalues) {
-        //默认返回 0,表示set失败
+        // 默认返回 0,表示set失败
         return throwOrReturnValue(false, 0L, new Callback<Long>() {
 
             @Override
@@ -355,7 +353,7 @@ public class SwitcherSupportJedis extends WeiboJedis {
 
     @Override
     public Long decrBy(final String key, final long integer) {
-        //默认返回 0
+        // 默认返回 0
         return throwOrReturnValue(false, 0L, new Callback<Long>() {
 
             @Override
@@ -368,7 +366,7 @@ public class SwitcherSupportJedis extends WeiboJedis {
 
     @Override
     public Long decrBy(final byte[] key, final long integer) {
-        //默认返回 0
+        // 默认返回 0
         return throwOrReturnValue(false, 0L, new Callback<Long>() {
 
             @Override
@@ -380,7 +378,7 @@ public class SwitcherSupportJedis extends WeiboJedis {
 
     @Override
     public Long decr(final String key) {
-        //默认返回 0
+        // 默认返回 0
         return throwOrReturnValue(false, 0L, new Callback<Long>() {
 
             @Override
@@ -392,7 +390,7 @@ public class SwitcherSupportJedis extends WeiboJedis {
 
     @Override
     public Long decr(final byte[] key) {
-        //默认返回 0
+        // 默认返回 0
         return throwOrReturnValue(false, 0L, new Callback<Long>() {
 
             @Override
@@ -404,7 +402,7 @@ public class SwitcherSupportJedis extends WeiboJedis {
 
     @Override
     public Long incrBy(final String key, final long integer) {
-        //默认返回 0
+        // 默认返回 0
         return throwOrReturnValue(false, 0L, new Callback<Long>() {
 
             @Override
@@ -417,7 +415,7 @@ public class SwitcherSupportJedis extends WeiboJedis {
 
     @Override
     public Long incrBy(final byte[] key, final long integer) {
-        //默认返回 0
+        // 默认返回 0
         return throwOrReturnValue(false, 0L, new Callback<Long>() {
 
             @Override
@@ -429,7 +427,7 @@ public class SwitcherSupportJedis extends WeiboJedis {
 
     @Override
     public Long incr(final String key) {
-        //默认返回 0
+        // 默认返回 0
         return throwOrReturnValue(false, 0L, new Callback<Long>() {
 
             @Override
@@ -441,7 +439,7 @@ public class SwitcherSupportJedis extends WeiboJedis {
 
     @Override
     public Long incr(final byte[] key) {
-        //默认返回 0
+        // 默认返回 0
         return throwOrReturnValue(false, 0L, new Callback<Long>() {
 
             @Override
@@ -454,7 +452,7 @@ public class SwitcherSupportJedis extends WeiboJedis {
 
     @Override
     public Long hincrBy(final String key, final String field, final long value) {
-        //默认返回 0
+        // 默认返回 0
         return throwOrReturnValue(false, 0L, new Callback<Long>() {
 
             @Override
@@ -467,7 +465,7 @@ public class SwitcherSupportJedis extends WeiboJedis {
 
     @Override
     public Long hincrBy(final byte[] key, final byte[] field, final long value) {
-        //默认返回 0
+        // 默认返回 0
         return throwOrReturnValue(false, 0L, new Callback<Long>() {
 
             @Override
@@ -479,7 +477,7 @@ public class SwitcherSupportJedis extends WeiboJedis {
 
     @Override
     public Long append(final String key, final String value) {
-        //默认返回 0
+        // 默认返回 0
         return throwOrReturnValue(false, 0L, new Callback<Long>() {
 
             @Override
@@ -492,7 +490,7 @@ public class SwitcherSupportJedis extends WeiboJedis {
 
     @Override
     public Long append(final byte[] key, final byte[] value) {
-        //默认返回 0
+        // 默认返回 0
         return throwOrReturnValue(false, 0L, new Callback<Long>() {
 
             @Override
@@ -505,7 +503,7 @@ public class SwitcherSupportJedis extends WeiboJedis {
 
     @Override
     public Long hset(final String key, final String field, final String value) {
-        //默认返回 0
+        // 默认返回 0
         return throwOrReturnValue(false, 0L, new Callback<Long>() {
 
             @Override
@@ -517,7 +515,7 @@ public class SwitcherSupportJedis extends WeiboJedis {
 
     @Override
     public Long hset(final byte[] key, final byte[] field, final byte[] value) {
-        //默认返回 0
+        // 默认返回 0
         return throwOrReturnValue(false, 0L, new Callback<Long>() {
 
             @Override
@@ -530,7 +528,7 @@ public class SwitcherSupportJedis extends WeiboJedis {
 
     @Override
     public Long hsetnx(final String key, final String field, final String value) {
-        //默认返回 0
+        // 默认返回 0
         return throwOrReturnValue(false, 0L, new Callback<Long>() {
 
             @Override
@@ -542,7 +540,7 @@ public class SwitcherSupportJedis extends WeiboJedis {
 
     @Override
     public Long hsetnx(final byte[] key, final byte[] field, final byte[] value) {
-        //默认返回 0
+        // 默认返回 0
         return throwOrReturnValue(false, 0L, new Callback<Long>() {
 
             @Override
@@ -554,7 +552,7 @@ public class SwitcherSupportJedis extends WeiboJedis {
 
     @Override
     public String hmset(final String key, final Map<String, String> hash) {
-        //默认返回 OK_REPLY
+        // 默认返回 OK_REPLY
         return throwOrReturnValue(false, OK_REPLY, new Callback<String>() {
 
             @Override
@@ -567,7 +565,7 @@ public class SwitcherSupportJedis extends WeiboJedis {
 
     @Override
     public String hmset(final byte[] key, final Map<byte[], byte[]> hash) {
-        //默认返回 OK_REPLY
+        // 默认返回 OK_REPLY
         return throwOrReturnValue(false, OK_REPLY, new Callback<String>() {
 
             @Override
@@ -579,7 +577,7 @@ public class SwitcherSupportJedis extends WeiboJedis {
 
     @Override
     public Long hdel(final String key, final String... field) {
-        //默认返回 0
+        // 默认返回 0
         return throwOrReturnValue(false, 0L, new Callback<Long>() {
 
             @Override
@@ -592,7 +590,7 @@ public class SwitcherSupportJedis extends WeiboJedis {
 
     @Override
     public Long hdel(final byte[] key, final byte[]... field) {
-        //默认返回 0
+        // 默认返回 0
         return throwOrReturnValue(false, 0L, new Callback<Long>() {
 
             @Override
@@ -604,7 +602,7 @@ public class SwitcherSupportJedis extends WeiboJedis {
 
     @Override
     public Long rpush(final String key, final String... string) {
-        //默认返回 0
+        // 默认返回 0
         return throwOrReturnValue(false, 0L, new Callback<Long>() {
 
             @Override
@@ -616,7 +614,7 @@ public class SwitcherSupportJedis extends WeiboJedis {
 
     @Override
     public Long rpush(final byte[] key, final byte[]... string) {
-        //默认返回 0
+        // 默认返回 0
         return throwOrReturnValue(false, 0L, new Callback<Long>() {
 
             @Override
@@ -628,7 +626,7 @@ public class SwitcherSupportJedis extends WeiboJedis {
 
     @Override
     public Long lpush(final String key, final String... string) {
-        //默认返回 0
+        // 默认返回 0
         return throwOrReturnValue(false, 0L, new Callback<Long>() {
 
             @Override
@@ -641,7 +639,7 @@ public class SwitcherSupportJedis extends WeiboJedis {
 
     @Override
     public Long lpush(final byte[] key, final byte[]... string) {
-        //默认返回 0
+        // 默认返回 0
         return throwOrReturnValue(false, 0L, new Callback<Long>() {
 
             @Override
@@ -654,7 +652,7 @@ public class SwitcherSupportJedis extends WeiboJedis {
 
     @Override
     public Long rpushx(final String key, final String string) {
-        //默认返回 0
+        // 默认返回 0
         return throwOrReturnValue(false, 0L, new Callback<Long>() {
 
             @Override
@@ -667,7 +665,7 @@ public class SwitcherSupportJedis extends WeiboJedis {
 
     @Override
     public Long rpushx(final byte[] key, final byte[] string) {
-        //默认返回 0
+        // 默认返回 0
         return throwOrReturnValue(false, 0L, new Callback<Long>() {
 
             @Override
@@ -679,7 +677,7 @@ public class SwitcherSupportJedis extends WeiboJedis {
 
     @Override
     public Long lpushx(final String key, final String string) {
-        //默认返回 0
+        // 默认返回 0
         return throwOrReturnValue(false, 0L, new Callback<Long>() {
 
             @Override
@@ -691,7 +689,7 @@ public class SwitcherSupportJedis extends WeiboJedis {
 
     @Override
     public Long lpushx(final byte[] key, final byte[] string) {
-        //默认返回 0
+        // 默认返回 0
         return throwOrReturnValue(false, 0L, new Callback<Long>() {
 
             @Override
@@ -703,7 +701,7 @@ public class SwitcherSupportJedis extends WeiboJedis {
 
     @Override
     public String ltrim(final String key, final long start, final long end) {
-        //默认返回 OK_REPLY
+        // 默认返回 OK_REPLY
         return throwOrReturnValue(false, OK_REPLY, new Callback<String>() {
 
             @Override
@@ -715,7 +713,7 @@ public class SwitcherSupportJedis extends WeiboJedis {
 
     @Override
     public String ltrim(final byte[] key, final int start, final int end) {
-        //默认返回 OK_REPLY
+        // 默认返回 OK_REPLY
         return throwOrReturnValue(false, OK_REPLY, new Callback<String>() {
 
             @Override
@@ -727,7 +725,7 @@ public class SwitcherSupportJedis extends WeiboJedis {
 
     @Override
     public String lset(final String key, final long index, final String value) {
-        //默认返回 OK_REPLY
+        // 默认返回 OK_REPLY
         return throwOrReturnValue(false, OK_REPLY, new Callback<String>() {
 
             @Override
@@ -740,7 +738,7 @@ public class SwitcherSupportJedis extends WeiboJedis {
 
     @Override
     public String lset(final byte[] key, final int index, final byte[] value) {
-        //默认返回 OK_REPLY
+        // 默认返回 OK_REPLY
         return throwOrReturnValue(false, OK_REPLY, new Callback<String>() {
 
             @Override
@@ -752,7 +750,7 @@ public class SwitcherSupportJedis extends WeiboJedis {
 
     @Override
     public Long lrem(final String key, final long count, final String value) {
-        //默认返回 0
+        // 默认返回 0
         return throwOrReturnValue(false, 0L, new Callback<Long>() {
 
             @Override
@@ -764,7 +762,7 @@ public class SwitcherSupportJedis extends WeiboJedis {
 
     @Override
     public Long lrem(final byte[] key, final int count, final byte[] value) {
-        //默认返回 0
+        // 默认返回 0
         return throwOrReturnValue(false, 0L, new Callback<Long>() {
 
             @Override
@@ -776,7 +774,7 @@ public class SwitcherSupportJedis extends WeiboJedis {
 
     @Override
     public String lpop(final String key) {
-        //默认返回 null
+        // 默认返回 null
         return throwOrReturnValue(false, null, new Callback<String>() {
 
             @Override
@@ -789,7 +787,7 @@ public class SwitcherSupportJedis extends WeiboJedis {
 
     @Override
     public byte[] lpop(final byte[] key) {
-        //默认返回 null
+        // 默认返回 null
         return throwOrReturnValue(false, null, new Callback<byte[]>() {
 
             @Override
@@ -802,7 +800,7 @@ public class SwitcherSupportJedis extends WeiboJedis {
 
     @Override
     public String rpop(final String key) {
-        //默认返回 null
+        // 默认返回 null
         return throwOrReturnValue(false, null, new Callback<String>() {
 
             @Override
@@ -814,7 +812,7 @@ public class SwitcherSupportJedis extends WeiboJedis {
 
     @Override
     public byte[] rpop(final byte[] key) {
-        //默认返回 null
+        // 默认返回 null
         return throwOrReturnValue(false, null, new Callback<byte[]>() {
 
             @Override
@@ -826,7 +824,7 @@ public class SwitcherSupportJedis extends WeiboJedis {
 
     @Override
     public String rpoplpush(final String srckey, final String dstkey) {
-        //默认返回 null
+        // 默认返回 null
         return throwOrReturnValue(false, null, new Callback<String>() {
 
             @Override
@@ -838,7 +836,7 @@ public class SwitcherSupportJedis extends WeiboJedis {
 
     @Override
     public byte[] rpoplpush(final byte[] srckey, final byte[] dstkey) {
-        //默认返回 null
+        // 默认返回 null
         return throwOrReturnValue(false, null, new Callback<byte[]>() {
 
             @Override
@@ -850,7 +848,7 @@ public class SwitcherSupportJedis extends WeiboJedis {
 
     @Override
     public Long sadd(final String key, final String... member) {
-        //默认返回 0
+        // 默认返回 0
         return throwOrReturnValue(false, 0L, new Callback<Long>() {
 
             @Override
@@ -863,7 +861,7 @@ public class SwitcherSupportJedis extends WeiboJedis {
 
     @Override
     public Long sadd(final byte[] key, final byte[]... member) {
-        //默认返回 0
+        // 默认返回 0
         return throwOrReturnValue(false, 0L, new Callback<Long>() {
 
             @Override
@@ -876,7 +874,7 @@ public class SwitcherSupportJedis extends WeiboJedis {
 
     @Override
     public Long srem(final String key, final String... member) {
-        //默认返回 0
+        // 默认返回 0
         return throwOrReturnValue(false, 0L, new Callback<Long>() {
 
             @Override
@@ -888,7 +886,7 @@ public class SwitcherSupportJedis extends WeiboJedis {
 
     @Override
     public Long srem(final byte[] key, final byte[]... member) {
-        //默认返回 0
+        // 默认返回 0
         return throwOrReturnValue(false, 0L, new Callback<Long>() {
 
             @Override
@@ -901,7 +899,7 @@ public class SwitcherSupportJedis extends WeiboJedis {
 
     @Override
     public String spop(final String key) {
-        //默认返回 null
+        // 默认返回 null
         return throwOrReturnValue(false, null, new Callback<String>() {
 
             @Override
@@ -914,7 +912,7 @@ public class SwitcherSupportJedis extends WeiboJedis {
 
     @Override
     public byte[] spop(final byte[] key) {
-        //默认返回 null
+        // 默认返回 null
         return throwOrReturnValue(false, null, new Callback<byte[]>() {
 
             @Override
@@ -926,7 +924,7 @@ public class SwitcherSupportJedis extends WeiboJedis {
 
     @Override
     public Long smove(final String srckey, final String dstkey, final String member) {
-        //默认返回 0
+        // 默认返回 0
         return throwOrReturnValue(false, 0L, new Callback<Long>() {
 
             @Override
@@ -940,7 +938,7 @@ public class SwitcherSupportJedis extends WeiboJedis {
 
     @Override
     public Long smove(final byte[] srckey, final byte[] dstkey, final byte[] member) {
-        //默认返回 0
+        // 默认返回 0
         return throwOrReturnValue(false, 0L, new Callback<Long>() {
 
             @Override
@@ -952,7 +950,7 @@ public class SwitcherSupportJedis extends WeiboJedis {
 
     @Override
     public Long sunionstore(final String dstkey, final String... keys) {
-        //默认返回 0
+        // 默认返回 0
         return throwOrReturnValue(false, 0L, new Callback<Long>() {
 
             @Override
@@ -964,7 +962,7 @@ public class SwitcherSupportJedis extends WeiboJedis {
 
     @Override
     public Long sunionstore(final byte[] dstkey, final byte[]... keys) {
-        //默认返回 0
+        // 默认返回 0
         return throwOrReturnValue(false, 0L, new Callback<Long>() {
 
             @Override
@@ -976,7 +974,7 @@ public class SwitcherSupportJedis extends WeiboJedis {
 
     @Override
     public Long sinterstore(final String dstkey, final String... keys) {
-        //默认返回 0
+        // 默认返回 0
         return throwOrReturnValue(false, 0L, new Callback<Long>() {
 
             @Override
@@ -989,7 +987,7 @@ public class SwitcherSupportJedis extends WeiboJedis {
 
     @Override
     public Long sinterstore(final byte[] dstkey, final byte[]... keys) {
-        //默认返回 0
+        // 默认返回 0
         return throwOrReturnValue(false, 0L, new Callback<Long>() {
 
             @Override
@@ -1001,7 +999,7 @@ public class SwitcherSupportJedis extends WeiboJedis {
 
     @Override
     public Long sdiffstore(final String dstkey, final String... keys) {
-        //默认返回 0
+        // 默认返回 0
         return throwOrReturnValue(false, 0L, new Callback<Long>() {
 
             @Override
@@ -1014,7 +1012,7 @@ public class SwitcherSupportJedis extends WeiboJedis {
 
     @Override
     public Long sdiffstore(final byte[] dstkey, final byte[]... keys) {
-        //默认返回 0
+        // 默认返回 0
         return throwOrReturnValue(false, 0L, new Callback<Long>() {
 
             @Override
@@ -1026,7 +1024,7 @@ public class SwitcherSupportJedis extends WeiboJedis {
 
     @Override
     public Long zadd(final String key, final double score, final String member) {
-        //默认返回 0
+        // 默认返回 0
         return throwOrReturnValue(false, 0L, new Callback<Long>() {
 
             @Override
@@ -1039,7 +1037,7 @@ public class SwitcherSupportJedis extends WeiboJedis {
 
     @Override
     public Long zadd(final byte[] key, final double score, final byte[] member) {
-        //默认返回 0
+        // 默认返回 0
         return throwOrReturnValue(false, 0L, new Callback<Long>() {
 
             @Override
@@ -1052,7 +1050,7 @@ public class SwitcherSupportJedis extends WeiboJedis {
 
     @Override
     public Long zadd(final String key, final Map<Double, String> scoreMembers) {
-        //默认返回 0
+        // 默认返回 0
         return throwOrReturnValue(false, 0L, new Callback<Long>() {
 
             @Override
@@ -1064,7 +1062,7 @@ public class SwitcherSupportJedis extends WeiboJedis {
 
     @Override
     public Long zadd(final byte[] key, final Map<Double, byte[]> scoreMembers) {
-        //默认返回 0
+        // 默认返回 0
         return throwOrReturnValue(false, 0L, new Callback<Long>() {
 
             @Override
@@ -1077,7 +1075,7 @@ public class SwitcherSupportJedis extends WeiboJedis {
 
     @Override
     public Long zrem(final String key, final String... member) {
-        //默认返回 0
+        // 默认返回 0
         return throwOrReturnValue(false, 0L, new Callback<Long>() {
 
             @Override
@@ -1090,7 +1088,7 @@ public class SwitcherSupportJedis extends WeiboJedis {
 
     @Override
     public Long zrem(final byte[] key, final byte[]... member) {
-        //默认返回 0
+        // 默认返回 0
         return throwOrReturnValue(false, 0L, new Callback<Long>() {
 
             @Override
@@ -1102,7 +1100,7 @@ public class SwitcherSupportJedis extends WeiboJedis {
 
     @Override
     public Double zincrby(final String key, final double score, final String member) {
-        //默认返回 0
+        // 默认返回 0
         return throwOrReturnValue(false, 0D, new Callback<Double>() {
             @Override
             public Double call() {
@@ -1114,7 +1112,7 @@ public class SwitcherSupportJedis extends WeiboJedis {
 
     @Override
     public Double zincrby(final byte[] key, final double score, final byte[] member) {
-        //默认返回 0
+        // 默认返回 0
         return throwOrReturnValue(false, 0D, new Callback<Double>() {
             @Override
             public Double call() {
@@ -1126,7 +1124,7 @@ public class SwitcherSupportJedis extends WeiboJedis {
 
     @Override
     public Long sort(final String key, final SortingParams sortingParameters, final String dstkey) {
-        //默认返回 0, 本sort操作会写数据
+        // 默认返回 0, 本sort操作会写数据
         return throwOrReturnValue(false, 0L, new Callback<Long>() {
 
             @Override
@@ -1138,7 +1136,7 @@ public class SwitcherSupportJedis extends WeiboJedis {
 
     @Override
     public Long sort(final String key, final String dstkey) {
-        //默认返回 0, 本sort操作会写数据
+        // 默认返回 0, 本sort操作会写数据
         return throwOrReturnValue(false, 0L, new Callback<Long>() {
 
             @Override
@@ -1151,7 +1149,7 @@ public class SwitcherSupportJedis extends WeiboJedis {
 
     @Override
     public Long sort(final byte[] key, final SortingParams sortingParameters, final byte[] dstkey) {
-        //默认返回 0, 本sort操作会写数据
+        // 默认返回 0, 本sort操作会写数据
         return throwOrReturnValue(false, 0L, new Callback<Long>() {
 
             @Override
@@ -1163,7 +1161,7 @@ public class SwitcherSupportJedis extends WeiboJedis {
 
     @Override
     public Long sort(final byte[] key, final byte[] dstkey) {
-        //默认返回 0, 本sort操作会写数据
+        // 默认返回 0, 本sort操作会写数据
         return throwOrReturnValue(false, 0L, new Callback<Long>() {
 
             @Override
@@ -1176,7 +1174,7 @@ public class SwitcherSupportJedis extends WeiboJedis {
 
     @Override
     public List<String> blpop(final int timeout, final String... keys) {
-        //默认返回 null 表示超时
+        // 默认返回 null 表示超时
         return throwOrReturnValue(false, null, new Callback<List<String>>() {
 
             @Override
@@ -1189,7 +1187,7 @@ public class SwitcherSupportJedis extends WeiboJedis {
 
     @Override
     public List<byte[]> blpop(final int timeout, final byte[]... keys) {
-        //默认返回 null 表示超时
+        // 默认返回 null 表示超时
         return throwOrReturnValue(false, null, new Callback<List<byte[]>>() {
 
             @Override
@@ -1201,7 +1199,7 @@ public class SwitcherSupportJedis extends WeiboJedis {
 
     @Override
     public String brpoplpush(final String source, final String destination, final int timeout) {
-        //默认返回 null
+        // 默认返回 null
         return throwOrReturnValue(false, null, new Callback<String>() {
 
             @Override
@@ -1213,7 +1211,7 @@ public class SwitcherSupportJedis extends WeiboJedis {
 
     @Override
     public byte[] brpoplpush(final byte[] source, final byte[] destination, final int timeout) {
-        //默认返回 null
+        // 默认返回 null
         return throwOrReturnValue(false, null, new Callback<byte[]>() {
 
             @Override
@@ -1226,7 +1224,7 @@ public class SwitcherSupportJedis extends WeiboJedis {
 
     @Override
     public List<String> brpop(final int timeout, final String... keys) {
-        //默认返回 null 表示超时
+        // 默认返回 null 表示超时
         return throwOrReturnValue(false, null, new Callback<List<String>>() {
 
             @Override
@@ -1239,7 +1237,7 @@ public class SwitcherSupportJedis extends WeiboJedis {
 
     @Override
     public List<byte[]> brpop(final int timeout, final byte[]... keys) {
-        //默认返回 null 表示超时
+        // 默认返回 null 表示超时
         return throwOrReturnValue(false, null, new Callback<List<byte[]>>() {
 
             @Override
@@ -1252,7 +1250,7 @@ public class SwitcherSupportJedis extends WeiboJedis {
 
     @Override
     public Long zremrangeByRank(final String key, final long start, final long end) {
-        //默认返回 0
+        // 默认返回 0
         return throwOrReturnValue(false, 0L, new Callback<Long>() {
 
             @Override
@@ -1264,7 +1262,7 @@ public class SwitcherSupportJedis extends WeiboJedis {
 
     @Override
     public Long zremrangeByRank(final byte[] key, final int start, final int end) {
-        //默认返回 0
+        // 默认返回 0
         return throwOrReturnValue(false, 0L, new Callback<Long>() {
 
             @Override
@@ -1277,7 +1275,7 @@ public class SwitcherSupportJedis extends WeiboJedis {
 
     @Override
     public Long zremrangeByScore(final String key, final double start, final double end) {
-        //默认返回 0
+        // 默认返回 0
         return throwOrReturnValue(false, 0L, new Callback<Long>() {
 
             @Override
@@ -1289,7 +1287,7 @@ public class SwitcherSupportJedis extends WeiboJedis {
 
     @Override
     public Long zremrangeByScore(final byte[] key, final double start, final double end) {
-        //默认返回 0
+        // 默认返回 0
         return throwOrReturnValue(false, 0L, new Callback<Long>() {
 
             @Override
@@ -1301,7 +1299,7 @@ public class SwitcherSupportJedis extends WeiboJedis {
 
     @Override
     public Long zremrangeByScore(final byte[] key, final byte[] start, final byte[] end) {
-        //默认返回 0
+        // 默认返回 0
         return throwOrReturnValue(false, 0L, new Callback<Long>() {
 
             @Override
@@ -1326,7 +1324,7 @@ public class SwitcherSupportJedis extends WeiboJedis {
 
     @Override
     public Long zunionstore(final String dstkey, final String... sets) {
-        //默认返回 0
+        // 默认返回 0
         return throwOrReturnValue(false, 0L, new Callback<Long>() {
 
             @Override
@@ -1338,7 +1336,7 @@ public class SwitcherSupportJedis extends WeiboJedis {
 
     @Override
     public Long zunionstore(final String dstkey, final ZParams params, final String... sets) {
-        //默认返回 0
+        // 默认返回 0
         return throwOrReturnValue(false, 0L, new Callback<Long>() {
 
             @Override
@@ -1350,7 +1348,7 @@ public class SwitcherSupportJedis extends WeiboJedis {
 
     @Override
     public Long zunionstore(final byte[] dstkey, final byte[]... sets) {
-        //默认返回 0
+        // 默认返回 0
         return throwOrReturnValue(false, 0L, new Callback<Long>() {
 
             @Override
@@ -1362,7 +1360,7 @@ public class SwitcherSupportJedis extends WeiboJedis {
 
     @Override
     public Long zunionstore(final byte[] dstkey, final ZParams params, final byte[]... sets) {
-        //默认返回 0
+        // 默认返回 0
         return throwOrReturnValue(false, 0L, new Callback<Long>() {
 
             @Override
@@ -1374,7 +1372,7 @@ public class SwitcherSupportJedis extends WeiboJedis {
 
     @Override
     public Long zinterstore(final String dstkey, final String... sets) {
-        //默认返回 0
+        // 默认返回 0
         return throwOrReturnValue(false, 0L, new Callback<Long>() {
 
             @Override
@@ -1387,7 +1385,7 @@ public class SwitcherSupportJedis extends WeiboJedis {
 
     @Override
     public Long zinterstore(final byte[] dstkey, final byte[]... sets) {
-        //默认返回 0
+        // 默认返回 0
         return throwOrReturnValue(false, 0L, new Callback<Long>() {
 
             @Override
@@ -1400,7 +1398,7 @@ public class SwitcherSupportJedis extends WeiboJedis {
 
     @Override
     public Long zinterstore(final String dstkey, final ZParams params, final String... sets) {
-        //默认返回 0
+        // 默认返回 0
         return throwOrReturnValue(false, 0L, new Callback<Long>() {
 
             @Override
@@ -1412,7 +1410,7 @@ public class SwitcherSupportJedis extends WeiboJedis {
 
     @Override
     public Long zinterstore(final byte[] dstkey, final ZParams params, final byte[]... sets) {
-        //默认返回 0
+        // 默认返回 0
         return throwOrReturnValue(false, 0L, new Callback<Long>() {
 
             @Override
@@ -1423,9 +1421,8 @@ public class SwitcherSupportJedis extends WeiboJedis {
     }
 
     @Override
-    public Long linsert(final String key, final LIST_POSITION where, final String pivot,
-                        final String value) {
-        //默认返回 -1 表示pivot 未找到
+    public Long linsert(final String key, final LIST_POSITION where, final String pivot, final String value) {
+        // 默认返回 -1 表示pivot 未找到
         return throwOrReturnValue(false, -1L, new Callback<Long>() {
 
             @Override
@@ -1437,9 +1434,8 @@ public class SwitcherSupportJedis extends WeiboJedis {
 
 
     @Override
-    public Long linsert(final byte[] key, final LIST_POSITION where, final byte[] pivot,
-                        final byte[] value) {
-        //默认返回 -1 表示pivot 未找到
+    public Long linsert(final byte[] key, final LIST_POSITION where, final byte[] pivot, final byte[] value) {
+        // 默认返回 -1 表示pivot 未找到
         return throwOrReturnValue(false, -1L, new Callback<Long>() {
 
             @Override
@@ -1451,7 +1447,7 @@ public class SwitcherSupportJedis extends WeiboJedis {
 
     @Override
     public Boolean setbit(final String key, final long offset, final boolean value) {
-        //默认返回 0
+        // 默认返回 0
         return throwOrReturnValue(false, false, new Callback<Boolean>() {
 
             @Override
@@ -1463,7 +1459,7 @@ public class SwitcherSupportJedis extends WeiboJedis {
 
     @Override
     public Boolean setbit(final byte[] key, final long offset, final byte[] value) {
-        //默认返回 0
+        // 默认返回 0
         return throwOrReturnValue(false, false, new Callback<Boolean>() {
 
             @Override
@@ -1474,11 +1470,11 @@ public class SwitcherSupportJedis extends WeiboJedis {
     }
 
 
-    //================ read 操作 =========================
+    // ================ read 操作 =========================
 
     @Override
     public String get(final String key) {
-        //默认返回null
+        // 默认返回null
         return throwOrReturnValue(true, null, new Callback<String>() {
 
             @Override
@@ -1490,7 +1486,7 @@ public class SwitcherSupportJedis extends WeiboJedis {
 
     @Override
     public byte[] get(final byte[] key) {
-        //默认返回null
+        // 默认返回null
         return throwOrReturnValue(true, null, new Callback<byte[]>() {
 
             @Override
@@ -1502,7 +1498,7 @@ public class SwitcherSupportJedis extends WeiboJedis {
 
     @Override
     public String hget(final String key, final String field) {
-        //默认返回null
+        // 默认返回null
         return throwOrReturnValue(true, null, new Callback<String>() {
 
             @Override
@@ -1514,7 +1510,7 @@ public class SwitcherSupportJedis extends WeiboJedis {
 
     @Override
     public byte[] hget(final byte[] key, final byte[] field) {
-        //默认返回null
+        // 默认返回null
         return throwOrReturnValue(true, null, new Callback<byte[]>() {
 
             @Override
@@ -1526,7 +1522,7 @@ public class SwitcherSupportJedis extends WeiboJedis {
 
     @Override
     public String substr(final String key, final int start, final int end) {
-        //默认返回null
+        // 默认返回null
         return throwOrReturnValue(true, null, new Callback<String>() {
 
             @Override
@@ -1538,7 +1534,7 @@ public class SwitcherSupportJedis extends WeiboJedis {
 
     @Override
     public byte[] substr(final byte[] key, final int start, final int end) {
-        //默认返回null
+        // 默认返回null
         return throwOrReturnValue(true, null, new Callback<byte[]>() {
 
             @Override
@@ -1550,7 +1546,7 @@ public class SwitcherSupportJedis extends WeiboJedis {
 
     @Override
     public List<String> mget(final String... keys) {
-        //默认返回 empty list
+        // 默认返回 empty list
         return throwOrReturnValue(true, Collections.<String>emptyList(), new Callback<List<String>>() {
 
             @Override
@@ -1562,7 +1558,7 @@ public class SwitcherSupportJedis extends WeiboJedis {
 
     @Override
     public List<byte[]> mget(final byte[]... keys) {
-        //默认返回 empty list
+        // 默认返回 empty list
         return throwOrReturnValue(true, Collections.<byte[]>emptyList(), new Callback<List<byte[]>>() {
 
             @Override
@@ -1574,7 +1570,7 @@ public class SwitcherSupportJedis extends WeiboJedis {
 
     @Override
     public List<String> hmget(final String key, final String... fields) {
-        //默认返回 empty list
+        // 默认返回 empty list
         return throwOrReturnValue(true, Collections.<String>emptyList(), new Callback<List<String>>() {
 
             @Override
@@ -1586,7 +1582,7 @@ public class SwitcherSupportJedis extends WeiboJedis {
 
     @Override
     public List<byte[]> hmget(final byte[] key, final byte[]... fields) {
-        //默认返回 empty list
+        // 默认返回 empty list
         return throwOrReturnValue(true, Collections.<byte[]>emptyList(), new Callback<List<byte[]>>() {
 
             @Override
@@ -1598,7 +1594,7 @@ public class SwitcherSupportJedis extends WeiboJedis {
 
     @Override
     public Set<String> keys(final String pattern) {
-        //默认返回 empty set
+        // 默认返回 empty set
         return throwOrReturnValue(true, Collections.<String>emptySet(), new Callback<Set<String>>() {
 
             @Override
@@ -1611,7 +1607,7 @@ public class SwitcherSupportJedis extends WeiboJedis {
 
     @Override
     public Set<byte[]> keys(final byte[] pattern) {
-        //默认返回 empty set
+        // 默认返回 empty set
         return throwOrReturnValue(true, Collections.<byte[]>emptySet(), new Callback<Set<byte[]>>() {
 
             @Override
@@ -1624,7 +1620,7 @@ public class SwitcherSupportJedis extends WeiboJedis {
 
     @Override
     public Set<String> hkeys(final String key) {
-        //默认返回 empty set
+        // 默认返回 empty set
         return throwOrReturnValue(true, Collections.<String>emptySet(), new Callback<Set<String>>() {
 
             @Override
@@ -1637,7 +1633,7 @@ public class SwitcherSupportJedis extends WeiboJedis {
 
     @Override
     public Set<byte[]> hkeys(final byte[] key) {
-        //默认返回 empty set
+        // 默认返回 empty set
         return throwOrReturnValue(true, Collections.<byte[]>emptySet(), new Callback<Set<byte[]>>() {
 
             @Override
@@ -1649,7 +1645,7 @@ public class SwitcherSupportJedis extends WeiboJedis {
 
     @Override
     public Boolean exists(final String key) {
-        //默认返回false
+        // 默认返回false
         return throwOrReturnValue(true, false, new Callback<Boolean>() {
 
             @Override
@@ -1662,7 +1658,7 @@ public class SwitcherSupportJedis extends WeiboJedis {
 
     @Override
     public Boolean exists(final byte[] key) {
-        //默认返回false
+        // 默认返回false
         return throwOrReturnValue(true, false, new Callback<Boolean>() {
 
             @Override
@@ -1674,7 +1670,7 @@ public class SwitcherSupportJedis extends WeiboJedis {
 
     @Override
     public Boolean hexists(final String key, final String field) {
-        //默认返回false
+        // 默认返回false
         return throwOrReturnValue(true, false, new Callback<Boolean>() {
 
             @Override
@@ -1687,7 +1683,7 @@ public class SwitcherSupportJedis extends WeiboJedis {
 
     @Override
     public Boolean hexists(final byte[] key, final byte[] field) {
-        //默认返回false
+        // 默认返回false
         return throwOrReturnValue(true, false, new Callback<Boolean>() {
 
             @Override
@@ -1699,7 +1695,7 @@ public class SwitcherSupportJedis extends WeiboJedis {
 
     @Override
     public Long hlen(final String key) {
-        //默认返回 0
+        // 默认返回 0
         return throwOrReturnValue(true, 0L, new Callback<Long>() {
 
             @Override
@@ -1712,7 +1708,7 @@ public class SwitcherSupportJedis extends WeiboJedis {
 
     @Override
     public Long hlen(final byte[] key) {
-        //默认返回 0
+        // 默认返回 0
         return throwOrReturnValue(true, 0L, new Callback<Long>() {
 
             @Override
@@ -1724,7 +1720,7 @@ public class SwitcherSupportJedis extends WeiboJedis {
 
     @Override
     public Long llen(final String key) {
-        //默认返回 0
+        // 默认返回 0
         return throwOrReturnValue(true, 0L, new Callback<Long>() {
 
             @Override
@@ -1736,7 +1732,7 @@ public class SwitcherSupportJedis extends WeiboJedis {
 
     @Override
     public Long llen(final byte[] key) {
-        //默认返回 0
+        // 默认返回 0
         return throwOrReturnValue(true, 0L, new Callback<Long>() {
 
             @Override
@@ -1748,7 +1744,7 @@ public class SwitcherSupportJedis extends WeiboJedis {
 
     @Override
     public List<String> hvals(final String key) {
-        //默认返回 empty list
+        // 默认返回 empty list
         return throwOrReturnValue(true, Collections.<String>emptyList(), new Callback<List<String>>() {
 
             @Override
@@ -1760,7 +1756,7 @@ public class SwitcherSupportJedis extends WeiboJedis {
 
     @Override
     public List<byte[]> hvals(final byte[] key) {
-        //默认返回 empty list
+        // 默认返回 empty list
         return throwOrReturnValue(true, Collections.<byte[]>emptyList(), new Callback<List<byte[]>>() {
 
             @Override
@@ -1772,7 +1768,7 @@ public class SwitcherSupportJedis extends WeiboJedis {
 
     @Override
     public Map<String, String> hgetAll(final String key) {
-        //默认返回 empty map
+        // 默认返回 empty map
         return throwOrReturnValue(true, Collections.<String, String>emptyMap(), new Callback<Map<String, String>>() {
 
             @Override
@@ -1784,7 +1780,7 @@ public class SwitcherSupportJedis extends WeiboJedis {
 
     @Override
     public Map<byte[], byte[]> hgetAll(final byte[] key) {
-        //默认返回 empty map
+        // 默认返回 empty map
         return throwOrReturnValue(true, Collections.<byte[], byte[]>emptyMap(), new Callback<Map<byte[], byte[]>>() {
 
             @Override
@@ -1797,7 +1793,7 @@ public class SwitcherSupportJedis extends WeiboJedis {
 
     @Override
     public List<String> lrange(final String key, final long start, final long end) {
-        //默认返回 empty list
+        // 默认返回 empty list
         return throwOrReturnValue(true, Collections.<String>emptyList(), new Callback<List<String>>() {
 
             @Override
@@ -1810,7 +1806,7 @@ public class SwitcherSupportJedis extends WeiboJedis {
 
     @Override
     public List<byte[]> lrange(final byte[] key, final int start, final int end) {
-        //默认返回 empty list
+        // 默认返回 empty list
         return throwOrReturnValue(true, Collections.<byte[]>emptyList(), new Callback<List<byte[]>>() {
 
             @Override
@@ -1823,7 +1819,7 @@ public class SwitcherSupportJedis extends WeiboJedis {
 
     @Override
     public String lindex(final String key, final long index) {
-        //默认返回null,表示未找到
+        // 默认返回null,表示未找到
         return throwOrReturnValue(true, null, new Callback<String>() {
 
             @Override
@@ -1836,7 +1832,7 @@ public class SwitcherSupportJedis extends WeiboJedis {
 
     @Override
     public byte[] lindex(final byte[] key, final int index) {
-        //默认返回null,表示未找到
+        // 默认返回null,表示未找到
         return throwOrReturnValue(true, null, new Callback<byte[]>() {
 
             @Override
@@ -1849,7 +1845,7 @@ public class SwitcherSupportJedis extends WeiboJedis {
 
     @Override
     public Set<String> smembers(final String key) {
-        //默认返回 empty set
+        // 默认返回 empty set
         return throwOrReturnValue(true, Collections.<String>emptySet(), new Callback<Set<String>>() {
 
             @Override
@@ -1862,7 +1858,7 @@ public class SwitcherSupportJedis extends WeiboJedis {
 
     @Override
     public Set<byte[]> smembers(final byte[] key) {
-        //默认返回 empty set
+        // 默认返回 empty set
         return throwOrReturnValue(true, Collections.<byte[]>emptySet(), new Callback<Set<byte[]>>() {
 
             @Override
@@ -1874,7 +1870,7 @@ public class SwitcherSupportJedis extends WeiboJedis {
 
     @Override
     public Boolean sismember(final String key, final String member) {
-        //默认返回false
+        // 默认返回false
         return throwOrReturnValue(true, false, new Callback<Boolean>() {
 
             @Override
@@ -1887,7 +1883,7 @@ public class SwitcherSupportJedis extends WeiboJedis {
 
     @Override
     public Boolean sismember(final byte[] key, final byte[] member) {
-        //默认返回false
+        // 默认返回false
         return throwOrReturnValue(true, false, new Callback<Boolean>() {
 
             @Override
@@ -1900,7 +1896,7 @@ public class SwitcherSupportJedis extends WeiboJedis {
 
     @Override
     public Set<String> sinter(final String... keys) {
-        //默认返回 empty set
+        // 默认返回 empty set
         return throwOrReturnValue(true, Collections.<String>emptySet(), new Callback<Set<String>>() {
 
             @Override
@@ -1912,7 +1908,7 @@ public class SwitcherSupportJedis extends WeiboJedis {
 
     @Override
     public Set<byte[]> sinter(final byte[]... keys) {
-        //默认返回 empty set
+        // 默认返回 empty set
         return throwOrReturnValue(true, Collections.<byte[]>emptySet(), new Callback<Set<byte[]>>() {
 
             @Override
@@ -1924,7 +1920,7 @@ public class SwitcherSupportJedis extends WeiboJedis {
 
     @Override
     public Set<String> sunion(final String... keys) {
-        //默认返回 empty set
+        // 默认返回 empty set
         return throwOrReturnValue(true, Collections.<String>emptySet(), new Callback<Set<String>>() {
 
             @Override
@@ -1937,7 +1933,7 @@ public class SwitcherSupportJedis extends WeiboJedis {
 
     @Override
     public Set<byte[]> sunion(final byte[]... keys) {
-        //默认返回 empty set
+        // 默认返回 empty set
         return throwOrReturnValue(true, Collections.<byte[]>emptySet(), new Callback<Set<byte[]>>() {
 
             @Override
@@ -1949,7 +1945,7 @@ public class SwitcherSupportJedis extends WeiboJedis {
 
     @Override
     public Set<String> sdiff(final String... keys) {
-        //默认返回 empty set
+        // 默认返回 empty set
         return throwOrReturnValue(true, Collections.<String>emptySet(), new Callback<Set<String>>() {
 
             @Override
@@ -1961,7 +1957,7 @@ public class SwitcherSupportJedis extends WeiboJedis {
 
     @Override
     public Set<byte[]> sdiff(final byte[]... keys) {
-        //默认返回 empty set
+        // 默认返回 empty set
         return throwOrReturnValue(true, Collections.<byte[]>emptySet(), new Callback<Set<byte[]>>() {
 
             @Override
@@ -1973,7 +1969,7 @@ public class SwitcherSupportJedis extends WeiboJedis {
 
     @Override
     public String srandmember(final String key) {
-        //默认返回null,表示未找到
+        // 默认返回null,表示未找到
         return throwOrReturnValue(true, null, new Callback<String>() {
 
             @Override
@@ -1986,7 +1982,7 @@ public class SwitcherSupportJedis extends WeiboJedis {
 
     @Override
     public byte[] srandmember(final byte[] key) {
-        //默认返回null,表示未找到
+        // 默认返回null,表示未找到
         return throwOrReturnValue(true, null, new Callback<byte[]>() {
 
             @Override
@@ -1998,7 +1994,7 @@ public class SwitcherSupportJedis extends WeiboJedis {
 
     @Override
     public Long scard(final String key) {
-        //默认返回 0 表示不存在
+        // 默认返回 0 表示不存在
         return throwOrReturnValue(true, 0L, new Callback<Long>() {
 
             @Override
@@ -2011,7 +2007,7 @@ public class SwitcherSupportJedis extends WeiboJedis {
 
     @Override
     public Long scard(final byte[] key) {
-        //默认返回 0 表示不存在
+        // 默认返回 0 表示不存在
         return throwOrReturnValue(true, 0L, new Callback<Long>() {
 
             @Override
@@ -2024,7 +2020,7 @@ public class SwitcherSupportJedis extends WeiboJedis {
 
     @Override
     public Set<String> zrange(final String key, final long start, final long end) {
-        //默认返回 empty set
+        // 默认返回 empty set
         return throwOrReturnValue(true, Collections.<String>emptySet(), new Callback<Set<String>>() {
 
             @Override
@@ -2037,7 +2033,7 @@ public class SwitcherSupportJedis extends WeiboJedis {
 
     @Override
     public Set<byte[]> zrange(final byte[] key, final int start, final int end) {
-        //默认返回 empty set
+        // 默认返回 empty set
         return throwOrReturnValue(true, Collections.<byte[]>emptySet(), new Callback<Set<byte[]>>() {
 
             @Override
@@ -2050,7 +2046,7 @@ public class SwitcherSupportJedis extends WeiboJedis {
 
     @Override
     public Long zrank(final String key, final String member) {
-        //默认返回 null 表示不存在
+        // 默认返回 null 表示不存在
         return throwOrReturnValue(true, null, new Callback<Long>() {
 
             @Override
@@ -2063,7 +2059,7 @@ public class SwitcherSupportJedis extends WeiboJedis {
 
     @Override
     public Long zrank(final byte[] key, final byte[] member) {
-        //默认返回 null 表示不存在
+        // 默认返回 null 表示不存在
         return throwOrReturnValue(true, null, new Callback<Long>() {
 
             @Override
@@ -2076,7 +2072,7 @@ public class SwitcherSupportJedis extends WeiboJedis {
 
     @Override
     public Long zrevrank(final String key, final String member) {
-        //默认返回 null 表示不存在
+        // 默认返回 null 表示不存在
         return throwOrReturnValue(true, null, new Callback<Long>() {
 
             @Override
@@ -2089,7 +2085,7 @@ public class SwitcherSupportJedis extends WeiboJedis {
 
     @Override
     public Long zrevrank(final byte[] key, final byte[] member) {
-        //默认返回 null 表示不存在
+        // 默认返回 null 表示不存在
         return throwOrReturnValue(true, null, new Callback<Long>() {
 
             @Override
@@ -2102,7 +2098,7 @@ public class SwitcherSupportJedis extends WeiboJedis {
 
     @Override
     public Set<String> zrevrange(final String key, final long start, final long end) {
-        //默认返回 empty set
+        // 默认返回 empty set
         return throwOrReturnValue(true, Collections.<String>emptySet(), new Callback<Set<String>>() {
 
             @Override
@@ -2114,7 +2110,7 @@ public class SwitcherSupportJedis extends WeiboJedis {
 
     @Override
     public Set<byte[]> zrevrange(final byte[] key, final int start, final int end) {
-        //默认返回 empty set
+        // 默认返回 empty set
         return throwOrReturnValue(true, Collections.<byte[]>emptySet(), new Callback<Set<byte[]>>() {
 
             @Override
@@ -2127,7 +2123,7 @@ public class SwitcherSupportJedis extends WeiboJedis {
 
     @Override
     public Set<Tuple> zrangeWithScores(final String key, final long start, final long end) {
-        //默认返回 empty set
+        // 默认返回 empty set
         return throwOrReturnValue(true, Collections.<Tuple>emptySet(), new Callback<Set<Tuple>>() {
 
             @Override
@@ -2139,7 +2135,7 @@ public class SwitcherSupportJedis extends WeiboJedis {
 
     @Override
     public Set<Tuple> zrangeWithScores(final byte[] key, final int start, final int end) {
-        //默认返回 empty set
+        // 默认返回 empty set
         return throwOrReturnValue(true, Collections.<Tuple>emptySet(), new Callback<Set<Tuple>>() {
 
             @Override
@@ -2151,7 +2147,7 @@ public class SwitcherSupportJedis extends WeiboJedis {
 
     @Override
     public Set<Tuple> zrevrangeWithScores(final String key, final long start, final long end) {
-        //默认返回 empty set
+        // 默认返回 empty set
         return throwOrReturnValue(true, Collections.<Tuple>emptySet(), new Callback<Set<Tuple>>() {
 
             @Override
@@ -2164,7 +2160,7 @@ public class SwitcherSupportJedis extends WeiboJedis {
 
     @Override
     public Set<Tuple> zrevrangeWithScores(final byte[] key, final int start, final int end) {
-        //默认返回 empty set
+        // 默认返回 empty set
         return throwOrReturnValue(true, Collections.<Tuple>emptySet(), new Callback<Set<Tuple>>() {
 
             @Override
@@ -2176,7 +2172,7 @@ public class SwitcherSupportJedis extends WeiboJedis {
 
     @Override
     public Long zcard(final String key) {
-        //默认返回 0 表示不存在
+        // 默认返回 0 表示不存在
         return throwOrReturnValue(true, 0L, new Callback<Long>() {
 
             @Override
@@ -2188,7 +2184,7 @@ public class SwitcherSupportJedis extends WeiboJedis {
 
     @Override
     public Long zcard(final byte[] key) {
-        //默认返回 0 表示不存在
+        // 默认返回 0 表示不存在
         return throwOrReturnValue(true, 0L, new Callback<Long>() {
 
             @Override
@@ -2200,7 +2196,7 @@ public class SwitcherSupportJedis extends WeiboJedis {
 
     @Override
     public Double zscore(final String key, final String member) {
-        //默认返回 null,表示不存在
+        // 默认返回 null,表示不存在
         return throwOrReturnValue(true, null, new Callback<Double>() {
 
             @Override
@@ -2213,7 +2209,7 @@ public class SwitcherSupportJedis extends WeiboJedis {
 
     @Override
     public Double zscore(final byte[] key, final byte[] member) {
-        //默认返回 null,表示不存在
+        // 默认返回 null,表示不存在
         return throwOrReturnValue(true, null, new Callback<Double>() {
 
             @Override
@@ -2226,7 +2222,7 @@ public class SwitcherSupportJedis extends WeiboJedis {
 
     @Override
     public List<String> sort(final String key) {
-        //默认返回 empty list,sort 不会改变存储在redis中的值，所以是读操作
+        // 默认返回 empty list,sort 不会改变存储在redis中的值，所以是读操作
         return throwOrReturnValue(true, Collections.<String>emptyList(), new Callback<List<String>>() {
 
             @Override
@@ -2239,7 +2235,7 @@ public class SwitcherSupportJedis extends WeiboJedis {
 
     @Override
     public List<byte[]> sort(final byte[] key) {
-        //默认返回 empty list,sort 不会改变存储在redis中的值，所以是读操作
+        // 默认返回 empty list,sort 不会改变存储在redis中的值，所以是读操作
         return throwOrReturnValue(true, Collections.<byte[]>emptyList(), new Callback<List<byte[]>>() {
             @Override
             public List<byte[]> call() {
@@ -2250,7 +2246,7 @@ public class SwitcherSupportJedis extends WeiboJedis {
 
     @Override
     public List<String> sort(final String key, final SortingParams sortingParameters) {
-        //默认返回 empty list
+        // 默认返回 empty list
         return throwOrReturnValue(true, Collections.<String>emptyList(), new Callback<List<String>>() {
 
             @Override
@@ -2262,7 +2258,7 @@ public class SwitcherSupportJedis extends WeiboJedis {
 
     @Override
     public List<byte[]> sort(final byte[] key, final SortingParams sortingParameters) {
-        //默认返回 empty list
+        // 默认返回 empty list
         return throwOrReturnValue(true, Collections.<byte[]>emptyList(), new Callback<List<byte[]>>() {
 
             @Override
@@ -2274,7 +2270,7 @@ public class SwitcherSupportJedis extends WeiboJedis {
 
     @Override
     public Long zcount(final String key, final double min, final double max) {
-        //默认返回 0 表示不存在
+        // 默认返回 0 表示不存在
         return throwOrReturnValue(true, 0L, new Callback<Long>() {
 
             @Override
@@ -2286,7 +2282,7 @@ public class SwitcherSupportJedis extends WeiboJedis {
 
     @Override
     public Long zcount(final byte[] key, final double min, final double max) {
-        //默认返回 0 表示不存在
+        // 默认返回 0 表示不存在
         return throwOrReturnValue(true, 0L, new Callback<Long>() {
 
             @Override
@@ -2298,7 +2294,7 @@ public class SwitcherSupportJedis extends WeiboJedis {
 
     @Override
     public Long zcount(final byte[] key, final byte[] min, final byte[] max) {
-        //默认返回 0 表示不存在
+        // 默认返回 0 表示不存在
         return throwOrReturnValue(true, 0L, new Callback<Long>() {
 
             @Override
@@ -2322,7 +2318,7 @@ public class SwitcherSupportJedis extends WeiboJedis {
 
     @Override
     public Set<String> zrangeByScore(final String key, final double min, final double max) {
-        //默认返回 empty set
+        // 默认返回 empty set
         return throwOrReturnValue(true, Collections.<String>emptySet(), new Callback<Set<String>>() {
 
             @Override
@@ -2335,7 +2331,7 @@ public class SwitcherSupportJedis extends WeiboJedis {
 
     @Override
     public Set<byte[]> zrangeByScore(final byte[] key, final double min, final double max) {
-        //默认返回 empty set
+        // 默认返回 empty set
         return throwOrReturnValue(true, Collections.<byte[]>emptySet(), new Callback<Set<byte[]>>() {
 
             @Override
@@ -2347,7 +2343,7 @@ public class SwitcherSupportJedis extends WeiboJedis {
 
     @Override
     public Set<byte[]> zrangeByScore(final byte[] key, final byte[] min, final byte[] max) {
-        //默认返回 empty set
+        // 默认返回 empty set
         return throwOrReturnValue(true, Collections.<byte[]>emptySet(), new Callback<Set<byte[]>>() {
 
             @Override
@@ -2359,7 +2355,7 @@ public class SwitcherSupportJedis extends WeiboJedis {
 
     @Override
     public Set<String> zrangeByScore(final String key, final String min, final String max) {
-        //默认返回 empty set
+        // 默认返回 empty set
         return throwOrReturnValue(true, Collections.<String>emptySet(), new Callback<Set<String>>() {
 
             @Override
@@ -2370,9 +2366,8 @@ public class SwitcherSupportJedis extends WeiboJedis {
     }
 
     @Override
-    public Set<String> zrangeByScore(final String key, final double min, final double max,
-                                     final int offset, final int count) {
-        //默认返回 empty set
+    public Set<String> zrangeByScore(final String key, final double min, final double max, final int offset, final int count) {
+        // 默认返回 empty set
         return throwOrReturnValue(true, Collections.<String>emptySet(), new Callback<Set<String>>() {
 
             @Override
@@ -2383,9 +2378,8 @@ public class SwitcherSupportJedis extends WeiboJedis {
     }
 
     @Override
-    public Set<byte[]> zrangeByScore(final byte[] key, final double min, final double max,
-                                     final int offset, final int count) {
-        //默认返回 empty set
+    public Set<byte[]> zrangeByScore(final byte[] key, final double min, final double max, final int offset, final int count) {
+        // 默认返回 empty set
         return throwOrReturnValue(true, Collections.<byte[]>emptySet(), new Callback<Set<byte[]>>() {
 
             @Override
@@ -2396,9 +2390,8 @@ public class SwitcherSupportJedis extends WeiboJedis {
     }
 
     @Override
-    public Set<byte[]> zrangeByScore(final byte[] key, final byte[] min, final byte[] max,
-                                     final int offset, final int count) {
-        //默认返回 empty set
+    public Set<byte[]> zrangeByScore(final byte[] key, final byte[] min, final byte[] max, final int offset, final int count) {
+        // 默认返回 empty set
         return throwOrReturnValue(true, Collections.<byte[]>emptySet(), new Callback<Set<byte[]>>() {
 
             @Override
@@ -2409,8 +2402,7 @@ public class SwitcherSupportJedis extends WeiboJedis {
     }
 
     @Override
-    public Set<String> zrangeByScore(final String key, final String min, final String max, final int offset,
-                                     final int count) {
+    public Set<String> zrangeByScore(final String key, final String min, final String max, final int offset, final int count) {
         // 默认返回 empty set
         return throwOrReturnValue(true, Collections.<String>emptySet(), new Callback<Set<String>>() {
 
@@ -2423,7 +2415,7 @@ public class SwitcherSupportJedis extends WeiboJedis {
 
     @Override
     public Set<Tuple> zrangeByScoreWithScores(final String key, final double min, final double max) {
-        //默认返回 empty set
+        // 默认返回 empty set
         return throwOrReturnValue(true, Collections.<Tuple>emptySet(), new Callback<Set<Tuple>>() {
 
             @Override
@@ -2435,7 +2427,7 @@ public class SwitcherSupportJedis extends WeiboJedis {
 
     @Override
     public Set<Tuple> zrangeByScoreWithScores(final byte[] key, final double min, final double max) {
-        //默认返回 empty set
+        // 默认返回 empty set
         return throwOrReturnValue(true, Collections.<Tuple>emptySet(), new Callback<Set<Tuple>>() {
 
             @Override
@@ -2447,7 +2439,7 @@ public class SwitcherSupportJedis extends WeiboJedis {
 
     @Override
     public Set<Tuple> zrangeByScoreWithScores(final byte[] key, final byte[] min, final byte[] max) {
-        //默认返回 empty set
+        // 默认返回 empty set
         return throwOrReturnValue(true, Collections.<Tuple>emptySet(), new Callback<Set<Tuple>>() {
 
             @Override
@@ -2458,9 +2450,8 @@ public class SwitcherSupportJedis extends WeiboJedis {
     }
 
     @Override
-    public Set<Tuple> zrangeByScoreWithScores(final String key, final double min,
-                                              final double max, final int offset, final int count) {
-        //默认返回 empty set
+    public Set<Tuple> zrangeByScoreWithScores(final String key, final double min, final double max, final int offset, final int count) {
+        // 默认返回 empty set
         return throwOrReturnValue(true, Collections.<Tuple>emptySet(), new Callback<Set<Tuple>>() {
 
             @Override
@@ -2471,9 +2462,8 @@ public class SwitcherSupportJedis extends WeiboJedis {
     }
 
     @Override
-    public Set<Tuple> zrangeByScoreWithScores(final byte[] key, final byte[] min,
-                                              final byte[] max, final int offset, final int count) {
-        //默认返回 empty set
+    public Set<Tuple> zrangeByScoreWithScores(final byte[] key, final byte[] min, final byte[] max, final int offset, final int count) {
+        // 默认返回 empty set
         return throwOrReturnValue(true, Collections.<Tuple>emptySet(), new Callback<Set<Tuple>>() {
 
             @Override
@@ -2484,9 +2474,8 @@ public class SwitcherSupportJedis extends WeiboJedis {
     }
 
     @Override
-    public Set<Tuple> zrangeByScoreWithScores(final byte[] key, final double min,
-                                              final double max, final int offset, final int count) {
-        //默认返回 empty set
+    public Set<Tuple> zrangeByScoreWithScores(final byte[] key, final double min, final double max, final int offset, final int count) {
+        // 默认返回 empty set
         return throwOrReturnValue(true, Collections.<Tuple>emptySet(), new Callback<Set<Tuple>>() {
 
             @Override
@@ -2497,8 +2486,7 @@ public class SwitcherSupportJedis extends WeiboJedis {
     }
 
     @Override
-    public Set<Tuple> zrangeByScoreWithScores(final String key, final String min, final String max, final int offset,
-                                              final int count) {
+    public Set<Tuple> zrangeByScoreWithScores(final String key, final String min, final String max, final int offset, final int count) {
         // 默认返回 empty set
         return throwOrReturnValue(true, Collections.<Tuple>emptySet(), new Callback<Set<Tuple>>() {
 
@@ -2523,7 +2511,7 @@ public class SwitcherSupportJedis extends WeiboJedis {
 
     @Override
     public Long strlen(final String key) {
-        //默认返回 0 表示不存在
+        // 默认返回 0 表示不存在
         return throwOrReturnValue(true, 0L, new Callback<Long>() {
 
             @Override
@@ -2535,7 +2523,7 @@ public class SwitcherSupportJedis extends WeiboJedis {
 
     @Override
     public Long strlen(final byte[] key) {
-        //默认返回 0 表示不存在
+        // 默认返回 0 表示不存在
         return throwOrReturnValue(true, 0L, new Callback<Long>() {
 
             @Override
@@ -2547,7 +2535,7 @@ public class SwitcherSupportJedis extends WeiboJedis {
 
     @Override
     public Boolean getbit(final String key, final long offset) {
-        //默认返回 0 
+        // 默认返回 0
         return throwOrReturnValue(true, false, new Callback<Boolean>() {
 
             @Override
@@ -2559,7 +2547,7 @@ public class SwitcherSupportJedis extends WeiboJedis {
 
     @Override
     public Boolean getbit(final byte[] key, final long offset) {
-        //默认返回 0 
+        // 默认返回 0
         return throwOrReturnValue(true, false, new Callback<Boolean>() {
 
             @Override
@@ -2602,8 +2590,7 @@ public class SwitcherSupportJedis extends WeiboJedis {
     }
 
     @Override
-    public Set<String> zrevrangeByScore(final String key, final double max, final double min, final int offset,
-                                        final int count) {
+    public Set<String> zrevrangeByScore(final String key, final double max, final double min, final int offset, final int count) {
         return throwOrReturnValue(true, Collections.<String>emptySet(), new Callback<Set<String>>() {
 
             @Override
@@ -2614,8 +2601,7 @@ public class SwitcherSupportJedis extends WeiboJedis {
     }
 
     @Override
-    public Set<String> zrevrangeByScore(final String key, final String max, final String min, final int offset,
-                                        final int count) {
+    public Set<String> zrevrangeByScore(final String key, final String max, final String min, final int offset, final int count) {
         return throwOrReturnValue(true, Collections.<String>emptySet(), new Callback<Set<String>>() {
 
             @Override
@@ -2637,8 +2623,7 @@ public class SwitcherSupportJedis extends WeiboJedis {
     }
 
     @Override
-    public Set<Tuple> zrevrangeByScoreWithScores(final String key, final double max, final double min,
-                                                 final int offset, final int count) {
+    public Set<Tuple> zrevrangeByScoreWithScores(final String key, final double max, final double min, final int offset, final int count) {
         return throwOrReturnValue(true, Collections.<Tuple>emptySet(), new Callback<Set<Tuple>>() {
 
             @Override
@@ -2649,8 +2634,7 @@ public class SwitcherSupportJedis extends WeiboJedis {
     }
 
     @Override
-    public Set<Tuple> zrevrangeByScoreWithScores(final String key, final String max, final String min,
-                                                 final int offset, final int count) {
+    public Set<Tuple> zrevrangeByScoreWithScores(final String key, final String max, final String min, final int offset, final int count) {
         return throwOrReturnValue(true, Collections.<Tuple>emptySet(), new Callback<Set<Tuple>>() {
 
             @Override
@@ -2694,7 +2678,7 @@ public class SwitcherSupportJedis extends WeiboJedis {
     }
 
 
-    //================ 其他 操作 开关无影响 =========================
+    // ================ 其他 操作 开关无影响 =========================
 
 
     @Override

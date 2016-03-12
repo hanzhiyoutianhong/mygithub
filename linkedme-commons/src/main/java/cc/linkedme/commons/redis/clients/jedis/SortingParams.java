@@ -24,12 +24,12 @@ public class SortingParams {
     /**
      * Sort by weight in keys.
      * <p>
-     * Takes a pattern that is used in order to generate the key names of the
-     * weights used for sorting. Weight key names are obtained substituting the
-     * first occurrence of * with the actual value of the elements on the list.
+     * Takes a pattern that is used in order to generate the key names of the weights used for
+     * sorting. Weight key names are obtained substituting the first occurrence of * with the actual
+     * value of the elements on the list.
      * <p>
-     * The pattern for a normal key/value pair is "keyname*" and for a value in
-     * a hash "keyname*->fieldname".
+     * The pattern for a normal key/value pair is "keyname*" and for a value in a hash
+     * "keyname*->fieldname".
      *
      * @param pattern
      * @return the SortingParams Object
@@ -41,12 +41,12 @@ public class SortingParams {
     /**
      * Sort by weight in keys.
      * <p>
-     * Takes a pattern that is used in order to generate the key names of the
-     * weights used for sorting. Weight key names are obtained substituting the
-     * first occurrence of * with the actual value of the elements on the list.
+     * Takes a pattern that is used in order to generate the key names of the weights used for
+     * sorting. Weight key names are obtained substituting the first occurrence of * with the actual
+     * value of the elements on the list.
      * <p>
-     * The pattern for a normal key/value pair is "keyname*" and for a value in
-     * a hash "keyname*->fieldname".
+     * The pattern for a normal key/value pair is "keyname*" and for a value in a hash
+     * "keyname*->fieldname".
      *
      * @param pattern
      * @return the SortingParams Object
@@ -60,8 +60,8 @@ public class SortingParams {
     /**
      * No sorting.
      * <p>
-     * This is useful if you want to retrieve a external key (using
-     * {@link #get(String...) GET}) but you don't want the sorting overhead.
+     * This is useful if you want to retrieve a external key (using {@link #get(String...) GET}) but
+     * you don't want the sorting overhead.
      *
      * @return the SortingParams Object
      */
@@ -110,8 +110,8 @@ public class SortingParams {
     }
 
     /**
-     * Sort lexicographicaly. Note that Redis is utf-8 aware assuming you set
-     * the right value for the LC_COLLATE environment variable.
+     * Sort lexicographicaly. Note that Redis is utf-8 aware assuming you set the right value for
+     * the LC_COLLATE environment variable.
      *
      * @return the SortingParams Object
      */
@@ -123,12 +123,12 @@ public class SortingParams {
     /**
      * Retrieving external keys from the result of the search.
      * <p>
-     * Takes a pattern that is used in order to generate the key names of the
-     * result of sorting. The key names are obtained substituting the first
-     * occurrence of * with the actual value of the elements on the list.
+     * Takes a pattern that is used in order to generate the key names of the result of sorting. The
+     * key names are obtained substituting the first occurrence of * with the actual value of the
+     * elements on the list.
      * <p>
-     * The pattern for a normal key/value pair is "keyname*" and for a value in
-     * a hash "keyname*->fieldname".
+     * The pattern for a normal key/value pair is "keyname*" and for a value in a hash
+     * "keyname*->fieldname".
      * <p>
      * To get the list itself use the char # as pattern.
      *
@@ -146,12 +146,12 @@ public class SortingParams {
     /**
      * Retrieving external keys from the result of the search.
      * <p>
-     * Takes a pattern that is used in order to generate the key names of the
-     * result of sorting. The key names are obtained substituting the first
-     * occurrence of * with the actual value of the elements on the list.
+     * Takes a pattern that is used in order to generate the key names of the result of sorting. The
+     * key names are obtained substituting the first occurrence of * with the actual value of the
+     * elements on the list.
      * <p>
-     * The pattern for a normal key/value pair is "keyname*" and for a value in
-     * a hash "keyname*->fieldname".
+     * The pattern for a normal key/value pair is "keyname*" and for a value in a hash
+     * "keyname*->fieldname".
      * <p>
      * To get the list itself use the char # as pattern.
      *

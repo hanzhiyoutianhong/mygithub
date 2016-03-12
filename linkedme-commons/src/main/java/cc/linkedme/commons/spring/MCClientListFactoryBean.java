@@ -20,8 +20,7 @@ import cc.linkedme.commons.spring.MCClientFactoryBean.MCConfigStrategy;
  * 如:<br/>
  * <code>
  * testmc1:11211,testmc2:11211|testmc3:11211
- * </code>
- * 表示两组mc
+ * </code> 表示两组mc
  */
 @SuppressWarnings("rawtypes")
 public class MCClientListFactoryBean extends CacheableObjectFactoryBean<VikaCacheClient> {
@@ -41,9 +40,10 @@ public class MCClientListFactoryBean extends CacheableObjectFactoryBean<VikaCach
     private boolean enableSwitcher = true;
 
     /**
-     * Set the class to use for the target List. Can be populated with a fully
-     * qualified class name when defined in a Spring application context.
-     * <p>Default is a <code>java.util.ArrayList</code>.
+     * Set the class to use for the target List. Can be populated with a fully qualified class name
+     * when defined in a Spring application context.
+     * <p>
+     * Default is a <code>java.util.ArrayList</code>.
      *
      * @see java.util.ArrayList
      */
@@ -207,7 +207,7 @@ public class MCClientListFactoryBean extends CacheableObjectFactoryBean<VikaCach
             if (!StringUtils.isBlank(serverPort)) {
                 VikaCacheClient client = new VikaCacheClient();
                 this.strategy.setConfig(client);
-                //再使用自定义属性覆盖 策略配置
+                // 再使用自定义属性覆盖 策略配置
                 for (BeanProperty<VikaCacheClient> p : this.properties) {
                     if (ApiLogger.isDebugEnabled()) {
                         ApiLogger.debug("MC-Config " + serverPort + " property:" + p.getName() + " value:" + p.getValue());
@@ -228,11 +228,11 @@ public class MCClientListFactoryBean extends CacheableObjectFactoryBean<VikaCach
         if (instance == null) {
             return;
         }
-//		List list = (List)instance;
-//		for(Object obj:list){
-//			VikaCacheClient client = (VikaCacheClient)obj;
-//			client.close();
-//		}
+        // List list = (List)instance;
+        // for(Object obj:list){
+        // VikaCacheClient client = (VikaCacheClient)obj;
+        // client.close();
+        // }
     }
 
     /**
@@ -241,12 +241,10 @@ public class MCClientListFactoryBean extends CacheableObjectFactoryBean<VikaCach
      * @param hashingAlg
      */
     public void setHashingAlg(final String hashingAlg) {
-        this.properties.add(new BeanProperty<VikaCacheClient>("hashingAlg",
-                hashingAlg) {
+        this.properties.add(new BeanProperty<VikaCacheClient>("hashingAlg", hashingAlg) {
             @Override
             public void apply(VikaCacheClient target) {
-                MCClientFactoryBean
-                        .setHashingAlg4VikaClient(target, hashingAlg);
+                MCClientFactoryBean.setHashingAlg4VikaClient(target, hashingAlg);
             }
         });
     }

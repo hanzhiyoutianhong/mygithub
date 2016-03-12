@@ -6,39 +6,48 @@ public enum ProfileType {
         public String value() {
             return "API";
         }
-    }, SERVICE {
+    },
+    SERVICE {
         public String value() {
             return "SERVICE";
         }
-    }, MC {
+    },
+    MC {
         public String value() {
             return "MC";
         }
-    }, REDIS {
+    },
+    REDIS {
         public String value() {
             return "REDIS";
         }
-    }, DB {
+    },
+    DB {
         public String value() {
             return "DB";
         }
-    }, HBASE {
+    },
+    HBASE {
         public String value() {
             return "HBASE";
         }
-    }, HBASEFAILFAST {
+    },
+    HBASEFAILFAST {
         public String value() {
             return "HBASEFAILFAST";
         }
-    }, HTTP {
+    },
+    HTTP {
         public String value() {
             return "HTTP";
         }
-    }, JVM {
+    },
+    JVM {
         public String value() {
             return "JVM";
         }
-    }, APIFAILFAST {
+    },
+    APIFAILFAST {
         public String value() {
             return "APIFAILFAST";
         }

@@ -50,14 +50,11 @@ public class QuickLZ {
         byte[] hash_counter = new byte[HASH_VALUES];
         byte[] d2;
         int fetch = 0;
-        int last_matchstart = (source.length - UNCONDITIONAL_MATCHLEN
-                - UNCOMPRESSED_END - 1);
+        int last_matchstart = (source.length - UNCONDITIONAL_MATCHLEN - UNCOMPRESSED_END - 1);
 
-        if (source.length == 0)
-            return new byte[0];
+        if (source.length == 0) return new byte[0];
 
-        if (src <= last_matchstart)
-            fetch = (int) fastread(source, src, 3);
+        if (src <= last_matchstart) fetch = (int) fastread(source, src, 3);
 
         while (src <= last_matchstart) {
             if ((cword_val & 1) == 1) {
@@ -70,8 +67,7 @@ public class QuickLZ {
                     return d2;
                 }
 
-                fastwrite(destination, cword_ptr,
-                        (cword_val >>> 1) | 0x80000000L, 4);
+                fastwrite(destination, cword_ptr, (cword_val >>> 1) | 0x80000000L, 4);
                 cword_ptr = dst;
                 dst += CWORD_LEN;
                 cword_val = 0x80000000L;
@@ -94,17 +90,16 @@ public class QuickLZ {
                     dst += 2;
                 } else {
                     int old_src = src;
-                    int remaining = ((source.length - UNCOMPRESSED_END - src
-                            + 1 - 1) > 255 ? 255 : (source.length
-                            - UNCOMPRESSED_END - src + 1 - 1));
+                    int remaining = ((source.length - UNCOMPRESSED_END - src + 1 - 1) > 255
+                            ? 255
+                            : (source.length - UNCOMPRESSED_END - src + 1 - 1));
 
                     src += 4;
                     if (source[o + src - old_src] == source[src]) {
                         src++;
                         if (source[o + src - old_src] == source[src]) {
                             src++;
-                            while (source[o + (src - old_src)] == source[src]
-                                    && (src - old_src) < remaining)
+                            while (source[o + (src - old_src)] == source[src] && (src - old_src) < remaining)
                                 src++;
                         }
                     }
@@ -131,15 +126,13 @@ public class QuickLZ {
                 cword_val = (cword_val >>> 1);
                 src++;
                 dst++;
-                fetch = ((fetch >>> 8) & 0xffff)
-                        | ((((int) source[src + 2]) & 0xff) << 16);
+                fetch = ((fetch >>> 8) & 0xffff) | ((((int) source[src + 2]) & 0xff) << 16);
             }
         }
 
         while (src <= source.length - 1) {
             if ((cword_val & 1) == 1) {
-                fastwrite(destination, cword_ptr,
-                        (long) ((cword_val >>> 1) | 0x80000000L), 4);
+                fastwrite(destination, cword_ptr, (long) ((cword_val >>> 1) | 0x80000000L), 4);
                 cword_ptr = dst;
                 dst += CWORD_LEN;
                 cword_val = 0x80000000L;
@@ -153,8 +146,7 @@ public class QuickLZ {
         while ((cword_val & 1) != 1) {
             cword_val = (cword_val >>> 1);
         }
-        fastwrite(destination, cword_ptr,
-                (long) ((cword_val >>> 1) | 0x80000000L), CWORD_LEN);
+        fastwrite(destination, cword_ptr, (long) ((cword_val >>> 1) | 0x80000000L), CWORD_LEN);
         destination[0] = 2 | 1;
         fastwrite(destination, 1, (long) dst, 4);
         fastwrite(destination, 5, (long) source.length, 4);
@@ -218,8 +210,7 @@ public class QuickLZ {
         byte[] destination = new byte[size];
         int[] hashtable = new int[4096];
         byte[] hash_counter = new byte[4096];
-        int last_matchstart = size - UNCONDITIONAL_MATCHLEN - UNCOMPRESSED_END
-                - 1;
+        int last_matchstart = size - UNCONDITIONAL_MATCHLEN - UNCOMPRESSED_END - 1;
         int last_hashed = -1;
         int hash;
         int fetch = 0;
@@ -230,12 +221,11 @@ public class QuickLZ {
             return d2;
         }
 
-        for (; ; ) {
+        for (;;) {
             if (cword_val == 1) {
                 cword_val = fastread(source, src, 4);
                 src += 4;
-                if (dst <= last_matchstart)
-                    fetch = (int) fastread(source, src, 3);
+                if (dst <= last_matchstart) fetch = (int) fastread(source, src, 3);
             }
 
             if ((cword_val & 1) == 1) {
@@ -283,9 +273,7 @@ public class QuickLZ {
                     hash = ((fetch >>> 12) ^ fetch) & (HASH_VALUES - 1);
                     hashtable[hash] = last_hashed;
                     hash_counter[hash] = 1;
-                    fetch = fetch >>> 8
-                            & 0xffff
-                            | (((int) destination[last_hashed + 3]) & 0xff) << 16;
+                    fetch = fetch >>> 8 & 0xffff | (((int) destination[last_hashed + 3]) & 0xff) << 16;
                 }
                 last_hashed = dst - 1;
                 fetch = (int) fastread(source, src, 3);
@@ -303,8 +291,7 @@ public class QuickLZ {
                         hashtable[hash] = last_hashed;
                         hash_counter[hash] = 1;
                     }
-                    fetch = fetch >> 8 & 0xffff
-                            | (((int) source[src + 2]) & 0xff) << 16;
+                    fetch = fetch >> 8 & 0xffff | (((int) source[src + 2]) & 0xff) << 16;
                 } else {
                     while (dst <= size - 1) {
                         if (cword_val == 1) {

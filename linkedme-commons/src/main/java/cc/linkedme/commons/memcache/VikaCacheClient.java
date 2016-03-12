@@ -14,8 +14,7 @@ import java.util.Map;
 import java.util.concurrent.atomic.AtomicInteger;
 
 /**
- * use spring to manage life cycle,
- * singleton design pattern
+ * use spring to manage life cycle, singleton design pattern
  *
  * @author Tim
  */
@@ -47,7 +46,7 @@ public class VikaCacheClient implements MemcacheClient, DisposableBean, Resource
     // seconds to wait for collect all connection data(multiget)
     // change total timeout from 5min to 15 seconds
     // maxBusyTimePerConnection(timeout) is set in MemcachedClient.doMulti() (Ln 2369)
-    //  move as class field,support config.
+    // move as class field,support config.
     private long maxBusyTime = DEFAULT_MAX_BUSY_TIME;
 
     // seconds to block on reads
@@ -55,7 +54,7 @@ public class VikaCacheClient implements MemcacheClient, DisposableBean, Resource
     // seconds to block on initial
     private int socketConnectTimeOut = DEFAULT_SOCKET_CONNECT_TIMEOUT;
 
-    //默认启用开关
+    // 默认启用开关
     private boolean enableSwitcher = true;
     // 创建socket时进行二次check，暂时默认不打开，与之前保持一致
     private boolean doubleCheckWhenCreateSocket = false;
@@ -106,7 +105,7 @@ public class VikaCacheClient implements MemcacheClient, DisposableBean, Resource
                 resource = TimeStatUtil.MC_TYPE + port;
                 TimeStatUtil.register(resource);
             } catch (Exception e) {
-                //防止port取到的是null
+                // 防止port取到的是null
             }
         } catch (Exception e) {
             e.printStackTrace();
@@ -304,11 +303,11 @@ public class VikaCacheClient implements MemcacheClient, DisposableBean, Resource
 
     public void setServerPort(String serverPort) {
         if (serverPort.indexOf(",") == -1)
-            this.serverPort = new String[]{serverPort};
+            this.serverPort = new String[] {serverPort};
         else {
             this.serverPort = serverPort.split(",");
         }
-        //init();
+        // init();
         ApiLogger.info("== Init Cache - " + serverPort + "\tcompressEnable:" + compressEnable);
     }
 
@@ -327,7 +326,7 @@ public class VikaCacheClient implements MemcacheClient, DisposableBean, Resource
     @Override
     public void setServerPortList(String[] serverPort) {
         this.serverPort = serverPort;
-//		init();
+        // init();
     }
 
     @Override
@@ -456,4 +455,4 @@ public class VikaCacheClient implements MemcacheClient, DisposableBean, Resource
     public void setSanitizeKeys(boolean sanitizeKeys) {
         this.sanitizeKeys = sanitizeKeys;
     }
-} 
+}

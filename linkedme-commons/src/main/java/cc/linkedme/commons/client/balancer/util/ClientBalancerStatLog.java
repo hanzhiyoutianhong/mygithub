@@ -143,20 +143,20 @@ public class ClientBalancerStatLog {
             long cur = (cnt - lastCount) * 1000l / (time2 - lastTime);
             if (cur > max) max = cur;
 
-            //.statLog.info("---------------------------");
-            //ClientBalancerLog.statLog.info("JAVA HEAP: " + memoryReport() + ", UP TIME: " + ((time2 - startTime) / 1000) + ", min: " + ((time2 - startTime) / 60000));
+            // .statLog.info("---------------------------");
+            // ClientBalancerLog.statLog.info("JAVA HEAP: " + memoryReport() + ", UP TIME: " +
+            // ((time2 - startTime) / 1000) + ", min: " + ((time2 - startTime) / 60000));
             SortedSet<String> keys = new TreeSet<String>(statVars.keySet());
             StringBuilder sb = new StringBuilder(512).append("cBalancer_stat[");
             boolean firstLoop = true;
-            for (Iterator<String> iterator = keys.iterator(); iterator.hasNext(); ) {
+            for (Iterator<String> iterator = keys.iterator(); iterator.hasNext();) {
                 String var = iterator.next();
                 AtomicLong c = statVars.get(var);
                 AtomicLong last1 = lastStatVars.get(var);
                 AtomicLong m1 = maxStatVars.get(var);
 
                 long cnt1 = c.get();
-                if (cnt1 == 0)
-                    continue;
+                if (cnt1 == 0) continue;
                 long max1 = m1.get();
                 long lastCount1 = last1.get();
 
@@ -170,21 +170,21 @@ public class ClientBalancerStatLog {
                     firstLoop = false;
 
                 // json-style output
-                sb.append("{\"").append(var).append("\":[").append(cnt1).append(",")
-                        .append(avg1).append(",").append(cur1).append(",").append(max1).append("]}\n");
+                sb.append("{\"").append(var).append("\":[").append(cnt1).append(",").append(avg1).append(",").append(cur1).append(",")
+                        .append(max1).append("]}\n");
 
                 m1.set(max1);
                 last1.set(cnt1);
             }
             sb.append("]\r\n");
-            //sb.append(sb.toString());
+            // sb.append(sb.toString());
 
-            //stat process time
+            // stat process time
             if (processStats.size() > 0) {
                 sb.append(statProcessSt().toString()).append("\r\n");
             }
 
-            //stat executors
+            // stat executors
             sb.append("cBalancer_pool:[ ");
             for (Map.Entry<String, ThreadPoolExecutor> entry : executors.entrySet()) {
                 sb.append(statExecutor(entry.getKey(), entry.getValue())).append(", ");
@@ -214,12 +214,11 @@ public class ClientBalancerStatLog {
             }
 
             if (ps.getAvgTime() > 0) {
-                pstatSb.append(entry.getKey()).append("{")
-                        .append(ps.getCount()).append("=").append(ps.getAvgTime()).append(",")
-                        .append(psLast.getCount()).append("=").append(psLast.getAvgTime()).append(",")
-                        .append(psMax.getCount()).append("=").append(psMax.getAvgTime()).append("},\n ");
+                pstatSb.append(entry.getKey()).append("{").append(ps.getCount()).append("=").append(ps.getAvgTime()).append(",")
+                        .append(psLast.getCount()).append("=").append(psLast.getAvgTime()).append(",").append(psMax.getCount()).append("=")
+                        .append(psMax.getAvgTime()).append("},\n ");
             }
-            //reset last stat
+            // reset last stat
             processStatsLast.put(psKey, new ProcessStat());
         }
         if (pstatSb.lastIndexOf(",") > 0) {
@@ -234,25 +233,22 @@ public class ClientBalancerStatLog {
 
     private static String statExecutor(String name, ThreadPoolExecutor executor) {
         StringBuilder strBuf = new StringBuilder(32);
-        strBuf.append(name).append("{").append(executor.getQueue().size()).append(",")
-                .append(executor.getCompletedTaskCount()).append(",")
-                .append(executor.getTaskCount()).append(",")
-                .append(executor.getActiveCount()).append(",")
+        strBuf.append(name).append("{").append(executor.getQueue().size()).append(",").append(executor.getCompletedTaskCount()).append(",")
+                .append(executor.getTaskCount()).append(",").append(executor.getActiveCount()).append(",")
                 .append(executor.getCorePoolSize()).append("}\n");
         return strBuf.toString();
     }
 
-//	private String statEhCache(String name, Ehcache ehcache){
-//		return new StringBuilder().append("EhCache: ").append(ehcache.getStatistics()).toString();
-//
-//	}
+    // private String statEhCache(String name, Ehcache ehcache){
+    // return new StringBuilder().append("EhCache: ").append(ehcache.getStatistics()).toString();
+    //
+    // }
 
     public static class ProcessStat {
         public AtomicLong count = new AtomicLong();
         public AtomicLong time = new AtomicLong();
 
-        public ProcessStat() {
-        }
+        public ProcessStat() {}
 
         private void addStat(int pcount, long ptime) {
             this.count.addAndGet(pcount);

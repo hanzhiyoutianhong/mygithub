@@ -17,18 +17,18 @@ import cc.linkedme.commons.util.RequestTraceContext;
  */
 public class TraceableThreadExecutor extends ThreadPoolExecutor {
     public TraceableThreadExecutor(int corePoolSize, int maximumPoolSize, long keepAliveTime, TimeUnit unit,
-                                   BlockingQueue<Runnable> workQueue, RejectedExecutionHandler handler) {
+            BlockingQueue<Runnable> workQueue, RejectedExecutionHandler handler) {
         super(corePoolSize, maximumPoolSize, keepAliveTime, unit, workQueue, handler);
     }
 
     public TraceableThreadExecutor(int corePoolSize, int maximumPoolSize, long keepAliveTime, TimeUnit unit,
-                                   BlockingQueue<Runnable> workQueue, RejectedExecutionHandler handler, String poolName) {
-        super(corePoolSize, maximumPoolSize, keepAliveTime, unit, workQueue,
-                new ThreadFactoryBuilder().setNameFormat(poolName).build(), handler);
+            BlockingQueue<Runnable> workQueue, RejectedExecutionHandler handler, String poolName) {
+        super(corePoolSize, maximumPoolSize, keepAliveTime, unit, workQueue, new ThreadFactoryBuilder().setNameFormat(poolName).build(),
+                handler);
     }
 
     public TraceableThreadExecutor(int corePoolSize, int maximumPoolSize, long keepAliveTime, TimeUnit unit,
-                                   BlockingQueue<Runnable> workQueue, ThreadFactory threadFactory, RejectedExecutionHandler handler) {
+            BlockingQueue<Runnable> workQueue, ThreadFactory threadFactory, RejectedExecutionHandler handler) {
         super(corePoolSize, maximumPoolSize, keepAliveTime, unit, workQueue, threadFactory, handler);
     }
 

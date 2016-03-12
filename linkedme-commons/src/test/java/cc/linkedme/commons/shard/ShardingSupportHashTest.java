@@ -12,8 +12,9 @@ public class ShardingSupportHashTest {
     private static long id;
 
     static {
-        ClassPathXmlApplicationContext ctx = new ClassPathXmlApplicationContext(new String[]{"classpath:spring/redis.xml"});
-//        ApplicationContext app = new ClassPathXmlApplicationContext("classpath:spring/redis.xml");
+        ClassPathXmlApplicationContext ctx = new ClassPathXmlApplicationContext(new String[] {"classpath:spring/redis.xml"});
+        // ApplicationContext app = new
+        // ClassPathXmlApplicationContext("classpath:spring/redis.xml");
         ctx.start();
         System.out.println("context init sucess!");
         sh = (ShardingSupportHash<JedisPort>) ctx.getBean("mgetShardingSupport");
@@ -21,11 +22,12 @@ public class ShardingSupportHashTest {
         id = 12345L;
     }
 
-//    ApplicationContext app = new ClassPathXmlApplicationContext("classpath:spring/redis.xml");
-//    ShardingSupportHash<JedisPort> sh = (ShardingSupportHash<JedisPort>)app.getBean("mgetShardingSupport");
-//
-//    public String key = "abcde";
-//    public String id = "12345L";
+    // ApplicationContext app = new ClassPathXmlApplicationContext("classpath:spring/redis.xml");
+    // ShardingSupportHash<JedisPort> sh =
+    // (ShardingSupportHash<JedisPort>)app.getBean("mgetShardingSupport");
+    //
+    // public String key = "abcde";
+    // public String id = "12345L";
 
     @Test
     public void testGetClient() {

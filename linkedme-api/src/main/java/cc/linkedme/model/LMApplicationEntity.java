@@ -197,21 +197,17 @@ public class LMApplicationEntity {
         if (timestamp != that.timestamp) return false;
         if (appName != null ? !appName.equals(that.appName) : that.appName != null) return false;
         if (appKeyLive != null ? !appKeyLive.equals(that.appKeyLive) : that.appKeyLive != null) return false;
-        if (appSecretLive != null ? !appSecretLive.equals(that.appSecretLive) : that.appSecretLive != null)
-            return false;
+        if (appSecretLive != null ? !appSecretLive.equals(that.appSecretLive) : that.appSecretLive != null) return false;
         if (appKeyTest != null ? !appKeyTest.equals(that.appKeyTest) : that.appKeyTest != null) return false;
-        if (appSecretTest != null ? !appSecretTest.equals(that.appSecretTest) : that.appSecretTest != null)
-            return false;
+        if (appSecretTest != null ? !appSecretTest.equals(that.appSecretTest) : that.appSecretTest != null) return false;
         if (urlScheme != null ? !urlScheme.equals(that.urlScheme) : that.urlScheme != null) return false;
         if (iosStoreUrl != null ? !iosStoreUrl.equals(that.iosStoreUrl) : that.iosStoreUrl != null) return false;
         if (iosCustomUrl != null ? !iosCustomUrl.equals(that.iosCustomUrl) : that.iosCustomUrl != null) return false;
         if (iosNotUrl != null ? !iosNotUrl.equals(that.iosNotUrl) : that.iosNotUrl != null) return false;
         if (iosBundleId != null ? !iosBundleId.equals(that.iosBundleId) : that.iosBundleId != null) return false;
         if (iosTeamId != null ? !iosTeamId.equals(that.iosTeamId) : that.iosTeamId != null) return false;
-        if (adroidCustomUrl != null ? !adroidCustomUrl.equals(that.adroidCustomUrl) : that.adroidCustomUrl != null)
-            return false;
-        if (androidNotUrl != null ? !androidNotUrl.equals(that.androidNotUrl) : that.androidNotUrl != null)
-            return false;
+        if (adroidCustomUrl != null ? !adroidCustomUrl.equals(that.adroidCustomUrl) : that.adroidCustomUrl != null) return false;
+        if (androidNotUrl != null ? !androidNotUrl.equals(that.androidNotUrl) : that.androidNotUrl != null) return false;
         if (packageName != null ? !packageName.equals(that.packageName) : that.packageName != null) return false;
         if (desktopUrl != null ? !desktopUrl.equals(that.desktopUrl) : that.desktopUrl != null) return false;
 

@@ -18,10 +18,10 @@ public class LMFingerConfiguration {
      * construction function
      */
 
-    public LMFingerConfiguration() {
-    }
+    public LMFingerConfiguration() {}
 
-    public LMFingerConfiguration(String appID, String IP, String os, String osVersion, String deviceModel, String screenWidth, String scrrenHeight) {
+    public LMFingerConfiguration(String appID, String IP, String os, String osVersion, String deviceModel, String screenWidth,
+            String scrrenHeight) {
         this.appID = appID;
         this.IP = IP;
         this.os = os;

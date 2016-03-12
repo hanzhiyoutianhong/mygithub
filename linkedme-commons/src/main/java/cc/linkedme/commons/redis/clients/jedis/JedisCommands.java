@@ -156,39 +156,31 @@ public interface JedisCommands {
 
     Set<String> zrevrangeByScore(String key, double max, double min);
 
-    Set<String> zrangeByScore(String key, double min, double max, int offset,
-                              int count);
+    Set<String> zrangeByScore(String key, double min, double max, int offset, int count);
 
     Set<String> zrevrangeByScore(String key, String max, String min);
 
-    Set<String> zrangeByScore(String key, String min, String max, int offset,
-                              int count);
+    Set<String> zrangeByScore(String key, String min, String max, int offset, int count);
 
-    Set<String> zrevrangeByScore(String key, double max, double min,
-                                 int offset, int count);
+    Set<String> zrevrangeByScore(String key, double max, double min, int offset, int count);
 
     Set<Tuple> zrangeByScoreWithScores(String key, double min, double max);
 
     Set<Tuple> zrevrangeByScoreWithScores(String key, double max, double min);
 
-    Set<Tuple> zrangeByScoreWithScores(String key, double min, double max,
-                                       int offset, int count);
+    Set<Tuple> zrangeByScoreWithScores(String key, double min, double max, int offset, int count);
 
-    Set<String> zrevrangeByScore(String key, String max, String min,
-                                 int offset, int count);
+    Set<String> zrevrangeByScore(String key, String max, String min, int offset, int count);
 
     Set<Tuple> zrangeByScoreWithScores(String key, String min, String max);
 
     Set<Tuple> zrevrangeByScoreWithScores(String key, String max, String min);
 
-    Set<Tuple> zrangeByScoreWithScores(String key, String min, String max,
-                                       int offset, int count);
+    Set<Tuple> zrangeByScoreWithScores(String key, String min, String max, int offset, int count);
 
-    Set<Tuple> zrevrangeByScoreWithScores(String key, double max, double min,
-                                          int offset, int count);
+    Set<Tuple> zrevrangeByScoreWithScores(String key, double max, double min, int offset, int count);
 
-    Set<Tuple> zrevrangeByScoreWithScores(String key, String max, String min,
-                                          int offset, int count);
+    Set<Tuple> zrevrangeByScoreWithScores(String key, String max, String min, int offset, int count);
 
     Long zremrangeByRank(String key, long start, long end);
 
@@ -196,8 +188,7 @@ public interface JedisCommands {
 
     Long zremrangeByScore(String key, String start, String end);
 
-    Long linsert(String key, Client.LIST_POSITION where, String pivot,
-                 String value);
+    Long linsert(String key, Client.LIST_POSITION where, String pivot, String value);
 
     Long lpushx(String key, String string);
 

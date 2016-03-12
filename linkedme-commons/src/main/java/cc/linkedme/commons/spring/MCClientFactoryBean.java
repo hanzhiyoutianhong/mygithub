@@ -17,22 +17,25 @@ public class MCClientFactoryBean extends CacheableObjectFactoryBean<VikaCacheCli
 
     public static enum MCConfigStrategy {
         /**
-         * 默认mc配置
-         * /* compressEnable=true，consistentHashEnable=true，primitiveAsString=false
+         * 默认mc配置 /* compressEnable=true，consistentHashEnable=true，primitiveAsString=false
          */
-        normal_mc(WfcXmlConstants.MC_DEFAULT_MIN_SPARE_CONNECTIONS, WfcXmlConstants.MC_DEFAULT_MAX_SPARE_CONNECTIONS, true, true, false, WfcXmlConstants.MC_DEFAULT_MAX_BUSY_TIME, WfcXmlConstants.MC_DEFAULT_SOCKET_TIMEOUT, WfcXmlConstants.MC_DEFAULT_SOCKET_CONNECT_TIMEOUT),
+        normal_mc(WfcXmlConstants.MC_DEFAULT_MIN_SPARE_CONNECTIONS, WfcXmlConstants.MC_DEFAULT_MAX_SPARE_CONNECTIONS, true, true, false,
+                WfcXmlConstants.MC_DEFAULT_MAX_BUSY_TIME, WfcXmlConstants.MC_DEFAULT_SOCKET_TIMEOUT,
+                WfcXmlConstants.MC_DEFAULT_SOCKET_CONNECT_TIMEOUT),
 
         /**
-         * 默认mcq配置
-         * compressEnable=false,consistentHashEnable=false,primitiveAsString=true
+         * 默认mcq配置 compressEnable=false,consistentHashEnable=false,primitiveAsString=true
          */
-        mcq(WfcXmlConstants.MC_DEFAULT_MIN_SPARE_CONNECTIONS, WfcXmlConstants.MC_DEFAULT_MAX_SPARE_CONNECTIONS, false, false, true, VikaCacheClient.DEFAULT_MAX_BUSY_TIME, VikaCacheClient.DEFAULT_SOCKET_TIMEOUT, VikaCacheClient.DEFAULT_SOCKET_CONNECT_TIMEOUT),
+        mcq(WfcXmlConstants.MC_DEFAULT_MIN_SPARE_CONNECTIONS, WfcXmlConstants.MC_DEFAULT_MAX_SPARE_CONNECTIONS, false, false, true,
+                VikaCacheClient.DEFAULT_MAX_BUSY_TIME, VikaCacheClient.DEFAULT_SOCKET_TIMEOUT,
+                VikaCacheClient.DEFAULT_SOCKET_CONNECT_TIMEOUT),
 
         /**
-         * 默认mc counter配置
-         * compressEnable=true，consistentHashEnable=true，primitiveAsString=true
+         * 默认mc counter配置 compressEnable=true，consistentHashEnable=true，primitiveAsString=true
          */
-        counter_mc(WfcXmlConstants.MC_DEFAULT_MIN_SPARE_CONNECTIONS, WfcXmlConstants.MC_DEFAULT_MAX_SPARE_CONNECTIONS, true, true, true, WfcXmlConstants.MC_DEFAULT_MAX_BUSY_TIME, WfcXmlConstants.MC_DEFAULT_SOCKET_TIMEOUT, WfcXmlConstants.MC_DEFAULT_SOCKET_CONNECT_TIMEOUT);
+        counter_mc(WfcXmlConstants.MC_DEFAULT_MIN_SPARE_CONNECTIONS, WfcXmlConstants.MC_DEFAULT_MAX_SPARE_CONNECTIONS, true, true, true,
+                WfcXmlConstants.MC_DEFAULT_MAX_BUSY_TIME, WfcXmlConstants.MC_DEFAULT_SOCKET_TIMEOUT,
+                WfcXmlConstants.MC_DEFAULT_SOCKET_CONNECT_TIMEOUT);
 
         private int minSpareConnections;
         private int maxSpareConnections;
@@ -43,10 +46,8 @@ public class MCClientFactoryBean extends CacheableObjectFactoryBean<VikaCacheCli
         private int socketTimeOut;
         private int socketConnectTimeOut;
 
-        private MCConfigStrategy(int minSpareConnections,
-                                 int maxSpareConnections, boolean compressEnable,
-                                 boolean consistentHashEnable, boolean primitiveAsString,
-                                 long maxBusyTime, int socketTimeOut, int socketConnectTimeOut) {
+        private MCConfigStrategy(int minSpareConnections, int maxSpareConnections, boolean compressEnable, boolean consistentHashEnable,
+                boolean primitiveAsString, long maxBusyTime, int socketTimeOut, int socketConnectTimeOut) {
             this.minSpareConnections = minSpareConnections;
             this.maxSpareConnections = maxSpareConnections;
             this.compressEnable = compressEnable;
@@ -64,7 +65,7 @@ public class MCClientFactoryBean extends CacheableObjectFactoryBean<VikaCacheCli
             client.setMinSpareConnections(this.minSpareConnections);
             client.setMaxSpareConnections(this.maxSpareConnections);
             client.setFailover(true);
-            //影响multiget
+            // 影响multiget
             client.setMaxBusyTime(this.maxBusyTime);
             client.setSocketTimeOut(this.socketTimeOut);
             client.setSocketConnectTimeOut(this.socketConnectTimeOut);
@@ -185,7 +186,9 @@ public class MCClientFactoryBean extends CacheableObjectFactoryBean<VikaCacheCli
         this.enableSwitcher = enableSwitcher;
     }
 
-    /* (non-Javadoc)
+    /*
+     * (non-Javadoc)
+     * 
      * @see cn.sina.api.commons.spring.CacheableObjectFactoryBean#getKey()
      */
     @Override
@@ -205,7 +208,9 @@ public class MCClientFactoryBean extends CacheableObjectFactoryBean<VikaCacheCli
     }
 
 
-    /* (non-Javadoc)
+    /*
+     * (non-Javadoc)
+     * 
      * @see cn.sina.api.commons.spring.CacheableObjectFactoryBean#doCreateInstance()
      */
     @Override
@@ -216,9 +221,9 @@ public class MCClientFactoryBean extends CacheableObjectFactoryBean<VikaCacheCli
         }
         ApiLogger.info("MC-Config create MC Client with server:" + serverPort);
         VikaCacheClient client = new VikaCacheClient();
-        //先使用配置策略
+        // 先使用配置策略
         this.strategy.setConfig(client);
-        //再使用自定义属性覆盖 策略配置
+        // 再使用自定义属性覆盖 策略配置
         for (BeanProperty<VikaCacheClient> p : this.properties) {
             if (ApiLogger.isDebugEnabled()) {
                 ApiLogger.debug("MC-Config " + this.serverPort + " property:" + p.getName() + " value:" + p.getValue());
@@ -232,7 +237,9 @@ public class MCClientFactoryBean extends CacheableObjectFactoryBean<VikaCacheCli
         return client;
     }
 
-    /* (non-Javadoc)
+    /*
+     * (non-Javadoc)
+     * 
      * @see org.springframework.beans.factory.config.AbstractFactoryBean#getObjectType()
      */
     @SuppressWarnings("rawtypes")
@@ -246,8 +253,8 @@ public class MCClientFactoryBean extends CacheableObjectFactoryBean<VikaCacheCli
         if (instance == null) {
             return;
         }
-//		VikaCacheClient client = (VikaCacheClient)instance;
-//		client.close();
+        // VikaCacheClient client = (VikaCacheClient)instance;
+        // client.close();
     }
 
     /**
@@ -256,10 +263,8 @@ public class MCClientFactoryBean extends CacheableObjectFactoryBean<VikaCacheCli
      * @author tongchuan
      */
     public static enum HashingAlg {
-        NATIVE_HASH("native_hash", 0),
-        OLD_COMPAT_HASH("old_compat_hash", 1),
-        NEW_COMPAT_HASH("new_compat_hash", 2),
-        CONSISTENT_HASH("consistent_hash", 3);
+        NATIVE_HASH("native_hash", 0), OLD_COMPAT_HASH("old_compat_hash", 1), NEW_COMPAT_HASH("new_compat_hash",
+                2), CONSISTENT_HASH("consistent_hash", 3);
 
         /**
          * hashing algorithm name
@@ -295,11 +300,8 @@ public class MCClientFactoryBean extends CacheableObjectFactoryBean<VikaCacheCli
                     return hash;
                 }
             }
-            ApiLogger.error("MemcacheClient does not support the "
-                    + algorithmName + " hashing algorithm,please check the property!");
-            throw new IllegalArgumentException(
-                    " MemcacheClient does not support the " + algorithmName
-                            + " hashing algorithm !");
+            ApiLogger.error("MemcacheClient does not support the " + algorithmName + " hashing algorithm,please check the property!");
+            throw new IllegalArgumentException(" MemcacheClient does not support the " + algorithmName + " hashing algorithm !");
         }
     }
 
@@ -309,8 +311,7 @@ public class MCClientFactoryBean extends CacheableObjectFactoryBean<VikaCacheCli
      * @param hashingAlg hashing algorithm name
      */
     public void setHashingAlg(final String hashingAlg) {
-        this.properties.add(new BeanProperty<VikaCacheClient>("hashingAlg",
-                hashingAlg) {
+        this.properties.add(new BeanProperty<VikaCacheClient>("hashingAlg", hashingAlg) {
             @Override
             public void apply(VikaCacheClient target) {
                 setHashingAlg4VikaClient(target, hashingAlg);
@@ -319,8 +320,7 @@ public class MCClientFactoryBean extends CacheableObjectFactoryBean<VikaCacheCli
 
     }
 
-    public static void setHashingAlg4VikaClient(VikaCacheClient target,
-                                                final String hashingAlg) {
+    public static void setHashingAlg4VikaClient(VikaCacheClient target, final String hashingAlg) {
         // don't set hashing algorithm if the hashingAlg is empty
         if (StringUtils.isBlank(hashingAlg)) {
             return;

@@ -445,8 +445,7 @@ public class ShardedJedisPipeline extends Queable {
         return getResponse(BuilderFactory.STRING_ZSET);
     }
 
-    public Response<Set<String>> zrangeByScore(String key, double min, double max,
-                                               int offset, int count) {
+    public Response<Set<String>> zrangeByScore(String key, double min, double max, int offset, int count) {
         Client c = getClient(key);
         c.zrangeByScore(key, min, max, offset, count);
         results.add(new FutureResult(c));
@@ -460,8 +459,7 @@ public class ShardedJedisPipeline extends Queable {
         return getResponse(BuilderFactory.TUPLE_ZSET);
     }
 
-    public Response<Set<Tuple>> zrangeByScoreWithScores(String key, double min, double max,
-                                                        int offset, int count) {
+    public Response<Set<Tuple>> zrangeByScoreWithScores(String key, double min, double max, int offset, int count) {
         Client c = getClient(key);
         c.zrangeByScoreWithScores(key, min, max, offset, count);
         results.add(new FutureResult(c));
@@ -482,8 +480,7 @@ public class ShardedJedisPipeline extends Queable {
         return getResponse(BuilderFactory.LONG);
     }
 
-    public Response<Long> linsert(String key, LIST_POSITION where, String pivot,
-                                  String value) {
+    public Response<Long> linsert(String key, LIST_POSITION where, String pivot, String value) {
         Client c = getClient(key);
         c.linsert(key, where, pivot, value);
         results.add(new FutureResult(c));
@@ -528,9 +525,9 @@ public class ShardedJedisPipeline extends Queable {
     }
 
     /**
-     * Syncronize pipeline by reading all responses. This operation closes the
-     * pipeline. In order to get return values from pipelined commands, capture
-     * the different Response&lt;?&gt; of the commands you execute.
+     * Syncronize pipeline by reading all responses. This operation closes the pipeline. In order to
+     * get return values from pipelined commands, capture the different Response&lt;?&gt; of the
+     * commands you execute.
      */
     public void sync() {
         for (Client client : clients) {
@@ -539,10 +536,10 @@ public class ShardedJedisPipeline extends Queable {
     }
 
     /**
-     * Syncronize pipeline by reading all responses. This operation closes the
-     * pipeline. Whenever possible try to avoid using this version and use
-     * ShardedJedisPipeline.sync() as it won't go through all the responses and generate the
-     * right response type (usually it is a waste of time).
+     * Syncronize pipeline by reading all responses. This operation closes the pipeline. Whenever
+     * possible try to avoid using this version and use ShardedJedisPipeline.sync() as it won't go
+     * through all the responses and generate the right response type (usually it is a waste of
+     * time).
      *
      * @return A list of all the responses in the order you executed them.
      */
@@ -559,8 +556,7 @@ public class ShardedJedisPipeline extends Queable {
      * sync().
      */
     @Deprecated
-    public void execute() {
-    }
+    public void execute() {}
 
     private Client getClient(String key) {
         Client client = jedis.getShard(key).getClient();

@@ -12,7 +12,6 @@ import javax.sql.DataSource;
 import org.springframework.jdbc.datasource.DataSourceUtils;
 import org.springframework.jdbc.support.JdbcUtils;
 
-
 import cc.linkedme.commons.log.LogCollector;
 import cc.linkedme.commons.log.LogCollector.DType;
 import cc.linkedme.commons.log.LogCollectorFactory;
@@ -21,9 +20,8 @@ import cc.linkedme.commons.log.ApiLogger;
 import com.google.code.hs4j.network.util.ConcurrentHashSet;
 
 /**
- * auto check db status
- * set in dead list when this datasource is invalid
- * remove datasource from dead list when it is restored
+ * auto check db status set in dead list when this datasource is invalid remove datasource from dead
+ * list when it is restored
  */
 public class InvalidDBCheck {
 
@@ -32,9 +30,15 @@ public class InvalidDBCheck {
         AtomicLong success = new AtomicLong(0);
     }
 
-    public static ConcurrentHashMap<DataSource, DBTimeStat> map = new ConcurrentHashMap<DataSource, DBTimeStat>();//success rate of all dataSources
-    private static ConcurrentHashSet<DataSource> deadSet = new ConcurrentHashSet<DataSource>();//dead dataSource list
-    private final static int SUCCESS_RATE = 40;//success rate
+    public static ConcurrentHashMap<DataSource, DBTimeStat> map = new ConcurrentHashMap<DataSource, DBTimeStat>();// success
+                                                                                                                  // rate
+                                                                                                                  // of
+                                                                                                                  // all
+                                                                                                                  // dataSources
+    private static ConcurrentHashSet<DataSource> deadSet = new ConcurrentHashSet<DataSource>();// dead
+                                                                                               // dataSource
+                                                                                               // list
+    private final static int SUCCESS_RATE = 40;// success rate
     private final static long CHECK_TIME = 1000 * 60;
     private static boolean switcherOpen = false;
 
@@ -49,16 +53,14 @@ public class InvalidDBCheck {
                     checkStatus();
                     try {
                         Thread.sleep(CHECK_TIME);
-                    } catch (InterruptedException e) {
-                    }
+                    } catch (InterruptedException e) {}
                 }
             }
         };
-        //将线程设置为守护线程
+        // 将线程设置为守护线程
         try {
             checkDBThread.setDaemon(true);
-        } catch (Exception e) {
-        }
+        } catch (Exception e) {}
         checkDBThread.start();
 
         invalidCheckThread = new Thread("invalidCheckThread") {
@@ -68,16 +70,14 @@ public class InvalidDBCheck {
                     invalidCheckDead();
                     try {
                         Thread.sleep(CHECK_TIME);
-                    } catch (InterruptedException e) {
-                    }
+                    } catch (InterruptedException e) {}
                 }
             }
         };
-        //将线程设置为守护线程
+        // 将线程设置为守护线程
         try {
             invalidCheckThread.setDaemon(true);
-        } catch (Exception e) {
-        }
+        } catch (Exception e) {}
         invalidCheckThread.start();
     }
 
@@ -89,17 +89,18 @@ public class InvalidDBCheck {
                 DBTimeStat stat = map.get(ds);
                 total = stat.total.get();
                 success = stat.success.get();
-                //为防止网络抖动对服务的影响，对周期内请求量少的端口做增大周期判断处理
+                // 为防止网络抖动对服务的影响，对周期内请求量少的端口做增大周期判断处理
                 if (total > 20) {
                     map.put(ds, new DBTimeStat());
                     if (success * 100.00 / total < SUCCESS_RATE) {
                         deadSet.add(ds);
-                        ApiLogger.info("Invalid add dead: " + ((com.mchange.v2.c3p0.ComboPooledDataSource) ds).getJdbcUrl() + ", success:" + success + ",total:" + total);
-                        LogCollectorFactory.getLogCollector().log(LogCollector.DEFAULT_LOG_ID, "mysqlInvalid", "add dead", DType.RAWSTR, ((com.mchange.v2.c3p0.ComboPooledDataSource) ds).getJdbcUrl() + ", success:" + success + ",total:" + total);
+                        ApiLogger.info("Invalid add dead: " + ((com.mchange.v2.c3p0.ComboPooledDataSource) ds).getJdbcUrl() + ", success:"
+                                + success + ",total:" + total);
+                        LogCollectorFactory.getLogCollector().log(LogCollector.DEFAULT_LOG_ID, "mysqlInvalid", "add dead", DType.RAWSTR,
+                                ((com.mchange.v2.c3p0.ComboPooledDataSource) ds).getJdbcUrl() + ", success:" + success + ",total:" + total);
                     }
                 }
-            } catch (Exception e) {
-            }
+            } catch (Exception e) {}
         }
     }
 
@@ -120,20 +121,20 @@ public class InvalidDBCheck {
                 if (result != null && time < 500) {
                     deadSet.remove(ds);
                     ApiLogger.info("Invalid remove dead: " + ((com.mchange.v2.c3p0.ComboPooledDataSource) ds).getJdbcUrl());
-                    LogCollectorFactory.getLogCollector().log(LogCollector.DEFAULT_LOG_ID, "mysqlInvalid", "remove dead", DType.RAWSTR, ((com.mchange.v2.c3p0.ComboPooledDataSource) ds).getJdbcUrl());
+                    LogCollectorFactory.getLogCollector().log(LogCollector.DEFAULT_LOG_ID, "mysqlInvalid", "remove dead", DType.RAWSTR,
+                            ((com.mchange.v2.c3p0.ComboPooledDataSource) ds).getJdbcUrl());
                 }
-            } catch (SQLException e) {
-            } catch (Exception e1) {
-//				ApiLogger.info("Invalid remove dead error: "+e1.getMessage());
-                LogCollectorFactory.getLogCollector().log(LogCollector.DEFAULT_LOG_ID, "mysqlInvalid", "remove dead error: ", DType.RAWSTR, e1.getMessage());
+            } catch (SQLException e) {} catch (Exception e1) {
+                // ApiLogger.info("Invalid remove dead error: "+e1.getMessage());
+                LogCollectorFactory.getLogCollector().log(LogCollector.DEFAULT_LOG_ID, "mysqlInvalid", "remove dead error: ", DType.RAWSTR,
+                        e1.getMessage());
             } finally {
-                //release connection
+                // release connection
                 try {
                     if (result != null) {
                         result.close();
                     }
-                } catch (Exception e) {
-                }
+                } catch (Exception e) {}
                 JdbcUtils.closeStatement(stmt);
                 DataSourceUtils.releaseConnection(con, ds);
             }
@@ -158,7 +159,7 @@ public class InvalidDBCheck {
 
     public static void addElapseDBTimeStat(DataSource ds, boolean success, long time, long fireTime) {
         try {
-            //增加开关，当开关关闭后后续所有工作不做
+            // 增加开关，当开关关闭后后续所有工作不做
             if (!switcherOpen) {
                 return;
             }
@@ -170,8 +171,12 @@ public class InvalidDBCheck {
                 stat.success.incrementAndGet();
             }
             if (!suc) {
-//				ApiLogger.info("Invalid add:"+((com.mchange.v2.c3p0.ComboPooledDataSource)ds).getJdbcUrl()+",time:" +time+",success:"+success+",fireTime:"+fireTime);
-                LogCollectorFactory.getLogCollector().log(LogCollector.DEFAULT_LOG_ID, "mysqlInvalid", "add", DType.RAWSTR, ((com.mchange.v2.c3p0.ComboPooledDataSource) ds).getJdbcUrl() + ",time:" + time + ",success:" + success + ",fireTime:" + fireTime);
+                // ApiLogger.info("Invalid
+                // add:"+((com.mchange.v2.c3p0.ComboPooledDataSource)ds).getJdbcUrl()+",time:"
+                // +time+",success:"+success+",fireTime:"+fireTime);
+                LogCollectorFactory.getLogCollector().log(LogCollector.DEFAULT_LOG_ID, "mysqlInvalid", "add", DType.RAWSTR,
+                        ((com.mchange.v2.c3p0.ComboPooledDataSource) ds).getJdbcUrl() + ",time:" + time + ",success:" + success
+                                + ",fireTime:" + fireTime);
             }
         } catch (Exception e) {
             ApiLogger.info("Invalid add error: " + e.getMessage());
@@ -180,7 +185,7 @@ public class InvalidDBCheck {
 
     public static void setSwitcher(boolean isOpen) {
         switcherOpen = isOpen;
-        //开关关闭后清空所有数据，不做健康检测，也不做恢复探测
+        // 开关关闭后清空所有数据，不做健康检测，也不做恢复探测
         if (!switcherOpen) {
             map.clear();
             deadSet.clear();

@@ -162,15 +162,15 @@ public abstract class McqProcessor implements StartReadingAble {
     public void setAfterMsgForwarder(MsgForwarder afterMsgForwarder) {
         this.afterMsgForwarder = afterMsgForwarder;
     }
-    
+
     public String getReadKey() {
         return readKey;
     }
-    
+
     private String getMQReadDataKey(String serverPort, String key) {
         return "read_mq_data_" + serverPort + "_" + key;
     }
-    
+
     /**
      * 设置系统初始化成功状态
      */

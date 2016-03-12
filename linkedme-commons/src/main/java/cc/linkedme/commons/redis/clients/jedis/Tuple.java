@@ -24,18 +24,13 @@ public class Tuple implements Comparable<Tuple> {
     }
 
     public boolean equals(Object obj) {
-        if (this == obj)
-            return true;
-        if (obj == null)
-            return false;
-        if (getClass() != obj.getClass())
-            return false;
+        if (this == obj) return true;
+        if (obj == null) return false;
+        if (getClass() != obj.getClass()) return false;
         Tuple other = (Tuple) obj;
         if (element == null) {
-            if (other.element != null)
-                return false;
-        } else if (!Arrays.equals(element, other.element))
-            return false;
+            if (other.element != null) return false;
+        } else if (!Arrays.equals(element, other.element)) return false;
         return true;
     }
 

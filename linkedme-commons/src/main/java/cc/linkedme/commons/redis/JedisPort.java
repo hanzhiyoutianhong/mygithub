@@ -72,8 +72,7 @@ public class JedisPort implements JedisClient, ResourceInfo {
     protected long hashMin = -1L;
     protected long hashMax = -1L;
 
-    public JedisPort() {
-    }
+    public JedisPort() {}
 
     public JedisPort(final long hashMin, final long hashMax) {
         this();
@@ -96,7 +95,7 @@ public class JedisPort implements JedisClient, ResourceInfo {
             resource = TimeStatUtil.REDIS_TYPE + port;
             TimeStatUtil.register(resource);
         } catch (Exception e) {
-            //防止port取到的是null
+            // 防止port取到的是null
         }
 
     }
@@ -1311,8 +1310,7 @@ public class JedisPort implements JedisClient, ResourceInfo {
     }
 
     /**
-     * ================================================
-     * methods for sorted set zset
+     * ================================================ methods for sorted set zset
      * ================================================
      */
     @Override
@@ -1529,8 +1527,7 @@ public class JedisPort implements JedisClient, ResourceInfo {
     }
 
     @Override
-    public Set<byte[]> zrangeByScore(final byte[] key, final double min, final double max, final int offset,
-                                     final int count) {
+    public Set<byte[]> zrangeByScore(final byte[] key, final double min, final double max, final int offset, final int count) {
         return callable(new JedisPortCallback<Set<byte[]>>("zrangeByScore", CodecHandler.toStr(key), false) {
             @Override
             public Set<byte[]> call(Jedis jedis) {
@@ -1550,8 +1547,7 @@ public class JedisPort implements JedisClient, ResourceInfo {
     }
 
     @Override
-    public Set<Tuple> zrangeByScoreWithScores(final byte[] key, final double min, final double max,
-                                              final int offset, final int count) {
+    public Set<Tuple> zrangeByScoreWithScores(final byte[] key, final double min, final double max, final int offset, final int count) {
         return callable(new JedisPortCallback<Set<Tuple>>("zrangeByScoreWithScores", CodecHandler.toStr(key), false) {
             @Override
             public Set<Tuple> call(Jedis jedis) {
@@ -1829,17 +1825,17 @@ public class JedisPort implements JedisClient, ResourceInfo {
         return callable(callback, DEFAULT_WRITE_RETRY);
     }
 
-    //将retry设置成可配置可调整的
+    // 将retry设置成可配置可调整的
     public static void setMaxTryTime(int retry) {
         max_try_time = retry;
     }
 
-    //默认重试，非批量，大部分都是非批量接口，区分开是为了做日志统计使用
+    // 默认重试，非批量，大部分都是非批量接口，区分开是为了做日志统计使用
     public <K> K callable(JedisPortCallback<K> callback) {
         return callable(callback, max_try_time);
     }
 
-    //非批量，主要用于incr decr等
+    // 非批量，主要用于incr decr等
     public <K> K callable(JedisPortCallback<K> callback, int tryTime) {
         return callable(callback, tryTime, false);
     }
@@ -1860,12 +1856,11 @@ public class JedisPort implements JedisClient, ResourceInfo {
                     ClientBalancerStatLog.incProcessTime("jedis." + callback.getName(), 1, cost);
 
                     if (log.isDebugEnabled() && cost < REDIS_SLOW_TIME) {
-                        log.debug(this.toString() + " " + callback.getName()
-                                + ", key: " + callback.getKey() + " result:" + value);
+                        log.debug(this.toString() + " " + callback.getName() + ", key: " + callback.getKey() + " result:" + value);
                     } else if (cost >= REDIS_SLOW_TIME) {
                         ClientBalancerStatLog.inc("jedis.slowget");
-                        log.warn(this.toString() + "_" + jedis.ipAddress + " " + callback.getName()
-                                + ", key: " + callback.getKey() + " result:" + ApiUtil.truncateString(value, 500));
+                        log.warn(this.toString() + "_" + jedis.ipAddress + " " + callback.getName() + ", key: " + callback.getKey()
+                                + " result:" + ApiUtil.truncateString(value, 500));
                     }
                     RedisLog.slowLog(this.toString(), cost);
                     conn.returnEndpoint(jedis);
@@ -1901,7 +1896,7 @@ public class JedisPort implements JedisClient, ResourceInfo {
                 realPort = resource + TimeStatUtil.MULTI_TYPE;
             }
             end = System.currentTimeMillis();
-            //从开始到finally中结束的时间，包括异常和重试时间
+            // 从开始到finally中结束的时间，包括异常和重试时间
             cost = end - start;
             TimeStatUtil.addElapseTimeStat(realPort, callback.isWriter(), start, cost);
             String[] redisName = this.toString().split(" ")[0].split("-");
@@ -1914,8 +1909,7 @@ public class JedisPort implements JedisClient, ResourceInfo {
     }
 
     /**
-     * 某些异常是由于server回来的数据异常，这种场景下，server端的连接还可用，如果盲目close连接，会导致server被摘除,
-     * 从而导致其他问题，还有其他一些异常返回需要进行判断
+     * 某些异常是由于server回来的数据异常，这种场景下，server端的连接还可用，如果盲目close连接，会导致server被摘除, 从而导致其他问题，还有其他一些异常返回需要进行判断
      *
      * @throws Exception
      */
@@ -1924,8 +1918,7 @@ public class JedisPort implements JedisClient, ResourceInfo {
             return false;
         }
 
-        if (StringUtils.equals(e.getMessage(),
-                "NOSCRIPT No matching script. Please use EVAL.")) {
+        if (StringUtils.equals(e.getMessage(), "NOSCRIPT No matching script. Please use EVAL.")) {
             return true;
         }
 
@@ -2003,8 +1996,7 @@ public class JedisPort implements JedisClient, ResourceInfo {
     }
 
     @Override
-    public Set<Tuple> zrevrangeByScoreWithScores(final byte[] key, final double max, final double min,
-                                                 final int offset, final int count) {
+    public Set<Tuple> zrevrangeByScoreWithScores(final byte[] key, final double max, final double min, final int offset, final int count) {
         return callable(new JedisPortCallback<Set<Tuple>>("zrevrangeByScoreWithScores", CodecHandler.toStr(key), false) {
             @Override
             public Set<Tuple> call(Jedis jedis) {

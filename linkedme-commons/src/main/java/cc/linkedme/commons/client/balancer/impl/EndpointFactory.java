@@ -91,8 +91,7 @@ public abstract class EndpointFactory<R> extends BasePoolableObjectFactory<Endpo
      * {@inheritDoc}
      */
     @Override
-    public final void destroyObject(Endpoint<R> endpoint)
-            throws Exception {
+    public final void destroyObject(Endpoint<R> endpoint) throws Exception {
         if (endpoint == null) {
             ClientBalancerLog.log.warn("destroyObject endpoint is null {" + this.config.getHostnamePort() + "}");
             return;
@@ -139,10 +138,9 @@ public abstract class EndpointFactory<R> extends BasePoolableObjectFactory<Endpo
      * {@inheritDoc}
      */
     @Override
-    public final void passivateObject(Endpoint<R> endpoint)
-            throws Exception {
-        //do nothing!
-        //ClientBalancerLog.log.warn("EndpintFactory does not support passivateObject!");
+    public final void passivateObject(Endpoint<R> endpoint) throws Exception {
+        // do nothing!
+        // ClientBalancerLog.log.warn("EndpintFactory does not support passivateObject!");
     }
 
     public void onHostAddressChanged(String hostname, Set<String> latestIps) {
@@ -150,7 +148,8 @@ public abstract class EndpointFactory<R> extends BasePoolableObjectFactory<Endpo
         synchronized (ipAddresses) {
             clearAndAddIps(latestIps);
         }
-        ClientBalancerLog.log.info("EndpintFactory - onHostAddressChanged after refresh, now in factory hostname={}, ipAddresses={}", hostname, this.ipAddresses);
+        ClientBalancerLog.log.info("EndpintFactory - onHostAddressChanged after refresh, now in factory hostname={}, ipAddresses={}",
+                hostname, this.ipAddresses);
     }
 
     /**
@@ -196,7 +195,7 @@ public abstract class EndpointFactory<R> extends BasePoolableObjectFactory<Endpo
             }
         }
 
-        ClientBalancerLog.log.info("getNextIp for hostname {} is {}, idx={}", new Object[]{this.config.getHostname(), nextIp, dcount});
+        ClientBalancerLog.log.info("getNextIp for hostname {} is {}, idx={}", new Object[] {this.config.getHostname(), nextIp, dcount});
         return nextIp;
     }
 

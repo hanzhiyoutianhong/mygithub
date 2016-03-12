@@ -37,7 +37,7 @@ public interface MemcacheClient {
     /**
      * Adds data to the server; only the key and the value are specified.
      *
-     * @param key   key to store data under
+     * @param key key to store data under
      * @param value value to store
      * @return true, if the data was successfully stored
      */

@@ -3,24 +3,21 @@ package cc.linkedme.commons.redis.clients.jedis;
 import org.apache.commons.pool.impl.GenericObjectPool.Config;
 
 /**
- * Subclass of org.apache.commons.pool.impl.GenericObjectPool.Config that
- * includes getters/setters so it can be more easily configured by Spring and
- * other IoC frameworks.
+ * Subclass of org.apache.commons.pool.impl.GenericObjectPool.Config that includes getters/setters
+ * so it can be more easily configured by Spring and other IoC frameworks.
  * <p>
  * Spring example:
  * <p>
- * <bean id="jedisConfig" class="redis.clients.jedis.JedisPoolConfig"> <property
- * name="testWhileIdle" value="true"/> </bean>
+ * <bean id="jedisConfig" class="redis.clients.jedis.JedisPoolConfig"> <property name=
+ * "testWhileIdle" value="true"/> </bean>
  * <p>
- * <bean id="jedisPool" class="redis.clients.jedis.JedisPool"
- * destroy-method="destroy"> <constructor-arg ref="jedisConfig" />
- * <constructor-arg value="localhost" /> <constructor-arg type="int"
- * value="6379" /> </bean>
+ * <bean id="jedisPool" class="redis.clients.jedis.JedisPool" destroy-method="destroy">
+ * <constructor-arg ref="jedisConfig" /> <constructor-arg value="localhost" /> <constructor-arg type
+ * ="int" value="6379" /> </bean>
  * <p>
  * For information on parameters refer to:
  * <p>
- * http://commons.apache.org/pool/apidocs/org/apache/commons/pool/impl/
- * GenericObjectPool.html
+ * http://commons.apache.org/pool/apidocs/org/apache/commons/pool/impl/ GenericObjectPool.html
  */
 public class JedisPoolConfig extends Config {
     public JedisPoolConfig() {
@@ -99,8 +96,7 @@ public class JedisPoolConfig extends Config {
         return timeBetweenEvictionRunsMillis;
     }
 
-    public void setTimeBetweenEvictionRunsMillis(
-            long timeBetweenEvictionRunsMillis) {
+    public void setTimeBetweenEvictionRunsMillis(long timeBetweenEvictionRunsMillis) {
         this.timeBetweenEvictionRunsMillis = timeBetweenEvictionRunsMillis;
     }
 
@@ -124,8 +120,7 @@ public class JedisPoolConfig extends Config {
         return softMinEvictableIdleTimeMillis;
     }
 
-    public void setSoftMinEvictableIdleTimeMillis(
-            long softMinEvictableIdleTimeMillis) {
+    public void setSoftMinEvictableIdleTimeMillis(long softMinEvictableIdleTimeMillis) {
         this.softMinEvictableIdleTimeMillis = softMinEvictableIdleTimeMillis;
     }
 

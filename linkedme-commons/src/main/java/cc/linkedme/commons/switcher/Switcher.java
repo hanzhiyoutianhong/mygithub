@@ -45,7 +45,7 @@ public class Switcher extends ValueChangeSupport<Boolean> {
     }
 
     public boolean booleanValue() {
-        //如果为null，默认为开状态
+        // 如果为null，默认为开状态
         return this.value == null ? true : this.value.booleanValue();
     }
 

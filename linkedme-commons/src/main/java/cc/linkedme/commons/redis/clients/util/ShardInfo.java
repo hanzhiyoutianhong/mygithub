@@ -3,8 +3,7 @@ package cc.linkedme.commons.redis.clients.util;
 public abstract class ShardInfo<T> {
     private int weight;
 
-    public ShardInfo() {
-    }
+    public ShardInfo() {}
 
     public ShardInfo(int weight) {
         this.weight = weight;

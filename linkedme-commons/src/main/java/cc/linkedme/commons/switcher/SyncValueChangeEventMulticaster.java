@@ -1,7 +1,6 @@
 package cc.linkedme.commons.switcher;
 
-public class SyncValueChangeEventMulticaster<V, L extends ValueChangeListener<V>> extends
-        AbstractValueChangeEventMulticaster<V, L> {
+public class SyncValueChangeEventMulticaster<V, L extends ValueChangeListener<V>> extends AbstractValueChangeEventMulticaster<V, L> {
 
 
     @Override

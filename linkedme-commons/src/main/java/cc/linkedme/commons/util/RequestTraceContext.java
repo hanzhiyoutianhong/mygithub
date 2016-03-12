@@ -17,21 +17,21 @@ public class RequestTraceContext {
     private String originalSource;
 
     private int appId;
-    private String spr;//代表客户端版本信息
+    private String spr;// 代表客户端版本信息
     private int exposureType;
 
-    private String ip;//用户ip
-    private Long vid;//游客vid
+    private String ip;// 用户ip
+    private Long vid;// 游客vid
     private boolean isAggreDarwin = false;
-    //第32位置为1，目的是为了设置vip flag 位。32,33位置为01,表示vip
+    // 第32位置为1，目的是为了设置vip flag 位。32,33位置为01,表示vip
     private static long FLAG_VIP_MASK_32 = 1L << 31;
 
-    //33位为0，其余为1，目的是为了设置vip flag 位 。32,33位置为01,表示vip
-    //111111111111111111111111111111011111111111111111111111111111111
+    // 33位为0，其余为1，目的是为了设置vip flag 位 。32,33位置为01,表示vip
+    // 111111111111111111111111111111011111111111111111111111111111111
     private static long FLAG_VIP_MASK_33 = 9223372032559808511L;
 
-    //32,33位为00
-    //111111111111111111111111111111001111111111111111111111111111111
+    // 32,33位为00
+    // 111111111111111111111111111111001111111111111111111111111111111
     private static long FLAG_NOT_VIP = 9223372030412324863L;
 
     private static long VIP_FLAG = 1L;
@@ -41,7 +41,7 @@ public class RequestTraceContext {
         intIp = intIp & 0x00FFFFFF;
         intIp <<= 6;
 
-        int minute = Calendar.getInstance().get(Calendar.MINUTE);    //获取当前的分钟数
+        int minute = Calendar.getInstance().get(Calendar.MINUTE); // 获取当前的分钟数
 
         refreshIdPrefix = ((long) (intIp | minute)) << 33;
     }
@@ -101,16 +101,15 @@ public class RequestTraceContext {
     }
 
     /**
-     * clear current thread context, which may leads to {@link #get()} return
-     * null.
+     * clear current thread context, which may leads to {@link #get()} return null.
      */
     public static void clear() {
         requestContext.remove();
     }
 
     /**
-     * get current thread's context. the context may be initialized by parent
-     * thread or explicit call {@link #init(String)}
+     * get current thread's context. the context may be initialized by parent thread or explicit
+     * call {@link #init(String)}
      *
      * @return null if current thread doesn't have any context.
      */
@@ -241,8 +240,7 @@ public class RequestTraceContext {
             if (context.vid != null) {
                 try {
                     visitorVid = context.vid.longValue();
-                } catch (Exception e) {
-                }
+                } catch (Exception e) {}
             }
         }
 
@@ -348,10 +346,10 @@ public class RequestTraceContext {
 
     public void markVipFlagOnRequestId(VipType vipType) {
         if (VipType.VIP.equals(vipType)) {
-            //32,33位置为01,表示vip
+            // 32,33位置为01,表示vip
             this.id = this.id | FLAG_VIP_MASK_32 & FLAG_VIP_MASK_33;
         } else if (VipType.UN_VIP.equals(vipType)) {
-            //32,33位置为00,表示非vip
+            // 32,33位置为00,表示非vip
             this.id &= FLAG_NOT_VIP;
         }
     }
@@ -359,8 +357,8 @@ public class RequestTraceContext {
     public static boolean isVip() {
         RequestTraceContext context = get();
         if (context != null) {
-            //提取出32，33位
-            //6442450944L为110000000000000000000000000000000
+            // 提取出32，33位
+            // 6442450944L为110000000000000000000000000000000
             long vipFlag = context.id & 6442450944L;
             if (vipFlag >> 31 == VIP_FLAG) {
                 return true;
@@ -376,8 +374,8 @@ public class RequestTraceContext {
     ;
 
     public static void main(String[] args) {
-//        System.out.println(VipType.VIP.equals(VipType.VIP));
-//        RequestTraceContext.init("test");
+        // System.out.println(VipType.VIP.equals(VipType.VIP));
+        // RequestTraceContext.init("test");
         RequestTraceContext context = RequestTraceContext.get();
         context.markVipFlagOnRequestId(VipType.UN_VIP);
         System.out.println(RequestTraceContext.isVip());

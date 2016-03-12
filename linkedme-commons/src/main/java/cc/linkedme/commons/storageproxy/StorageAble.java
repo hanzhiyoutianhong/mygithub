@@ -18,7 +18,7 @@ import java.util.Map;
 public abstract class StorageAble<T> {
     private static Map<Type, String> suffixCache = new HashMap<Type, String>();
 
-    //private static Map<Type, StorageLevel> storageLevels = new HashMap<Type, StorageLevel>();
+    // private static Map<Type, StorageLevel> storageLevels = new HashMap<Type, StorageLevel>();
 
     static {
         StatLog.addCacheStatKeySuffix(CacheSuffix.PAGE_VECTOR_STATUS_DATE);
@@ -100,8 +100,8 @@ public abstract class StorageAble<T> {
     public abstract boolean set(String key, T value, Date expdate);
 
     /**
-     * vika memcache client use set commond not cas
-     * cas cache value with expire date, some impl like database may ignore this parameter
+     * vika memcache client use set commond not cas cas cache value with expire date, some impl like
+     * database may ignore this parameter
      *
      * @param key
      * @param value
@@ -111,7 +111,7 @@ public abstract class StorageAble<T> {
     @Deprecated
     public abstract boolean setCas(String key, CasValue<T> value, Date expdate);
 
-    // ----------- fix setCas bug -----------------  
+    // ----------- fix setCas bug -----------------
 
     /**
      * cas save key-value
@@ -142,13 +142,11 @@ public abstract class StorageAble<T> {
      * @return
      */
     public T getFromMaster(String key) {
-        throw new IllegalArgumentException(new StringBuffer(32)
-                .append("Unsupport getFromMaster for key=").append(key).toString());
+        throw new IllegalArgumentException(new StringBuffer(32).append("Unsupport getFromMaster for key=").append(key).toString());
     }
 
     public CasValue<T> getCasFromMaster(String key) {
-        throw new IllegalArgumentException(new StringBuffer(32)
-                .append("Unsupport getCasFromMaster for key=").append(key).toString());
+        throw new IllegalArgumentException(new StringBuffer(32).append("Unsupport getCasFromMaster for key=").append(key).toString());
     }
 
     /**
@@ -158,8 +156,7 @@ public abstract class StorageAble<T> {
      * @return
      */
     public T incr(String key) {
-        throw new IllegalArgumentException(new StringBuffer(32)
-                .append("Unsupport incr for key=").append(key).toString());
+        throw new IllegalArgumentException(new StringBuffer(32).append("Unsupport incr for key=").append(key).toString());
     }
 
     /**
@@ -169,26 +166,26 @@ public abstract class StorageAble<T> {
      * @return
      */
     public T decr(String key) {
-        throw new IllegalArgumentException(new StringBuffer(32)
-                .append("Unsupport incr for key=").append(key).toString());
+        throw new IllegalArgumentException(new StringBuffer(32).append("Unsupport incr for key=").append(key).toString());
     }
 
     /**
      * append value to cache
+     * 
      * @param key
      * @param value
      * @return
      *
-    boolean append(String key, T value);
-
-    /**
-     * append value to cache with expdate
+     *         boolean append(String key, T value);
+     * 
+     *         /** append value to cache with expdate
      * @param key
      * @param value
      * @param expdate
      * @return
      *
-    boolean append(String key, T value, Date expdate);*/
+     *         boolean append(String key, T value, Date expdate);
+     */
 
     /**
      * delete value via key
@@ -272,8 +269,7 @@ public abstract class StorageAble<T> {
     public static String getKeySuffixWithoutSep(String key) {
         int suffixIndex = key.indexOf(Constants.KEY_SEPERATOR);
         if (suffixIndex > 0) {
-            return key
-                    .substring(suffixIndex + Constants.KEY_SEPERATOR.length());
+            return key.substring(suffixIndex + Constants.KEY_SEPERATOR.length());
         } else {
             return "";
         }
@@ -282,8 +278,7 @@ public abstract class StorageAble<T> {
     public static String getBareKeySuffixWithoutSep(String key) {
         int suffixIndex = key.lastIndexOf(Constants.KEY_SEPERATOR);
         if (suffixIndex > 0) {
-            return key
-                    .substring(suffixIndex + Constants.KEY_SEPERATOR.length());
+            return key.substring(suffixIndex + Constants.KEY_SEPERATOR.length());
         } else {
             return "";
         }
@@ -337,7 +332,7 @@ public abstract class StorageAble<T> {
         suffixCache.put(Type.vector_object_like_list, CacheSuffix.VECTOR_OBJECT_LIKE_LIST);
         suffixCache.put(Type.vector_uid_like_by_me, CacheSuffix.VECTOR_UID_LIKE_BY_ME);
         suffixCache.put(Type.vector_uid_like_by_me_count, CacheSuffix.VECTOR_UID_LIKE_BY_ME_COUNT);
-        //favorite likes to_me
+        // favorite likes to_me
         suffixCache.put(Type.favorite_likes_to_me_count, CacheSuffix.FAVORITE_LIKES_TO_ME_COUNT);
         suffixCache.put(Type.vector_uid_attitude_by_me, CacheSuffix.VECTOR_UID_ATTITUDE_BY_ME);
         suffixCache.put(Type.mapping_uid_like_exist, CacheSuffix.MAPPING_UID_LIKE_EXIST);
@@ -345,7 +340,8 @@ public abstract class StorageAble<T> {
         suffixCache.put(Type.vector_uid_in_dm, CacheSuffix.VECTOR_DM_IN);
         suffixCache.put(Type.vector_uid_out_dm, CacheSuffix.VECTOR_DM_OUT);
         suffixCache.put(Type.vector_uid_with_dm, CacheSuffix.VECTOR_DM_WITH);
-        //suffixCache.put(Type.vector_uid_state_show_self_status, CacheSuffix.VECTOR_STATUS_STATE_SHOW_SELF);
+        // suffixCache.put(Type.vector_uid_state_show_self_status,
+        // CacheSuffix.VECTOR_STATUS_STATE_SHOW_SELF);
         suffixCache.put(Type.vector_uid_state_no_spread, CacheSuffix.VECTOR_STATUS_STATE_NO_SPREAD);
         suffixCache.put(Type.vector_uid_hour_status, CacheSuffix.VECTOR_HOUR);
         suffixCache.put(Type.vector_uid_inbox, CacheSuffix.VECTOR_INBOX);
@@ -357,22 +353,22 @@ public abstract class StorageAble<T> {
         suffixCache.put(Type.vector_status_comments_asc, CacheSuffix.VECTOR_STATUS_COMMENTS_ASC);
         suffixCache.put(Type.vector_uid_cmt_mention, CacheSuffix.VECTOR_CMT_MENTION);
 
-        // activity 
+        // activity
         suffixCache.put(Type.new_vector_in_activiy, CacheSuffix.NEW_VECTOR_ACTIVITY_IN);
 
-        // new activity 
+        // new activity
         suffixCache.put(Type.activity_user_vector, CacheSuffix.ACTIVITY_USER_VECTOR);
         suffixCache.put(Type.activity_user_new_vector, CacheSuffix.ACTIVITY_USER_NEW_VECTOR);
         suffixCache.put(Type.activity_user_index_vector, CacheSuffix.ACTIVITY_USER_INDEX_VECTOR);
         suffixCache.put(Type.activity_content, CacheSuffix.ACTIVITY_CONTENT);
         suffixCache.put(Type.activity_template, CacheSuffix.ACTIVITY_TEMPLATE);
-        //user group status vector
+        // user group status vector
         suffixCache.put(Type.user_group_status_vector, CacheSuffix.USER_GROUP_STATUS_VECTOR);
         suffixCache.put(Type.user_metagroup_status_vector, CacheSuffix.USER_METAGROUP_STATUS_VECTOR);
-        //secret group dlvector
+        // secret group dlvector
         suffixCache.put(Type.sgroup_dlvector, CacheSuffix.SGROUP_DLVECTOR);
 
-        //suffixCache.put(Type.content_feature_value, CacheSuffix.CONTENT_FEATURE_VALUE);
+        // suffixCache.put(Type.content_feature_value, CacheSuffix.CONTENT_FEATURE_VALUE);
 
         suffixCache.put(Type.vector_uid_cmt_friend, CacheSuffix.VECTOR_CMT_BY_FRIEND);
         suffixCache.put(Type.vector_uid_cmt_closefriend, CacheSuffix.VECTOR_CMT_BY_CLOSEFRIEND);
@@ -386,7 +382,8 @@ public abstract class StorageAble<T> {
         suffixCache.put(Type.spec_vector_uid_status_flag, CacheSuffix.SPEC_VECTOR_UID_STATUS_FLAG);
         suffixCache.put(Type.d_vector_feed_flag, CacheSuffix.D_VECTOR_FEED_FLAG);
 
-        //suffixCache.put(Type.spec_vector_uid_status_flag_self, CacheSuffix.SPEC_VECTOR_UID_STATUS_FLAG_SELF);
+        // suffixCache.put(Type.spec_vector_uid_status_flag_self,
+        // CacheSuffix.SPEC_VECTOR_UID_STATUS_FLAG_SELF);
 
         suffixCache.put(Type.content_longtext_status, CacheSuffix.CONTENT_CACHE_LONGTEXT_STATUS);
         suffixCache.put(Type.content_slice_pb, CacheSuffix.CONTENT_CACHE__SLICE_PB);
@@ -397,7 +394,7 @@ public abstract class StorageAble<T> {
         suffixCache.put(Type.status_exposure_policy, CacheSuffix.STATUS_EXPOSURE_POLICY);
         suffixCache.put(Type.content_id_attitude_pb, CacheSuffix.CONTENT_CACHE_ATTITUDE_PB);
 
-//      suffixCache.put(Type.mapping_nick_uid, CacheSuffix.MAPPING_NICK_UID_FLAG);
+        // suffixCache.put(Type.mapping_nick_uid, CacheSuffix.MAPPING_NICK_UID_FLAG);
         suffixCache.put(Type.mapping_id_mid_comment, CacheSuffix.MAPPING_ID_MID_COMMENT);
         suffixCache.put(Type.mapping_mid_id_comment, CacheSuffix.MAPPING_MID_ID_COMMENT);
         suffixCache.put(Type.mapping_id_mid_dm, CacheSuffix.MAPPING_ID_MID_DM);
@@ -430,7 +427,7 @@ public abstract class StorageAble<T> {
 
         suffixCache.put(Type.sinauser_uid_pbuser, CacheSuffix.SINA_PB_USER);
         suffixCache.put(Type.sinauser_uid_persence, CacheSuffix.SINA_USER_PERSENCE);
-//      suffixCache.put(Type.sinauser_nick_uid, CacheSuffix.SINA_USER_NICK_UID);
+        // suffixCache.put(Type.sinauser_nick_uid, CacheSuffix.SINA_USER_NICK_UID);
         suffixCache.put(Type.sinauser_domain_uid, CacheSuffix.SINA_USER_DOMAIN_UID);
         suffixCache.put(Type.sinauser_weinum_uid, CacheSuffix.SINA_USER_WEINUM_UID);
         suffixCache.put(Type.sinauser_weinum, CacheSuffix.SINA_USER_WEINUM);
@@ -567,37 +564,42 @@ public abstract class StorageAble<T> {
         suffixCache.put(Type.cf_omt_to_me_count, CacheSuffix.CLOSEFRIEND_ORIGINMENTIONTOME_COUNT);
 
         suffixCache.put(Type.common_cmt_remind, CacheSuffix.COMMON_CMT_REMIND);
-//      锟斤拷尾type锟斤拷锟斤拷锟斤拷2锟杰观察，之锟斤拷去锟斤拷 fishermen 2011.7.19
-//      suffixCache.put(Type.tail_vector_status, CacheSuffix.TAIL_VECTOR_STATUS);
-//      suffixCache.put(Type.tail_vector_status_filter,CacheSuffix.TAIL_VECTOR_STATUS_FILTER);
-//      suffixCache.put(Type.tail_vector_status_filter_self,CacheSuffix.TAIL_VECTOR_STATUS_FILTER_SELF);
+        // 锟斤拷尾type锟斤拷锟斤拷锟斤拷2锟杰观察，之锟斤拷去锟斤拷 fishermen 2011.7.19
+        // suffixCache.put(Type.tail_vector_status, CacheSuffix.TAIL_VECTOR_STATUS);
+        // suffixCache.put(Type.tail_vector_status_filter,CacheSuffix.TAIL_VECTOR_STATUS_FILTER);
+        // suffixCache.put(Type.tail_vector_status_filter_self,CacheSuffix.TAIL_VECTOR_STATUS_FILTER_SELF);
 
-//      suffixCache.put(Type.tail_status_mention, CacheSuffix.TAIL_STATUS_MENTION);
-//      suffixCache.put(Type.tail_comment_status, CacheSuffix.TAIL_CONTENT_STATUS);
-//      suffixCache.put(Type.tail_comment_by_me, CacheSuffix.TAIL_COMMENTS_BY_ME);
-//      suffixCache.put(Type.tail_comment_timeline, CacheSuffix.TAIL_COMMENTS_TIMELINE);
-//      suffixCache.put(Type.tail_comment_to_me, CacheSuffix.TAIL_COMMENTS_TO_ME);
-//      suffixCache.put(Type.tail_dm_by_me, CacheSuffix.TAIL_DM_BY_ME);
-//      suffixCache.put(Type.tail_dm_to_me, CacheSuffix.TAIL_DM_TO_ME);
-//      suffixCache.put(Type.tail_dm_with, CacheSuffix.TAIL_DM_WITH);
+        // suffixCache.put(Type.tail_status_mention, CacheSuffix.TAIL_STATUS_MENTION);
+        // suffixCache.put(Type.tail_comment_status, CacheSuffix.TAIL_CONTENT_STATUS);
+        // suffixCache.put(Type.tail_comment_by_me, CacheSuffix.TAIL_COMMENTS_BY_ME);
+        // suffixCache.put(Type.tail_comment_timeline, CacheSuffix.TAIL_COMMENTS_TIMELINE);
+        // suffixCache.put(Type.tail_comment_to_me, CacheSuffix.TAIL_COMMENTS_TO_ME);
+        // suffixCache.put(Type.tail_dm_by_me, CacheSuffix.TAIL_DM_BY_ME);
+        // suffixCache.put(Type.tail_dm_to_me, CacheSuffix.TAIL_DM_TO_ME);
+        // suffixCache.put(Type.tail_dm_with, CacheSuffix.TAIL_DM_WITH);
 
-//      suffixCache.put(Type.secondary_index_cmt_by_me, CacheSuffix.SECONDARY_INDEX_CMT_BYME);
-//      suffixCache.put(Type.secondary_index_cmt_status, CacheSuffix.SECONDARY_INDEX_CMT_STATUS);
-//      suffixCache.put(Type.secondary_index_cmt_to_me, CacheSuffix.SECONDARY_INDEX_CMT_TOME);
-//      suffixCache.put(Type.secondary_index_dm_by_me, CacheSuffix.SECONDARY_INDEX_DM_BY_ME);
-//      suffixCache.put(Type.secondary_index_dm_to_me, CacheSuffix.SECONDARY_INDEX_DM_TO_ME);
-//      suffixCache.put(Type.secondary_index_dm_with, CacheSuffix.SECONDARY_INDEX_DM_WITH);
-        //suffixCache.put(Type.secondary_index_mention, CacheSuffix.SECONDARY_INDEX_MENTION);
-        //suffixCache.put(Type.secondary_index_status_timeline, CacheSuffix.SECONDARY_INDEX_STATUS_TIMELINE);
-        //suffixCache.put(Type.secondary_index_cmt_timeline, CacheSuffix.SECONDARY_INDEX_CMT_TIMELINE);
+        // suffixCache.put(Type.secondary_index_cmt_by_me, CacheSuffix.SECONDARY_INDEX_CMT_BYME);
+        // suffixCache.put(Type.secondary_index_cmt_status, CacheSuffix.SECONDARY_INDEX_CMT_STATUS);
+        // suffixCache.put(Type.secondary_index_cmt_to_me, CacheSuffix.SECONDARY_INDEX_CMT_TOME);
+        // suffixCache.put(Type.secondary_index_dm_by_me, CacheSuffix.SECONDARY_INDEX_DM_BY_ME);
+        // suffixCache.put(Type.secondary_index_dm_to_me, CacheSuffix.SECONDARY_INDEX_DM_TO_ME);
+        // suffixCache.put(Type.secondary_index_dm_with, CacheSuffix.SECONDARY_INDEX_DM_WITH);
+        // suffixCache.put(Type.secondary_index_mention, CacheSuffix.SECONDARY_INDEX_MENTION);
+        // suffixCache.put(Type.secondary_index_status_timeline,
+        // CacheSuffix.SECONDARY_INDEX_STATUS_TIMELINE);
+        // suffixCache.put(Type.secondary_index_cmt_timeline,
+        // CacheSuffix.SECONDARY_INDEX_CMT_TIMELINE);
 
         suffixCache.put(Type.counter_user_attitude_to_me_by_friends, CacheSuffix.COUNTER_USER_ATTITUDE_TO_ME_BY_FRIENDS);
         suffixCache.put(Type.counter_user_attitude_to_me_by_cf, CacheSuffix.COUNTER_USER_ATTITUDE_TO_ME_BY_CF);
         suffixCache.put(Type.counter_user_attitude_to_me_by_strangers, CacheSuffix.COUNTER_USER_ATTITUDE_TO_ME_BY_STRAGERS);
 
-        suffixCache.put(Type.counter_user_attitude_to_me_order_by_status_by_friends, CacheSuffix.COUNTER_USER_ATTITUDE_TO_ME_ORDER_BY_STATUS_BY_FRIENDS);
-        suffixCache.put(Type.counter_user_attitude_to_me_order_by_status_by_cf, CacheSuffix.COUNTER_USER_ATTITUDE_TO_ME_ORDER_BY_STATUS_BY_CF);
-        suffixCache.put(Type.counter_user_attitude_to_me_order_by_status_by_strangers, CacheSuffix.COUNTER_USER_ATTITUDE_TO_ME_ORDER_BY_STATUS_BY_STRAGERS);
+        suffixCache.put(Type.counter_user_attitude_to_me_order_by_status_by_friends,
+                CacheSuffix.COUNTER_USER_ATTITUDE_TO_ME_ORDER_BY_STATUS_BY_FRIENDS);
+        suffixCache.put(Type.counter_user_attitude_to_me_order_by_status_by_cf,
+                CacheSuffix.COUNTER_USER_ATTITUDE_TO_ME_ORDER_BY_STATUS_BY_CF);
+        suffixCache.put(Type.counter_user_attitude_to_me_order_by_status_by_strangers,
+                CacheSuffix.COUNTER_USER_ATTITUDE_TO_ME_ORDER_BY_STATUS_BY_STRAGERS);
 
         suffixCache.put(Type.counter_status_attitude_by_friends, CacheSuffix.COUNTER_STATUS_ATTITUDE_BY_FRIENDS);
         suffixCache.put(Type.counter_status_attitude_by_cf, CacheSuffix.COUNTER_STATUS_ATTITUDE_BY_CF);
@@ -629,8 +631,8 @@ public abstract class StorageAble<T> {
     public static boolean isCasKey(String key) {
         int pos = key.lastIndexOf(Constants.KEY_SEPERATOR);
         String suffix = key.substring(pos + 1);
-        return suffix.startsWith("v") || suffix.startsWith("sv") || suffix.startsWith("dlv")
-                || suffix.startsWith("tdv") || suffix.startsWith("dvl");
+        return suffix.startsWith("v") || suffix.startsWith("sv") || suffix.startsWith("dlv") || suffix.startsWith("tdv")
+                || suffix.startsWith("dvl");
     }
 
     public static String getCacheKey(String rawKey, Type type) {
@@ -662,9 +664,7 @@ public abstract class StorageAble<T> {
     }
 
     /**
-     * params: rawKey-ids, Type, midfix
-     * example of midfix: .21
-     * 1242322322.21.vsh
+     * params: rawKey-ids, Type, midfix example of midfix: .21 1242322322.21.vsh
      */
     public static String[] getCacheKeys(long[] rawKeys, Type type, String midfix) {
         if (ArrayUtils.isEmpty(rawKeys)) {
@@ -713,266 +713,121 @@ public abstract class StorageAble<T> {
 
     public static enum Type {
 
-        like_recommend_vector,
-        page_vector_status_date,
-        page_vector_status_date_title,
-        pagegroup_vector_status_date,
+        like_recommend_vector, page_vector_status_date, page_vector_status_date_title, pagegroup_vector_status_date,
 
-        meta_vector_status_date,
-        meta_vector_status_latest,
+        meta_vector_status_date, meta_vector_status_latest,
 
-        id_created_at_comment,
-        id_created_at_dm,
-        id_created_at_status,
+        id_created_at_comment, id_created_at_dm, id_created_at_status,
 
-        //priority vector
-        vector_uid_latest_status,
-        vector_uid_days_status,
+        // priority vector
+        vector_uid_latest_status, vector_uid_days_status,
 
-        //common vector
-        vector_uid_in_comment,
-        vector_uid_out_comment,
-        vector_uid_out_comment_self,
+        // common vector
+        vector_uid_in_comment, vector_uid_out_comment, vector_uid_out_comment_self,
 
-        vector_uid_in_common_involve_cmt,//2014新版共同参与评论收件箱缓存
+        vector_uid_in_common_involve_cmt, // 2014新版共同参与评论收件箱缓存
 
-        // common comment vector 
-        vector_uid_common_cmt,
-        vector_uid_trash_cmt,
-        vector_uid_common_cmt_dl,
+        // common comment vector
+        vector_uid_common_cmt, vector_uid_trash_cmt, vector_uid_common_cmt_dl,
 
-        //attitude vector
-        vector_uid_in_attitude_cf,
-        vector_uid_in_attitude,
-        vector_uid_in_attitude_orderbystatus,
-        vector_status_attitudes,
-        vector_status_attitudes_uid,
-        unread_status_attitude,
-        vector_uid_attitude_status,
-        vector_uid_in_common_involve_attitude,//共同赞
-        vector_uid_in_comment_attitude,//赞评论
-        vector_uid_in_object_attitude,//赞对象
+        // attitude vector
+        vector_uid_in_attitude_cf, vector_uid_in_attitude, vector_uid_in_attitude_orderbystatus, vector_status_attitudes, vector_status_attitudes_uid, unread_status_attitude, vector_uid_attitude_status, vector_uid_in_common_involve_attitude, // 共同赞
+        vector_uid_in_comment_attitude, // 赞评论
+        vector_uid_in_object_attitude, // 赞对象
 
-        vector_object_like_list,
-        vector_uid_like_by_me,
-        vector_uid_like_by_me_count,
-        vector_uid_attitude_by_me,
-        mapping_uid_like_exist,
+        vector_object_like_list, vector_uid_like_by_me, vector_uid_like_by_me_count, vector_uid_attitude_by_me, mapping_uid_like_exist,
 
-        vector_uid_in_dm,
-        vector_uid_out_dm,
-        vector_uid_with_dm,
+        vector_uid_in_dm, vector_uid_out_dm, vector_uid_with_dm,
 
-        //雷达to_me赞计数
+        // 雷达to_me赞计数
         favorite_likes_to_me_count,
 
-        //vector_uid_state_show_self_status,
-        vector_uid_state_no_spread,
-        vector_uid_hour_status,
-        vector_uid_inbox,
-        vector_uid_mentioned_status,
-        vector_uid_cmt_mention,
-        vector_uid_repost_status,
-        vector_repost_status,
-        vector_status_comments,
-        vector_status_comments_asc,
+        // vector_uid_state_show_self_status,
+        vector_uid_state_no_spread, vector_uid_hour_status, vector_uid_inbox, vector_uid_mentioned_status, vector_uid_cmt_mention, vector_uid_repost_status, vector_repost_status, vector_status_comments, vector_status_comments_asc,
 
         vector_status_member_comments,
 
         // vector, ususally in Level 2 cache
-        vector_uid_cmt_friend,
-        vector_uid_cmt_stranger,
-        vector_uid_cmt_closefriend,
-        vector_uid_mention_friend,
-        vector_uid_mention_original,
-        vector_uid_mention_friend_original,
-        vector_uid_mention_closefriend,
-        vector_uid_mention_closefriend_original,
+        vector_uid_cmt_friend, vector_uid_cmt_stranger, vector_uid_cmt_closefriend, vector_uid_mention_friend, vector_uid_mention_original, vector_uid_mention_friend_original, vector_uid_mention_closefriend, vector_uid_mention_closefriend_original,
 
-        // activity 
+        // activity
         new_vector_in_activiy,
 
-        // new activity 
-        activity_user_vector,
-        activity_user_new_vector,
-        activity_user_index_vector,
-        activity_content,
-        activity_template,
+        // new activity
+        activity_user_vector, activity_user_new_vector, activity_user_index_vector, activity_content, activity_template,
 
-        user_group_status_vector,
-        user_metagroup_status_vector,
-        sgroup_dlvector,
+        user_group_status_vector, user_metagroup_status_vector, sgroup_dlvector,
 
-        mapping_id_flag_value_status,
-        mapping_id_feature_value_comment,
+        mapping_id_flag_value_status, mapping_id_feature_value_comment,
 
-        spec_vector_uid_status_flag,
-        d_vector_feed_flag,
+        spec_vector_uid_status_flag, d_vector_feed_flag,
 
         user_last_status_id,
-        //spec_vector_uid_status_flag_self,
+        // spec_vector_uid_status_flag_self,
 
-        //content_feature_value,
+        // content_feature_value,
 
-        //content_id_status_xml,
-        //content_id_status_json,
+        // content_id_status_xml,
+        // content_id_status_json,
         content_id_status_pb,
 
-        //content_id_comment_xml,
-        //content_id_comment_json,
-        content_id_comment_pb,
-        content_id_attitude_pb,
-        //content_id_dm_xml,
-        //content_id_dm_json,
+        // content_id_comment_xml,
+        // content_id_comment_json,
+        content_id_comment_pb, content_id_attitude_pb,
+        // content_id_dm_xml,
+        // content_id_dm_json,
         content_id_dm_pb,
 
         status_exposure_policy,
 
-        mapping_nick_uid,
-        mapping_id_mid_comment,
-        mapping_mid_id_comment,
-        mapping_id_mid_dm,
-        mapping_mid_id_dm_in,
-        mapping_mid_id_dm_out,
-        mapping_id_sourceid_status,
-        mapping_id_mid_status,
-        mapping_mid_id_status,
-        //mapping_id_apistate_status,
-        //mapping_id_apistate_comment,
-        mapping_id_uid_status,
-        mapping_id_uid_comment,
-        mapping_cid_uid_comment,
-        mapping_uid_watermark,
+        mapping_nick_uid, mapping_id_mid_comment, mapping_mid_id_comment, mapping_id_mid_dm, mapping_mid_id_dm_in, mapping_mid_id_dm_out, mapping_id_sourceid_status, mapping_id_mid_status, mapping_mid_id_status,
+        // mapping_id_apistate_status,
+        // mapping_id_apistate_comment,
+        mapping_id_uid_status, mapping_id_uid_comment, mapping_cid_uid_comment, mapping_uid_watermark,
 
-        mapping_apiid_uuid_status,
-        mapping_uuid_apiid_status,
-        mapping_apiid_uuid_comment,
-        mapping_uuid_apiid_comment,
+        mapping_apiid_uuid_status, mapping_uuid_apiid_status, mapping_apiid_uuid_comment, mapping_uuid_apiid_comment,
 
-        attention_uid_friends,
-        attention_uid_followers,
-        attention_uid_bothfriends,
-        attention_uid_friends_source,
-        attention_uid_friends_page_source,
-        attention_uid_followers_source,
-        attention_uid_secret,
+        attention_uid_friends, attention_uid_followers, attention_uid_bothfriends, attention_uid_friends_source, attention_uid_friends_page_source, attention_uid_followers_source, attention_uid_secret,
 
 
-        sinauser_uid_pbuser,
-        sinauser_uid_persence, // online status
-        sinauser_domain_uid,
-        sinauser_nick_uid,
-        sinauser_weinum_uid,
-        sinauser_weinum,
-        sinauser_filter,
-        sinauser_privacys,
-        sinauser_settings,
-        sinauser_type,
-        sinauser_level,
-        sinauser_login_name_uid,
+        sinauser_uid_pbuser, sinauser_uid_persence, // online status
+        sinauser_domain_uid, sinauser_nick_uid, sinauser_weinum_uid, sinauser_weinum, sinauser_filter, sinauser_privacys, sinauser_settings, sinauser_type, sinauser_level, sinauser_login_name_uid,
 
-        page_uid_flag_friend,
-        page_repost_flag,
-        page_user_repost_flag,
-        page_list_flag,
-        page_uid_flag_user,
-        page_uid_friend_timeline,
-        page_repost_timeline,
-        page_user_repost_timeline,
-        page_list_timeline,
-        page_uid_user_timeline,
+        page_uid_flag_friend, page_repost_flag, page_user_repost_flag, page_list_flag, page_uid_flag_user, page_uid_friend_timeline, page_repost_timeline, page_user_repost_timeline, page_list_timeline, page_uid_user_timeline,
 
-        group_uid_info_json,
-        group_uid_info_xml,
-        group_gidUid_member_json,
-        group_gidUid_member_xml,
-        group_listed_json,
-        group_listed_xml,
-        group_uids,
-        group_gid_info,
-        group_listed,
-        group_gid_members,
-        group_ungroup,
-        group_like,
+        group_uid_info_json, group_uid_info_xml, group_gidUid_member_json, group_gidUid_member_xml, group_listed_json, group_listed_xml, group_uids, group_gid_info, group_listed, group_gid_members, group_ungroup, group_like,
 
-        group_member_reverse,
-        group_member_reverse_set_caching,
+        group_member_reverse, group_member_reverse_set_caching,
 
-        user_ext_remark,
-        user_rank,
+        user_ext_remark, user_rank,
 
-        oset_uid_dm_withUser,
-        omap_uid_dm_withUser,
+        oset_uid_dm_withUser, omap_uid_dm_withUser,
 
-        counter_user_apistatus,
-        counter_user_fav,
-        counter_user_apistatus_without_spec,
-        counter_user_status,
-        counter_user_following,
-        counter_user_follower,
-        counter_user_api_following,
-        counter_user_api_follower,
-        counter_user_bifollower,
-        counter_user_comment_by_me,
-        counter_user_comment_to_me_by_friends,
-        counter_user_comment_to_me,
-        counter_user_metions,
-        counter_user_comment_metions,
-        counter_user_repost_by_me,
-        counter_user_attention_secret,
-        counter_user_attitude_to_me,
-        counter_user_direct_group_status,
-        counter_user_attitude_to_me_order_by_status,
-        counter_status_attitude,
-        counter_user_commoncmt_to_me,
-        counter_user_group_status,
-        counter_user_comment_attitude_to_me,
-        counter_user_object_attitude_to_me,
+        counter_user_apistatus, counter_user_fav, counter_user_apistatus_without_spec, counter_user_status, counter_user_following, counter_user_follower, counter_user_api_following, counter_user_api_follower, counter_user_bifollower, counter_user_comment_by_me, counter_user_comment_to_me_by_friends, counter_user_comment_to_me, counter_user_metions, counter_user_comment_metions, counter_user_repost_by_me, counter_user_attention_secret, counter_user_attitude_to_me, counter_user_direct_group_status, counter_user_attitude_to_me_order_by_status, counter_status_attitude, counter_user_commoncmt_to_me, counter_user_group_status, counter_user_comment_attitude_to_me, counter_user_object_attitude_to_me,
 
-        counter_node_status,
-        counter_node_following,
-        counter_node_follower,
+        counter_node_status, counter_node_following, counter_node_follower,
 
-        counter_group_like,
-        counter_group_member,
-        counter_group_member_reverse,
+        counter_group_like, counter_group_member, counter_group_member_reverse,
 
         counter_pick,
 
-        counter_repeat_detect_status_inc,
-        counter_repeat_detect_status_dec,
-        counter_repeat_detect_comment_inc,
-        counter_repeat_detect_comment_dec,
+        counter_repeat_detect_status_inc, counter_repeat_detect_status_dec, counter_repeat_detect_comment_inc, counter_repeat_detect_comment_dec,
 
         counter_repeat_detect_attitude_inc,
 
-        counter_status_rt,
-        counter_status_comment,
+        counter_status_rt, counter_status_comment,
 
         remind_360_user_pulgin,
 
-        friendlist_fans_all,
-        friendlist_fans_new,
-        friendlist_fans_foremost,
-        friendlist_attentions,
-        friendlist_bothfans,
-        friendlist_remark,
-        fanslist_remark,
-        nonelist_remark,
-        friendlist_filtered,
-        friendlist_attentions_residual,
-        friendlist_bothfans_residual,
-        friendlist_blacklist,
-        friendlist_recommend,
-        friendlist_interaction,
+        friendlist_fans_all, friendlist_fans_new, friendlist_fans_foremost, friendlist_attentions, friendlist_bothfans, friendlist_remark, fanslist_remark, nonelist_remark, friendlist_filtered, friendlist_attentions_residual, friendlist_bothfans_residual, friendlist_blacklist, friendlist_recommend, friendlist_interaction,
 
-        //双向关注屏蔽列表
+        // 双向关注屏蔽列表
         both_friendlist_filtered,
-        //双向关注反向屏蔽列表
+        // 双向关注反向屏蔽列表
         both_friendlist_reverse_filtered,
-        //双向关注哪些人屏蔽了我的列表
+        // 双向关注哪些人屏蔽了我的列表
         both_friendlist_be_reverse_filtered,
-        //双向关注更进一步的关系
+        // 双向关注更进一步的关系
         both_friendlist_relations,
         // 关系粉丝列表缓存的 Key。
         graph_followers_list,
@@ -981,80 +836,59 @@ public abstract class StorageAble<T> {
          */
         tourist_followings_list,
 
-        ties_close_friends_initiate,
-        ties_close_friends,
+        ties_close_friends_initiate, ties_close_friends,
 
-        state_of_status,
-        state_of_user,
+        state_of_status, state_of_user,
 
         dm_uids_summary,
 
-        lists_user_listed_count,
-        lists_menbers_show_count,
-        lists_user_sub_count,
-        lists_sub_show_count,
+        lists_user_listed_count, lists_menbers_show_count, lists_user_sub_count, lists_sub_show_count,
 
-        //secondary_index_cmt_status,
-        //secondary_index_cmt_to_me,
-        //secondary_index_cmt_by_me,
-        //secondary_index_cmt_timeline,
-        //secondary_index_status_timeline,
-        //secondary_index_mention,
-        //secondary_index_dm_to_me,
-        //secondary_index_dm_by_me,
-        //secondary_index_dm_with,
+        // secondary_index_cmt_status,
+        // secondary_index_cmt_to_me,
+        // secondary_index_cmt_by_me,
+        // secondary_index_cmt_timeline,
+        // secondary_index_status_timeline,
+        // secondary_index_mention,
+        // secondary_index_dm_to_me,
+        // secondary_index_dm_by_me,
+        // secondary_index_dm_with,
 
-        //tail_vector_status,
-        //tail_vector_status_filter,
-        //tail_vector_status_filter_self,
-        //tail_status_mention,
-        //tail_comment_status1,
-        //tail_comment_to_me,
-        //tail_comment_by_me,
-        //tail_comment_timeline,
-        //tail_dm_by_me,
-        //tail_dm_to_me,
-        //tail_dm_with,
+        // tail_vector_status,
+        // tail_vector_status_filter,
+        // tail_vector_status_filter_self,
+        // tail_status_mention,
+        // tail_comment_status1,
+        // tail_comment_to_me,
+        // tail_comment_by_me,
+        // tail_comment_timeline,
+        // tail_dm_by_me,
+        // tail_dm_to_me,
+        // tail_dm_with,
 
         tail_spec_vector_uid_status,
 
-        exclued_mention_uids,
-        blacklist_uid,
-        uninterested,
+        exclued_mention_uids, blacklist_uid, uninterested,
 
-        feedfilter_vector,
-        feedfilter_item,
+        feedfilter_vector, feedfilter_item,
 
-        cf_direct_count,
-        cf_cm_to_me_count,
-        cf_mt_to_me_count,
-        cf_omt_to_me_count,
+        cf_direct_count, cf_cm_to_me_count, cf_mt_to_me_count, cf_omt_to_me_count,
 
         common_cmt_remind,
 
-        counter_user_attitude_to_me_by_friends,
-        counter_user_attitude_to_me_by_cf,
-        counter_user_attitude_to_me_by_strangers,
+        counter_user_attitude_to_me_by_friends, counter_user_attitude_to_me_by_cf, counter_user_attitude_to_me_by_strangers,
 
-        counter_user_attitude_to_me_order_by_status_by_friends,
-        counter_user_attitude_to_me_order_by_status_by_cf,
-        counter_user_attitude_to_me_order_by_status_by_strangers,
+        counter_user_attitude_to_me_order_by_status_by_friends, counter_user_attitude_to_me_order_by_status_by_cf, counter_user_attitude_to_me_order_by_status_by_strangers,
 
-        counter_status_attitude_by_friends,
-        counter_status_attitude_by_cf,
-        counter_status_attitude_by_strangers,
+        counter_status_attitude_by_friends, counter_status_attitude_by_cf, counter_status_attitude_by_strangers,
 
-        counter_user_diff_status,
-        counter_user_diff_follower,
-        counter_user_diff_following,
+        counter_user_diff_status, counter_user_diff_follower, counter_user_diff_following,
 
-        counter_object_comment,
-        counter_object_status,
+        counter_object_comment, counter_object_status,
 
         counter_microcontacts,
 
-        counter_page_att,
-        counter_page_fans,
+        counter_page_att, counter_page_fans,
 
         counter_page_status,
 
@@ -1108,11 +942,12 @@ public abstract class StorageAble<T> {
          */
         public static final String META_VECTOR_STATUS_LATEST = ".mvl";
 
-        //vector priority
+        // vector priority
         public static final String VECTOR_STATUS_LATEST = ".vsl";
         public static final String VECTOR_STATUS_DAYS = ".usd";
-        //public static final String VECTOR_STATUS_STATE_SHOW_SELF = ".vss";
-        public static final String VECTOR_STATUS_STATE_NO_SPREAD = ".vsn";// add no spread state by suoyuan
+        // public static final String VECTOR_STATUS_STATE_SHOW_SELF = ".vss";
+        public static final String VECTOR_STATUS_STATE_NO_SPREAD = ".vsn";// add no spread state by
+                                                                          // suoyuan
         public static final String VECTOR_HOUR = ".vsh";
         public static final String VECTOR_MENTION = ".vsm";
         public static final String VECTOR_CMT_MENTION = ".vcm";
@@ -1126,7 +961,7 @@ public abstract class StorageAble<T> {
         public static final String VECTOR_COMMON_INVOLVE_ATTITUDE = ".vcia";
         public static final String VECTOR_COMMENT_ATTITUDE = ".vca";
         public static final String VECTOR_OBJECT_ATTITUDE = ".voa";
-        // common comment 
+        // common comment
         public static final String VECTOR_COMMON_CMT = ".vcc";
         public static final String VECTOR_COMMON_CMT_DL = ".vccd";
 
@@ -1148,7 +983,7 @@ public abstract class StorageAble<T> {
         public static final String VECTOR_UID_LIKE_LIST = ".ull";
         public static final String VECTOR_UID_LIKE_BY_ME = ".ulm";
         public static final String VECTOR_UID_LIKE_BY_ME_COUNT = ".ulc";
-        //favorite likes to_me
+        // favorite likes to_me
         public static final String FAVORITE_LIKES_TO_ME_COUNT = ".fltc";
         public static final String VECTOR_UID_ATTITUDE_BY_ME = ".uabm";
         public static final String MAPPING_UID_LIKE_EXIST = ".ule";
@@ -1163,10 +998,10 @@ public abstract class StorageAble<T> {
         public static final String VECTOR_META_INBOX = ".mib";
         public static final String VECTOR_META_INBOX_PAGE = ".mip";
 
-        // activity 
+        // activity
         public static final String NEW_VECTOR_ACTIVITY_IN = ".nvai";
 
-        // new activity 
+        // new activity
         public static final String ACTIVITY_USER_VECTOR = ".auv";
         public static final String ACTIVITY_USER_NEW_VECTOR = ".aunv";
         public static final String ACTIVITY_USER_INDEX_VECTOR = ".auiv";
@@ -1193,29 +1028,29 @@ public abstract class StorageAble<T> {
 
         public static final String USER_LAST_STATUS_ID = ".ulsi";
 
-        //TODO: 这个暂时兼容保留，不再更新，也不再从db加载,预计9月底之后不再需要，届时去掉 fishermen 2011.9.1 
+        // TODO: 这个暂时兼容保留，不再更新，也不再从db加载,预计9月底之后不再需要，届时去掉 fishermen 2011.9.1
         @Deprecated
         public static final String SPEC_VECTOR_UID_STATUS_FLAG_SELF = ".dlvp";
 
-        //public static final String CONTENT_FEATURE_VALUE = ".cfv"; // uid -> aid&featureValue
+        // public static final String CONTENT_FEATURE_VALUE = ".cfv"; // uid -> aid&featureValue
 
-        //public static final String CONTENT_CACHE_STATUS_XML = ".csx";
-        //public static final String CONTENT_CACHE_STATUS_JSON = ".csj";
+        // public static final String CONTENT_CACHE_STATUS_XML = ".csx";
+        // public static final String CONTENT_CACHE_STATUS_JSON = ".csj";
         public static final String CONTENT_CACHE_STATUS_PB = ".csp";
         public static final String CONTENT_CACHE_LONGTEXT_STATUS = ".ccls";
         public static final String CONTENT_CACHE__SLICE_PB = ".cclp";
 
-        //public static final String CONTENT_CACHE_COMMENT_XML = ".ccx";
-        //public static final String CONTENT_CACHE_COMMENT_JSON = ".ccj";
+        // public static final String CONTENT_CACHE_COMMENT_XML = ".ccx";
+        // public static final String CONTENT_CACHE_COMMENT_JSON = ".ccj";
         public static final String CONTENT_CACHE_COMMENT_PB = ".ccp";
-        //public static final String CONTENT_CACHE_DM_XML = ".cdx";
-        //public static final String CONTENT_CACHE_DM_JSON = ".cdj";
+        // public static final String CONTENT_CACHE_DM_XML = ".cdx";
+        // public static final String CONTENT_CACHE_DM_JSON = ".cdj";
         public static final String CONTENT_CACHE_DM_PB = ".cdp";
         public static final String CONTENT_CACHE_ATTITUDE_PB = ".cap";
 
         public static final String STATUS_EXPOSURE_POLICY = ".sep";
 
-        //      public static final String MAPPING_NICK_UID_FLAG = ".mn2u";
+        // public static final String MAPPING_NICK_UID_FLAG = ".mn2u";
         public static final String MAPPING_ID_SOURCEID_STATUS = ".mi2si";
         public static final String MAPPING_ID_MID_STATUS = ".mi2ms";
         public static final String MAPPING_MID_ID_STATUS = ".mm2is";
@@ -1225,13 +1060,15 @@ public abstract class StorageAble<T> {
         public static final String MAPPING_ID_MID_COMMENT = ".mi2mc";
         public static final String MAPPING_MID_ID_COMMENT = ".mm2ic";
         public static final String MAPPING_ID_UID_COMMENT = ".mi2uc";
-        //微博评论-uid映射2000条
+        // 微博评论-uid映射2000条
         public static final String MAPPING_CID_UID_COMMENT = ".mc2uc";
         public static final String MAPPING_ID_UID_STATUS = ".mi2us";
         public static final String MAPPING_ID_STATE = ".mi2ste";
         public static final String MAPPING_UID_STATE = ".mui2ste";
-        public static final String MAPPING_ID_FLAG_VALUE_STATUS = ".mi2fv"; // status_id -> aid&featureValue
-        public static final String MAPPING_ID_FEATURE_VALUE_COMMENT = ".mi2fvc"; // comment_id -> aid&featureValue
+        public static final String MAPPING_ID_FLAG_VALUE_STATUS = ".mi2fv"; // status_id ->
+                                                                            // aid&featureValue
+        public static final String MAPPING_ID_FEATURE_VALUE_COMMENT = ".mi2fvc"; // comment_id ->
+                                                                                 // aid&featureValue
         public static final String MAPPING_UID_WATERMARK = ".mui2wm";
 
         public static final String MAPPING_APIID_UUID_STAUTS = ".ma2us";
@@ -1251,11 +1088,11 @@ public abstract class StorageAble<T> {
         public static final String ATTENTION_FOLLOWERS_SOURCE = ".afols";
         public static final String ATTENTION_SECRET = ".asec";
 
-        //public static final String SINA_USER = ".u";
+        // public static final String SINA_USER = ".u";
         // DON'T CHANGE THE .u2 suffix, some hard code "+ 2" in StorageProxy.java
         public static final String SINA_PB_USER = ".u2";
         public static final String SINA_USER_PERSENCE = ".p";
-        //      public static final String SINA_USER_NICK_UID = MAPPING_NICK_UID_FLAG;
+        // public static final String SINA_USER_NICK_UID = MAPPING_NICK_UID_FLAG;
         public static final String SINA_USER_DOMAIN_UID = ".sd2u";
         public static final String SINA_USER_WEINUM_UID = ".sw2u";
         public static final String SINA_USER_WEINUM = ".suw";
@@ -1266,7 +1103,7 @@ public abstract class StorageAble<T> {
         public static final String SINA_USER_EXT_SETTINGS = ".sues";
         public static final String SINA_USER_LOGIN_NAME_UID = ".sul2u";
 
-        //page cache: only for request, not get frm db
+        // page cache: only for request, not get frm db
         public static final String PAGE_CACHE_UID_FLAG_FRIEND = ".pff";
         public static final String PAGE_CACHE_LIST_FLAG = ".plf";
         public static final String PAGE_CACHE_REPOST_FLAG = ".prf";
@@ -1297,7 +1134,7 @@ public abstract class StorageAble<T> {
         public static final String USER_EXT_REMARK = ".uer";
 
         public static final String USER_RANK = ".urnk";
-        //ordered set cache
+        // ordered set cache
         public static final String OSET_DM_WITH_USER = ".owu";
 
         public static final String DM_UIDS_SUMMARY = ".dus";
@@ -1424,37 +1261,37 @@ public abstract class StorageAble<T> {
         public static final String TIES_CLOSE_FRIENDS_INITIATE = ".tcfi";
         public static final String TIES_CLOSE_FRIENDS = ".tcf";
 
-        //用户最新2000条spec vector
+        // 用户最新2000条spec vector
         public static final String TAIL_SPEC_VECTOR_UID_STATUS = ".tdvsl";
 
-        //FEED屏蔽向量
+        // FEED屏蔽向量
         public static final String FEEDFILTER_VECTOR = ".ffvec";
         public static final String FEEDFILTER_ITEM = ".ffitem";
 
-//      public static final String TAIL_VECTOR_STATUS = ".svtvs";
-//      public static final String TAIL_CONTENT_STATUS = ".svtcs";
-//      public static final String TAIL_COMMENTS_TO_ME = ".svtctm";
-//      public static final String TAIL_COMMENTS_BY_ME =".svtcbm";
-//      public static final String TAIL_COMMENTS_TIMELINE =".svtct";
-//      public static final String TAIL_STATUS_MENTION =".svtsm";
-//      public static final String TAIL_DM_BY_ME = ".svtdmbm";
-//      public static final String TAIL_DM_TO_ME = ".svtdmtm";
-//      public static final String TAIL_DM_WITH = ".svtdms";
-//        public static final String TAIL_VECTOR_STATUS_FILTER = ".svtvsf";
-//        public static final String TAIL_VECTOR_STATUS_FILTER_SELF = ".svtvss";
+        // public static final String TAIL_VECTOR_STATUS = ".svtvs";
+        // public static final String TAIL_CONTENT_STATUS = ".svtcs";
+        // public static final String TAIL_COMMENTS_TO_ME = ".svtctm";
+        // public static final String TAIL_COMMENTS_BY_ME =".svtcbm";
+        // public static final String TAIL_COMMENTS_TIMELINE =".svtct";
+        // public static final String TAIL_STATUS_MENTION =".svtsm";
+        // public static final String TAIL_DM_BY_ME = ".svtdmbm";
+        // public static final String TAIL_DM_TO_ME = ".svtdmtm";
+        // public static final String TAIL_DM_WITH = ".svtdms";
+        // public static final String TAIL_VECTOR_STATUS_FILTER = ".svtvsf";
+        // public static final String TAIL_VECTOR_STATUS_FILTER_SELF = ".svtvss";
 
         /**
          * si cache
          */
-//      public static final String SECONDARY_INDEX_CMT_STATUS = ".sics";
-//      public static final String SECONDARY_INDEX_CMT_TOME = ".sictm";
-//      public static final String SECONDARY_INDEX_CMT_BYME = ".sicbm";
-//      public static final String SECONDARY_INDEX_CMT_TIMELINE = ".sict";
-//      public static final String SECONDARY_INDEX_STATUS_TIMELINE = ".sist";
-//      public static final String SECONDARY_INDEX_MENTION = ".sim";
-//      public static final String SECONDARY_INDEX_DM_TO_ME = ".sidmtm";
-//      public static final String SECONDARY_INDEX_DM_BY_ME = ".sidmbm";
-//      public static final String SECONDARY_INDEX_DM_WITH = ".sidmw";
+        // public static final String SECONDARY_INDEX_CMT_STATUS = ".sics";
+        // public static final String SECONDARY_INDEX_CMT_TOME = ".sictm";
+        // public static final String SECONDARY_INDEX_CMT_BYME = ".sicbm";
+        // public static final String SECONDARY_INDEX_CMT_TIMELINE = ".sict";
+        // public static final String SECONDARY_INDEX_STATUS_TIMELINE = ".sist";
+        // public static final String SECONDARY_INDEX_MENTION = ".sim";
+        // public static final String SECONDARY_INDEX_DM_TO_ME = ".sidmtm";
+        // public static final String SECONDARY_INDEX_DM_BY_ME = ".sidmbm";
+        // public static final String SECONDARY_INDEX_DM_WITH = ".sidmw";
 
         public static final String LISTS_USER_LISTED_COUNT = ".lulc";
         public static final String LISTS_USER_SUB_COUNT = ".lusc";

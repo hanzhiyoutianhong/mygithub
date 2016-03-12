@@ -70,10 +70,8 @@ public class LMAppAccountEntity {
         if (emailexsit != null ? !emailexsit.equals(that.emailexsit) : that.emailexsit != null) return false;
         if (username != null ? !username.equals(that.username) : that.username != null) return false;
         if (password != null ? !password.equals(that.password) : that.password != null) return false;
-        if (registertimestamp != null ? !registertimestamp.equals(that.registertimestamp) : that.registertimestamp != null)
-            return false;
-        if (logintimestamp != null ? !logintimestamp.equals(that.logintimestamp) : that.logintimestamp != null)
-            return false;
+        if (registertimestamp != null ? !registertimestamp.equals(that.registertimestamp) : that.registertimestamp != null) return false;
+        if (logintimestamp != null ? !logintimestamp.equals(that.logintimestamp) : that.logintimestamp != null) return false;
 
         return true;
     }

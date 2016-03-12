@@ -14,7 +14,7 @@ import cc.linkedme.commons.util.UuidHelper;
 import cc.linkedme.data.dao.util.JdbcTemplate;
 
 public final class TableItemHlper {
-    //private static final int SPLIT_NUMBER = 256;
+    // private static final int SPLIT_NUMBER = 256;
     private static Logger logger = Logger.getLogger(TableItemHlper.class);
     private static final String DB_NAME_EXPRESSION = "$db$";
     private static final String TABLE_NAME_EXPRESSION = "$tb$";
@@ -109,8 +109,9 @@ public final class TableItemHlper {
 
     public static String getTableName(TableItem item, Long id) {
         if (item != null) {
-            TNamePostfixType type = "yymmdd".equalsIgnoreCase(item.getTableNamePostFix()) ? TNamePostfixType.yyMMdd : "yymm".equalsIgnoreCase(item.getTableNamePostFix()) ? TNamePostfixType.yyMM
-                    : TNamePostfixType.index;
+            TNamePostfixType type = "yymmdd".equalsIgnoreCase(item.getTableNamePostFix())
+                    ? TNamePostfixType.yyMMdd
+                    : "yymm".equalsIgnoreCase(item.getTableNamePostFix()) ? TNamePostfixType.yyMM : TNamePostfixType.index;
             String tableName = null;
             switch (type) {
                 case yyMM: // yymm
@@ -134,8 +135,9 @@ public final class TableItemHlper {
 
     public static String getTableName(TableItem item, Date date) {
         if (item != null) {
-            TNamePostfixType type = "yymmdd".equalsIgnoreCase(item.getTableNamePostFix()) ? TNamePostfixType.yyMMdd : "yymm".equalsIgnoreCase(item.getTableNamePostFix()) ? TNamePostfixType.yyMM
-                    : TNamePostfixType.index;
+            TNamePostfixType type = "yymmdd".equalsIgnoreCase(item.getTableNamePostFix())
+                    ? TNamePostfixType.yyMMdd
+                    : "yymm".equalsIgnoreCase(item.getTableNamePostFix()) ? TNamePostfixType.yyMM : TNamePostfixType.index;
             String tableName = null;
             switch (type) {
                 case yyMM: // yymm

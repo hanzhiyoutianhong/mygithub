@@ -7,18 +7,10 @@ import java.util.Map;
 /**
  * Sharding Util
  * <p>
- * <map>
- * <entry key="0-29" value-ref="client_demo1"/>
- * <entry key="30,31" value-ref="client_demo2"/>
- * </map>
- * after parseClients:
- * <map>
- * <entry key="0" value-ref="client_demo1"/>
- * ...
- * <entry key="29" value-ref="client_demo1"/>
- * <entry key="30" value-ref="client_demo2"/>
- * <entry key="31" value-ref="client_demo2"/>
- * </map>
+ * <map> <entry key="0-29" value-ref="client_demo1"/> <entry key="30,31" value-ref="client_demo2"/>
+ * </map> after parseClients: <map> <entry key="0" value-ref="client_demo1"/> ...
+ * <entry key="29" value-ref="client_demo1"/> <entry key="30" value-ref="client_demo2"/> <entry key=
+ * "31" value-ref="client_demo2"/> </map>
  *
  * @param <T>
  */

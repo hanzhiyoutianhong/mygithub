@@ -15,8 +15,7 @@ public interface SwitcherManager {
      * @param defaultValue
      * @return 已经存在的同名开关或者新创建的开关 不会为null
      */
-    public abstract Switcher registerSwitcher(String switcherName,
-                                              SwitcherChangeListener switcherChangeListener, boolean defaultValue);
+    public abstract Switcher registerSwitcher(String switcherName, SwitcherChangeListener switcherChangeListener, boolean defaultValue);
 
     /**
      * @param switcherName
@@ -24,8 +23,7 @@ public interface SwitcherManager {
      * @return
      * @see #registerSwitcher(String, SwitcherChangeListener, boolean)
      */
-    public abstract Switcher registerSwitcher(String switcherName,
-                                              boolean defaultValue);
+    public abstract Switcher registerSwitcher(String switcherName, boolean defaultValue);
 
     /**
      * 将 switcherChangeListener 关联到该开关，如果该开关不存在则返回 false
@@ -34,8 +32,7 @@ public interface SwitcherManager {
      * @param switcherChangeListener
      * @return
      */
-    public abstract boolean watch(String switcherName,
-                                  SwitcherChangeListener switcherChangeListener);
+    public abstract boolean watch(String switcherName, SwitcherChangeListener switcherChangeListener);
 
     /**
      * 通过 switcherName 获取 Switcher,如果不存在则返回null.

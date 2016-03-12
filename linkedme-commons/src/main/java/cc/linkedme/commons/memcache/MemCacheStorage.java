@@ -14,36 +14,36 @@ import cc.linkedme.commons.util.ApiUtil;
 
 public class MemCacheStorage<T> extends StorageAble<T> implements CacheAble<T> {
 
-    // set by McqProcessor.startReading 
+    // set by McqProcessor.startReading
     public static boolean isInProcessor = false;
 
     static int LOCK_EXPIRE_MILLIS = 2000;
-    static Date LOCK_EXPIRE_TIME = new Date(LOCK_EXPIRE_MILLIS); //2 second
+    static Date LOCK_EXPIRE_TIME = new Date(LOCK_EXPIRE_MILLIS); // 2 second
 
     Date expireTime;
 
-    //the using cache, which also is master
+    // the using cache, which also is master
     MemcacheClient cacheClientMaster;
-    // master L1 cache list 
+    // master L1 cache list
     List<MemcacheClient> cacheClientL1;
-    //the backup/olden cache, when add or reduce cache，we need to get data from backup cache
+    // the backup/olden cache, when add or reduce cache，we need to get data from backup cache
     MemcacheClient cacheClientBackup;
 
-    //the slave/standby cache, for double set，to avoid single point
+    // the slave/standby cache, for double set，to avoid single point
     MemcacheClient cacheClientSlave;
-    // slave L1 cache list 
+    // slave L1 cache list
     List<MemcacheClient> cacheClientSlaveL1;
     MemcacheClient cacheClientTemp;
 
-    //暂时不再从backup清理数据，bakcup的cache中老数据依靠踢出、过期来完成清理， 等永丰稳定后，再设为true
+    // 暂时不再从backup清理数据，bakcup的cache中老数据依靠踢出、过期来完成清理， 等永丰稳定后，再设为true
     boolean deleteFrmBackupCache = false;
 
     boolean updateTempCache = true;
 
-    //slaveL1通过配置为其它机房的缓存，通过updateSlaveL1来控制队列机是否更新其它机房的缓存
+    // slaveL1通过配置为其它机房的缓存，通过updateSlaveL1来控制队列机是否更新其它机房的缓存
     AtomicBoolean updateSlaveL1 = new AtomicBoolean(false);
 
-    //通过配置readOnly来控制队列机是否更新缓存
+    // 通过配置readOnly来控制队列机是否更新缓存
     AtomicBoolean readOnly = new AtomicBoolean(false);
 
     AtomicInteger point = new AtomicInteger(0);
@@ -66,7 +66,7 @@ public class MemCacheStorage<T> extends StorageAble<T> implements CacheAble<T> {
             }
         }
 
-        //L1获取到值之后应该直接返回，避免重新set L1导致脏数据过期时间被刷新 chenfei 2014.4.16
+        // L1获取到值之后应该直接返回，避免重新set L1导致脏数据过期时间被刷新 chenfei 2014.4.16
         if (value != null) {
             return value;
         }
@@ -83,7 +83,7 @@ public class MemCacheStorage<T> extends StorageAble<T> implements CacheAble<T> {
             value = get(key, cacheClientTemp);
         }
 
-        //如果master没有，就尝试从slave来取，去掉content的限制，所有的cache都需要从slave来取 fishermen 2011.8.4
+        // 如果master没有，就尝试从slave来取，去掉content的限制，所有的cache都需要从slave来取 fishermen 2011.8.4
         if (value == null && cacheClientSlave != null) {
             value = get(key, cacheClientSlave);
         }
@@ -153,7 +153,8 @@ public class MemCacheStorage<T> extends StorageAble<T> implements CacheAble<T> {
     }
 
     /**
-     * 批量获取,为了提高效率，getMulti如果获取的是cas值，此处不保证cas unique key的正确性，也就是说：调用者不能用getMulti获得value进行set （目前没有类似操作）
+     * 批量获取,为了提高效率，getMulti如果获取的是cas值，此处不保证cas unique key的正确性，也就是说：调用者不能用getMulti获得value进行set
+     * （目前没有类似操作）
      *
      * @see 当从老的cache获取的casValue数据会去掉cas 标记，避免迁移时cas失败
      */
@@ -170,23 +171,23 @@ public class MemCacheStorage<T> extends StorageAble<T> implements CacheAble<T> {
                 values = getMulti(keys, client);
             }
         }
-       
-       /* 本机房最新mc */
+
+        /* 本机房最新mc */
         if (keys.length > values.size()) {
             leftkeys = getMulti(values, keys, cacheClientMaster);
         }
-       
-       /* 本机房原有mc，只获取 */
+
+        /* 本机房原有mc，只获取 */
         if (keys.length > values.size() && cacheClientBackup != null) {
             getAndSetFromBackupCache(keys, values);
         }
-       
-       /* 后备机房原有mc，对cas key同步更新 */
+
+        /* 后备机房原有mc，对cas key同步更新 */
         if (keys.length > values.size() && cacheClientTemp != null) {
             getMulti(values, keys, cacheClientTemp);
         }
 
-       /* 后备机房最新mc，对cas key同步更新 */
+        /* 后备机房最新mc，对cas key同步更新 */
         // master 如果没有从 slave 读,不仅仅局限于content fishermen 2011.4.15
         if (keys.length > values.size() && cacheClientSlave != null) {
             if (keys.length > 0) {
@@ -222,11 +223,9 @@ public class MemCacheStorage<T> extends StorageAble<T> implements CacheAble<T> {
     }
 
     /**
-     * set key and value to mc, if set cacheClient success, we also set
-     * cacheClientStandby
+     * set key and value to mc, if set cacheClient success, we also set cacheClientStandby
      *
-     * @see we not set cas for cacheClientStandby, for the value is read from
-     * cacheClient
+     * @see we not set cas for cacheClientStandby, for the value is read from cacheClient
      */
     @Override
     public boolean set(String key, T value, Date expdate) {
@@ -234,7 +233,7 @@ public class MemCacheStorage<T> extends StorageAble<T> implements CacheAble<T> {
         if (cacheClientSlave != null) {
             set(key, value, expdate, cacheClientSlave, false);
         }
-        //确保新老cache都更新，避免中间状态
+        // 确保新老cache都更新，避免中间状态
         if (cacheClientBackup != null) {
             set(key, value, expdate, cacheClientBackup, false);
         }
@@ -265,23 +264,22 @@ public class MemCacheStorage<T> extends StorageAble<T> implements CacheAble<T> {
     }
 
     /**
-     * vika memcache client use set commond not cas
-     * cas set key and value to mc, if set cacheClient success, we also set
-     * cacheClientStandby
+     * vika memcache client use set commond not cas cas set key and value to mc, if set cacheClient
+     * success, we also set cacheClientStandby
      *
-     * @see we not set cas for cacheClientStandby, for the value is read from
-     * cacheClient
+     * @see we not set cas for cacheClientStandby, for the value is read from cacheClient
      */
     @Deprecated
     @Override
     public boolean setCas(String key, CasValue cas, Date expdate) {
         boolean rs = cacheClientMaster.setCas(key, cas, expdate);
 
-        //除master外，其他应该是cacheClientSlave.set()，不能用setCas，因为1）master的cas unique key,不一定等于slave的cas unique key
+        // 除master外，其他应该是cacheClientSlave.set()，不能用setCas，因为1）master的cas unique key,不一定等于slave的cas
+        // unique key
         if (cacheClientSlave != null && cas != null) {
             cacheClientSlave.set(key, cas.getValue(), expdate);
         }
-        //确保新老cache都更新，避免中间状态
+        // 确保新老cache都更新，避免中间状态
         if (cacheClientBackup != null) {
             cacheClientBackup.set(key, cas.getValue(), expdate);
         }
@@ -303,11 +301,9 @@ public class MemCacheStorage<T> extends StorageAble<T> implements CacheAble<T> {
     }
 
     /**
-     * incr key and value to mc, if set cacheClient success, we also set
-     * cacheClientStandby
+     * incr key and value to mc, if set cacheClient success, we also set cacheClientStandby
      *
-     * @see we not set cas for cacheClientStandby, for the value is read from
-     * cacheClient
+     * @see we not set cas for cacheClientStandby, for the value is read from cacheClient
      */
     @SuppressWarnings("unchecked")
     @Override
@@ -317,7 +313,7 @@ public class MemCacheStorage<T> extends StorageAble<T> implements CacheAble<T> {
         if (cacheClientSlave != null) {
             cacheClientSlave.incr(key);
         }
-        //确保新老cache都更新，避免中间状态
+        // 确保新老cache都更新，避免中间状态
         if (cacheClientBackup != null) {
             cacheClientBackup.incr(key);
         }
@@ -340,11 +336,9 @@ public class MemCacheStorage<T> extends StorageAble<T> implements CacheAble<T> {
     }
 
     /**
-     * incr key and value to mc, if set cacheClient success, we also set
-     * cacheClientStandby
+     * incr key and value to mc, if set cacheClient success, we also set cacheClientStandby
      *
-     * @see we not set cas for cacheClientStandby, for the value is read from
-     * cacheClient
+     * @see we not set cas for cacheClientStandby, for the value is read from cacheClient
      */
     @Override
     public T decr(String key) {
@@ -353,7 +347,7 @@ public class MemCacheStorage<T> extends StorageAble<T> implements CacheAble<T> {
         if (cacheClientSlave != null) {
             cacheClientSlave.decr(key);
         }
-        //确保新老cache都更新，避免中间状态
+        // 确保新老cache都更新，避免中间状态
         if (cacheClientBackup != null) {
             cacheClientBackup.decr(key);
         }
@@ -383,8 +377,7 @@ public class MemCacheStorage<T> extends StorageAble<T> implements CacheAble<T> {
     /**
      * cas set key and value to mc, if cas cacheClient success, we also set cacheClientStandby
      *
-     * @see we not set cas for cacheClientStandby, for the value is read from
-     * cacheClient
+     * @see we not set cas for cacheClientStandby, for the value is read from cacheClient
      */
     @Override
     public boolean cas(String key, CasValue cas, Date expdate) {
@@ -394,11 +387,12 @@ public class MemCacheStorage<T> extends StorageAble<T> implements CacheAble<T> {
             return rs;
         }
 
-        //除master外，其他应该是cacheClientSlave.set()，不能用setCas，因为1）master的cas unique key,不一定等于slave的cas unique key
+        // 除master外，其他应该是cacheClientSlave.set()，不能用setCas，因为1）master的cas unique key,不一定等于slave的cas
+        // unique key
         if (cacheClientSlave != null) {
             cacheClientSlave.set(key, cas.getValue(), expdate);
         }
-        //确保新老cache都更新，避免中间状态
+        // 确保新老cache都更新，避免中间状态
         if (cacheClientBackup != null) {
             cacheClientBackup.set(key, cas.getValue(), expdate);
         }
@@ -515,7 +509,7 @@ public class MemCacheStorage<T> extends StorageAble<T> implements CacheAble<T> {
     private T getAndSetFromBackupCache(String key) {
         T value = null;
         if (!StorageAble.isCasKey(key)) {
-            //对于非cas值，直接迁移
+            // 对于非cas值，直接迁移
             value = get(key, cacheClientBackup);
             if (value != null) {
                 if (deleteFrmBackupCache) {
@@ -527,7 +521,7 @@ public class MemCacheStorage<T> extends StorageAble<T> implements CacheAble<T> {
                 }
             }
         } else {
-            //对于cas值，cache迁移数据时需要加分布锁
+            // 对于cas值，cache迁移数据时需要加分布锁
             try {
                 lock(key, true);
                 value = get(key, cacheClientMaster);
@@ -539,7 +533,7 @@ public class MemCacheStorage<T> extends StorageAble<T> implements CacheAble<T> {
                     return null;
                 }
 
-                //not cas set to cacheClient, bug re-get the cas value, for cas values is needed
+                // not cas set to cacheClient, bug re-get the cas value, for cas values is needed
                 ((CasValue) value).resetCas();
                 set(key, value);
                 if (ApiLogger.isDebugEnabled()) {
@@ -551,9 +545,9 @@ public class MemCacheStorage<T> extends StorageAble<T> implements CacheAble<T> {
             } finally {
                 releaseLock(key);
             }
-            //re-get,to get the correct cas value
+            // re-get,to get the correct cas value
             value = get(key, cacheClientMaster);
-            //delete dirty data
+            // delete dirty data
             if (deleteFrmBackupCache) {
                 cacheClientBackup.delete(key);
             }
@@ -565,7 +559,7 @@ public class MemCacheStorage<T> extends StorageAble<T> implements CacheAble<T> {
     @SuppressWarnings("unchecked")
     private CasValue<T> getAndSetCasFromBackupCache(String key) {
         CasValue<T> value = null;
-        //对于cas值，cache迁移数据时需要加分布锁
+        // 对于cas值，cache迁移数据时需要加分布锁
         try {
             lock(key, true);
             value = (CasValue) cacheClientMaster.gets(key);
@@ -577,7 +571,7 @@ public class MemCacheStorage<T> extends StorageAble<T> implements CacheAble<T> {
                 return null;
             }
 
-            //not cas set to cacheClient, bug re-get the cas value, for cas values is needed
+            // not cas set to cacheClient, bug re-get the cas value, for cas values is needed
             value.resetCas();
             setCas(key, value);
             if (ApiLogger.isDebugEnabled()) {
@@ -589,9 +583,9 @@ public class MemCacheStorage<T> extends StorageAble<T> implements CacheAble<T> {
         } finally {
             releaseLock(key);
         }
-        //re-get,to get the correct cas value
+        // re-get,to get the correct cas value
         value = (CasValue) cacheClientMaster.gets(key);
-        //delete dirty data
+        // delete dirty data
         if (deleteFrmBackupCache) {
             cacheClientBackup.delete(key);
         }
@@ -617,7 +611,8 @@ public class MemCacheStorage<T> extends StorageAble<T> implements CacheAble<T> {
             }
             ApiUtil.safeSleep(sleepTime);
             if (i <= 80 && i % 10 == 0) {
-                ApiLogger.warn(new StringBuilder(64).append("warn - careful, lock too slow. key=").append(key).append(", t=").append((100 - i) * sleepTime));
+                ApiLogger.warn(new StringBuilder(64).append("warn - careful, lock too slow. key=").append(key).append(", t=")
+                        .append((100 - i) * sleepTime));
             }
         }
         ApiLogger.warn(new StringBuilder(64).append("Error - lock false, check cache now! key=").append(key).append(", t=2000ms"));
@@ -643,8 +638,8 @@ public class MemCacheStorage<T> extends StorageAble<T> implements CacheAble<T> {
      *
      * @param key
      * @param mc
-     * @param autoCheckCas : if ture, we will check if the key is casKey, if it is ,we
-     *                     will use "gets" to get cas value, or just use "get"
+     * @param autoCheckCas : if ture, we will check if the key is casKey, if it is ,we will use
+     *        "gets" to get cas value, or just use "get"
      * @return
      */
     @SuppressWarnings("unchecked")
@@ -657,8 +652,8 @@ public class MemCacheStorage<T> extends StorageAble<T> implements CacheAble<T> {
     }
 
     /**
-     * 将数据从老的cache迁移到新的cache时,迁移的数据如果是casValue，会去掉cas标记
-     * 去掉cas标记原因：1 ）目前及可预计的将来不会存在对getMulti的value再set cas的情况，2 ）获取正确的cas unique key 需要重新gets，性能损耗
+     * 将数据从老的cache迁移到新的cache时,迁移的数据如果是casValue，会去掉cas标记 去掉cas标记原因：1
+     * ）目前及可预计的将来不会存在对getMulti的value再set cas的情况，2 ）获取正确的cas unique key 需要重新gets，性能损耗
      *
      * @param allKeys
      * @param cachedValues: 主cache中缓存的data
@@ -666,7 +661,7 @@ public class MemCacheStorage<T> extends StorageAble<T> implements CacheAble<T> {
      */
     @SuppressWarnings("unchecked")
     private List<String> getAndSetFromBackupCache(String[] allKeys, Map<String, T> cachedValues) {
-        //get the keys which are not cached in the main cache
+        // get the keys which are not cached in the main cache
         List<String> missingKeys = new ArrayList<String>(allKeys.length - cachedValues.size());
         for (String key : allKeys) {
             if (!cachedValues.containsKey(key)) {
@@ -674,12 +669,11 @@ public class MemCacheStorage<T> extends StorageAble<T> implements CacheAble<T> {
             }
         }
 
-        //transfer datas from olden cache to using cache, and delete old datas
+        // transfer datas from olden cache to using cache, and delete old datas
         if (missingKeys.size() > 0) {
             String[] missingKeysArr = new String[missingKeys.size()];
             missingKeysArr = missingKeys.toArray(missingKeysArr);
-            Map<String, T> valuesInOlderCache = getMulti(missingKeysArr,
-                    cacheClientBackup);
+            Map<String, T> valuesInOlderCache = getMulti(missingKeysArr, cacheClientBackup);
             cachedValues.putAll(valuesInOlderCache);
         }
 
@@ -697,8 +691,7 @@ public class MemCacheStorage<T> extends StorageAble<T> implements CacheAble<T> {
             values = new HashMap<String, T>();
             T casValue = null;
             for (Map.Entry<String, Object> entry : casValues.entrySet()) {
-                casValue = (T) parseCasValue((CasValue) entry.getValue(),
-                        entry.getKey());
+                casValue = (T) parseCasValue((CasValue) entry.getValue(), entry.getKey());
                 if (casValue != null) {
                     values.put(entry.getKey(), casValue);
                 }
@@ -725,9 +718,8 @@ public class MemCacheStorage<T> extends StorageAble<T> implements CacheAble<T> {
     @SuppressWarnings("unchecked")
     private List<String> getMulti(Map<String, T> results, String[] allKeys, MemcacheClient mc) {
         Map<String, T> values = null;
-        if (allKeys.length - results.size() <= 0)
-            return null;
-        //String[] keys2 = new String[allKeys.length - results.size()];
+        if (allKeys.length - results.size() <= 0) return null;
+        // String[] keys2 = new String[allKeys.length - results.size()];
         List<String> leftKeysList = new ArrayList<String>();
         for (String key : allKeys) {
             if (!results.containsKey(key)) {
@@ -744,8 +736,7 @@ public class MemCacheStorage<T> extends StorageAble<T> implements CacheAble<T> {
             values = new HashMap<String, T>();
             T casValue = null;
             for (Map.Entry<String, Object> entry : casValues.entrySet()) {
-                casValue = (T) parseCasValue((CasValue) entry.getValue(),
-                        entry.getKey());
+                casValue = (T) parseCasValue((CasValue) entry.getValue(), entry.getKey());
                 if (casValue != null) {
                     values.put(entry.getKey(), casValue);
                 }
@@ -777,19 +768,20 @@ public class MemCacheStorage<T> extends StorageAble<T> implements CacheAble<T> {
             return null;
         }
         Object value = casValue.getValue();
-//       if(value instanceof VectorItemValue){
-//           return new VectorItem(casValue);
-//       }else if(value instanceof TailVectorItemValue){
-//           return new TailVectorItem(casValue);
-//       }else if(value instanceof DoubleLongitudeVectorItemValue){
-//           return new DoubleLongitudeVectorItem(casValue);
-//       }else if(value instanceof TailDoubleLongitudeVectorItemValue){
-//           return new DoubleLongitudeVectorItem(casValue);
-//       }
-//       else{
-//           ApiLogger.warn(new StringBuilder(32).append("[Careful] Unknown cas vauel, key").append(key));
-//           return null;
-//       }
+        // if(value instanceof VectorItemValue){
+        // return new VectorItem(casValue);
+        // }else if(value instanceof TailVectorItemValue){
+        // return new TailVectorItem(casValue);
+        // }else if(value instanceof DoubleLongitudeVectorItemValue){
+        // return new DoubleLongitudeVectorItem(casValue);
+        // }else if(value instanceof TailDoubleLongitudeVectorItemValue){
+        // return new DoubleLongitudeVectorItem(casValue);
+        // }
+        // else{
+        // ApiLogger.warn(new StringBuilder(32).append("[Careful] Unknown cas vauel,
+        // key").append(key));
+        // return null;
+        // }
         return null;
     }
 
@@ -804,8 +796,7 @@ public class MemCacheStorage<T> extends StorageAble<T> implements CacheAble<T> {
      * @return
      */
     @SuppressWarnings("unchecked")
-    private boolean set(String key, T value, Date expdate, MemcacheClient mc,
-                        boolean autoSetCas) {
+    private boolean set(String key, T value, Date expdate, MemcacheClient mc, boolean autoSetCas) {
         if (isReadOnly()) {
             return true;
         }

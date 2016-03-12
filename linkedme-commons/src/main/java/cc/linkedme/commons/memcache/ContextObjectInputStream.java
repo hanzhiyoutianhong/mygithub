@@ -1,23 +1,16 @@
 /**
- * MemCached Java client
- * Copyright (c) 2008 Greg Whalin
- * All rights reserved.
+ * MemCached Java client Copyright (c) 2008 Greg Whalin All rights reserved.
  * <p>
- * This library is free software; you can redistribute it and/or
- * modify it under the terms of the BSD license
+ * This library is free software; you can redistribute it and/or modify it under the terms of the
+ * BSD license
  * <p>
- * This library is distributed in the hope that it will be
- * useful, but WITHOUT ANY WARRANTY; without even the implied
- * warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR
- * PURPOSE.
+ * This library is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without
+ * even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
  * <p>
- * You should have received a copy of the BSD License along with this
- * library.
+ * You should have received a copy of the BSD License along with this library.
  * <p>
- * Adds the ability for the MemCached client to be initialized
- * with a custom class loader.  This will allow for the
- * deserialization of classes that are not visible to the system
- * class loader.
+ * Adds the ability for the MemCached client to be initialized with a custom class loader. This will
+ * allow for the deserialization of classes that are not visible to the system class loader.
  *
  * @author Vin Chawla <vin@tivo.com>
  * @version 2.0

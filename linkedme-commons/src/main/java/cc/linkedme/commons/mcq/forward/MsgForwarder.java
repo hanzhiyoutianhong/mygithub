@@ -35,7 +35,8 @@ public class MsgForwarder {
             try {
                 writer.writeMsg(msg);
             } catch (Exception e) {
-                ApiLogger.error("forward false, type=" + type + ", flag=" + flag + ", writeKey:" + writer.getWriteKey() + ", msg=" + msg, e);
+                ApiLogger.error("forward false, type=" + type + ", flag=" + flag + ", writeKey:" + writer.getWriteKey() + ", msg=" + msg,
+                        e);
             }
         }
 

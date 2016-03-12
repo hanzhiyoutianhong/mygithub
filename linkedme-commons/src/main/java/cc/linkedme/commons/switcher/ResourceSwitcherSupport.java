@@ -47,7 +47,8 @@ public class ResourceSwitcherSupport {
 
     private static String buildName(String resourceType, String host, int port, boolean reader) {
         StringBuilder builder = new StringBuilder();
-        builder.append(SWITCHER_PREFIX).append(resourceType).append(".").append(host).append(":").append(port).append(":").append(reader ? "read" : "write");
+        builder.append(SWITCHER_PREFIX).append(resourceType).append(".").append(host).append(":").append(port).append(":")
+                .append(reader ? "read" : "write");
         return builder.toString();
     }
 

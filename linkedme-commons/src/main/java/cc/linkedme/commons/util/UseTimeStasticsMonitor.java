@@ -34,8 +34,9 @@ public class UseTimeStasticsMonitor {
         }
     }
 
-    public static final UseTimeStasticsMonitor webCommonMonitor = new UseTimeStasticsMonitor(
-            "webCommonMonitor"); // web common 访问统计
+    public static final UseTimeStasticsMonitor webCommonMonitor = new UseTimeStasticsMonitor("webCommonMonitor"); // web
+                                                                                                                  // common
+                                                                                                                  // 访问统计
 
     /**
      * monitor池
@@ -115,7 +116,7 @@ public class UseTimeStasticsMonitor {
      * 任务开始
      */
     public LinkedList<Long> start(LinkedList<Long> stamps, boolean debug) {
-        if (isPause.get()) return null; //暂停采集
+        if (isPause.get()) return null; // 暂停采集
         if (stamps == null) {
             stamps = new LinkedList<Long>();
         }
@@ -124,7 +125,7 @@ public class UseTimeStasticsMonitor {
     }
 
     public LinkedList<String> startStep(LinkedList<String> steps, boolean debug) {
-        if (isPause.get()) return null; //暂停采集
+        if (isPause.get()) return null; // 暂停采集
         if (steps == null) {
             steps = new LinkedList<String>();
         }
@@ -201,7 +202,8 @@ public class UseTimeStasticsMonitor {
         }
         cur = start;
         StringBuilder sb = null;
-        if (debug || (debugLimit > 0 && useTime > debugLimit)) { // process timestamps when debug is true
+        if (debug || (debugLimit > 0 && useTime > debugLimit)) { // process timestamps when debug is
+                                                                 // true
             sb = new StringBuilder(64);
             sb.append("[useTime-").append(this.name).append("]");
             long temp = 0L;
@@ -253,9 +255,8 @@ public class UseTimeStasticsMonitor {
             long vc = this.visitCount.get();
             if (vc > 0) {
                 try {
-                    ApiLogger.info("[visitStas-" + this.name + "]\ttotal:" + visitCount + "\thit:" + hitCount
-                            + "\ttotalTime:" + totalMiles + "\tavgTime: " + (totalMiles.get() / vc) + "\thitRate:"
-                            + (this.hitCount.get() * 100 / vc));
+                    ApiLogger.info("[visitStas-" + this.name + "]\ttotal:" + visitCount + "\thit:" + hitCount + "\ttotalTime:" + totalMiles
+                            + "\tavgTime: " + (totalMiles.get() / vc) + "\thitRate:" + (this.hitCount.get() * 100 / vc));
 
                     JsonBuilder jb = new JsonBuilder();
                     jb.append("total", vc);
@@ -342,9 +343,8 @@ public class UseTimeStasticsMonitor {
             long vc = this.visitCount.get();
             if (vc > 0) {
                 try {
-                    ApiLogger.info("[visitStas-" + this.name + "]\ttotal:" + visitCount + "\thit:" + hitCount
-                            + "\ttotalTime:" + totalMiles + "\tavgTime: " + (totalMiles.get() / vc) + "\thitRate:"
-                            + (this.hitCount.get() * 100 / vc));
+                    ApiLogger.info("[visitStas-" + this.name + "]\ttotal:" + visitCount + "\thit:" + hitCount + "\ttotalTime:" + totalMiles
+                            + "\tavgTime: " + (totalMiles.get() / vc) + "\thitRate:" + (this.hitCount.get() * 100 / vc));
 
                     JsonBuilder jb = new JsonBuilder();
                     jb.append("total", vc);

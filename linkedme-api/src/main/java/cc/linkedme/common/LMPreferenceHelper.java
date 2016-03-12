@@ -11,7 +11,7 @@ public class LMPreferenceHelper {
 
     protected static final Logger LM_INFO_LOG = LoggerFactory.getLogger("LMInfoFile");
 
-    //common
+    // common
     private String appID;
     private String appVersion;
     private String os;
@@ -21,7 +21,7 @@ public class LMPreferenceHelper {
     private String identifyID;
     private String isReferrable;
 
-    //register install
+    // register install
     private String hardwareID;
     private String isHardwareIDReal;
     private String carrier;
@@ -33,12 +33,12 @@ public class LMPreferenceHelper {
     private String installTme;
 
 
-    //register open
+    // register open
     private String deviceFingerprintID;
     private String clickID;
     private String clickIDTime;
 
-    //register custom url
+    // register custom url
     private String type;
     private String tags;
     private String channel;
@@ -47,15 +47,14 @@ public class LMPreferenceHelper {
     private String alias;
     private String sdk;
 
-    //register close
+    // register close
     private String sessionID;
 
 
-    public static LMClientOpenEntity initLMClientOpenEntity(String identityId, String appKey, String deviceFingerprintId, String appVersion, boolean adTrackingEnabled,
-                                                            String googleAdvertsId, boolean isReferrable, String os, String osVersion, String osRelease,
-                                                            String update, String sdk, String uriScheme, String spotlightIdentifier, String universalLinkUrl,
-                                                            String linkIdentifier, String iosBundleId, boolean lat_val, boolean debug, String sessionId,
-                                                            String ip, int retryNumber, int timestamp) {
+    public static LMClientOpenEntity initLMClientOpenEntity(String identityId, String appKey, String deviceFingerprintId, String appVersion,
+            boolean adTrackingEnabled, String googleAdvertsId, boolean isReferrable, String os, String osVersion, String osRelease,
+            String update, String sdk, String uriScheme, String spotlightIdentifier, String universalLinkUrl, String linkIdentifier,
+            String iosBundleId, boolean lat_val, boolean debug, String sessionId, String ip, int retryNumber, int timestamp) {
 
         LMClientOpenEntity co = new LMClientOpenEntity();
 
@@ -91,13 +90,12 @@ public class LMPreferenceHelper {
     }
 
 
-    public static LMClientInstallEntity initLMClientInstallEntity(String identityId, String appKey, String hardwareId, String googleAdvertisingId, boolean isHardwareIdReal,
-                                                                  boolean adTrackingEnabled, boolean isReferrable, String appVersion, String sdk, String carrier,
-                                                                  String brand, String model, String os, String osVersion, String osRelease,
-                                                                  int screenWidth, int screenHeight, int screenDpi, String update, boolean bluetooth,
-                                                                  String bluetoothVersion, boolean latVal, boolean hasNfc, boolean hasTelephone, boolean wifi,
-                                                                  String uriScheme, int retryNumber, String iosTeamId, String iosBundleId, String linkIdentifier,
-                                                                  String universalLink, String spotlightIdentifier, boolean debug, String ip, int timestamp) {
+    public static LMClientInstallEntity initLMClientInstallEntity(String identityId, String appKey, String hardwareId,
+            String googleAdvertisingId, boolean isHardwareIdReal, boolean adTrackingEnabled, boolean isReferrable, String appVersion,
+            String sdk, String carrier, String brand, String model, String os, String osVersion, String osRelease, int screenWidth,
+            int screenHeight, int screenDpi, String update, boolean bluetooth, String bluetoothVersion, boolean latVal, boolean hasNfc,
+            boolean hasTelephone, boolean wifi, String uriScheme, int retryNumber, String iosTeamId, String iosBundleId,
+            String linkIdentifier, String universalLink, String spotlightIdentifier, boolean debug, String ip, int timestamp) {
         LMClientInstallEntity ci = new LMClientInstallEntity();
         ci.setIdentityId(identityId);
         ci.setAppKey(appKey);
@@ -151,11 +149,10 @@ public class LMPreferenceHelper {
      * init LMLinkEntity
      */
 
-    public static LMLinkEntity initLMLinkEntity(String identityId, String appKey, String type, String tags, String channel,
-                                                String feature, String stage, String alias, String sdk, String data,
-                                                String source, String deepLinkPath, long linkIdentifier, String linkClickId, int clicks,
-                                                int install, int rejectInstall, int open, int weibo, int weChat, int retryNumber,
-                                                String ip, int timestamp) {
+    public static LMLinkEntity initLMLinkEntity(String identityId, String appKey, String type, String tags, String channel, String feature,
+            String stage, String alias, String sdk, String data, String source, String deepLinkPath, long linkIdentifier,
+            String linkClickId, int clicks, int install, int rejectInstall, int open, int weibo, int weChat, int retryNumber, String ip,
+            int timestamp) {
         LMLinkEntity le = new LMLinkEntity();
 
         le.setIdentityId(identityId);

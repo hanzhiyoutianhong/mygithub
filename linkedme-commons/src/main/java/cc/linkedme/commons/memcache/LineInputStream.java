@@ -4,9 +4,8 @@ import java.io.IOException;
 
 public interface LineInputStream {
     /**
-     * Read everything up to the next end-of-line.  Does
-     * not include the end of line, though it is consumed
-     * from the input.
+     * Read everything up to the next end-of-line. Does not include the end of line, though it is
+     * consumed from the input.
      *
      * @return All next up to the next end of line.
      */

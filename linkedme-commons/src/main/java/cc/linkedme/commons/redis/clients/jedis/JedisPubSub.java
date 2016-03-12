@@ -20,8 +20,7 @@ public abstract class JedisPubSub {
 
     public abstract void onMessage(String channel, String message);
 
-    public abstract void onPMessage(String pattern, String channel,
-                                    String message);
+    public abstract void onPMessage(String pattern, String channel, String message);
 
     public abstract void onSubscribe(String channel, int subscribedChannels);
 
@@ -33,8 +32,7 @@ public abstract class JedisPubSub {
 
     public void unsubscribe() {
         if (client == null) {
-            throw new JedisConnectionException(
-                    "JedisPubSub was not subscribed to a Jedis instance.");
+            throw new JedisConnectionException("JedisPubSub was not subscribed to a Jedis instance.");
         }
         client.unsubscribe();
         client.flush();
@@ -94,45 +92,36 @@ public abstract class JedisPubSub {
             if (Arrays.equals(SUBSCRIBE.raw, resp)) {
                 subscribedChannels = ((Long) reply.get(2)).intValue();
                 final byte[] bchannel = (byte[]) reply.get(1);
-                final String strchannel = (bchannel == null) ? null
-                        : SafeEncoder.encode(bchannel);
+                final String strchannel = (bchannel == null) ? null : SafeEncoder.encode(bchannel);
                 onSubscribe(strchannel, subscribedChannels);
             } else if (Arrays.equals(UNSUBSCRIBE.raw, resp)) {
                 subscribedChannels = ((Long) reply.get(2)).intValue();
                 final byte[] bchannel = (byte[]) reply.get(1);
-                final String strchannel = (bchannel == null) ? null
-                        : SafeEncoder.encode(bchannel);
+                final String strchannel = (bchannel == null) ? null : SafeEncoder.encode(bchannel);
                 onUnsubscribe(strchannel, subscribedChannels);
             } else if (Arrays.equals(MESSAGE.raw, resp)) {
                 final byte[] bchannel = (byte[]) reply.get(1);
                 final byte[] bmesg = (byte[]) reply.get(2);
-                final String strchannel = (bchannel == null) ? null
-                        : SafeEncoder.encode(bchannel);
-                final String strmesg = (bmesg == null) ? null : SafeEncoder
-                        .encode(bmesg);
+                final String strchannel = (bchannel == null) ? null : SafeEncoder.encode(bchannel);
+                final String strmesg = (bmesg == null) ? null : SafeEncoder.encode(bmesg);
                 onMessage(strchannel, strmesg);
             } else if (Arrays.equals(PMESSAGE.raw, resp)) {
                 final byte[] bpattern = (byte[]) reply.get(1);
                 final byte[] bchannel = (byte[]) reply.get(2);
                 final byte[] bmesg = (byte[]) reply.get(3);
-                final String strpattern = (bpattern == null) ? null
-                        : SafeEncoder.encode(bpattern);
-                final String strchannel = (bchannel == null) ? null
-                        : SafeEncoder.encode(bchannel);
-                final String strmesg = (bmesg == null) ? null : SafeEncoder
-                        .encode(bmesg);
+                final String strpattern = (bpattern == null) ? null : SafeEncoder.encode(bpattern);
+                final String strchannel = (bchannel == null) ? null : SafeEncoder.encode(bchannel);
+                final String strmesg = (bmesg == null) ? null : SafeEncoder.encode(bmesg);
                 onPMessage(strpattern, strchannel, strmesg);
             } else if (Arrays.equals(PSUBSCRIBE.raw, resp)) {
                 subscribedChannels = ((Long) reply.get(2)).intValue();
                 final byte[] bpattern = (byte[]) reply.get(1);
-                final String strpattern = (bpattern == null) ? null
-                        : SafeEncoder.encode(bpattern);
+                final String strpattern = (bpattern == null) ? null : SafeEncoder.encode(bpattern);
                 onPSubscribe(strpattern, subscribedChannels);
             } else if (Arrays.equals(PUNSUBSCRIBE.raw, resp)) {
                 subscribedChannels = ((Long) reply.get(2)).intValue();
                 final byte[] bpattern = (byte[]) reply.get(1);
-                final String strpattern = (bpattern == null) ? null
-                        : SafeEncoder.encode(bpattern);
+                final String strpattern = (bpattern == null) ? null : SafeEncoder.encode(bpattern);
                 onPUnsubscribe(strpattern, subscribedChannels);
             } else {
                 throw new JedisException("Unknown message type: " + firstObj);

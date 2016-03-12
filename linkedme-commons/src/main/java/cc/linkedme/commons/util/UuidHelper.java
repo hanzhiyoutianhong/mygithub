@@ -11,17 +11,19 @@ public class UuidHelper {
 
     public static final long TIME1_BIT = Long.MAX_VALUE << 34;// 30个1+34个0
     public static final long TIME2_BIT = 1073741823L << 4; // 30个11+4个0
-    public static final long FLAG_BIT = 15L; //4个1
+    public static final long FLAG_BIT = 15L; // 4个1
 
     public static final long MIN_VALID_ID = 3000000000000000L;
     public static final long MAX_VALID_ID = 4500000000000000L;
 
     public static boolean isUuidAfterUpdate(long id) {
-        return UuidHelper.isValidId(id) && id > 3342818919841793L; // 微博id升级后的一个id, 2011-08-05 00:00:00  
+        return UuidHelper.isValidId(id) && id > 3342818919841793L; // 微博id升级后的一个id, 2011-08-05
+                                                                   // 00:00:00
     }
 
     public static boolean isCommentMidAfterUpdate(long id) {
-        return UuidHelper.isValidId(id) && id > 3557855061995026L; //评论mid改造后的一个id，2013-3-20 09:16:50
+        return UuidHelper.isValidId(id) && id > 3557855061995026L; // 评论mid改造后的一个id，2013-3-20
+                                                                   // 09:16:50
     }
 
     /**
@@ -79,8 +81,7 @@ public class UuidHelper {
     }
 
     /**
-     * get unix time from id, start from 2014-01-01 00:00:00
-     * <pre>UNIT:seconds</pre>
+     * get unix time from id, start from 2014-01-01 00:00:00 <pre>UNIT:seconds</pre>
      *
      * @param id
      * @return
@@ -90,8 +91,7 @@ public class UuidHelper {
     }
 
     /**
-     * get 30 bit timestamp from id，start from 2014-01-01 00:00:00
-     * <pre>UNIT:seconds</pre>
+     * get 30 bit timestamp from id，start from 2014-01-01 00:00:00 <pre>UNIT:seconds</pre>
      *
      * @param id
      * @return
@@ -156,16 +156,16 @@ public class UuidHelper {
 
     public static void main(String[] args) {
         long id = 3000000000000000L;
-//    	long id = 3379782484330149l;
-//    	long id = 3363475030378149l; //10.1 3363475030378149
-//    	long id = 3374709054211749l; //11.1 3374709054211749
-//    	long id = 3100365840449541l;
-//    	System.out.println(getTimeFromId(id) * 1000);
-//    	System.out.println(new Date(UuidHelper.getTimeFromId(id) * 1000));
-//    	SimpleDateFormat format = new SimpleDateFormat("yyMMdd");
-//		System.out.println(format.format(UuidHelper.getTimeFromId(id) * 1000));
+        // long id = 3379782484330149l;
+        // long id = 3363475030378149l; //10.1 3363475030378149
+        // long id = 3374709054211749l; //11.1 3374709054211749
+        // long id = 3100365840449541l;
+        // System.out.println(getTimeFromId(id) * 1000);
+        // System.out.println(new Date(UuidHelper.getTimeFromId(id) * 1000));
+        // SimpleDateFormat format = new SimpleDateFormat("yyMMdd");
+        // System.out.println(format.format(UuidHelper.getTimeFromId(id) * 1000));
 
-//    	long id = getIdByDate(new Date());
+        // long id = getIdByDate(new Date());
         System.out.println(id);
         System.out.println(getDateFromId(id));
         Calendar cal = Calendar.getInstance();

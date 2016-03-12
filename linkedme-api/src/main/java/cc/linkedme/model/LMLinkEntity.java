@@ -257,13 +257,11 @@ public class LMLinkEntity implements Serializable {
         if (data != null ? !data.equals(that.data) : that.data != null) return false;
         if (source != null ? !source.equals(that.source) : that.source != null) return false;
         if (deeplinkpath != null ? !deeplinkpath.equals(that.deeplinkpath) : that.deeplinkpath != null) return false;
-        if (linkIdentifier != null ? !linkIdentifier.equals(that.linkIdentifier) : that.linkIdentifier != null)
-            return false;
+        if (linkIdentifier != null ? !linkIdentifier.equals(that.linkIdentifier) : that.linkIdentifier != null) return false;
         if (linkClickId != null ? !linkClickId.equals(that.linkClickId) : that.linkClickId != null) return false;
         if (clicks != null ? !clicks.equals(that.clicks) : that.clicks != null) return false;
         if (install != null ? !install.equals(that.install) : that.install != null) return false;
-        if (rejectInstall != null ? !rejectInstall.equals(that.rejectInstall) : that.rejectInstall != null)
-            return false;
+        if (rejectInstall != null ? !rejectInstall.equals(that.rejectInstall) : that.rejectInstall != null) return false;
         if (open != null ? !open.equals(that.open) : that.open != null) return false;
         if (weibo != null ? !weibo.equals(that.weibo) : that.weibo != null) return false;
         if (wechat != null ? !wechat.equals(that.wechat) : that.wechat != null) return false;

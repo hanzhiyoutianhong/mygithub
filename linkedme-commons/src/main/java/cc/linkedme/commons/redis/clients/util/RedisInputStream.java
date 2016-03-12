@@ -1,17 +1,15 @@
 /*
  * Copyright 2009-2010 MBTE Sweden AB.
  *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except
+ * in compliance with the License. You may obtain a copy of the License at
  *
- *      http://www.apache.org/licenses/LICENSE-2.0
+ * http://www.apache.org/licenses/LICENSE-2.0
  *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
+ * Unless required by applicable law or agreed to in writing, software distributed under the License
+ * is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express
+ * or implied. See the License for the specific language governing permissions and limitations under
+ * the License.
  */
 
 package cc.linkedme.commons.redis.clients.util;
@@ -58,8 +56,7 @@ public class RedisInputStream extends FilterInputStream {
                 if (count == limit) {
                     fill();
                 }
-                if (limit == -1)
-                    break;
+                if (limit == -1) break;
 
                 b = buf[count++];
                 if (b == '\r') {
@@ -87,8 +84,7 @@ public class RedisInputStream extends FilterInputStream {
         }
         String reply = sb.toString();
         if (reply.length() == 0) {
-            throw new JedisConnectionException(
-                    "It seems like server has closed the connection.");
+            throw new JedisConnectionException("It seems like server has closed the connection.");
         }
         return reply;
     }
@@ -96,8 +92,7 @@ public class RedisInputStream extends FilterInputStream {
     public int read(byte[] b, int off, int len) throws IOException {
         if (count == limit) {
             fill();
-            if (limit == -1)
-                return -1;
+            if (limit == -1) return -1;
         }
         final int length = Math.min(limit - count, len);
         System.arraycopy(buf, count, b, off, length);

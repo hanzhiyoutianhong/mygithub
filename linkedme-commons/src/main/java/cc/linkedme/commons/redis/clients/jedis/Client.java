@@ -154,8 +154,7 @@ public class Client extends BinaryClient implements Commands {
     }
 
     public void hset(final String key, final String field, final String value) {
-        hset(SafeEncoder.encode(key), SafeEncoder.encode(field),
-                SafeEncoder.encode(value));
+        hset(SafeEncoder.encode(key), SafeEncoder.encode(field), SafeEncoder.encode(value));
     }
 
     public void hget(final String key, final String field) {
@@ -163,16 +162,13 @@ public class Client extends BinaryClient implements Commands {
     }
 
     public void hsetnx(final String key, final String field, final String value) {
-        hsetnx(SafeEncoder.encode(key), SafeEncoder.encode(field),
-                SafeEncoder.encode(value));
+        hsetnx(SafeEncoder.encode(key), SafeEncoder.encode(field), SafeEncoder.encode(value));
     }
 
     public void hmset(final String key, final Map<String, String> hash) {
-        final Map<byte[], byte[]> bhash = new HashMap<byte[], byte[]>(
-                hash.size());
+        final Map<byte[], byte[]> bhash = new HashMap<byte[], byte[]>(hash.size());
         for (final Entry<String, String> entry : hash.entrySet()) {
-            bhash.put(SafeEncoder.encode(entry.getKey()),
-                    SafeEncoder.encode(entry.getValue()));
+            bhash.put(SafeEncoder.encode(entry.getKey()), SafeEncoder.encode(entry.getValue()));
         }
         hmset(SafeEncoder.encode(key), bhash);
     }
@@ -273,10 +269,8 @@ public class Client extends BinaryClient implements Commands {
         spop(SafeEncoder.encode(key));
     }
 
-    public void smove(final String srckey, final String dstkey,
-                      final String member) {
-        smove(SafeEncoder.encode(srckey), SafeEncoder.encode(dstkey),
-                SafeEncoder.encode(member));
+    public void smove(final String srckey, final String dstkey, final String member) {
+        smove(SafeEncoder.encode(srckey), SafeEncoder.encode(dstkey), SafeEncoder.encode(member));
     }
 
     public void scard(final String key) {
@@ -351,8 +345,7 @@ public class Client extends BinaryClient implements Commands {
         zrem(SafeEncoder.encode(key), SafeEncoder.encodeMany(members));
     }
 
-    public void zincrby(final String key, final double score,
-                        final String member) {
+    public void zincrby(final String key, final double score, final String member) {
         zincrby(SafeEncoder.encode(key), score, SafeEncoder.encode(member));
     }
 
@@ -368,13 +361,11 @@ public class Client extends BinaryClient implements Commands {
         zrevrange(SafeEncoder.encode(key), start, end);
     }
 
-    public void zrangeWithScores(final String key, final long start,
-                                 final long end) {
+    public void zrangeWithScores(final String key, final long start, final long end) {
         zrangeWithScores(SafeEncoder.encode(key), start, end);
     }
 
-    public void zrevrangeWithScores(final String key, final long start,
-                                    final long end) {
+    public void zrevrangeWithScores(final String key, final long start, final long end) {
         zrevrangeWithScores(SafeEncoder.encode(key), start, end);
     }
 
@@ -410,10 +401,8 @@ public class Client extends BinaryClient implements Commands {
         blpop(bargs);
     }
 
-    public void sort(final String key, final SortingParams sortingParameters,
-                     final String dstkey) {
-        sort(SafeEncoder.encode(key), sortingParameters,
-                SafeEncoder.encode(dstkey));
+    public void sort(final String key, final SortingParams sortingParameters, final String dstkey) {
+        sort(SafeEncoder.encode(key), sortingParameters, SafeEncoder.encode(dstkey));
     }
 
     public void sort(final String key, final String dstkey) {
@@ -433,121 +422,83 @@ public class Client extends BinaryClient implements Commands {
     }
 
     public void zcount(final String key, final String min, final String max) {
-        zcount(SafeEncoder.encode(key), SafeEncoder.encode(min),
-                SafeEncoder.encode(max));
+        zcount(SafeEncoder.encode(key), SafeEncoder.encode(min), SafeEncoder.encode(max));
     }
 
-    public void zrangeByScore(final String key, final double min,
-                              final double max) {
-        zrangeByScore(SafeEncoder.encode(key), toByteArray(min),
-                toByteArray(max));
+    public void zrangeByScore(final String key, final double min, final double max) {
+        zrangeByScore(SafeEncoder.encode(key), toByteArray(min), toByteArray(max));
     }
 
-    public void zrangeByScore(final String key, final String min,
-                              final String max) {
-        zrangeByScore(SafeEncoder.encode(key), SafeEncoder.encode(min),
-                SafeEncoder.encode(max));
+    public void zrangeByScore(final String key, final String min, final String max) {
+        zrangeByScore(SafeEncoder.encode(key), SafeEncoder.encode(min), SafeEncoder.encode(max));
     }
 
-    public void zrangeByScore(final String key, final double min,
-                              final double max, final int offset, int count) {
-        zrangeByScore(SafeEncoder.encode(key), toByteArray(min),
-                toByteArray(max), offset, count);
+    public void zrangeByScore(final String key, final double min, final double max, final int offset, int count) {
+        zrangeByScore(SafeEncoder.encode(key), toByteArray(min), toByteArray(max), offset, count);
     }
 
-    public void zrangeByScoreWithScores(final String key, final double min,
-                                        final double max) {
-        zrangeByScoreWithScores(SafeEncoder.encode(key), toByteArray(min),
-                toByteArray(max));
+    public void zrangeByScoreWithScores(final String key, final double min, final double max) {
+        zrangeByScoreWithScores(SafeEncoder.encode(key), toByteArray(min), toByteArray(max));
     }
 
-    public void zrangeByScoreWithScores(final String key, final double min,
-                                        final double max, final int offset, final int count) {
-        zrangeByScoreWithScores(SafeEncoder.encode(key), toByteArray(min),
-                toByteArray(max), offset, count);
+    public void zrangeByScoreWithScores(final String key, final double min, final double max, final int offset, final int count) {
+        zrangeByScoreWithScores(SafeEncoder.encode(key), toByteArray(min), toByteArray(max), offset, count);
     }
 
-    public void zrevrangeByScore(final String key, final double max,
-                                 final double min) {
-        zrevrangeByScore(SafeEncoder.encode(key), toByteArray(max),
-                toByteArray(min));
+    public void zrevrangeByScore(final String key, final double max, final double min) {
+        zrevrangeByScore(SafeEncoder.encode(key), toByteArray(max), toByteArray(min));
     }
 
-    public void zrangeByScore(final String key, final String min,
-                              final String max, final int offset, int count) {
-        zrangeByScore(SafeEncoder.encode(key), SafeEncoder.encode(min),
-                SafeEncoder.encode(max), offset, count);
+    public void zrangeByScore(final String key, final String min, final String max, final int offset, int count) {
+        zrangeByScore(SafeEncoder.encode(key), SafeEncoder.encode(min), SafeEncoder.encode(max), offset, count);
     }
 
-    public void zrangeByScoreWithScores(final String key, final String min,
-                                        final String max) {
-        zrangeByScoreWithScores(SafeEncoder.encode(key),
-                SafeEncoder.encode(min), SafeEncoder.encode(max));
+    public void zrangeByScoreWithScores(final String key, final String min, final String max) {
+        zrangeByScoreWithScores(SafeEncoder.encode(key), SafeEncoder.encode(min), SafeEncoder.encode(max));
     }
 
-    public void zrangeByScoreWithScores(final String key, final String min,
-                                        final String max, final int offset, final int count) {
-        zrangeByScoreWithScores(SafeEncoder.encode(key),
-                SafeEncoder.encode(min), SafeEncoder.encode(max), offset, count);
+    public void zrangeByScoreWithScores(final String key, final String min, final String max, final int offset, final int count) {
+        zrangeByScoreWithScores(SafeEncoder.encode(key), SafeEncoder.encode(min), SafeEncoder.encode(max), offset, count);
     }
 
-    public void zrevrangeByScore(final String key, final String max,
-                                 final String min) {
-        zrevrangeByScore(SafeEncoder.encode(key), SafeEncoder.encode(max),
-                SafeEncoder.encode(min));
+    public void zrevrangeByScore(final String key, final String max, final String min) {
+        zrevrangeByScore(SafeEncoder.encode(key), SafeEncoder.encode(max), SafeEncoder.encode(min));
     }
 
-    public void zrevrangeByScore(final String key, final double max,
-                                 final double min, final int offset, int count) {
-        zrevrangeByScore(SafeEncoder.encode(key), toByteArray(max),
-                toByteArray(min), offset, count);
+    public void zrevrangeByScore(final String key, final double max, final double min, final int offset, int count) {
+        zrevrangeByScore(SafeEncoder.encode(key), toByteArray(max), toByteArray(min), offset, count);
     }
 
-    public void zrevrangeByScore(final String key, final String max,
-                                 final String min, final int offset, int count) {
-        zrevrangeByScore(SafeEncoder.encode(key), SafeEncoder.encode(max),
-                SafeEncoder.encode(min), offset, count);
+    public void zrevrangeByScore(final String key, final String max, final String min, final int offset, int count) {
+        zrevrangeByScore(SafeEncoder.encode(key), SafeEncoder.encode(max), SafeEncoder.encode(min), offset, count);
     }
 
-    public void zrevrangeByScoreWithScores(final String key, final double max,
-                                           final double min) {
-        zrevrangeByScoreWithScores(SafeEncoder.encode(key), toByteArray(max),
-                toByteArray(min));
+    public void zrevrangeByScoreWithScores(final String key, final double max, final double min) {
+        zrevrangeByScoreWithScores(SafeEncoder.encode(key), toByteArray(max), toByteArray(min));
     }
 
-    public void zrevrangeByScoreWithScores(final String key, final String max,
-                                           final String min) {
-        zrevrangeByScoreWithScores(SafeEncoder.encode(key),
-                SafeEncoder.encode(max), SafeEncoder.encode(min));
+    public void zrevrangeByScoreWithScores(final String key, final String max, final String min) {
+        zrevrangeByScoreWithScores(SafeEncoder.encode(key), SafeEncoder.encode(max), SafeEncoder.encode(min));
     }
 
-    public void zrevrangeByScoreWithScores(final String key, final double max,
-                                           final double min, final int offset, final int count) {
-        zrevrangeByScoreWithScores(SafeEncoder.encode(key), toByteArray(max),
-                toByteArray(min), offset, count);
+    public void zrevrangeByScoreWithScores(final String key, final double max, final double min, final int offset, final int count) {
+        zrevrangeByScoreWithScores(SafeEncoder.encode(key), toByteArray(max), toByteArray(min), offset, count);
     }
 
-    public void zrevrangeByScoreWithScores(final String key, final String max,
-                                           final String min, final int offset, final int count) {
-        zrevrangeByScoreWithScores(SafeEncoder.encode(key),
-                SafeEncoder.encode(max), SafeEncoder.encode(min), offset, count);
+    public void zrevrangeByScoreWithScores(final String key, final String max, final String min, final int offset, final int count) {
+        zrevrangeByScoreWithScores(SafeEncoder.encode(key), SafeEncoder.encode(max), SafeEncoder.encode(min), offset, count);
     }
 
-    public void zremrangeByRank(final String key, final long start,
-                                final long end) {
+    public void zremrangeByRank(final String key, final long start, final long end) {
         zremrangeByRank(SafeEncoder.encode(key), start, end);
     }
 
-    public void zremrangeByScore(final String key, final double start,
-                                 final double end) {
-        zremrangeByScore(SafeEncoder.encode(key), toByteArray(start),
-                toByteArray(end));
+    public void zremrangeByScore(final String key, final double start, final double end) {
+        zremrangeByScore(SafeEncoder.encode(key), toByteArray(start), toByteArray(end));
     }
 
-    public void zremrangeByScore(final String key, final String start,
-                                 final String end) {
-        zremrangeByScore(SafeEncoder.encode(key), SafeEncoder.encode(start),
-                SafeEncoder.encode(end));
+    public void zremrangeByScore(final String key, final String start, final String end) {
+        zremrangeByScore(SafeEncoder.encode(key), SafeEncoder.encode(start), SafeEncoder.encode(end));
     }
 
     public void zunionstore(final String dstkey, final String... sets) {
@@ -558,8 +509,7 @@ public class Client extends BinaryClient implements Commands {
         zunionstore(SafeEncoder.encode(dstkey), bsets);
     }
 
-    public void zunionstore(final String dstkey, final ZParams params,
-                            final String... sets) {
+    public void zunionstore(final String dstkey, final ZParams params, final String... sets) {
         final byte[][] bsets = new byte[sets.length][];
         for (int i = 0; i < bsets.length; i++) {
             bsets[i] = SafeEncoder.encode(sets[i]);
@@ -575,8 +525,7 @@ public class Client extends BinaryClient implements Commands {
         zinterstore(SafeEncoder.encode(dstkey), bsets);
     }
 
-    public void zinterstore(final String dstkey, final ZParams params,
-                            final String... sets) {
+    public void zinterstore(final String dstkey, final ZParams params, final String... sets) {
         final byte[][] bsets = new byte[sets.length][];
         for (int i = 0; i < bsets.length; i++) {
             bsets[i] = SafeEncoder.encode(sets[i]);
@@ -604,15 +553,12 @@ public class Client extends BinaryClient implements Commands {
         echo(SafeEncoder.encode(string));
     }
 
-    public void linsert(final String key, final LIST_POSITION where,
-                        final String pivot, final String value) {
-        linsert(SafeEncoder.encode(key), where, SafeEncoder.encode(pivot),
-                SafeEncoder.encode(value));
+    public void linsert(final String key, final LIST_POSITION where, final String pivot, final String value) {
+        linsert(SafeEncoder.encode(key), where, SafeEncoder.encode(pivot), SafeEncoder.encode(value));
     }
 
     public void brpoplpush(String source, String destination, int timeout) {
-        brpoplpush(SafeEncoder.encode(source), SafeEncoder.encode(destination),
-                timeout);
+        brpoplpush(SafeEncoder.encode(source), SafeEncoder.encode(destination), timeout);
     }
 
     public void setbit(final String key, final long offset, final boolean value) {
@@ -684,13 +630,11 @@ public class Client extends BinaryClient implements Commands {
     }
 
     public void eval(String script, int keyCount, String... params) {
-        eval(SafeEncoder.encode(script), toByteArray(keyCount),
-                getByteParams(params));
+        eval(SafeEncoder.encode(script), toByteArray(keyCount), getByteParams(params));
     }
 
     public void evalsha(String sha1, int keyCount, String... params) {
-        evalsha(SafeEncoder.encode(sha1), toByteArray(keyCount),
-                getByteParams(params));
+        evalsha(SafeEncoder.encode(sha1), toByteArray(keyCount), getByteParams(params));
     }
 
     public void scriptExists(String... sha1) {
@@ -709,8 +653,7 @@ public class Client extends BinaryClient implements Commands {
         HashMap<Double, byte[]> binaryScoreMembers = new HashMap<Double, byte[]>();
 
         for (Map.Entry<Double, String> entry : scoreMembers.entrySet()) {
-            binaryScoreMembers.put(entry.getKey(),
-                    SafeEncoder.encode(entry.getValue()));
+            binaryScoreMembers.put(entry.getKey(), SafeEncoder.encode(entry.getValue()));
         }
 
         zaddBinary(SafeEncoder.encode(key), binaryScoreMembers);

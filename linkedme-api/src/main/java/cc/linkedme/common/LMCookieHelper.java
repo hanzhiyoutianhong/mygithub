@@ -113,8 +113,7 @@ public class LMCookieHelper {
      * construction function
      */
 
-    public LMCookieHelper() {
-    }
+    public LMCookieHelper() {}
 
     /**
      * get and set function

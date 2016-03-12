@@ -1,18 +1,16 @@
 /*
- * Licensed to the Apache Software Foundation (ASF) under one or more
- * contributor license agreements.  See the NOTICE file distributed with
- * this work for additional information regarding copyright ownership.
- * The ASF licenses this file to You under the Apache License, Version 2.0
- * (the "License"); you may not use this file except in compliance with
- * the License.  You may obtain a copy of the License at
+ * Licensed to the Apache Software Foundation (ASF) under one or more contributor license
+ * agreements. See the NOTICE file distributed with this work for additional information regarding
+ * copyright ownership. The ASF licenses this file to You under the Apache License, Version 2.0 (the
+ * "License"); you may not use this file except in compliance with the License. You may obtain a
+ * copy of the License at
  * 
- *      http://www.apache.org/licenses/LICENSE-2.0
+ * http://www.apache.org/licenses/LICENSE-2.0
  * 
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
+ * Unless required by applicable law or agreed to in writing, software distributed under the License
+ * is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express
+ * or implied. See the License for the specific language governing permissions and limitations under
+ * the License.
  */
 
 package cc.linkedme.commons.thread;
@@ -33,8 +31,7 @@ import cc.linkedme.commons.util.RequestTraceContext;
 /**
  * 本类主要逻辑是从Tomcat源码中移植过来
  * <p>
- * 主要特点是：
- * 如果线程数超过 minSpareThreads,则会增加thread直到 maxThreads，然后才放入队列.队列长度为 maxThreads.
+ * 主要特点是： 如果线程数超过 minSpareThreads,则会增加thread直到 maxThreads，然后才放入队列.队列长度为 maxThreads.
  *
  * @author yuanming@staff.sina.com.cn
  */
@@ -246,26 +243,26 @@ public class StandardThreadExecutor extends java.util.concurrent.AbstractExecuto
         }
 
         public boolean force(Runnable o) {
-            if (parent.isShutdown())
-                throw new RejectedExecutionException("Executor not running, can't force a command into the queue");
-            return super.offer(o); //forces the item onto the queue, to be used if the task is rejected
+            if (parent.isShutdown()) throw new RejectedExecutionException("Executor not running, can't force a command into the queue");
+            return super.offer(o); // forces the item onto the queue, to be used if the task is
+                                   // rejected
         }
 
         public boolean offer(Runnable o) {
-            //we can't do any checks
+            // we can't do any checks
             if (parent == null) return super.offer(o);
             int poolSize = parent.getPoolSize();
-            //we are maxed out on threads, simply queue the object
+            // we are maxed out on threads, simply queue the object
             if (poolSize == parent.getMaximumPoolSize()) return super.offer(o);
-            //we have idle threads, just add it to the queue
-            //note that we don't use getActiveCount(), see BZ 49730
+            // we have idle threads, just add it to the queue
+            // note that we don't use getActiveCount(), see BZ 49730
             AtomicInteger submittedTasksCount = StandardThreadExecutor.this.submittedTasksCount;
             if (submittedTasksCount != null) {
                 if (submittedTasksCount.get() <= poolSize) return super.offer(o);
             }
-            //if we have less threads than maximum force creation of a new thread
+            // if we have less threads than maximum force creation of a new thread
             if (poolSize < parent.getMaximumPoolSize()) return false;
-            //if we reached here, we need to add it to the queue
+            // if we reached here, we need to add it to the queue
             return super.offer(o);
         }
     }
@@ -315,8 +312,7 @@ public class StandardThreadExecutor extends java.util.concurrent.AbstractExecuto
 
 
     @Override
-    public boolean awaitTermination(long timeout, TimeUnit unit)
-            throws InterruptedException {
+    public boolean awaitTermination(long timeout, TimeUnit unit) throws InterruptedException {
         return this.executor.awaitTermination(timeout, unit);
     }
 

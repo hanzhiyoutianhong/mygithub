@@ -6,8 +6,8 @@ import java.util.Set;
  * Watch the addresses of hostname, notify EndpointManager if the host addresses change.
  * <p>
  * <p>
- * Now only the endpointManager need knows the change event.
- * If more objects need know, change the watcher to observer-model.
+ * Now only the endpointManager need knows the change event. If more objects need know, change the
+ * watcher to observer-model.
  * </p>
  */
 

@@ -28,13 +28,11 @@ public final class Protocol {
         // this prevent the class from instantiation
     }
 
-    public static void sendCommand(final RedisOutputStream os,
-                                   final Command command, final byte[]... args) {
+    public static void sendCommand(final RedisOutputStream os, final Command command, final byte[]... args) {
         sendCommand(os, command.raw, args);
     }
 
-    private static void sendCommand(final RedisOutputStream os,
-                                    final byte[] command, final byte[]... args) {
+    private static void sendCommand(final RedisOutputStream os, final byte[] command, final byte[]... args) {
         try {
             os.write(ASTERISK_BYTE);
             os.writeIntCrLf(args.length + 1);

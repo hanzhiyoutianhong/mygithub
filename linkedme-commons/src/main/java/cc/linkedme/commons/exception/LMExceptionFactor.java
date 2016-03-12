@@ -70,7 +70,8 @@ public class LMExceptionFactor implements Serializable {
     /**
      * 任务过多，系统繁忙
      */
-    public static final LMExceptionFactor LM_SYSTEM_BUSY = new LMExceptionFactor(20009, "too many pending tasks, system is busy!", "任务过多，系统繁忙!");
+    public static final LMExceptionFactor LM_SYSTEM_BUSY =
+            new LMExceptionFactor(20009, "too many pending tasks, system is busy!", "任务过多，系统繁忙!");
 
     /**
      * 非法请求

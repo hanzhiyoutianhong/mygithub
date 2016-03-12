@@ -55,7 +55,7 @@ public class EndpointBalancerConfig {
     public EndpointBalancerConfig() {
         commonConfig = new Config();
 
-        //init Config
+        // init Config
         initCommonConfig();
     }
 
@@ -218,32 +218,20 @@ public class EndpointBalancerConfig {
 
     @Override
     public String toString() {
-        return new StringBuilder(512)
-                .append("ClientBalancerConfig - { host=").append(hostname)
-                .append(", port=").append(port)
-                .append(", minPoolSize=").append(minPoolSize)
-                .append(", maxPoolSize=").append(maxPoolSize)
-                .append(", poolWatchInterval=").append(poolWatchInterval)
-                .append(", maxIdleTime=").append(maxIdleTime)
-                .append(", maxConnectionAge=").append(maxConnectionAge)
-                .append(", soTimeout=").append(soTimeout)
-                .append(", opTimeout=").append(opTimeout)
-                .append(", CommonConfig: [")
-                .append("ccof.maxIdle=").append(this.commonConfig.maxIdle)
-                .append(", ccof.minIdle=").append(this.commonConfig.minIdle)
-                .append(", ccof.maxActive=").append(this.commonConfig.maxActive)
-                .append(", ccof.maxWait=").append(this.commonConfig.maxWait)
-                .append(", ccof.whenExhaustedAction=").append(this.commonConfig.whenExhaustedAction)
-                .append(", ccof.testOnBorrow=").append(this.commonConfig.testOnBorrow)
-                .append(", ccof.testOnReturn=").append(this.commonConfig.testOnReturn)
-                .append(", ccof.testWhileIdle=").append(this.commonConfig.testWhileIdle)
+        return new StringBuilder(512).append("ClientBalancerConfig - { host=").append(hostname).append(", port=").append(port)
+                .append(", minPoolSize=").append(minPoolSize).append(", maxPoolSize=").append(maxPoolSize).append(", poolWatchInterval=")
+                .append(poolWatchInterval).append(", maxIdleTime=").append(maxIdleTime).append(", maxConnectionAge=")
+                .append(maxConnectionAge).append(", soTimeout=").append(soTimeout).append(", opTimeout=").append(opTimeout)
+                .append(", CommonConfig: [").append("ccof.maxIdle=").append(this.commonConfig.maxIdle).append(", ccof.minIdle=")
+                .append(this.commonConfig.minIdle).append(", ccof.maxActive=").append(this.commonConfig.maxActive).append(", ccof.maxWait=")
+                .append(this.commonConfig.maxWait).append(", ccof.whenExhaustedAction=").append(this.commonConfig.whenExhaustedAction)
+                .append(", ccof.testOnBorrow=").append(this.commonConfig.testOnBorrow).append(", ccof.testOnReturn=")
+                .append(this.commonConfig.testOnReturn).append(", ccof.testWhileIdle=").append(this.commonConfig.testWhileIdle)
                 .append(", ccof.timeBetweenEvictionRunsMillis=").append(this.commonConfig.timeBetweenEvictionRunsMillis)
                 .append(", ccof.numTestsPerEvictionRun=").append(this.commonConfig.numTestsPerEvictionRun)
                 .append(", ccof.minEvictableIdleTimeMillis=").append(this.commonConfig.minEvictableIdleTimeMillis)
                 .append(", ccof.softMinEvictableIdleTimeMillis=").append(this.commonConfig.softMinEvictableIdleTimeMillis)
-                .append(", ccof.lifo=").append(this.commonConfig.lifo)
-                .append("]")
-                .append("}").toString();
+                .append(", ccof.lifo=").append(this.commonConfig.lifo).append("]").append("}").toString();
     }
 
 }
