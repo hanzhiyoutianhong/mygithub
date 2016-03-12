@@ -19,6 +19,7 @@ public class CountComponentSimple implements CountComponent {
         }
         return countDao.get(id, field);
     }
+
     @Override
     public Map<Long, Integer> gets(long[] ids, String field) {
         if (daoEnable == false) {
@@ -87,6 +88,7 @@ public class CountComponentSimple implements CountComponent {
     public boolean isDaoEnable() {
         return daoEnable;
     }
+
     @Override
     public void setDaoEnable(boolean daoEnable) {
         this.daoEnable = daoEnable;
@@ -95,6 +97,7 @@ public class CountComponentSimple implements CountComponent {
     public CountDao getCountDao() {
         return countDao;
     }
+
     public void setCountDao(CountDao countDao) {
         this.countDao = countDao;
     }

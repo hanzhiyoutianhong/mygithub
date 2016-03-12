@@ -5,10 +5,13 @@ import java.util.Map;
 
 public interface CountComponent {
     int get(long id, String field);
+
     Map<Long, Integer> gets(long[] ids, String field);
 
     Map<String, Integer> getAll(long id);
+
     Map<Long, List<Integer>> gets(long[] ids, String[] fields);
+
     Map<Long, Map<String, Integer>> getsAll(long[] ids);
 
     int incr(long id, String field, int value);
@@ -23,5 +26,6 @@ public interface CountComponent {
      * switch
      */
     boolean isDaoEnable();
+
     void setDaoEnable(boolean daoEnable);
 }

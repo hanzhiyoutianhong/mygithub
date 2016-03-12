@@ -17,6 +17,7 @@ import cc.linkedme.commons.log.ApiLogger;
 public class LinkedmeExceptionMapper implements ExceptionMapper<RuntimeException> {
     @Context
     private HttpServletRequest request;
+
     @Override
     public Response toResponse(RuntimeException e) {
         LMException apiException;
@@ -47,7 +48,7 @@ public class LinkedmeExceptionMapper implements ExceptionMapper<RuntimeException
     }
 
     private Response buildResponse(LMException e) {
-        int status = e.getFactor().getErrorCode();//之后换成http的标准错误码
+        int status = e.getFactor().getErrorCode();// 之后换成http的标准错误码
         ResponseBuilder builder = Response.status(status).entity(e.formatExceptionInfo(request.getServletPath()));
         return builder.build();
     }

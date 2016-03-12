@@ -11,8 +11,7 @@ public class CountCodecUtil {
     public static final char colon = ':';
 
     /**
-     * result format is "repost:9,comment:8,like:1"
-     * TODO string.spilt performance
+     * result format is "repost:9,comment:8,like:1" TODO string.spilt performance
      *
      * @param str
      * @return null if not exist

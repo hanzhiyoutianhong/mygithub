@@ -6,8 +6,10 @@ public class Base62 {
      * code Table
      */
     private static final String ALPHABET = "ABCDEFGH_123456789IJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz";
+
     /**
      * encoding long num
+     * 
      * @param num
      * @return
      */
@@ -17,21 +19,23 @@ public class Base62 {
 
     /**
      * decoding string
+     * 
      * @param str
      * @return
      */
     public static long decode(String str) {
         return decode(str, 62);
     }
+
     /**
      * encoding long num base62
+     * 
      * @param num
      * @param base
      * @return
      */
     private static String encode(long num, int base) {
-        if (num < 1)
-            throw new IllegalArgumentException("num must be greater than 0.");
+        if (num < 1) throw new IllegalArgumentException("num must be greater than 0.");
 
         StringBuilder sb = new StringBuilder();
         for (; num > 0; num /= base) {
@@ -40,16 +44,17 @@ public class Base62 {
 
         return sb.toString();
     }
+
     /**
      * decoding string base62
+     * 
      * @param str
      * @param base
      * @return
      */
     private static long decode(String str, int base) {
         str = str.trim();
-        if (str.length() < 1)
-            throw new IllegalArgumentException("str must not be empty.");
+        if (str.length() < 1) throw new IllegalArgumentException("str must not be empty.");
 
         long result = 0;
         for (int i = 0; i < str.length(); i++) {

@@ -17,9 +17,9 @@ public class DeepLinkService {
 
     public int addDeepLink(DeepLink deepLink) {
         int result = 0;
-        //insert dao
+        // insert dao
         result = deepLinkDao.addDeepLink(deepLink);
-        //counter
+        // counter
         return result;
     }
 }

@@ -93,8 +93,7 @@ public class LMExceptionFactor implements Serializable {
             new LMExceptionFactor(20013, "HTTP METHOD is not suported for this request!", "请求的HTTP METHOD不支持!");
 
     /** Http 方法错误 */
-    public static final LMExceptionFactor LM_UUID_ERROR =
-            new LMExceptionFactor(20014, "Creat uuid failed!", "发号失败!");
+    public static final LMExceptionFactor LM_UUID_ERROR = new LMExceptionFactor(20014, "Creat uuid failed!", "发号失败!");
 
     /**
      * get and set

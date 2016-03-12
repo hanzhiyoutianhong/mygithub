@@ -58,8 +58,7 @@ public abstract class McqProcessor implements StartReadingAble {
         startExtWork();
     }
 
-    protected void startExtWork() {
-    }
+    protected void startExtWork() {}
 
     protected abstract void handleMsq(String msg);
 
@@ -104,9 +103,8 @@ public abstract class McqProcessor implements StartReadingAble {
                         }
 
                     } catch (Exception e) {
-                        ApiLogger.warn(
-                                new StringBuilder(128).append("Error: processing the msg frm mq error, ").append(portInfo).append(", msg=")
-                                        .append(msg), e);
+                        ApiLogger.warn(new StringBuilder(128).append("Error: processing the msg frm mq error, ").append(portInfo)
+                                .append(", msg=").append(msg), e);
                     } finally {
                         if (readKey != null) {
                             long end = System.currentTimeMillis();

@@ -9,6 +9,7 @@ public class CountUtil {
      * count debug
      */
     public static AtomicBoolean countDebug = new AtomicBoolean(false);
+
     public static boolean isDebugEnabled() {
         return ApiLogger.isDebugEnabled() && countDebug.get();
     }

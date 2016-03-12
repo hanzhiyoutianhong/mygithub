@@ -48,6 +48,7 @@ public class MsgUtils {
 
 
     public static boolean isDeeplinkMsgType(int type) {
-        return (McqMsgType.ADD_DEEPLINK.getType() == type || McqMsgType.UPDATE_DEEPLINK.getType() == type || McqMsgType.DELETE_DEEPLINK.getType() == type);
+        return (McqMsgType.ADD_DEEPLINK.getType() == type || McqMsgType.UPDATE_DEEPLINK.getType() == type
+                || McqMsgType.DELETE_DEEPLINK.getType() == type);
     }
 }

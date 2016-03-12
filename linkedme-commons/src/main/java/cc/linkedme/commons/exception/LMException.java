@@ -9,7 +9,7 @@ public class LMException extends RuntimeException {
     private String description;
 
     public LMException(LMExceptionFactor factor) {
-        if(factor != null) {
+        if (factor != null) {
             this.factor = factor;
             this.description = factor.getErrorMessageEn();
         }

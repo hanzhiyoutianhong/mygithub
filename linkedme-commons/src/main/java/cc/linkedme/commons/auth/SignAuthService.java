@@ -20,7 +20,7 @@ public class SignAuthService {
         List<String> signParams = new ArrayList<String>();
         while (paramNames.hasMoreElements()) {
             String paramName = (String) paramNames.nextElement();
-            if("sign".equals(paramName)) {
+            if ("sign".equals(paramName)) {
                 continue;
             }
             String[] paramValues = request.getParameterValues(paramName);

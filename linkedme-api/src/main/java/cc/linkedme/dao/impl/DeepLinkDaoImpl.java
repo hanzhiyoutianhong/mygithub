@@ -35,8 +35,8 @@ public class DeepLinkDaoImpl extends BaseDao implements DeepLinkDao {
         String sdk_version = deepLink.getSdk_version();
         TableChannel tableChannel = tableContainer.getTableChannel("deeplink", ADD_DEEPLINK, deeplink_id, deeplink_id);
         try {
-            result += tableChannel.getJdbcTemplate().update(tableChannel.getSql(),
-                    new Object[]{deeplink_id, deeplink_md5, linkedme_key, identity_id, create_time, tags, alias, channel, feature, stage, campaign, params, source, sdk_version});
+            result += tableChannel.getJdbcTemplate().update(tableChannel.getSql(), new Object[] {deeplink_id, deeplink_md5, linkedme_key,
+                    identity_id, create_time, tags, alias, channel, feature, stage, campaign, params, source, sdk_version});
         } catch (DataAccessException e) {
             if (DaoUtil.isDuplicateInsert(e)) {
                 ApiLogger.info(new StringBuilder(128).append("Duplicate insert deepLink, id=").append(deeplink_id));

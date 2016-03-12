@@ -12,6 +12,7 @@ public interface CountDao {
      * @return
      */
     int get(long id, String field);
+
     /**
      * performance not good: for each get id
      *
@@ -20,8 +21,10 @@ public interface CountDao {
      * @return
      */
     Map<Long, Integer> gets(long[] ids, String field);
+
     /**
      * result format is "uid1.cntbf, uid1.cntuf, uid2.cntbf, uid2.cntuf"
+     * 
      * @param
      * @return
      */
@@ -34,6 +37,7 @@ public interface CountDao {
      * @return
      */
     Map<String, Integer> getAll(long id);
+
     /**
      * performance is ok: sharding by dbIndex and concurrent multi_get
      *

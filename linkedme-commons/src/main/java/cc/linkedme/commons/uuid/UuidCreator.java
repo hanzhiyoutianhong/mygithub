@@ -18,14 +18,14 @@ public class UuidCreator {
     public final static Random randomGenerator = new Random();
 
     private VikaCacheClient uuidGenerator;
-    
-    public long nextId(int bizId){
 
-        for(int i = 0; i < RETRY_TIMES; i++){
+    public long nextId(int bizId) {
+
+        for (int i = 0; i < RETRY_TIMES; i++) {
             long nextId = 0;
             try {
                 String uuidKey = bizId + "_" + randomGenerator.nextInt();
-                String uuid = (String)uuidGenerator.get(uuidKey);
+                String uuid = (String) uuidGenerator.get(uuidKey);
                 nextId = Util.convertLong(uuid);
             } catch (Exception e) {
                 ApiLogger.error("Error: in uuidCreator get");
@@ -34,7 +34,8 @@ public class UuidCreator {
                 return nextId;
             }
             ApiUtil.safeSleep(2 * i);
-            ApiLogger.warn("Warn - retry create id, uuidCreator:" + uuidGenerator.getServerPort() + ", tryTime:" + i + ", nextId=" + nextId);
+            ApiLogger
+                    .warn("Warn - retry create id, uuidCreator:" + uuidGenerator.getServerPort() + ", tryTime:" + i + ", nextId=" + nextId);
         }
 
         // FIXME 重连

@@ -10,7 +10,7 @@ import javax.servlet.http.HttpServlet;
  */
 public class McqProcessorInitListener extends HttpServlet {
     public void init() throws ServletException {
-        //系统启动成功后,设置队列机初始化成功
+        // 系统启动成功后,设置队列机初始化成功
         McqProcessor.setSystemInitSuccess();
     }
 }
