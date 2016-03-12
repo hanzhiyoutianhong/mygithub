@@ -1,30 +1,26 @@
 /**
- * $RCSfile$
- * $Revision$
- * $Date$
+ * $RCSfile$ $Revision$ $Date$
  * <p>
  * Copyright (C) 2004-2008 Jive Software. All rights reserved.
  * <p>
- * This software is published under the terms of the GNU Public License (GPL),
- * a copy of which is included in this distribution, or a commercial license
- * agreement with Jive.
+ * This software is published under the terms of the GNU Public License (GPL), a copy of which is
+ * included in this distribution, or a commercial license agreement with Jive.
  */
 
 package cc.linkedme.commons.cache;
 
 
 /**
- * Simple LinkedList implementation. The main feature is that list nodes
- * are public, which allows very fast delete operations when one has a
- * reference to the node that is to be deleted.<p>
+ * Simple LinkedList implementation. The main feature is that list nodes are public, which allows
+ * very fast delete operations when one has a reference to the node that is to be deleted.
+ * <p>
  *
  * @author Jive Software
  */
 public class LinkedList {
 
     /**
-     * The root of the list keeps a reference to both the first and last
-     * elements of the list.
+     * The root of the list keeps a reference to both the first and last elements of the list.
      */
     private LinkedListNode head = new LinkedListNode("head", null, null);
 
@@ -75,8 +71,8 @@ public class LinkedList {
     }
 
     /**
-     * Adds an object to the beginning of the list by automatically creating a
-     * a new node and adding it to the beginning of the list.
+     * Adds an object to the beginning of the list by automatically creating a a new node and adding
+     * it to the beginning of the list.
      *
      * @param object the object to add to the beginning of the list.
      * @return the node created to wrap the object.
@@ -89,8 +85,8 @@ public class LinkedList {
     }
 
     /**
-     * Adds an object to the end of the list by automatically creating a
-     * a new node and adding it to the end of the list.
+     * Adds an object to the end of the list by automatically creating a a new node and adding it to
+     * the end of the list.
      *
      * @param object the object to add to the end of the list.
      * @return the node created to wrap the object.
@@ -106,20 +102,20 @@ public class LinkedList {
      * Erases all elements in the list and re-initializes it.
      */
     public void clear() {
-        //Remove all references in the list.
+        // Remove all references in the list.
         LinkedListNode node = getLast();
         while (node != null) {
             node.remove();
             node = getLast();
         }
 
-        //Re-initialize.
+        // Re-initialize.
         head.next = head.previous = head;
     }
 
     /**
-     * Returns a String representation of the linked list with a comma
-     * delimited list of all the elements in the list.
+     * Returns a String representation of the linked list with a comma delimited list of all the
+     * elements in the list.
      *
      * @return a String representation of the LinkedList.
      */

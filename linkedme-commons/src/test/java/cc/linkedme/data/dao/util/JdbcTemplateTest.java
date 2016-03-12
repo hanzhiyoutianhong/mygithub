@@ -18,7 +18,7 @@ public class JdbcTemplateTest {
     private static JdbcTemplate jt;
 
     static {
-        ClassPathXmlApplicationContext ctx = new ClassPathXmlApplicationContext(new String[]{"classpath:spring/mysql.xml"});
+        ClassPathXmlApplicationContext ctx = new ClassPathXmlApplicationContext(new String[] {"classpath:spring/mysql.xml"});
         ctx.start();
         System.out.println("context init sucess!");
 
@@ -29,7 +29,7 @@ public class JdbcTemplateTest {
     public void testQuery() {
         TableChannel channel = tableContainer.getTableChannel("test", "GET_USER", 12345L, 12345L);
         String sql = channel.getSql();
-        Dog dog = (Dog) channel.getJdbcTemplate().query(sql, new String[]{"mike"}, new ResultSetExtractor() {
+        Dog dog = (Dog) channel.getJdbcTemplate().query(sql, new String[] {"mike"}, new ResultSetExtractor() {
             public Dog extractData(ResultSet rs) throws SQLException, DataAccessException {
                 if (rs.next()) {
                     Dog dog = new Dog();
@@ -45,13 +45,13 @@ public class JdbcTemplateTest {
 
     @Test
     public void testUpdate() {
-        //jt.execute(sql, action, isWrite);
+        // jt.execute(sql, action, isWrite);
         int result = 0;
         TableChannel channel = tableContainer.getTableChannel("test", "ADD_USER", 12345L, 12345L);
         String sql = channel.getSql();
 
         try {
-            result = channel.getJdbcTemplate().update(sql, new Object[]{"Andy", 20});
+            result = channel.getJdbcTemplate().update(sql, new Object[] {"Andy", 20});
         } catch (DataAccessException e) {
             throw e;
         }

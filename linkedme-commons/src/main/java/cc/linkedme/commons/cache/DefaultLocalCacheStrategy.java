@@ -1,13 +1,10 @@
 /**
- * $RCSfile$
- * $Revision: $
- * $Date: $
+ * $RCSfile$ $Revision: $ $Date: $
  * <p>
  * Copyright (C) 2005-2008 Jive Software. All rights reserved.
  * <p>
- * This software is published under the terms of the GNU Public License (GPL),
- * a copy of which is included in this distribution, or a commercial license
- * agreement with Jive.
+ * This software is published under the terms of the GNU Public License (GPL), a copy of which is
+ * included in this distribution, or a commercial license agreement with Jive.
  */
 
 package cc.linkedme.commons.cache;
@@ -34,15 +31,13 @@ public class DefaultLocalCacheStrategy implements CacheFactoryStrategy {
      */
     private Map<Object, LockAndCount> locks = new ConcurrentHashMap<Object, LockAndCount>();
 
-    public DefaultLocalCacheStrategy() {
-    }
+    public DefaultLocalCacheStrategy() {}
 
     public boolean startCluster() {
         return false;
     }
 
-    public void stopCluster() {
-    }
+    public void stopCluster() {}
 
     public Cache createCache(String name) {
         // Get cache configuration from system properties or default (hardcoded) values
@@ -60,9 +55,9 @@ public class DefaultLocalCacheStrategy implements CacheFactoryStrategy {
         return true;
     }
 
-//    public Collection<ClusterNodeInfo> getClusterNodesInfo() {
-//        return Collections.emptyList();
-//    }
+    // public Collection<ClusterNodeInfo> getClusterNodesInfo() {
+    // return Collections.emptyList();
+    // }
 
     public int getMaxClusterNodes() {
         return 0;
@@ -76,8 +71,7 @@ public class DefaultLocalCacheStrategy implements CacheFactoryStrategy {
         return new byte[0];
     }
 
-    public void updateCacheStats(Map<String, Cache> caches) {
-    }
+    public void updateCacheStats(Map<String, Cache> caches) {}
 
     public Lock getLock(Object key, Cache cache) {
         Object lockKey = key;

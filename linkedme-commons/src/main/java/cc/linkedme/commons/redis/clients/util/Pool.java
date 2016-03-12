@@ -9,8 +9,7 @@ import cc.linkedme.commons.redis.clients.jedis.exceptions.JedisException;
 public abstract class Pool<T> {
     private final GenericObjectPool internalPool;
 
-    public Pool(final GenericObjectPool.Config poolConfig,
-                PoolableObjectFactory factory) {
+    public Pool(final GenericObjectPool.Config poolConfig, PoolableObjectFactory factory) {
         this.internalPool = new GenericObjectPool(factory, poolConfig);
     }
 
@@ -19,8 +18,7 @@ public abstract class Pool<T> {
         try {
             return (T) internalPool.borrowObject();
         } catch (Exception e) {
-            throw new JedisConnectionException(
-                    "Could not get a resource from the pool", e);
+            throw new JedisConnectionException("Could not get a resource from the pool", e);
         }
     }
 
@@ -28,8 +26,7 @@ public abstract class Pool<T> {
         try {
             internalPool.returnObject(resource);
         } catch (Exception e) {
-            throw new JedisException(
-                    "Could not return the resource to the pool", e);
+            throw new JedisException("Could not return the resource to the pool", e);
         }
     }
 
@@ -45,8 +42,7 @@ public abstract class Pool<T> {
         try {
             internalPool.invalidateObject(resource);
         } catch (Exception e) {
-            throw new JedisException(
-                    "Could not return the resource to the pool", e);
+            throw new JedisException("Could not return the resource to the pool", e);
         }
     }
 

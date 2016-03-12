@@ -122,24 +122,17 @@ public interface JedisClient {
     public Boolean lsset(String key, long[] values);
 
     /**
-     * returns：
-     * 空字串：cache不存在
-     * 1：成功
-     * 0：不成功
+     * returns： 空字串：cache不存在 1：成功 0：不成功
      */
     public Boolean lsput(String key, long... values);
 
     /**
-     * returns：
-     * 空字串：cache不存在
-     * 1：成功
-     * 0：不成功
+     * returns： 空字串：cache不存在 1：成功 0：不成功
      */
     public Boolean lsdel(String key, long... value);
 
     /**
-     * returns
-     * 和values一一对应；返回null说明cache不存在
+     * returns 和values一一对应；返回null说明cache不存在
      */
     public Set<Long> lsmexists(String key, long... values);
 
@@ -216,8 +209,7 @@ public interface JedisClient {
     public <T extends Serializable> Long lrem(final String key, final int count, final T value);
 
     /**
-     * ================================================
-     * methods for sorted set zset
+     * ================================================ methods for sorted set zset
      * ================================================
      */
     public Long zadd(byte[] key, double score, byte[] member);
@@ -240,13 +232,11 @@ public interface JedisClient {
 
     public Set<byte[]> zrangeByScore(byte[] key, double min, double max);
 
-    public Set<byte[]> zrangeByScore(byte[] key, double min, double max, int offset,
-                                     int count);
+    public Set<byte[]> zrangeByScore(byte[] key, double min, double max, int offset, int count);
 
     public Set<Tuple> zrangeByScoreWithScores(byte[] key, double min, double max);
 
-    public Set<Tuple> zrangeByScoreWithScores(byte[] key, double min, double max,
-                                              int offset, int count);
+    public Set<Tuple> zrangeByScoreWithScores(byte[] key, double min, double max, int offset, int count);
 
     public Long zrevrank(byte[] key, byte[] member);
 
@@ -264,7 +254,7 @@ public interface JedisClient {
 
     public Object evalsha(final String sha1, int keyCount, final String... keys);
 
-    // 还没使用过的接口,谨慎使用  
+    // 还没使用过的接口,谨慎使用
     public List<Object> pipeline(JedisPipelineReadCallback callback);
 
     // 还没使用过的接口,谨慎使用
@@ -334,7 +324,7 @@ public interface JedisClient {
 
     /*
      * careful: pfcount 在reids原始是一个蹩脚（隐式）的write指令，eredis强制改成了非write指令，待观察效果 fishermen 2014.6.25 \
-     * */
+     */
     public Long pfcount(final String... keys);
 
     public boolean pfmerge(final String destkey, final String... sourcekeys);
@@ -343,7 +333,7 @@ public interface JedisClient {
 
     public Set<String> keys(final String pattern);
 
-    //增加getset命令封装  tangyang 2014.10.16
+    // 增加getset命令封装 tangyang 2014.10.16
     public String getset(final String key, final String newValue);
 
     public byte[] getset(final byte[] key, final byte[] newValue);
@@ -356,8 +346,7 @@ public interface JedisClient {
 
     public List<Long> bfmget(final String... keys);
 
-    public Set<Tuple> zrevrangeByScoreWithScores(final byte[] key, final double max, final double min,
-                                                 final int offset, final int count);
+    public Set<Tuple> zrevrangeByScoreWithScores(final byte[] key, final double max, final double min, final int offset, final int count);
 
     public Long zrem(String key, String[] members);
 

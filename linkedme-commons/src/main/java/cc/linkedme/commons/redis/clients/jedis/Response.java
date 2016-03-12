@@ -20,8 +20,7 @@ public class Response<T> {
 
     public T get() {
         if (!set) {
-            throw new JedisDataException(
-                    "Please close pipeline or multi block before calling this method.");
+            throw new JedisDataException("Please close pipeline or multi block before calling this method.");
         }
         if (!built) {
             if (data != null) {

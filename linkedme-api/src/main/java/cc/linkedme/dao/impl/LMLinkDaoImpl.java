@@ -18,11 +18,10 @@ public class LMLinkDaoImpl implements LMLinkDao {
 
     private JdbcTemplate jdbcTemplate;
 
-    public static final String INSERT_LINK = "INSERT INTO link(identity_id, app_key, type, tags, channel, " +
-            "feature, stage, alias, sdk, data, " +
-            "source, deeplinkpath, link_identifier, link_click_id, clicks, " +
-            "install, reject_install, open, weibo, wechat, " +
-            "retry_number, ip, timestamp)" + " VALUES(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
+    public static final String INSERT_LINK =
+            "INSERT INTO link(identity_id, app_key, type, tags, channel, " + "feature, stage, alias, sdk, data, "
+                    + "source, deeplinkpath, link_identifier, link_click_id, clicks, " + "install, reject_install, open, weibo, wechat, "
+                    + "retry_number, ip, timestamp)" + " VALUES(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
     public static final String QUERY_ALL_LINK = "SELECT * FROM link";
     public static final String QUERY_A_LINK = "SELECT * FROM link WHERE link_click_id=?";
     public static final String UPDATE_INSTALL_LINK = "UPDATE link SET install = install + 1, clicks = clicks + 1 WHERE link_click_id=?";
@@ -34,11 +33,10 @@ public class LMLinkDaoImpl implements LMLinkDao {
     public static final String UPDATE_REJECT_INSTALL_LINK = "UPDATE link SET reject_install = reject_install + 1 WHERE link_click_id=?";
 
     public void addLink(LMLinkEntity le) {
-        Object[] values = {le.getIdentityId(), le.getAppKey(), le.getType(), le.getTags(), le.getChannel(),
-                le.getFeature(), le.getStage(), le.getAlias(), le.getSdk(), le.getData(),
-                le.getSource(), le.getDeeplinkpath(), le.getLinkIdentifier(), le.getLinkClickId(), le.getClicks(),
-                le.getInstall(), le.getRejectInstall(), le.getOpen(), le.getWeibo(), le.getWechat(),
-                le.getRetryNumber(), le.getIp(), le.getTimestamp()};
+        Object[] values = {le.getIdentityId(), le.getAppKey(), le.getType(), le.getTags(), le.getChannel(), le.getFeature(), le.getStage(),
+                le.getAlias(), le.getSdk(), le.getData(), le.getSource(), le.getDeeplinkpath(), le.getLinkIdentifier(), le.getLinkClickId(),
+                le.getClicks(), le.getInstall(), le.getRejectInstall(), le.getOpen(), le.getWeibo(), le.getWechat(), le.getRetryNumber(),
+                le.getIp(), le.getTimestamp()};
         jdbcTemplate.update(INSERT_LINK, values);
     }
 

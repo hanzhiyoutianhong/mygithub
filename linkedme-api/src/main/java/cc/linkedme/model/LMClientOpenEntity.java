@@ -236,8 +236,7 @@ public class LMClientOpenEntity {
         if (deviceFingerprintId != null ? !deviceFingerprintId.equals(that.deviceFingerprintId) : that.deviceFingerprintId != null)
             return false;
         if (appVersion != null ? !appVersion.equals(that.appVersion) : that.appVersion != null) return false;
-        if (adTrackingEnabled != null ? !adTrackingEnabled.equals(that.adTrackingEnabled) : that.adTrackingEnabled != null)
-            return false;
+        if (adTrackingEnabled != null ? !adTrackingEnabled.equals(that.adTrackingEnabled) : that.adTrackingEnabled != null) return false;
         if (isReferrable != null ? !isReferrable.equals(that.isReferrable) : that.isReferrable != null) return false;
         if (os != null ? !os.equals(that.os) : that.os != null) return false;
         if (osVersion != null ? !osVersion.equals(that.osVersion) : that.osVersion != null) return false;
@@ -246,10 +245,8 @@ public class LMClientOpenEntity {
         if (uriScheme != null ? !uriScheme.equals(that.uriScheme) : that.uriScheme != null) return false;
         if (spotlightIdentifier != null ? !spotlightIdentifier.equals(that.spotlightIdentifier) : that.spotlightIdentifier != null)
             return false;
-        if (universalLinkUrl != null ? !universalLinkUrl.equals(that.universalLinkUrl) : that.universalLinkUrl != null)
-            return false;
-        if (linkIdentifier != null ? !linkIdentifier.equals(that.linkIdentifier) : that.linkIdentifier != null)
-            return false;
+        if (universalLinkUrl != null ? !universalLinkUrl.equals(that.universalLinkUrl) : that.universalLinkUrl != null) return false;
+        if (linkIdentifier != null ? !linkIdentifier.equals(that.linkIdentifier) : that.linkIdentifier != null) return false;
         if (latVal != null ? !latVal.equals(that.latVal) : that.latVal != null) return false;
         if (debug != null ? !debug.equals(that.debug) : that.debug != null) return false;
         if (sessionId != null ? !sessionId.equals(that.sessionId) : that.sessionId != null) return false;

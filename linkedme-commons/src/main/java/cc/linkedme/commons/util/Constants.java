@@ -62,7 +62,7 @@ public class Constants {
     public static int MAX_VECTOR_SIZE = 200;
     public static int MAX_SPEC_VECTOR_SIZE = 200;
     public static int MAX_TAIL_VECTOR_SIZE = 2000;
-    public static int MAX_SGROUP_VECTOR_SIZE = 50;   //私密群微博缓存大小
+    public static int MAX_SGROUP_VECTOR_SIZE = 50; // 私密群微博缓存大小
     public static int MAX_MVD_VECTOR_SIZE = 50;
     public static int MAX_MVL_VECTOR_SIZE = 200;
 
@@ -71,7 +71,7 @@ public class Constants {
 
     // 内部实现变量
     public static int MAX_MULTIGET_SIZE = 2000;
-    //fix bug:只取10个月的数据不够，实际应该取更多，先改为60，支持5年的数据，后续应该优化整个长尾方案 fishermen 2011.6.27 
+    // fix bug:只取10个月的数据不够，实际应该取更多，先改为60，支持5年的数据，后续应该优化整个长尾方案 fishermen 2011.6.27
     public static int SICOUNT = 60;
     public static int VECTOR_THRESHOLD = 10;
     public static int MAX_BATCH_FETCH_SIZE = 50; // 一批的最大处理数
@@ -142,14 +142,14 @@ public class Constants {
     public static long TIMEOUT_GET_USER_SESSION = 500;
     public static long TIMEOUT_GET_USER_ONLINE_STATES = 200;
 
-    //获取最近一条赞数据的超时
+    // 获取最近一条赞数据的超时
     public static long TIMEOUT_GET_LATEST_LIKE = 200;
 
     // test var
     public static long MAX_UID = 20000;
     public static long MIN_UID = 10000;
 
-    //try cas times
+    // try cas times
     public static int CAS_TIME = 2;
     public static int MAX_CAS_TIME = 3;
 
@@ -158,7 +158,7 @@ public class Constants {
      */
     public static boolean twitterCompatibleOutput = false;
 
-    //return type
+    // return type
     public static String RETURN_TYPE_JSON = "json";
     public static String RETURN_TYPE_XML = "xml";
 
@@ -198,8 +198,8 @@ public class Constants {
     // 取热门微博的超时时间
     public static int HOT_TOP_TIMEOUT = 40;
 
-    //设置是否处于SHARE_RUN状态:对于该种状态，不保存content、featrue，
-    //  不更新除content、vector之外的所有cache
+    // 设置是否处于SHARE_RUN状态:对于该种状态，不保存content、featrue，
+    // 不更新除content、vector之外的所有cache
     public static boolean SHARDING_SHARE_RUN = false;
 
     // from wuming1's apiNotice
@@ -216,22 +216,22 @@ public class Constants {
     public static final String UNREAD_COUNT_COMMENT_ATTITUDE = "comment_attitude";
     public static final String UNREAD_COUNT_OBJECT_ATTITUDE = "object_attitude";
 
-    //所有人的微博@提醒数 
+    // 所有人的微博@提醒数
     public static final String UNREAD_COUNT_ALL_MENTION_STATUS = "all_mention_status";
-    //我关注人的微博@提醒数
+    // 我关注人的微博@提醒数
     public static final String UNREAD_COUNT_ATTENTION_MENTION_STATUS = "attention_mention_status";
-    //所有人的评论@提醒数 
+    // 所有人的评论@提醒数
     public static final String UNREAD_COUNT_ALL_MENTION_CMT = "all_mention_cmt";
-    //我关注人的评论@提醒数  
+    // 我关注人的评论@提醒数
     public static final String UNREAD_COUNT_ATTENTION_MENTION_CMT = "attention_mention_cmt";
 
-    //所有人的评论提醒数 
+    // 所有人的评论提醒数
     public static final String UNREAD_COUNT_ALL_CMT = "all_cmt";
-    //我关注人的评论提醒数
+    // 我关注人的评论提醒数
     public static final String UNREAD_COUNT_ATTENTION_CMT = "attention_cmt";
-    //所有人的粉丝提醒数 
+    // 所有人的粉丝提醒数
     public static final String UNREAD_COUNT_ALL_FOLLOWER = "all_follower";
-    //我关注人的粉丝提醒数 
+    // 我关注人的粉丝提醒数
     public static final String UNREAD_COUNT_ATTENTION_FOLLOWER = "attention_follower";
 
     public static final String UNREAD_COUNT_PAGE_FOLLOWER = "page_follower";
@@ -249,36 +249,36 @@ public class Constants {
     /**
      * feed type，原来在web中的Util中
      */
-    public static final int TIMELINE_FEED = 0; //时间线feed
-    public static final int INTELLIGENT_FEED = 1; //智能feed
+    public static final int TIMELINE_FEED = 0; // 时间线feed
+    public static final int INTELLIGENT_FEED = 1; // 智能feed
 
-    public static final int ATT_FEED = 2; //亲密度排序
-    public static final int MIX_FEED = 3; //混排feed
+    public static final int ATT_FEED = 2; // 亲密度排序
+    public static final int MIX_FEED = 3; // 混排feed
 
-    //扩展二级索引类型
+    // 扩展二级索引类型
     public static final int EXT_TYPE_CLOSEFRIENDS = 1;
 
-    //用户设置的屏蔽类型
+    // 用户设置的屏蔽类型
     public static final short FEEDFILTER_TYPE_STATUS = 0;
     public static final short FEEDFILTER_TYPE_APP = 1;
     public static final int FEEDFILTER_APPS_LIMITED = 100;
     public static final int FEEDFILTER_STATUSES_LIMITED = 500;
 
-    //消息类型定义
-    public static final String MSG_TYPE_FEEDFILTER_ADD = "30";      //添加屏蔽
-    public static final String MSG_TYPE_FEEDFILTER_DELETE = "31";   //解除屏蔽
-    public static final String MSG_TYPE_FEEDFILTER_DELETEALL = "32";//解除所有屏蔽
+    // 消息类型定义
+    public static final String MSG_TYPE_FEEDFILTER_ADD = "30"; // 添加屏蔽
+    public static final String MSG_TYPE_FEEDFILTER_DELETE = "31"; // 解除屏蔽
+    public static final String MSG_TYPE_FEEDFILTER_DELETEALL = "32";// 解除所有屏蔽
 
-    public static final int STATUS_DELETE_BY_SELF = 0;      //微博的更新--用户自己
-    public static final int STATUS_DELETE_BY_MANAGEMENT = 1;//微博的更新--管理态
+    public static final int STATUS_DELETE_BY_SELF = 0; // 微博的更新--用户自己
+    public static final int STATUS_DELETE_BY_MANAGEMENT = 1;// 微博的更新--管理态
     public static final int STATUS_DELETE_BY_DEFAULT = STATUS_DELETE_BY_SELF;
-    public static final int STATUS_DELETE_NO_CHANGE = -1;   //状态没有发生变更
+    public static final int STATUS_DELETE_NO_CHANGE = -1; // 状态没有发生变更
 
-    public static final int INBOX_VECTOR_LIMITED = 2000;    //inbox vector上限个数
+    public static final int INBOX_VECTOR_LIMITED = 2000; // inbox vector上限个数
 
-    public static final int CLOSEFRIENDS_TIMELINE_ALL = 0;      //密友可见微博+密友动态
-    public static final int CLOSEFRIENDS_TIMELINE_STATUS = 1;   //密友可见微博
-    public static final int CLOSEFRIENDS_TIMELINE_ACTIVITY = 2; //密友动态
+    public static final int CLOSEFRIENDS_TIMELINE_ALL = 0; // 密友可见微博+密友动态
+    public static final int CLOSEFRIENDS_TIMELINE_STATUS = 1; // 密友可见微博
+    public static final int CLOSEFRIENDS_TIMELINE_ACTIVITY = 2; // 密友动态
 
     // 赞/表态相关常量定义开始
     // 表态消息类型定义
@@ -290,16 +290,16 @@ public class Constants {
 
     // like db timeout
     public static long TIMEOUT_LIKE_DB_BATCH = 500;
-    //批量微博赞
+    // 批量微博赞
     public static long TIMEOUT_STATUSES_ATTITUDE_BATCH = 500;
-    //单条微博赞
+    // 单条微博赞
     public static long TIMEOUT_STATUSES_ATTITUDE = 100;
 
     // 对象喜欢列表长度限制
     public static int OBJECT_LIKE_LIST_VECTOR_SIZE = 200;
     // 赞/表态相关常量定义结束
 
-    //垃圾箱消息类型定义
+    // 垃圾箱消息类型定义
     public static final String MSG_TYPE_TRASH_COMMENT_ADD = "73";
     public static final String MSG_TYPE_TRASH_COMMENT_DEL = "74";
 
@@ -336,8 +336,8 @@ public class Constants {
     public static final int NOT_AUTHORIZED = 3;
 
 
-    public static final int STATUS_POST_SOURCE_NORMAL = 1;//微博普通应用来源source的类型
-    public static final int STATUS_CUSTOM_SOURCE = 2;//微博自定义来源source的类型
+    public static final int STATUS_POST_SOURCE_NORMAL = 1;// 微博普通应用来源source的类型
+    public static final int STATUS_CUSTOM_SOURCE = 2;// 微博自定义来源source的类型
 
     public static final int NORMAL_ATTITUDE_TYPE = 0;
     public static final int COMMON_ATTITUDE_TYPE = 1;
@@ -346,10 +346,9 @@ public class Constants {
 
 
     public static enum PromotionType {
-        TEXT_FOR_ACTIVE_USER(2, "未读微博", "", "unread status"),
-        TEXT_FOR_INACTIVE_USER(2, "热门微博", "", "hot status"),
-        TEXT_FOR_PROMO_TYPE1_6HOURS(1, "最近", "", "6 hours unread statuses"),
-        TEXT_FOR_PROMO_TYPE1_24HOURS(1, "24小时未读", "", "24 hours unread statuses");
+        TEXT_FOR_ACTIVE_USER(2, "未读微博", "", "unread status"), TEXT_FOR_INACTIVE_USER(2, "热门微博", "",
+                "hot status"), TEXT_FOR_PROMO_TYPE1_6HOURS(1, "最近", "", "6 hours unread statuses"), TEXT_FOR_PROMO_TYPE1_24HOURS(1,
+                        "24小时未读", "", "24 hours unread statuses");
 
 
         private PromotionType(int type, String zhCN, String zhHK, String enUS) {
@@ -385,26 +384,20 @@ public class Constants {
     public static final String WEIBO_SUFFIX = "-Weibo";
 
     public static enum PageType {
-        ALL,
-        PAGE_GROUP,
-        PAGE_WITHOUT_GROUP
+        ALL, PAGE_GROUP, PAGE_WITHOUT_GROUP
     }
 
     /**
-     * 用户信用积分映射值存在以下关系
-     * 数据库中的值          展示的值
-     * -1，0                           80
-     * -2                                  0
-     * 为便于阅读，特此封装该变量
+     * 用户信用积分映射值存在以下关系 数据库中的值 展示的值 -1，0 80 -2 0 为便于阅读，特此封装该变量
      */
     public static final int USER_CREDIT_AS_ZERO = -2;
 
-    //客户端来源显示可点击 设置到customSource中的json key
+    // 客户端来源显示可点击 设置到customSource中的json key
     public static final String SOURCE_ALLOW_CLICK = "sourceAllowClick";
-    //1时表示来源可点击
+    // 1时表示来源可点击
     public static final int SOURCE_ALLOW_CLICK_Y = 1;
-    //0时表示为不可点
+    // 0时表示为不可点
     public static final int SOURCE_ALLOW_CLICK_N = 0;
-    //客户端来源显示可点击功能 在蒋超他们白名单服务存放的key。
+    // 客户端来源显示可点击功能 在蒋超他们白名单服务存放的key。
     public static final String ALLOW_CLICK_SOURCE = "allow_click_source";
 }

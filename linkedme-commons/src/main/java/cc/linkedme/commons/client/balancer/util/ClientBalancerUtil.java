@@ -22,7 +22,7 @@ public class ClientBalancerUtil {
      * @return ips or throws IllegalArgumentException if the hostname is unknown
      */
     public static Set<String> getAllIps(String hostname) {
-        //name service 可能会不稳定而解析失败，增加重试
+        // name service 可能会不稳定而解析失败，增加重试
         Set<String> ips = new HashSet<String>();
         int tryCount = 0;
         while (tryCount++ < 3) {

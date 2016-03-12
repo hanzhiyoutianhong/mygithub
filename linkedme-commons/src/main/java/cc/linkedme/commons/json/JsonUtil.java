@@ -106,8 +106,7 @@ public class JsonUtil {
      * @return
      */
     public static String toJsonStr(String value) {
-        if (value == null)
-            return null;
+        if (value == null) return null;
 
         StringBuilder buf = new StringBuilder(value.length());
         for (int i = 0; i < value.length(); i++) {
@@ -176,7 +175,7 @@ public class JsonUtil {
         return isValidJsonObject(json, false);
     }
 
-    //TODO 优化效率
+    // TODO 优化效率
     public static boolean isValidJsonObject(String json, boolean allowBlank) {
         if (StringUtils.isBlank(json)) {
             return allowBlank;
@@ -219,7 +218,7 @@ public class JsonUtil {
             int iMax = ids.length - 1;
             StringBuilder b = new StringBuilder();
             b.append('[');
-            for (int i = 0; ; i++) {
+            for (int i = 0;; i++) {
                 b.append('"').append(ids[i]).append('"');
                 if (i == iMax) {
                     b.append(']').toString();

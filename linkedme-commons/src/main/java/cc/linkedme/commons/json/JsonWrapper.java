@@ -33,7 +33,7 @@ public class JsonWrapper {
                 root = jtm.readTree(jp);
             } catch (Exception e) {
                 ApiLogger.warn(new StringBuilder(64).append("JSON-PARSER-ERROR json:").append(json).append(" msg:").append(e.getMessage()));
-                //TODO
+                // TODO
                 throw new RuntimeException(e);
             }
         }
@@ -107,8 +107,7 @@ public class JsonWrapper {
     }
 
     /**
-     * 对FieldName中包括“.”的node做特殊处理
-     * 不对“.”对解析处理
+     * 对FieldName中包括“.”的node做特殊处理 不对“.”对解析处理
      *
      * @param name 待查找的FieldName
      * @return 如果不存在，则node为null，但JsonWrapper不为null
@@ -145,15 +144,13 @@ public class JsonWrapper {
     }
 
     public JsonNode getJsonNode(String name) {
-        if (name == null || root == null)
-            return null;
+        if (name == null || root == null) return null;
 
         JsonNode node = root;
         StringTokenizer st = new StringTokenizer(name, ".");
         while (st.hasMoreTokens()) {
             String key = st.nextToken().trim();
-            if (key.isEmpty() || (node = node.get(key)) == null)
-                return null;
+            if (key.isEmpty() || (node = node.get(key)) == null) return null;
         }
         return node;
     }
@@ -296,7 +293,7 @@ public class JsonWrapper {
             }
             return result;
         } else {
-            return new String[]{root.getValueAsText()};
+            return new String[] {root.getValueAsText()};
         }
     }
 
@@ -364,9 +361,10 @@ public class JsonWrapper {
 
     public static void main(String[] args) {
         try {
-            String sassStr = "{\"status\":0,\"kwdlevel\":0,\"zonelevel\":0,\"userlevel\":1,\"usertype\":1,\"is_push_search\":true,\"push_another_search\":false,\"errmsg\":\"\u64cd\u4f5c\u6210\u529f\",\"errno\":1}";
+            String sassStr =
+                    "{\"status\":0,\"kwdlevel\":0,\"zonelevel\":0,\"userlevel\":1,\"usertype\":1,\"is_push_search\":true,\"push_another_search\":false,\"errmsg\":\"\u64cd\u4f5c\u6210\u529f\",\"errno\":1}";
             JsonWrapper js = new JsonWrapper(sassStr);
-            for (Iterator<JsonWrapper> it = js.getElements(); it.hasNext(); ) {
+            for (Iterator<JsonWrapper> it = js.getElements(); it.hasNext();) {
                 JsonWrapper wrapper = it.next();
                 System.out.println(wrapper.getRoot().toString());
             }

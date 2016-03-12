@@ -14,9 +14,8 @@ public class LocalSwitcherManager implements SwitcherManager {
     private static final Logger LOG = LoggerFactory.getLogger(LocalSwitcherManager.class);
 
     @Override
-    public Switcher registerSwitcher(String switcherName,
-                                     SwitcherChangeListener switcherChangeListener, boolean defaultValue) {
-        //开关数量是可控的，所以可以使用 String.intern
+    public Switcher registerSwitcher(String switcherName, SwitcherChangeListener switcherChangeListener, boolean defaultValue) {
+        // 开关数量是可控的，所以可以使用 String.intern
         synchronized (switcherName.intern()) {
             Switcher switcher = switchers.get(switcherName);
             if (switcher == null) {

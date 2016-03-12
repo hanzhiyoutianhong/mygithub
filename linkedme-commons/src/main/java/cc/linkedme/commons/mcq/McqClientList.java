@@ -74,8 +74,8 @@ public abstract class McqClientList {
     }
 
     public enum ClientStatus {
-        add, //new add ip status
-        remove, //will remove ip status
+        add, // new add ip status
+        remove, // will remove ip status
         old, // no change ip status
     }
 

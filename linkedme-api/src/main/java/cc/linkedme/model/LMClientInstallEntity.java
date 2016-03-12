@@ -342,10 +342,8 @@ public class LMClientInstallEntity {
         if (hardwareId != null ? !hardwareId.equals(that.hardwareId) : that.hardwareId != null) return false;
         if (googleAdvertisingId != null ? !googleAdvertisingId.equals(that.googleAdvertisingId) : that.googleAdvertisingId != null)
             return false;
-        if (isHardwareIdReal != null ? !isHardwareIdReal.equals(that.isHardwareIdReal) : that.isHardwareIdReal != null)
-            return false;
-        if (adTrackingEnabled != null ? !adTrackingEnabled.equals(that.adTrackingEnabled) : that.adTrackingEnabled != null)
-            return false;
+        if (isHardwareIdReal != null ? !isHardwareIdReal.equals(that.isHardwareIdReal) : that.isHardwareIdReal != null) return false;
+        if (adTrackingEnabled != null ? !adTrackingEnabled.equals(that.adTrackingEnabled) : that.adTrackingEnabled != null) return false;
         if (isReferrable != null ? !isReferrable.equals(that.isReferrable) : that.isReferrable != null) return false;
         if (appVersion != null ? !appVersion.equals(that.appVersion) : that.appVersion != null) return false;
         if (sdk != null ? !sdk.equals(that.sdk) : that.sdk != null) return false;
@@ -360,8 +358,7 @@ public class LMClientInstallEntity {
         if (screenDpi != null ? !screenDpi.equals(that.screenDpi) : that.screenDpi != null) return false;
         if (updation != null ? !updation.equals(that.updation) : that.updation != null) return false;
         if (bluetooth != null ? !bluetooth.equals(that.bluetooth) : that.bluetooth != null) return false;
-        if (bluetoothVersoin != null ? !bluetoothVersoin.equals(that.bluetoothVersoin) : that.bluetoothVersoin != null)
-            return false;
+        if (bluetoothVersoin != null ? !bluetoothVersoin.equals(that.bluetoothVersoin) : that.bluetoothVersoin != null) return false;
         if (latVal != null ? !latVal.equals(that.latVal) : that.latVal != null) return false;
         if (hasNfc != null ? !hasNfc.equals(that.hasNfc) : that.hasNfc != null) return false;
         if (hasTelephone != null ? !hasTelephone.equals(that.hasTelephone) : that.hasTelephone != null) return false;
@@ -369,10 +366,8 @@ public class LMClientInstallEntity {
         if (uriScheme != null ? !uriScheme.equals(that.uriScheme) : that.uriScheme != null) return false;
         if (retryNumber != null ? !retryNumber.equals(that.retryNumber) : that.retryNumber != null) return false;
         if (iosTeamId != null ? !iosTeamId.equals(that.iosTeamId) : that.iosTeamId != null) return false;
-        if (linkIdentifer != null ? !linkIdentifer.equals(that.linkIdentifer) : that.linkIdentifer != null)
-            return false;
-        if (universalLink != null ? !universalLink.equals(that.universalLink) : that.universalLink != null)
-            return false;
+        if (linkIdentifer != null ? !linkIdentifer.equals(that.linkIdentifer) : that.linkIdentifer != null) return false;
+        if (universalLink != null ? !universalLink.equals(that.universalLink) : that.universalLink != null) return false;
         if (spotlightIdentifier != null ? !spotlightIdentifier.equals(that.spotlightIdentifier) : that.spotlightIdentifier != null)
             return false;
         if (debug != null ? !debug.equals(that.debug) : that.debug != null) return false;

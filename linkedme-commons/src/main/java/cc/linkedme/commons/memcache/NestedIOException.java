@@ -1,18 +1,13 @@
 /**
- * MemCached Java client
- * Copyright (c) 2007 Greg Whalin
- * All rights reserved.
+ * MemCached Java client Copyright (c) 2007 Greg Whalin All rights reserved.
  * <p>
- * This library is free software; you can redistribute it and/or
- * modify it under the terms of the BSD license
+ * This library is free software; you can redistribute it and/or modify it under the terms of the
+ * BSD license
  * <p>
- * This library is distributed in the hope that it will be
- * useful, but WITHOUT ANY WARRANTY; without even the implied
- * warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR
- * PURPOSE.
+ * This library is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without
+ * even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
  * <p>
- * You should have received a copy of the BSD License along with this
- * library.
+ * You should have received a copy of the BSD License along with this library.
  *
  * @author Kevin A. Burton <burton@peerfear.org>
  * @version 2.0
@@ -22,8 +17,8 @@ package cc.linkedme.commons.memcache;
 import java.io.IOException;
 
 /**
- * Bridge class to provide nested Exceptions with IOException which has
- * constructors that don't take Throwables.
+ * Bridge class to provide nested Exceptions with IOException which has constructors that don't take
+ * Throwables.
  *
  * @author <a href="mailto:burton@rojo.com">Kevin Burton</a>
  * @version 1.2

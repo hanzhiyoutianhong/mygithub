@@ -26,8 +26,7 @@ public class WfcDefinitionParser extends AbstractSimpleBeanDefinitionParser {
 
     private Class<? extends FactoryBean> factoryBeanClass;
 
-    public WfcDefinitionParser(
-            Class<? extends FactoryBean> factoryBeanClass) {
+    public WfcDefinitionParser(Class<? extends FactoryBean> factoryBeanClass) {
         this.factoryBeanClass = factoryBeanClass;
     }
 
@@ -39,8 +38,7 @@ public class WfcDefinitionParser extends AbstractSimpleBeanDefinitionParser {
 
 
     @Override
-    protected void postProcess(BeanDefinitionBuilder builder,
-                               Element element) {
+    protected void postProcess(BeanDefinitionBuilder builder, Element element) {
         NodeList list = element.getElementsByTagName(PROPERTY_ELEMENT);
         if (list != null && list.getLength() > 0) {
             for (int i = 0; i < list.getLength(); i++) {
@@ -52,8 +50,7 @@ public class WfcDefinitionParser extends AbstractSimpleBeanDefinitionParser {
                 if (value == null) {
                     value = getTextElementValue(item, VALUE_ELEMENT);
                 }
-                Assert.state(value != null,
-                        "Illegal property value, cannot be null.");
+                Assert.state(value != null, "Illegal property value, cannot be null.");
                 builder.addPropertyValue(propertyName, value);
             }
         }
@@ -67,7 +64,7 @@ public class WfcDefinitionParser extends AbstractSimpleBeanDefinitionParser {
 
     @Override
     protected boolean isEligibleAttribute(String attributeName) {
-        //过滤掉 id 和parent,lazyInit属性
+        // 过滤掉 id 和parent,lazyInit属性
         return !ID_ATTRIBUTE.equals(attributeName) && !PARENT_ATTRIBUTE.equals(attributeName) && !LAZYINIT_ATTRIBUTE.equals(attributeName);
     }
 
@@ -106,7 +103,7 @@ public class WfcDefinitionParser extends AbstractSimpleBeanDefinitionParser {
         NodeList list = node.getChildNodes();
         for (int x = 0; x < list.getLength(); x++) {
             Node c = list.item(x);
-            //fix the bug: c.getLocalName will be empty
+            // fix the bug: c.getLocalName will be empty
             if (elementName.equals(c.getLocalName())) {
                 return c.getTextContent();
             }

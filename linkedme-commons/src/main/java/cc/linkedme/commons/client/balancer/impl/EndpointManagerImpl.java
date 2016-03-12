@@ -33,7 +33,7 @@ public class EndpointManagerImpl<R> implements EndpointManager<R>, HostAddressLi
 
     private EndpointHolder<R> endpointHolder;
 
-    //use for keep endpoints in pool to be balance.
+    // use for keep endpoints in pool to be balance.
     private ScheduledExecutorService scheduledService = Executors.newScheduledThreadPool(1);
 
     private static int REFRESH_CONFIRM_COUNT = 10;
@@ -46,7 +46,8 @@ public class EndpointManagerImpl<R> implements EndpointManager<R>, HostAddressLi
     public synchronized void init(EndpointPool<R> endpointPool, EndpointBalancerConfig config) {
         if (endpointHolder != null) {
             ClientBalancerLog.log.warn("Duplicate init the endpoinManager, hostname:port={}:{}", config.getHostname(), config.getPort());
-            throw new UnsupportedOperationException(String.format("Duplicate init the endpoinManager, hostname:port=%s:%s", config.getHostname(), config.getPort()));
+            throw new UnsupportedOperationException(
+                    String.format("Duplicate init the endpoinManager, hostname:port=%s:%s", config.getHostname(), config.getPort()));
         }
 
         this.endpointPool = endpointPool;
@@ -73,9 +74,9 @@ public class EndpointManagerImpl<R> implements EndpointManager<R>, HostAddressLi
     public void onHostAddressChanged(final String hostname, java.util.Set<String> newIps) {
         ClientBalancerLog.log.warn("EndpintManager - onHostAddressChanged, hostname={}, newIps={}", hostname, newIps);
 
-        //用独立线程来刷新连接，清理掉下线ip的client
-        //不共用scheduledService的原因：此处是独立任务，刷新完毕后就退出，但一次刷新的时间不定
-        //由于dns的变更时间不定，可能存在短时频繁更新的情况，因此每次refresh时，需要使用最新的ips列表
+        // 用独立线程来刷新连接，清理掉下线ip的client
+        // 不共用scheduledService的原因：此处是独立任务，刷新完毕后就退出，但一次刷新的时间不定
+        // 由于dns的变更时间不定，可能存在短时频繁更新的情况，因此每次refresh时，需要使用最新的ips列表
         /////////////////////////////////////////////////////////////////////////
         Thread refreshEpPoolThread = new Thread() {
             @Override
@@ -112,7 +113,7 @@ public class EndpointManagerImpl<R> implements EndpointManager<R>, HostAddressLi
     }
 
     private void checkHealthy() {
-        //watch if healthy
+        // watch if healthy
         try {
             endpointPool.doCheckHealthy();
         } catch (Exception e) {
@@ -121,13 +122,14 @@ public class EndpointManagerImpl<R> implements EndpointManager<R>, HostAddressLi
     }
 
     private void watchPool() {
-        //watch if idle
+        // watch if idle
         try {
             int retryCount = this.config.getMinPoolSize();
             while (retryCount-- > 0) {
                 tryRemoveOneIdleEndpoint(endpointPool.isIdle());
             }
-            ClientBalancerLog.log.info("After watch pool balancer & idle completed, endpoinHolder:{}, epPool:{}", endpointHolder, endpointPool);
+            ClientBalancerLog.log.info("After watch pool balancer & idle completed, endpoinHolder:{}, epPool:{}", endpointHolder,
+                    endpointPool);
         } catch (Exception e) {
             ClientBalancerLog.log.warn("Warn: meet exception when doKeepEndpoinsInPoolBalance", e);
         }
@@ -146,7 +148,7 @@ public class EndpointManagerImpl<R> implements EndpointManager<R>, HostAddressLi
         }
         sortIpCounters(ipCounters);
 
-        //minCounter 要大于0，避免某个ip无法建立建立而导致误清理
+        // minCounter 要大于0，避免某个ip无法建立建立而导致误清理
         int minCounter = ipCounters.get(0).value;
         if (minCounter < 1) {
             for (NameValue ipc : ipCounters) {
@@ -160,7 +162,8 @@ public class EndpointManagerImpl<R> implements EndpointManager<R>, HostAddressLi
         boolean isBalance = (ipCounters.get(ipCounters.size() - 1).value - minCounter) <= 1;
         if (forceRemove || !isBalance) {
             Endpoint<R> removedEp = endpointPool.tryInvalidateOneIdleEndpoint(ipCounters.get(ipCounters.size() - 1).name);
-            ClientBalancerLog.log.info("Removed ep={}, before removed epHolder {}, after remove epPool={}, isBalance={}", new Object[]{removedEp, ipEndpointCounter, endpointPool, isBalance});
+            ClientBalancerLog.log.info("Removed ep={}, before removed epHolder {}, after remove epPool={}, isBalance={}",
+                    new Object[] {removedEp, ipEndpointCounter, endpointPool, isBalance});
         }
     }
 
@@ -175,10 +178,7 @@ public class EndpointManagerImpl<R> implements EndpointManager<R>, HostAddressLi
 
         @Override
         public String toString() {
-            return new StringBuilder(64)
-                    .append("[ip=").append(name)
-                    .append(", allEps=").append(value)
-                    .append("]").toString();
+            return new StringBuilder(64).append("[ip=").append(name).append(", allEps=").append(value).append("]").toString();
         }
     }
 
@@ -194,13 +194,12 @@ public class EndpointManagerImpl<R> implements EndpointManager<R>, HostAddressLi
 
     /**
      * 刷新endpointsPool，去掉下线的endpoint，由于dns可能会连续变更，而refresh需要重复多次，因此每次refresh时需要使用最新的ip列表
-     * 连续REFRESH_CONFIRM_COUNT次在pool中发现不再有下线的ip时，则认为已经完全清理干净
-     * 需要多次确认的原因是：此处检查时，可能并发创建了下线ip的client
+     * 连续REFRESH_CONFIRM_COUNT次在pool中发现不再有下线的ip时，则认为已经完全清理干净 需要多次确认的原因是：此处检查时，可能并发创建了下线ip的client
      *
      * @param hostname
      */
     private void refreshEndpointPool(String hostname) {
-        ClientBalancerLog.log.info("Refresh endpoints - start epHolder={}", new Object[]{endpointHolder});
+        ClientBalancerLog.log.info("Refresh endpoints - start epHolder={}", new Object[] {endpointHolder});
         int refreshSuccessTime = 0;
         while (refreshSuccessTime < REFRESH_CONFIRM_COUNT) {
             Set<String> newIpAddresses = null;
@@ -216,30 +215,40 @@ public class EndpointManagerImpl<R> implements EndpointManager<R>, HostAddressLi
 
                 if (abandonedIps.size() > 0) {
                     endpointPool.removeOfflineIdleEndpoints(newIpAddresses);
-                    ClientBalancerLog.log.info("Refresh endpoints - found abandon ips in epHolder, latest ips={}, endpointHolder={}, abandonedIps={}", new Object[]{newIpAddresses, endpointHolder, abandonedIps});
+                    ClientBalancerLog.log.info(
+                            "Refresh endpoints - found abandon ips in epHolder, latest ips={}, endpointHolder={}, abandonedIps={}",
+                            new Object[] {newIpAddresses, endpointHolder, abandonedIps});
                 } else {
                     refreshSuccessTime++;
-                    //如果所有ip都是合法的ip，但epHolder中ip比newIpAddresses少，则清理掉若干连接，来让新ip尽快入pool
+                    // 如果所有ip都是合法的ip，但epHolder中ip比newIpAddresses少，则清理掉若干连接，来让新ip尽快入pool
                     if (newIpAddresses.size() > ipEndpointCounter.size()) {
                         for (int i = 0; i < newIpAddresses.size(); i++) {
                             tryRemoveOneIdleEndpoint(true);
                         }
-                        ClientBalancerLog.log.info("Refresh endpoints - not found abandon ips in epHolder, but remove some idle endpoints latest ips={}, befor remove endpointHolder={}, after remove epPool={}", new Object[]{newIpAddresses, endpointHolder, endpointPool});
+                        ClientBalancerLog.log.info(
+                                "Refresh endpoints - not found abandon ips in epHolder, but remove some idle endpoints latest ips={}, befor remove endpointHolder={}, after remove epPool={}",
+                                new Object[] {newIpAddresses, endpointHolder, endpointPool});
                     } else {
-                        ClientBalancerLog.log.info("Refresh endpoints - not found abandon ips in epHolder, latest ips={}, endpointHolder={}, abandonedIps={}", new Object[]{newIpAddresses, endpointHolder, abandonedIps});
+                        ClientBalancerLog.log.info(
+                                "Refresh endpoints - not found abandon ips in epHolder, latest ips={}, endpointHolder={}, abandonedIps={}",
+                                new Object[] {newIpAddresses, endpointHolder, abandonedIps});
                     }
 
 
                 }
             } catch (Exception e) {
-                ClientBalancerLog.log.error("Refresh endpoints - Error: when refresh endpointPool for ipAddress changed! newIpAddress=" + newIpAddresses, e);
+                ClientBalancerLog.log.error(
+                        "Refresh endpoints - Error: when refresh endpointPool for ipAddress changed! newIpAddress=" + newIpAddresses, e);
             } finally {
-                ClientBalancerLog.log.info("Refresh endpoints - one loop completed! loop count={}, now epHolder={}, epPool={}, will sleep a momment", new Object[]{refreshSuccessTime, endpointHolder, endpointPool});
+                ClientBalancerLog.log.info(
+                        "Refresh endpoints - one loop completed! loop count={}, now epHolder={}, epPool={}, will sleep a momment",
+                        new Object[] {refreshSuccessTime, endpointHolder, endpointPool});
                 ClientBalancerUtil.safeSleep(REFRESH_INTERVAL_WHEN_IP_CHANGED);
             }
         }
         endpointPool.removeOfflineEndpointsCompleted();
-        ClientBalancerLog.log.info("Refresh endpoints - all completed! loop count={}, now epHolder={} epPool={}", new Object[]{refreshSuccessTime, endpointHolder, endpointPool});
+        ClientBalancerLog.log.info("Refresh endpoints - all completed! loop count={}, now epHolder={} epPool={}",
+                new Object[] {refreshSuccessTime, endpointHolder, endpointPool});
     }
 
     public static void main(String[] args) {

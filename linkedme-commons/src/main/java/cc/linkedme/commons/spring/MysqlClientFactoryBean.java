@@ -32,7 +32,9 @@ public class MysqlClientFactoryBean extends CacheableObjectFactoryBean {
     }
 
 
-    /* (non-Javadoc)
+    /*
+     * (non-Javadoc)
+     * 
      * @see cc.linkedme.commons.spring.CacheableObjectFactoryBean#getKey()
      */
     @Override
@@ -179,8 +181,9 @@ public class MysqlClientFactoryBean extends CacheableObjectFactoryBean {
     }
 
     public static enum MysqlConfigStrategy {
-        master(WfcXmlConstants.MYSQL_DEFAULT_MASTER_CHECK_OUT_TIMEOUT, WfcXmlConstants.MYSQL_DEFAULT_MASTER_SOCKET_TIMEOUT, WfcXmlConstants.MYSQL_DEFAULT_MASTER_SOCKET_CONNECT_TIMEOUT),
-        slave(WfcXmlConstants.MYSQL_DEFAULT_SLAVE_CHECK_OUT_TIMEOUT, WfcXmlConstants.MYSQL_DEFAULT_SLAVE_SOCKET_TIMEOUT, WfcXmlConstants.MYSQL_DEFAULT_SLAVE_SOCKET_CONNECT_TIMEOUT);
+        master(WfcXmlConstants.MYSQL_DEFAULT_MASTER_CHECK_OUT_TIMEOUT, WfcXmlConstants.MYSQL_DEFAULT_MASTER_SOCKET_TIMEOUT,
+                WfcXmlConstants.MYSQL_DEFAULT_MASTER_SOCKET_CONNECT_TIMEOUT), slave(WfcXmlConstants.MYSQL_DEFAULT_SLAVE_CHECK_OUT_TIMEOUT,
+                        WfcXmlConstants.MYSQL_DEFAULT_SLAVE_SOCKET_TIMEOUT, WfcXmlConstants.MYSQL_DEFAULT_SLAVE_SOCKET_CONNECT_TIMEOUT);
         private int checkoutTimeout;
         private int socketTimeout;
         private int connectTimeout;
@@ -199,10 +202,10 @@ public class MysqlClientFactoryBean extends CacheableObjectFactoryBean {
             StringBuilder sb = new StringBuilder(jdbcUrl);
             /*
              * 如果自己在mysql.properties中的jdbcUrl已配置则按着此配置，否则按枚举类型里的默认配置
-			 * 为方便管理与维护，如需自己配置，只支持jdbcUrl配置socketTimeout、connectTimeout
-			 */
+             * 为方便管理与维护，如需自己配置，只支持jdbcUrl配置socketTimeout、connectTimeout
+             */
             if (!jdbcUrl.contains("socketTimeout")) {
-                //如果jdbcUrl中无参，则用?来接语句，否则用&
+                // 如果jdbcUrl中无参，则用?来接语句，否则用&
                 if (jdbcUrl.contains("?")) {
                     sb.append("&");
                 } else {
@@ -225,7 +228,9 @@ public class MysqlClientFactoryBean extends CacheableObjectFactoryBean {
     }
 
 
-    /* (non-Javadoc)
+    /*
+     * (non-Javadoc)
+     * 
      * @see cc.linkedme.commons.spring.CacheableObjectFactoryBean#doCreateInstance()
      */
     @Override
@@ -253,7 +258,9 @@ public class MysqlClientFactoryBean extends CacheableObjectFactoryBean {
         return dataSource;
     }
 
-    /* (non-Javadoc)
+    /*
+     * (non-Javadoc)
+     * 
      * @see org.springframework.beans.factory.config.AbstractFactoryBean#getObjectType()
      */
     @Override
@@ -267,8 +274,8 @@ public class MysqlClientFactoryBean extends CacheableObjectFactoryBean {
         if (instance == null) {
             return;
         }
-//		ComboPooledDataSource ds = (ComboPooledDataSource)instance;
-//		ds.close();
+        // ComboPooledDataSource ds = (ComboPooledDataSource)instance;
+        // ds.close();
     }
 
 }

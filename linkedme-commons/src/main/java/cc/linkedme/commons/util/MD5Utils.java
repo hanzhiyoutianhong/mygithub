@@ -9,8 +9,7 @@ public class MD5Utils {
         protected MessageDigest initialValue() {
             try {
                 return MessageDigest.getInstance("MD5");
-            } catch (Exception e) {
-            }
+            } catch (Exception e) {}
             return null;
         }
     };

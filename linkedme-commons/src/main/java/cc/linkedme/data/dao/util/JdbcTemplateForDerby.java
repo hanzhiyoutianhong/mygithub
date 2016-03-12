@@ -3,17 +3,15 @@ package cc.linkedme.data.dao.util;
 /*
  * Copyright 2002-2008 the original author or authors.
  *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except
+ * in compliance with the License. You may obtain a copy of the License at
  *
- *      http://www.apache.org/licenses/LICENSE-2.0
+ * http://www.apache.org/licenses/LICENSE-2.0
  *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
+ * Unless required by applicable law or agreed to in writing, software distributed under the License
+ * is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express
+ * or implied. See the License for the specific language governing permissions and limitations under
+ * the License.
  */
 
 import java.util.List;
@@ -84,8 +82,9 @@ import cc.linkedme.commons.log.ApiLogger;
 /**
  * <b> To get jdbcTemplate from m-s dbs </b>
  * <p>
- * <p>We can freely update the get strategy, for we can change read/write datasource if the datasource is crash or cannot connect,
- * we can retry get connection if some connection is stale
+ * <p>
+ * We can freely update the get strategy, for we can change read/write datasource if the datasource
+ * is crash or cannot connect, we can retry get connection if some connection is stale
  * </p>
  */
 @SuppressWarnings({"rawtypes", "unchecked"})
@@ -138,9 +137,9 @@ public class JdbcTemplateForDerby extends JdbcTemplate {
         }
     }
 
-    //private static final String RETURN_RESULT_SET_PREFIX = "#result-set-";
+    // private static final String RETURN_RESULT_SET_PREFIX = "#result-set-";
 
-    //private static final String RETURN_UPDATE_COUNT_PREFIX = "#update-count-";
+    // private static final String RETURN_UPDATE_COUNT_PREFIX = "#update-count-";
 
 
     /**
@@ -154,89 +153,92 @@ public class JdbcTemplateForDerby extends JdbcTemplate {
     private boolean ignoreWarnings = true;
 
     /**
-     * If this variable is set to a non-zero value, it will be used for setting the
-     * fetchSize property on statements used for query processing.
+     * If this variable is set to a non-zero value, it will be used for setting the fetchSize
+     * property on statements used for query processing.
      */
     private int fetchSize = 0;
 
     /**
-     * If this variable is set to a non-zero value, it will be used for setting the
-     * maxRows property on statements used for query processing.
+     * If this variable is set to a non-zero value, it will be used for setting the maxRows property
+     * on statements used for query processing.
      */
     private int maxRows = 0;
 
     /**
-     * If this variable is set to a non-zero value, it will be used for setting the
-     * queryTimeout property on statements used for query processing.
+     * If this variable is set to a non-zero value, it will be used for setting the queryTimeout
+     * property on statements used for query processing.
      */
     private int queryTimeout = 0;
 
     /**
-     * If this variable is set to true then all results checking will be bypassed for any
-     * callable statement processing.  This can be used to avoid a bug in some older Oracle
-     * JDBC drivers like 10.1.0.2.
+     * If this variable is set to true then all results checking will be bypassed for any callable
+     * statement processing. This can be used to avoid a bug in some older Oracle JDBC drivers like
+     * 10.1.0.2.
      */
     private boolean skipResultsProcessing = false;
 
     /**
-     * If this variable is set to true then all results from a stored procedure call
-     * that don't have a corresponding SqlOutParameter declaration will be bypassed.
-     * All other results processng will be take place unless the variable
-     * <code>skipResultsProcessing</code> is set to <code>true</code>
+     * If this variable is set to true then all results from a stored procedure call that don't have
+     * a corresponding SqlOutParameter declaration will be bypassed. All other results processng
+     * will be take place unless the variable <code>skipResultsProcessing</code> is set to
+     * <code>true</code>
      */
     private boolean skipUndeclaredResults = false;
 
     /**
-     * If this variable is set to true then execution of a CallableStatement will return
-     * the results in a Map that uses case insensitive names for the parameters if
-     * Commons Collections is available on the classpath.
+     * If this variable is set to true then execution of a CallableStatement will return the results
+     * in a Map that uses case insensitive names for the parameters if Commons Collections is
+     * available on the classpath.
      */
     private boolean resultsMapCaseInsensitive = false;
 
 
     /**
      * Construct a new JdbcTemplate for bean usage.
-     * <p>Note: The DataSource has to be set before using the instance.
+     * <p>
+     * Note: The DataSource has to be set before using the instance.
      *
      * @see #setDataSource
      */
     public JdbcTemplateForDerby() {
-        //checkHealthy();
+        // checkHealthy();
     }
 
     /**
      * Construct a new JdbcTemplate, given a DataSource to obtain connections from.
-     * <p>Note: This will not trigger initialization of the exception translator.
+     * <p>
+     * Note: This will not trigger initialization of the exception translator.
      *
      * @param dataSource the JDBC DataSource to obtain connections from
      */
     public JdbcTemplateForDerby(DataSource dataSource) {
-        //setDataSource(dataSource);
+        // setDataSource(dataSource);
         afterPropertiesSet(dataSource);
-        //checkHealthy();
+        // checkHealthy();
     }
 
     /**
      * Construct a new JdbcTemplate, given a DataSource to obtain connections from.
-     * <p>Note: Depending on the "lazyInit" flag, initialization of the exception translator
-     * will be triggered.
+     * <p>
+     * Note: Depending on the "lazyInit" flag, initialization of the exception translator will be
+     * triggered.
      *
      * @param dataSource the JDBC DataSource to obtain connections from
-     * @param lazyInit   whether to lazily initialize the SQLExceptionTranslator
+     * @param lazyInit whether to lazily initialize the SQLExceptionTranslator
      */
     public JdbcTemplateForDerby(DataSource dataSource, boolean lazyInit) {
-        //setDataSource(dataSource);
+        // setDataSource(dataSource);
         setLazyInit(lazyInit);
         afterPropertiesSet(dataSource);
-        //checkHealthy();
+        // checkHealthy();
     }
 
 
     /**
-     * Set a NativeJdbcExtractor to extract native JDBC objects from wrapped handles.
-     * Useful if native Statement and/or ResultSet handles are expected for casting
-     * to database-specific implementation classes, but a connection pool that wraps
-     * JDBC objects is used (note: <i>any</i> pool will return wrapped Connections).
+     * Set a NativeJdbcExtractor to extract native JDBC objects from wrapped handles. Useful if
+     * native Statement and/or ResultSet handles are expected for casting to database-specific
+     * implementation classes, but a connection pool that wraps JDBC objects is used (note:
+     * <i>any</i> pool will return wrapped Connections).
      */
     public void setNativeJdbcExtractor(NativeJdbcExtractor extractor) {
         this.nativeJdbcExtractor = extractor;
@@ -251,8 +253,9 @@ public class JdbcTemplateForDerby extends JdbcTemplate {
 
     /**
      * Set whether or not we want to ignore SQLWarnings.
-     * <p>Default is "true", swallowing and logging all warnings. Switch this flag
-     * to "false" to make the JdbcTemplate throw a SQLWarningException instead.
+     * <p>
+     * Default is "true", swallowing and logging all warnings. Switch this flag to "false" to make
+     * the JdbcTemplate throw a SQLWarningException instead.
      *
      * @see SQLWarning
      * @see SQLWarningException
@@ -270,11 +273,12 @@ public class JdbcTemplateForDerby extends JdbcTemplate {
     }
 
     /**
-     * Set the fetch size for this JdbcTemplate. This is important for processing
-     * large result sets: Setting this higher than the default value will increase
-     * processing speed at the cost of memory consumption; setting this lower can
-     * avoid transferring row data that will never be read by the application.
-     * <p>Default is 0, indicating to use the JDBC driver's default.
+     * Set the fetch size for this JdbcTemplate. This is important for processing large result sets:
+     * Setting this higher than the default value will increase processing speed at the cost of
+     * memory consumption; setting this lower can avoid transferring row data that will never be
+     * read by the application.
+     * <p>
+     * Default is 0, indicating to use the JDBC driver's default.
      *
      * @see Statement#setFetchSize
      */
@@ -290,12 +294,12 @@ public class JdbcTemplateForDerby extends JdbcTemplate {
     }
 
     /**
-     * Set the maximum number of rows for this JdbcTemplate. This is important
-     * for processing subsets of large result sets, avoiding to read and hold
-     * the entire result set in the database or in the JDBC driver if we're
-     * never interested in the entire result in the first place (for example,
-     * when performing searches that might return a large number of matches).
-     * <p>Default is 0, indicating to use the JDBC driver's default.
+     * Set the maximum number of rows for this JdbcTemplate. This is important for processing
+     * subsets of large result sets, avoiding to read and hold the entire result set in the database
+     * or in the JDBC driver if we're never interested in the entire result in the first place (for
+     * example, when performing searches that might return a large number of matches).
+     * <p>
+     * Default is 0, indicating to use the JDBC driver's default.
      *
      * @see Statement#setMaxRows
      */
@@ -312,10 +316,11 @@ public class JdbcTemplateForDerby extends JdbcTemplate {
 
     /**
      * Set the query timeout for statements that this JdbcTemplate executes.
-     * <p>Default is 0, indicating to use the JDBC driver's default.
-     * <p>Note: Any timeout specified here will be overridden by the remaining
-     * transaction timeout when executing within a transaction that has a
-     * timeout specified at the transaction level.
+     * <p>
+     * Default is 0, indicating to use the JDBC driver's default.
+     * <p>
+     * Note: Any timeout specified here will be overridden by the remaining transaction timeout when
+     * executing within a transaction that has a timeout specified at the transaction level.
      *
      * @see Statement#setQueryTimeout
      */
@@ -331,10 +336,10 @@ public class JdbcTemplateForDerby extends JdbcTemplate {
     }
 
     /**
-     * Set whether results processing should be skipped.  Can be used to optimize callable
-     * statement processing when we know that no results are being passed back - the processing
-     * of out parameter will still take place.  This can be used to avoid a bug in some older
-     * Oracle JDBC drivers like 10.1.0.2.
+     * Set whether results processing should be skipped. Can be used to optimize callable statement
+     * processing when we know that no results are being passed back - the processing of out
+     * parameter will still take place. This can be used to avoid a bug in some older Oracle JDBC
+     * drivers like 10.1.0.2.
      */
     public void setSkipResultsProcessing(boolean skipResultsProcessing) {
         this.skipResultsProcessing = skipResultsProcessing;
@@ -362,60 +367,61 @@ public class JdbcTemplateForDerby extends JdbcTemplate {
     }
 
     /**
-     * Set whether execution of a CallableStatement will return the results in a Map
-     * that uses case insensitive names for the parameters.
+     * Set whether execution of a CallableStatement will return the results in a Map that uses case
+     * insensitive names for the parameters.
      */
     public void setResultsMapCaseInsensitive(boolean resultsMapCaseInsensitive) {
         this.resultsMapCaseInsensitive = resultsMapCaseInsensitive;
     }
 
     /**
-     * Return whether execution of a CallableStatement will return the results in a Map
-     * that uses case insensitive names for the parameters.
+     * Return whether execution of a CallableStatement will return the results in a Map that uses
+     * case insensitive names for the parameters.
      */
     public boolean isResultsMapCaseInsensitive() {
         return this.resultsMapCaseInsensitive;
     }
 
 
-    //-------------------------------------------------------------------------
+    // -------------------------------------------------------------------------
     // Methods dealing with a plain java.sql.Connection
-    //-------------------------------------------------------------------------
+    // -------------------------------------------------------------------------
 
-//	public Object execute(ConnectionCallback action, boolean isWrite) throws DataAccessException {
-//		Assert.notNull(action, "Callback object must not be null");
-//
-//		DataSource ds = getDataSource(isWrite);
-//		Connection con = safeGetConnection(ds);
-//		try {
-//			Connection conToUse = con;
-//			if (this.nativeJdbcExtractor != null) {
-//				// Extract native JDBC Connection, castable to OracleConnection or the like.
-//				conToUse = this.nativeJdbcExtractor.getNativeConnection(con);
-//			}
-//			else {
-//				// Create close-suppressing Connection proxy, also preparing returned Statements.
-//				conToUse = createConnectionProxy(ds, con);
-//			}
-//			return action.doInConnection(conToUse);
-//		}
-//		catch (SQLException ex) {
-//			// Release Connection early, to avoid potential connection pool deadlock
-//			// in the case when the exception translator hasn't been initialized yet.
-//			DataSourceUtils.releaseConnection(con, ds);
-//			con = null;
-//			throw getExceptionTranslator(ds).translate("ConnectionCallback", getSql(action), ex);
-//		}
-//		finally {
-//			DataSourceUtils.releaseConnection(con, ds);
-//		}
-//	}
+    // public Object execute(ConnectionCallback action, boolean isWrite) throws DataAccessException
+    // {
+    // Assert.notNull(action, "Callback object must not be null");
+    //
+    // DataSource ds = getDataSource(isWrite);
+    // Connection con = safeGetConnection(ds);
+    // try {
+    // Connection conToUse = con;
+    // if (this.nativeJdbcExtractor != null) {
+    // // Extract native JDBC Connection, castable to OracleConnection or the like.
+    // conToUse = this.nativeJdbcExtractor.getNativeConnection(con);
+    // }
+    // else {
+    // // Create close-suppressing Connection proxy, also preparing returned Statements.
+    // conToUse = createConnectionProxy(ds, con);
+    // }
+    // return action.doInConnection(conToUse);
+    // }
+    // catch (SQLException ex) {
+    // // Release Connection early, to avoid potential connection pool deadlock
+    // // in the case when the exception translator hasn't been initialized yet.
+    // DataSourceUtils.releaseConnection(con, ds);
+    // con = null;
+    // throw getExceptionTranslator(ds).translate("ConnectionCallback", getSql(action), ex);
+    // }
+    // finally {
+    // DataSourceUtils.releaseConnection(con, ds);
+    // }
+    // }
 
     /**
      * Return the exception translator for this instance.
-     * <p>Creates a default {@link SQLErrorCodeSQLExceptionTranslator}
-     * for the specified DataSource if none set, or a
-     * {@link SQLStateSQLExceptionTranslator} in case of no DataSource.
+     * <p>
+     * Creates a default {@link SQLErrorCodeSQLExceptionTranslator} for the specified DataSource if
+     * none set, or a {@link SQLStateSQLExceptionTranslator} in case of no DataSource.
      *
      * @see #getDataSource()
      */
@@ -436,10 +442,11 @@ public class JdbcTemplateForDerby extends JdbcTemplate {
     }
 
     /**
-     * Create a close-suppressing proxy for the given JDBC Connection.
-     * Called by the <code>execute</code> method.
-     * <p>The proxy also prepares returned JDBC Statements, applying
-     * statement settings such as fetch size, max rows, and query timeout.
+     * Create a close-suppressing proxy for the given JDBC Connection. Called by the
+     * <code>execute</code> method.
+     * <p>
+     * The proxy also prepares returned JDBC Statements, applying statement settings such as fetch
+     * size, max rows, and query timeout.
      *
      * @param con the JDBC Connection to create a proxy for
      * @return the Connection proxy
@@ -447,16 +454,14 @@ public class JdbcTemplateForDerby extends JdbcTemplate {
      * @see #applyStatementSettings
      */
     protected Connection createConnectionProxy(DataSource dataSource, Connection con) {
-        return (Connection) Proxy.newProxyInstance(
-                ConnectionProxy.class.getClassLoader(),
-                new Class[]{ConnectionProxy.class},
+        return (Connection) Proxy.newProxyInstance(ConnectionProxy.class.getClassLoader(), new Class[] {ConnectionProxy.class},
                 new CloseSuppressingInvocationHandler(dataSource, con));
     }
 
 
-    //-------------------------------------------------------------------------
+    // -------------------------------------------------------------------------
     // Methods dealing with static SQL (java.sql.Statement)
-    //-------------------------------------------------------------------------
+    // -------------------------------------------------------------------------
     public Object execute(StatementCallback action, boolean isWrite) throws DataAccessException {
         Assert.notNull(action, "Callback object must not be null");
 
@@ -467,8 +472,7 @@ public class JdbcTemplateForDerby extends JdbcTemplate {
         Statement stmt = null;
         try {
             Connection conToUse = con;
-            if (this.nativeJdbcExtractor != null &&
-                    this.nativeJdbcExtractor.isNativeConnectionNecessaryForNativeStatements()) {
+            if (this.nativeJdbcExtractor != null && this.nativeJdbcExtractor.isNativeConnectionNecessaryForNativeStatements()) {
                 conToUse = this.nativeJdbcExtractor.getNativeConnection(con);
             }
             stmt = conToUse.createStatement();
@@ -492,10 +496,11 @@ public class JdbcTemplateForDerby extends JdbcTemplate {
             JdbcUtils.closeStatement(stmt);
             DataSourceUtils.releaseConnection(con, ds);
 
-            //add slow log
+            // add slow log
             long useTime = System.currentTimeMillis() - start;
             if (useTime > ApiLogger.DB_FIRE_TIME) {
-                ApiLogger.fire(new StringBuffer().append("DB ").append(((com.mchange.v2.c3p0.ComboPooledDataSource) ds).getJdbcUrl()).append(" too slow :").append(useTime).append(" isWrite:").append(isWrite));
+                ApiLogger.fire(new StringBuffer().append("DB ").append(((com.mchange.v2.c3p0.ComboPooledDataSource) ds).getJdbcUrl())
+                        .append(" too slow :").append(useTime).append(" isWrite:").append(isWrite));
             }
         }
     }
@@ -515,13 +520,17 @@ public class JdbcTemplateForDerby extends JdbcTemplate {
                 con = DataSourceUtils.getConnection(ds);
                 return con;
             } catch (CannotGetJdbcConnectionException e) {
-                ApiLogger.info(new StringBuilder(64).append("get connection try count:").append((tryGetConCount - count)).append(", ds=").append(((com.mchange.v2.c3p0.ComboPooledDataSource) ds).getJdbcUrl()));
+                ApiLogger.info(new StringBuilder(64).append("get connection try count:").append((tryGetConCount - count)).append(", ds=")
+                        .append(((com.mchange.v2.c3p0.ComboPooledDataSource) ds).getJdbcUrl()));
                 DataSourceUtils.releaseConnection(con, ds);
             }
         }
 
-        ApiLogger.fire(new StringBuffer().append("DB ").append(((com.mchange.v2.c3p0.ComboPooledDataSource) ds).getJdbcUrl()).append(" Error:").append("Could not get JDBC Connection: "));
-        throw new CannotGetJdbcConnectionException("Could not get JDBC Connection: " + ", ds=" + ((com.mchange.v2.c3p0.ComboPooledDataSource) ds).getJdbcUrl(), new SQLException());
+        ApiLogger.fire(new StringBuffer().append("DB ").append(((com.mchange.v2.c3p0.ComboPooledDataSource) ds).getJdbcUrl())
+                .append(" Error:").append("Could not get JDBC Connection: "));
+        throw new CannotGetJdbcConnectionException(
+                "Could not get JDBC Connection: " + ", ds=" + ((com.mchange.v2.c3p0.ComboPooledDataSource) ds).getJdbcUrl(),
+                new SQLException());
     }
 
     public Object query(final String sql, final ResultSetExtractor rse) throws DataAccessException {
@@ -656,18 +665,18 @@ public class JdbcTemplateForDerby extends JdbcTemplate {
     }
 
 
-    //-------------------------------------------------------------------------
+    // -------------------------------------------------------------------------
     // Methods dealing with prepared statements
-    //-------------------------------------------------------------------------
+    // -------------------------------------------------------------------------
 
-    public Object execute(PreparedStatementCreator psc, PreparedStatementCallback action, boolean isWrite)
-            throws DataAccessException {
+    public Object execute(PreparedStatementCreator psc, PreparedStatementCallback action, boolean isWrite) throws DataAccessException {
 
         Assert.notNull(psc, "PreparedStatementCreator must not be null");
         Assert.notNull(action, "Callback object must not be null");
         if (ApiLogger.isTraceEnabled()) {
             String sql = getSql(psc);
-            ApiLogger.trace(new StringBuilder(128).append("Executing prepared SQL statement").append((sql != null ? " [" + sql + "]" : "")));
+            ApiLogger
+                    .trace(new StringBuilder(128).append("Executing prepared SQL statement").append((sql != null ? " [" + sql + "]" : "")));
         }
 
         long start = System.currentTimeMillis();
@@ -676,8 +685,7 @@ public class JdbcTemplateForDerby extends JdbcTemplate {
         PreparedStatement ps = null;
         try {
             Connection conToUse = con;
-            if (this.nativeJdbcExtractor != null &&
-                    this.nativeJdbcExtractor.isNativeConnectionNecessaryForNativePreparedStatements()) {
+            if (this.nativeJdbcExtractor != null && this.nativeJdbcExtractor.isNativeConnectionNecessaryForNativePreparedStatements()) {
                 conToUse = this.nativeJdbcExtractor.getNativeConnection(con);
             }
             ps = psc.createPreparedStatement(conToUse);
@@ -704,10 +712,11 @@ public class JdbcTemplateForDerby extends JdbcTemplate {
             throw getExceptionTranslator(ds).translate("PreparedStatementCallback", sql, ex);
         } finally {
 
-            //add slow log
+            // add slow log
             long useTime = System.currentTimeMillis() - start;
             if (useTime > ApiLogger.DB_FIRE_TIME) {
-                ApiLogger.fire(new StringBuffer().append("DB ").append(((com.mchange.v2.c3p0.ComboPooledDataSource) ds).getJdbcUrl()).append(" too slow :").append(useTime));
+                ApiLogger.fire(new StringBuffer().append("DB ").append(((com.mchange.v2.c3p0.ComboPooledDataSource) ds).getJdbcUrl())
+                        .append(" too slow :").append(useTime));
             }
 
             if (psc instanceof ParameterDisposer) {
@@ -723,25 +732,22 @@ public class JdbcTemplateForDerby extends JdbcTemplate {
     }
 
     /**
-     * Query using a prepared statement, allowing for a PreparedStatementCreator
-     * and a PreparedStatementSetter. Most other query methods use this method,
-     * but application code will always work with either a creator or a setter.
+     * Query using a prepared statement, allowing for a PreparedStatementCreator and a
+     * PreparedStatementSetter. Most other query methods use this method, but application code will
+     * always work with either a creator or a setter.
      *
-     * @param psc Callback handler that can create a PreparedStatement given a
-     *            Connection
-     * @param pss object that knows how to set values on the prepared statement.
-     *            If this is null, the SQL will be assumed to contain no bind parameters.
+     * @param psc Callback handler that can create a PreparedStatement given a Connection
+     * @param pss object that knows how to set values on the prepared statement. If this is null,
+     *        the SQL will be assumed to contain no bind parameters.
      * @param rse object that will extract results.
      * @return an arbitrary result object, as returned by the ResultSetExtractor
      * @throws DataAccessException if there is any problem
      */
-    public Object query(
-            PreparedStatementCreator psc, final PreparedStatementSetter pss, final ResultSetExtractor rse)
+    public Object query(PreparedStatementCreator psc, final PreparedStatementSetter pss, final ResultSetExtractor rse)
             throws DataAccessException {
 
         Assert.notNull(rse, "ResultSetExtractor must not be null");
-        if (ApiLogger.isTraceEnabled())
-            ApiLogger.trace("Executing prepared SQL query");
+        if (ApiLogger.isTraceEnabled()) ApiLogger.trace("Executing prepared SQL query");
 
         return execute(psc, new PreparedStatementCallback() {
             public Object doInPreparedStatement(PreparedStatement ps) throws SQLException {
@@ -814,8 +820,7 @@ public class JdbcTemplateForDerby extends JdbcTemplate {
         return (List) query(sql, args, new RowMapperResultSetExtractor(rowMapper));
     }
 
-    public Object queryForObject(String sql, Object[] args, int[] argTypes, RowMapper rowMapper)
-            throws DataAccessException {
+    public Object queryForObject(String sql, Object[] args, int[] argTypes, RowMapper rowMapper) throws DataAccessException {
 
         List results = (List) query(sql, args, argTypes, new RowMapperResultSetExtractor(rowMapper, 1));
         return DataAccessUtils.requiredSingleResult(results);
@@ -826,8 +831,7 @@ public class JdbcTemplateForDerby extends JdbcTemplate {
         return DataAccessUtils.requiredSingleResult(results);
     }
 
-    public Object queryForObject(String sql, Object[] args, int[] argTypes, Class requiredType)
-            throws DataAccessException {
+    public Object queryForObject(String sql, Object[] args, int[] argTypes, Class requiredType) throws DataAccessException {
 
         return queryForObject(sql, args, argTypes, getSingleColumnRowMapper(requiredType));
     }
@@ -888,8 +892,7 @@ public class JdbcTemplateForDerby extends JdbcTemplate {
         return (SqlRowSet) query(sql, args, new SqlRowSetResultSetExtractor());
     }
 
-    protected int update(final PreparedStatementCreator psc, final PreparedStatementSetter pss)
-            throws DataAccessException {
+    protected int update(final PreparedStatementCreator psc, final PreparedStatementSetter pss) throws DataAccessException {
 
         if (ApiLogger.isTraceEnabled()) {
             ApiLogger.trace("Executing prepared SQL update");
@@ -920,8 +923,7 @@ public class JdbcTemplateForDerby extends JdbcTemplate {
         return update(psc, (PreparedStatementSetter) null);
     }
 
-    public int update(final PreparedStatementCreator psc, final KeyHolder generatedKeyHolder)
-            throws DataAccessException {
+    public int update(final PreparedStatementCreator psc, final KeyHolder generatedKeyHolder) throws DataAccessException {
 
         Assert.notNull(generatedKeyHolder, "KeyHolder must not be null");
         if (ApiLogger.isTraceEnabled()) {
@@ -973,9 +975,9 @@ public class JdbcTemplateForDerby extends JdbcTemplate {
             public Object doInPreparedStatement(PreparedStatement ps) throws SQLException {
                 try {
                     int batchSize = pss.getBatchSize();
-                    InterruptibleBatchPreparedStatementSetter ipss =
-                            (pss instanceof InterruptibleBatchPreparedStatementSetter ?
-                                    (InterruptibleBatchPreparedStatementSetter) pss : null);
+                    InterruptibleBatchPreparedStatementSetter ipss = (pss instanceof InterruptibleBatchPreparedStatementSetter
+                            ? (InterruptibleBatchPreparedStatementSetter) pss
+                            : null);
                     if (JdbcUtils.supportsBatchUpdates(ps.getConnection())) {
                         for (int i = 0; i < batchSize; i++) {
                             pss.setValues(ps, i);
@@ -1010,12 +1012,11 @@ public class JdbcTemplateForDerby extends JdbcTemplate {
     }
 
 
-    //-------------------------------------------------------------------------
+    // -------------------------------------------------------------------------
     // Methods dealing with callable statements
-    //-------------------------------------------------------------------------
+    // -------------------------------------------------------------------------
 
-    public Object execute(CallableStatementCreator csc, CallableStatementCallback action, boolean isWrite)
-            throws DataAccessException {
+    public Object execute(CallableStatementCreator csc, CallableStatementCallback action, boolean isWrite) throws DataAccessException {
 
         Assert.notNull(csc, "CallableStatementCreator must not be null");
         Assert.notNull(action, "Callback object must not be null");
@@ -1056,10 +1057,11 @@ public class JdbcTemplateForDerby extends JdbcTemplate {
             con = null;
             throw getExceptionTranslator(ds).translate("CallableStatementCallback", sql, ex);
         } finally {
-            //add slow log
+            // add slow log
             long useTime = System.currentTimeMillis() - start;
             if (useTime > ApiLogger.DB_FIRE_TIME) {
-                ApiLogger.fire(new StringBuffer().append("DB ").append(((com.mchange.v2.c3p0.ComboPooledDataSource) ds).getJdbcUrl()).append(" too slow :").append(useTime).append(" isWrite:").append(isWrite));
+                ApiLogger.fire(new StringBuffer().append("DB ").append(((com.mchange.v2.c3p0.ComboPooledDataSource) ds).getJdbcUrl())
+                        .append(" too slow :").append(useTime).append(" isWrite:").append(isWrite));
             }
 
             if (csc instanceof ParameterDisposer) {
@@ -1073,7 +1075,7 @@ public class JdbcTemplateForDerby extends JdbcTemplate {
     /**
      * Extract output parameters from the completed stored procedure.
      *
-     * @param cs         JDBC wrapper for the stored procedure
+     * @param cs JDBC wrapper for the stored procedure
      * @param parameters parameter list for the stored procedure
      * @return Map that contains returned results
      */
@@ -1085,8 +1087,7 @@ public class JdbcTemplateForDerby extends JdbcTemplate {
             if (param instanceof SqlOutParameter) {
                 SqlOutParameter outParam = (SqlOutParameter) param;
                 if (outParam.isReturnTypeSupported()) {
-                    Object out = outParam.getSqlReturnType().getTypeValue(
-                            cs, sqlColIndex, outParam.getSqlType(), outParam.getTypeName());
+                    Object out = outParam.getSqlReturnType().getTypeValue(cs, sqlColIndex, outParam.getSqlType(), outParam.getTypeName());
                     returnedResults.put(outParam.getName(), out);
                 } else {
                     Object out = cs.getObject(sqlColIndex);
@@ -1114,7 +1115,7 @@ public class JdbcTemplateForDerby extends JdbcTemplate {
     /**
      * Process the given ResultSet from a stored procedure.
      *
-     * @param rs    the ResultSet to process
+     * @param rs the ResultSet to process
      * @param param the corresponding stored procedure parameter
      * @return Map that contains returned results
      */
@@ -1147,9 +1148,9 @@ public class JdbcTemplateForDerby extends JdbcTemplate {
     }
 
 
-    //-------------------------------------------------------------------------
+    // -------------------------------------------------------------------------
     // Implementation hooks and helper methods
-    //-------------------------------------------------------------------------
+    // -------------------------------------------------------------------------
 
     /**
      * Create a new RowMapper for reading columns as key-value pairs.
@@ -1174,8 +1175,9 @@ public class JdbcTemplateForDerby extends JdbcTemplate {
 
     /**
      * Create a Map instance to be used as results map.
-     * <p>If "isResultsMapCaseInsensitive" has been set to true, a linked case-insensitive Map
-     * will be created if possible, else a plain HashMap (see Spring's CollectionFactory).
+     * <p>
+     * If "isResultsMapCaseInsensitive" has been set to true, a linked case-insensitive Map will be
+     * created if possible, else a plain HashMap (see Spring's CollectionFactory).
      *
      * @return the results Map instance
      * @see #setResultsMapCaseInsensitive
@@ -1191,8 +1193,8 @@ public class JdbcTemplateForDerby extends JdbcTemplate {
     }
 
     /**
-     * Prepare the given JDBC Statement (or PreparedStatement or CallableStatement),
-     * applying statement settings such as fetch size, max rows, and query timeout.
+     * Prepare the given JDBC Statement (or PreparedStatement or CallableStatement), applying
+     * statement settings such as fetch size, max rows, and query timeout.
      *
      * @param stmt the JDBC Statement to prepare
      * @throws SQLException if thrown by JDBC API
@@ -1214,8 +1216,8 @@ public class JdbcTemplateForDerby extends JdbcTemplate {
     }
 
     /**
-     * Throw an SQLWarningException if we're not ignoring warnings,
-     * else log the warnings (at debug level).
+     * Throw an SQLWarningException if we're not ignoring warnings, else log the warnings (at debug
+     * level).
      *
      * @param stmt the current JDBC statement
      * @throws SQLWarningException if not ignoring warnings
@@ -1226,8 +1228,8 @@ public class JdbcTemplateForDerby extends JdbcTemplate {
             if (ApiLogger.isTraceEnabled()) {
                 SQLWarning warningToLog = stmt.getWarnings();
                 while (warningToLog != null) {
-                    ApiLogger.trace("SQLWarning ignored: SQL state '" + warningToLog.getSQLState() + "', error code '" +
-                            warningToLog.getErrorCode() + "', message [" + warningToLog.getMessage() + "]");
+                    ApiLogger.trace("SQLWarning ignored: SQL state '" + warningToLog.getSQLState() + "', error code '"
+                            + warningToLog.getErrorCode() + "', message [" + warningToLog.getMessage() + "]");
                     warningToLog = warningToLog.getNextWarning();
                 }
             }
@@ -1239,8 +1241,8 @@ public class JdbcTemplateForDerby extends JdbcTemplate {
     /**
      * Throw an SQLWarningException if encountering an actual warning.
      *
-     * @param warning the warnings object from the current statement.
-     *                May be <code>null</code>, in which case this method does nothing.
+     * @param warning the warnings object from the current statement. May be <code>null</code>, in
+     *        which case this method does nothing.
      * @throws SQLWarningException in case of an actual warning to be raised
      */
     protected void handleWarnings(SQLWarning warning) throws SQLWarningException {
@@ -1266,8 +1268,8 @@ public class JdbcTemplateForDerby extends JdbcTemplate {
 
 
     /**
-     * Invocation handler that suppresses close calls on JDBC COnnections.
-     * Also prepares returned Statement (Prepared/CallbackStatement) objects.
+     * Invocation handler that suppresses close calls on JDBC COnnections. Also prepares returned
+     * Statement (Prepared/CallbackStatement) objects.
      *
      * @see Connection#close()
      */
@@ -1339,8 +1341,9 @@ public class JdbcTemplateForDerby extends JdbcTemplate {
 
     /**
      * Adapter to enable use of a RowCallbackHandler inside a ResultSetExtractor.
-     * <p>Uses a regular ResultSet, so we have to be careful when using it:
-     * We don't use it for navigating since this could lead to unpredictable consequences.
+     * <p>
+     * Uses a regular ResultSet, so we have to be careful when using it: We don't use it for
+     * navigating since this could lead to unpredictable consequences.
      */
     private static class RowCallbackHandlerResultSetExtractor implements ResultSetExtractor {
 

@@ -53,7 +53,7 @@ public class ApiUtil {
     //////////////////////////////////////////////////////
     // FIXME 确定所有调用在相同线程中，否则会判断错误.
     //////////////////////////////////////////////////////
-    //过滤微博时，传递是否有不能看的微博
+    // 过滤微博时，传递是否有不能看的微博
     public static ThreadLocal<Boolean> hasVisible = new ThreadLocal<Boolean>() {
         @Override
         protected Boolean initialValue() {
@@ -221,7 +221,8 @@ public class ApiUtil {
             int hash = (int) (h / splitCount % splitCount);
             return hash;
         } catch (UnsupportedEncodingException e) {
-            ApiLogger.warn(new StringBuilder(64).append("Error: when hash4split, id=").append(id).append(", splitCount=").append(splitCount), e);
+            ApiLogger.warn(
+                    new StringBuilder(64).append("Error: when hash4split, id=").append(id).append(", splitCount=").append(splitCount), e);
             return -1;
         }
     }
@@ -230,7 +231,7 @@ public class ApiUtil {
         try {
             Thread.sleep(millis);
         } catch (InterruptedException e) {
-            //eat the exception, for i am not care it
+            // eat the exception, for i am not care it
         }
     }
 
@@ -324,7 +325,7 @@ public class ApiUtil {
     /**
      * truncate the value to the specified length
      *
-     * @param value  the value that will being trucated
+     * @param value the value that will being trucated
      * @param length the threshold of trucate
      * @return the new value after truncated
      */

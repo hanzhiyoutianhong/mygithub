@@ -38,7 +38,7 @@ public class InternalMetricsFactory {
     /**
      * 指定几个名字的关键词，依据 {@link MetricRegistry} 的名字生成规则获取所属的实例。
      *
-     * @param name  关键字。
+     * @param name 关键字。
      * @param names 剩余的关键字。
      * @return {@link MetricRegistry} 实例。
      */

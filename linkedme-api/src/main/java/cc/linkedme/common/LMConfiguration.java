@@ -54,9 +54,8 @@ public class LMConfiguration {
     private static final String KEY_CAMPAGIN = "compagin";
     private static final String KEY_DEEPLINK_PATH = "deeplink_path";
 
-    //Android
-    private static final String KEY_BLUETOOTH = "bluetooth";
-    ;
+    // Android
+    private static final String KEY_BLUETOOTH = "bluetooth";;
     private static final String KEY_BLUETOOTH_VERSION = "bluetooth_version";
     private static final String KEY_HAS_NFC = "has_nfc";
     private static final String KEY_HAS_TELEPHONE = "has_telephone";
@@ -67,7 +66,7 @@ public class LMConfiguration {
     private static final String KEY_DURATION = "duration";
     private static final String KEY_LAT_VAL = "lat_val";
 
-    //Branch
+    // Branch
     private static final String KEY_AD_TRACKING_ENABLED = "ad_tracking_enabled";
     private static final String KEY_IOS_BUNDLE_ID = "ios_bundle_id";
     private static final String KEY_RETRYNUMBER = "retryNumber";
@@ -86,19 +85,19 @@ public class LMConfiguration {
 
     private static final String KEY_SOURCE = "source";
 
-    //server domain
-//    private static final String KEY_TEST_DOMAIN = "http://127.0.0.1:8888/l/";
-//    private static final String KEY_TEST_DOMAIN = "http://192.168.1.129:8888/l/";
-//    private static final String KEY_TEST_DOMAIN = "http://192.168.10.101:8888/l/";
-//    private static final String KEY_TEST_DOMAIN = "http://123.57.140.107/l/";
-//    private static final String KEY_TEST_DOMAIN = "http://192.168.1.107:8888/l/";
-//    private static final String KEY_TEST_DOMAIN = "http://182.92.108.111/l/";
-//    private static final String KEY_TEST_DOMAIN = "http://192.168.11.177:8888/l/";
+    // server domain
+    // private static final String KEY_TEST_DOMAIN = "http://127.0.0.1:8888/l/";
+    // private static final String KEY_TEST_DOMAIN = "http://192.168.1.129:8888/l/";
+    // private static final String KEY_TEST_DOMAIN = "http://192.168.10.101:8888/l/";
+    // private static final String KEY_TEST_DOMAIN = "http://123.57.140.107/l/";
+    // private static final String KEY_TEST_DOMAIN = "http://192.168.1.107:8888/l/";
+    // private static final String KEY_TEST_DOMAIN = "http://182.92.108.111/l/";
+    // private static final String KEY_TEST_DOMAIN = "http://192.168.11.177:8888/l/";
     private static final String KEY_TEST_DOMAIN = "http://lkme.cc/l/";
 
 
-//
-//        private static final String KEY_TEST_DOMAIN = "http://192.168.81.39:8888/l/";
+    //
+    // private static final String KEY_TEST_DOMAIN = "http://192.168.81.39:8888/l/";
 
     private static final String KEY_DOMAIN = "http://lmm.so/l/";
     private static final String KEY_LINK_ERROR = "http://error";
@@ -110,8 +109,7 @@ public class LMConfiguration {
      * construction function
      */
 
-    public LMConfiguration() {
-    }
+    public LMConfiguration() {}
 
     public static String getKeyLinkedmeKey() {
         return KEY_LINKEDME_KEY;

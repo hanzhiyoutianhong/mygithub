@@ -9,8 +9,7 @@ import java.util.Iterator;
 import java.util.Map;
 import java.util.Set;
 
-public class JedisByteHashMap implements Map<byte[], byte[]>, Cloneable,
-        Serializable {
+public class JedisByteHashMap implements Map<byte[], byte[]>, Cloneable, Serializable {
     private static final long serialVersionUID = -6971431362627219416L;
     private Map<ByteArrayWrapper, byte[]> internalMap = new HashMap<ByteArrayWrapper, byte[]>();
 
@@ -19,8 +18,7 @@ public class JedisByteHashMap implements Map<byte[], byte[]>, Cloneable,
     }
 
     public boolean containsKey(Object key) {
-        if (key instanceof byte[])
-            return internalMap.containsKey(new ByteArrayWrapper((byte[]) key));
+        if (key instanceof byte[]) return internalMap.containsKey(new ByteArrayWrapper((byte[]) key));
         return internalMap.containsKey(key);
     }
 
@@ -29,20 +27,17 @@ public class JedisByteHashMap implements Map<byte[], byte[]>, Cloneable,
     }
 
     public Set<java.util.Map.Entry<byte[], byte[]>> entrySet() {
-        Iterator<java.util.Map.Entry<ByteArrayWrapper, byte[]>> iterator = internalMap
-                .entrySet().iterator();
+        Iterator<java.util.Map.Entry<ByteArrayWrapper, byte[]>> iterator = internalMap.entrySet().iterator();
         HashSet<Entry<byte[], byte[]>> hashSet = new HashSet<java.util.Map.Entry<byte[], byte[]>>();
         while (iterator.hasNext()) {
             Entry<ByteArrayWrapper, byte[]> entry = iterator.next();
-            hashSet.add(new JedisByteEntry(entry.getKey().data, entry
-                    .getValue()));
+            hashSet.add(new JedisByteEntry(entry.getKey().data, entry.getValue()));
         }
         return hashSet;
     }
 
     public byte[] get(Object key) {
-        if (key instanceof byte[])
-            return internalMap.get(new ByteArrayWrapper((byte[]) key));
+        if (key instanceof byte[]) return internalMap.get(new ByteArrayWrapper((byte[]) key));
         return internalMap.get(key);
     }
 
@@ -67,16 +62,13 @@ public class JedisByteHashMap implements Map<byte[], byte[]>, Cloneable,
     public void putAll(Map<? extends byte[], ? extends byte[]> m) {
         Iterator<?> iterator = m.entrySet().iterator();
         while (iterator.hasNext()) {
-            Entry<? extends byte[], ? extends byte[]> next = (Entry<? extends byte[], ? extends byte[]>) iterator
-                    .next();
-            internalMap.put(new ByteArrayWrapper(next.getKey()), next
-                    .getValue());
+            Entry<? extends byte[], ? extends byte[]> next = (Entry<? extends byte[], ? extends byte[]>) iterator.next();
+            internalMap.put(new ByteArrayWrapper(next.getKey()), next.getValue());
         }
     }
 
     public byte[] remove(Object key) {
-        if (key instanceof byte[])
-            return internalMap.remove(new ByteArrayWrapper((byte[]) key));
+        if (key instanceof byte[]) return internalMap.remove(new ByteArrayWrapper((byte[]) key));
         return internalMap.remove(key);
     }
 

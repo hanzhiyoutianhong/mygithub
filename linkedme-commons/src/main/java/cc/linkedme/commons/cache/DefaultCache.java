@@ -1,13 +1,10 @@
 /**
- * $RCSfile$
- * $Revision: 3144 $
- * $Date: 2005-12-01 14:20:11 -0300 (Thu, 01 Dec 2005) $
+ * $RCSfile$ $Revision: 3144 $ $Date: 2005-12-01 14:20:11 -0300 (Thu, 01 Dec 2005) $
  * <p>
  * Copyright (C) 2004-2008 Jive Software. All rights reserved.
  * <p>
- * This software is published under the terms of the GNU Public License (GPL),
- * a copy of which is included in this distribution, or a commercial license
- * agreement with Jive.
+ * This software is published under the terms of the GNU Public License (GPL), a copy of which is
+ * included in this distribution, or a commercial license agreement with Jive.
  */
 package cc.linkedme.commons.cache;
 
@@ -19,27 +16,25 @@ import java.util.*;
 import org.apache.log4j.Logger;
 
 /**
- * Default, non-distributed implementation of the Cache interface.
- * The algorithm for cache is as follows: a HashMap is maintained for fast
- * object lookup. Two linked lists are maintained: one keeps objects in the
- * order they are accessed from cache, the other keeps objects in the order
- * they were originally added to cache. When objects are added to cache, they
- * are first wrapped by a CacheObject which maintains the following pieces
- * of information:<ul>
+ * Default, non-distributed implementation of the Cache interface. The algorithm for cache is as
+ * follows: a HashMap is maintained for fast object lookup. Two linked lists are maintained: one
+ * keeps objects in the order they are accessed from cache, the other keeps objects in the order
+ * they were originally added to cache. When objects are added to cache, they are first wrapped by a
+ * CacheObject which maintains the following pieces of information:
+ * <ul>
  * <p>
- * <li> The size of the object (in bytes).
- * <li> A pointer to the node in the linked list that maintains accessed
- * order for the object. Keeping a reference to the node lets us avoid
- * linear scans of the linked list.
- * <li> A pointer to the node in the linked list that maintains the age
- * of the object in cache. Keeping a reference to the node lets us avoid
- * linear scans of the linked list.</ul><p>
+ * <li>The size of the object (in bytes).
+ * <li>A pointer to the node in the linked list that maintains accessed order for the object.
+ * Keeping a reference to the node lets us avoid linear scans of the linked list.
+ * <li>A pointer to the node in the linked list that maintains the age of the object in cache.
+ * Keeping a reference to the node lets us avoid linear scans of the linked list.
+ * </ul>
  * <p>
- * To get an object from cache, a hash lookup is performed to get a reference
- * to the CacheObject that wraps the real object we are looking for.
- * The object is subsequently moved to the front of the accessed linked list
- * and any necessary cache cleanups are performed. Cache deletion and expiration
- * is performed as needed.
+ * <p>
+ * To get an object from cache, a hash lookup is performed to get a reference to the CacheObject
+ * that wraps the real object we are looking for. The object is subsequently moved to the front of
+ * the accessed linked list and any necessary cache cleanups are performed. Cache deletion and
+ * expiration is performed as needed.
  *
  * @author Matt Tucker
  */
@@ -53,14 +48,13 @@ public class DefaultCache<K, V> implements Cache<K, V> {
     protected Map<K, DefaultCache.CacheObject<V>> map;
 
     /**
-     * Linked list to maintain order that cache objects are accessed
-     * in, most used to least used.
+     * Linked list to maintain order that cache objects are accessed in, most used to least used.
      */
     protected LinkedList lastAccessedList;
 
     /**
-     * Linked list to maintain time that cache objects were initially added
-     * to the cache, most recently added to oldest added.
+     * Linked list to maintain time that cache objects were initially added to the cache, most
+     * recently added to oldest added.
      */
     protected LinkedList ageList;
 
@@ -80,12 +74,13 @@ public class DefaultCache<K, V> implements Cache<K, V> {
     protected long maxLifetime;
 
     /**
-     * Maintain the number of cache hits and misses. A cache hit occurs every
-     * time the get method is called and the cache contains the requested
-     * object. A cache miss represents the opposite occurence.<p>
+     * Maintain the number of cache hits and misses. A cache hit occurs every time the get method is
+     * called and the cache contains the requested object. A cache miss represents the opposite
+     * occurence.
      * <p>
-     * Keeping track of cache hits and misses lets one measure how efficient
-     * the cache is; the higher the percentage of hits, the more efficient.
+     * <p>
+     * Keeping track of cache hits and misses lets one measure how efficient the cache is; the
+     * higher the percentage of hits, the more efficient.
      */
     protected long cacheHits, cacheMisses = 0L;
 
@@ -95,14 +90,13 @@ public class DefaultCache<K, V> implements Cache<K, V> {
     private String name;
 
     /**
-     * Create a new default cache and specify the maximum size of for the cache in
-     * bytes, and the maximum lifetime of objects.
+     * Create a new default cache and specify the maximum size of for the cache in bytes, and the
+     * maximum lifetime of objects.
      *
-     * @param name        a name for the cache.
-     * @param maxSize     the maximum size of the cache in bytes. -1 means the cache
-     *                    has no max size.
-     * @param maxLifetime the maximum amount of time objects can exist in
-     *                    cache before being deleted. -1 means objects never expire.
+     * @param name a name for the cache.
+     * @param maxSize the maximum size of the cache in bytes. -1 means the cache has no max size.
+     * @param maxLifetime the maximum amount of time objects can exist in cache before being
+     *        deleted. -1 means objects never expire.
      */
     public DefaultCache(String name, long maxSize, long maxLifetime) {
         this.name = name;
@@ -125,8 +119,7 @@ public class DefaultCache<K, V> implements Cache<K, V> {
 
         // If the object is bigger than the entire cache, simply don't add it.
         if (maxCacheSize > 0 && objectSize > maxCacheSize * .90) {
-            log.warn("Cache: " + name + " -- object with key " + key +
-                    " is too large to fit in cache. Size is " + objectSize);
+            log.warn("Cache: " + name + " -- object with key " + key + " is too large to fit in cache. Size is " + objectSize);
             return value;
         }
         cacheSize += objectSize;
@@ -376,7 +369,7 @@ public class DefaultCache<K, V> implements Cache<K, V> {
     }
 
     public void putAll(Map<? extends K, ? extends V> map) {
-        for (Iterator<? extends K> i = map.keySet().iterator(); i.hasNext(); ) {
+        for (Iterator<? extends K> i = map.keySet().iterator(); i.hasNext();) {
             K key = i.next();
             V value = map.get(key);
             put(key, value);
@@ -436,8 +429,8 @@ public class DefaultCache<K, V> implements Cache<K, V> {
     }
 
     /**
-     * Returns the name of this cache. The name is completely arbitrary
-     * and used only for display to administrators.
+     * Returns the name of this cache. The name is completely arbitrary and used only for display to
+     * administrators.
      *
      * @return the name of this cache.
      */
@@ -455,12 +448,12 @@ public class DefaultCache<K, V> implements Cache<K, V> {
     }
 
     /**
-     * Returns the number of cache hits. A cache hit occurs every
-     * time the get method is called and the cache contains the requested
-     * object.<p>
+     * Returns the number of cache hits. A cache hit occurs every time the get method is called and
+     * the cache contains the requested object.
      * <p>
-     * Keeping track of cache hits and misses lets one measure how efficient
-     * the cache is; the higher the percentage of hits, the more efficient.
+     * <p>
+     * Keeping track of cache hits and misses lets one measure how efficient the cache is; the
+     * higher the percentage of hits, the more efficient.
      *
      * @return the number of cache hits.
      */
@@ -469,12 +462,12 @@ public class DefaultCache<K, V> implements Cache<K, V> {
     }
 
     /**
-     * Returns the number of cache misses. A cache miss occurs every
-     * time the get method is called and the cache does not contain the
-     * requested object.<p>
+     * Returns the number of cache misses. A cache miss occurs every time the get method is called
+     * and the cache does not contain the requested object.
      * <p>
-     * Keeping track of cache hits and misses lets one measure how efficient
-     * the cache is; the higher the percentage of hits, the more efficient.
+     * <p>
+     * Keeping track of cache hits and misses lets one measure how efficient the cache is; the
+     * higher the percentage of hits, the more efficient.
      *
      * @return the number of cache hits.
      */
@@ -483,10 +476,9 @@ public class DefaultCache<K, V> implements Cache<K, V> {
     }
 
     /**
-     * Returns the size of the cache contents in bytes. This value is only a
-     * rough approximation, so cache users should expect that actual VM
-     * memory used by the cache could be significantly higher than the value
-     * reported by this method.
+     * Returns the size of the cache contents in bytes. This value is only a rough approximation, so
+     * cache users should expect that actual VM memory used by the cache could be significantly
+     * higher than the value reported by this method.
      *
      * @return the size of the cache contents in bytes.
      */
@@ -495,9 +487,9 @@ public class DefaultCache<K, V> implements Cache<K, V> {
     }
 
     /**
-     * Returns the maximum size of the cache (in bytes). If the cache grows larger
-     * than the max size, the least frequently used items will be removed. If
-     * the max cache size is set to -1, there is no size limit.
+     * Returns the maximum size of the cache (in bytes). If the cache grows larger than the max
+     * size, the least frequently used items will be removed. If the max cache size is set to -1,
+     * there is no size limit.
      *
      * @return the maximum size of the cache (-1 indicates unlimited max size).
      */
@@ -506,9 +498,9 @@ public class DefaultCache<K, V> implements Cache<K, V> {
     }
 
     /**
-     * Sets the maximum size of the cache. If the cache grows larger
-     * than the max size, the least frequently used items will be removed. If
-     * the max cache size is set to -1, there is no size limit.
+     * Sets the maximum size of the cache. If the cache grows larger than the max size, the least
+     * frequently used items will be removed. If the max cache size is set to -1, there is no size
+     * limit.
      *
      * @param maxCacheSize the maximum size of this cache (-1 indicates unlimited max size).
      */
@@ -521,10 +513,9 @@ public class DefaultCache<K, V> implements Cache<K, V> {
     }
 
     /**
-     * Returns the maximum number of milleseconds that any object can live
-     * in cache. Once the specified number of milleseconds passes, the object
-     * will be automatically expried from cache. If the max lifetime is set
-     * to -1, then objects never expire.
+     * Returns the maximum number of milleseconds that any object can live in cache. Once the
+     * specified number of milleseconds passes, the object will be automatically expried from cache.
+     * If the max lifetime is set to -1, then objects never expire.
      *
      * @return the maximum number of milleseconds before objects are expired.
      */
@@ -533,10 +524,9 @@ public class DefaultCache<K, V> implements Cache<K, V> {
     }
 
     /**
-     * Sets the maximum number of milleseconds that any object can live
-     * in cache. Once the specified number of milleseconds passes, the object
-     * will be automatically expried from cache. If the max lifetime is set
-     * to -1, then objects never expire.
+     * Sets the maximum number of milleseconds that any object can live in cache. Once the specified
+     * number of milleseconds passes, the object will be automatically expried from cache. If the
+     * max lifetime is set to -1, then objects never expire.
      *
      * @param maxLifetime the maximum number of milleseconds before objects are expired.
      */
@@ -546,8 +536,8 @@ public class DefaultCache<K, V> implements Cache<K, V> {
     }
 
     /**
-     * Returns the size of an object in bytes. Determining size by serialization
-     * is only used as a last resort.
+     * Returns the size of an object in bytes. Determining size by serialization is only used as a
+     * last resort.
      *
      * @return the size of an object in bytes.
      */
@@ -592,8 +582,7 @@ public class DefaultCache<K, V> implements Cache<K, V> {
     }
 
     /**
-     * Clears all entries out of cache where the entries are older than the
-     * maximum defined age.
+     * Clears all entries out of cache where the entries are older than the maximum defined age.
      */
     protected void deleteExpiredEntries() {
         // Check if expiration is turned on.
@@ -630,10 +619,9 @@ public class DefaultCache<K, V> implements Cache<K, V> {
     }
 
     /**
-     * Removes objects from cache if the cache is too full. "Too full" is
-     * defined as within 3% of the maximum cache size. Whenever the cache is
-     * is too big, the least frequently used elements are deleted until the
-     * cache is at least 10% empty.
+     * Removes objects from cache if the cache is too full. "Too full" is defined as within 3% of
+     * the maximum cache size. Whenever the cache is is too big, the least frequently used elements
+     * are deleted until the cache is at least 10% empty.
      */
     protected final void cullCache() {
         // Check if a max cache size is defined.
@@ -657,16 +645,15 @@ public class DefaultCache<K, V> implements Cache<K, V> {
                     removeLast(100);
                 } while (cacheSize > desiredSize);
                 t = System.currentTimeMillis() - t;
-                if (t > 100)
-                    log.warn("Local cache " + name + " was full, shrinked to 90% in " + t + "ms.");
+                if (t > 100) log.warn("Local cache " + name + " was full, shrinked to 90% in " + t + "ms.");
             }
         }
     }
 
     /**
-     * Wrapper for all objects put into cache. It's primary purpose is to maintain
-     * references to the linked lists that maintain the creation time of the object
-     * and the ordering of the most used objects.
+     * Wrapper for all objects put into cache. It's primary purpose is to maintain references to the
+     * linked lists that maintain the creation time of the object and the ordering of the most used
+     * objects.
      */
     private static class CacheObject<V> {
 
@@ -676,25 +663,23 @@ public class DefaultCache<K, V> implements Cache<K, V> {
         public V object;
 
         /**
-         * The size of the Cacheable object. The size of the Cacheable
-         * object is only computed once when it is added to the cache. This makes
-         * the assumption that once objects are added to cache, they are mostly
-         * read-only and that their size does not change significantly over time.
+         * The size of the Cacheable object. The size of the Cacheable object is only computed once
+         * when it is added to the cache. This makes the assumption that once objects are added to
+         * cache, they are mostly read-only and that their size does not change significantly over
+         * time.
          */
         public int size;
 
         /**
-         * A reference to the node in the cache order list. We keep the reference
-         * here to avoid linear scans of the list. Every time the object is
-         * accessed, the node is removed from its current spot in the list and
-         * moved to the front.
+         * A reference to the node in the cache order list. We keep the reference here to avoid
+         * linear scans of the list. Every time the object is accessed, the node is removed from its
+         * current spot in the list and moved to the front.
          */
         public LinkedListNode lastAccessedListNode;
 
         /**
-         * A reference to the node in the age order list. We keep the reference
-         * here to avoid linear scans of the list. The reference is used if the
-         * object has to be deleted from the list.
+         * A reference to the node in the age order list. We keep the reference here to avoid linear
+         * scans of the list. The reference is used if the object has to be deleted from the list.
          */
         public LinkedListNode ageListNode;
 
@@ -705,12 +690,13 @@ public class DefaultCache<K, V> implements Cache<K, V> {
         public int readCount = 0;
 
         /**
-         * Creates a new cache object wrapper. The size of the Cacheable object
-         * must be passed in in order to prevent another possibly expensive
-         * lookup by querying the object itself for its size.<p>
+         * Creates a new cache object wrapper. The size of the Cacheable object must be passed in in
+         * order to prevent another possibly expensive lookup by querying the object itself for its
+         * size.
+         * <p>
          *
          * @param object the underlying Object to wrap.
-         * @param size   the size of the Cachable object in bytes.
+         * @param size the size of the Cachable object in bytes.
          */
         public CacheObject(V object, int size) {
             this.object = object;
@@ -719,8 +705,8 @@ public class DefaultCache<K, V> implements Cache<K, V> {
     }
 
     /**
-     * An extension of OutputStream that does nothing but calculate the number
-     * of bytes written through it.
+     * An extension of OutputStream that does nothing but calculate the number of bytes written
+     * through it.
      */
     private static class NullOutputStream extends OutputStream {
 

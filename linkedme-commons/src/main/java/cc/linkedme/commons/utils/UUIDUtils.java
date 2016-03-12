@@ -8,7 +8,7 @@ import java.util.UUID;
 public class UUIDUtils {
 
 
-    //TODO 用于表示手机的identityId
+    // TODO 用于表示手机的identityId
     public static String createUUID() {
         String result;
         UUID uuid = UUID.randomUUID();
@@ -19,7 +19,8 @@ public class UUIDUtils {
 
     public static String createHardwareId(String hardwareId) {
         hardwareId = hardwareId.toUpperCase();
-        return hardwareId.substring(0, 8) + hardwareId.substring(9, 13) + hardwareId.substring(14, 18) + hardwareId.substring(19, 23) + hardwareId.substring(24);
+        return hardwareId.substring(0, 8) + hardwareId.substring(9, 13) + hardwareId.substring(14, 18) + hardwareId.substring(19, 23)
+                + hardwareId.substring(24);
     }
 
     public static String createIdentityId(String linkedMeKey, String hardwareId) {

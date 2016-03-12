@@ -94,8 +94,7 @@ public class EndpointHolderImpl<R> implements EndpointHolder<R> {
 
     @Override
     public String toString() {
-        return new StringBuilder(64)
-                .append("endpoinCount=").append(getEndpointCounter()).toString();
+        return new StringBuilder(64).append("endpoinCount=").append(getEndpointCounter()).toString();
     }
 
 }

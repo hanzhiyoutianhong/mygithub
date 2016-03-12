@@ -20,23 +20,23 @@ final class MessageFormatter {
      * 根据给出的格式化参数，对格式化模板进行格式化。
      *
      * @param messagePattern 格式化模板。
-     * @param arg            格式化参数。
+     * @param arg 格式化参数。
      * @return 格式化后的结果。
      */
     static FormattingTuple format(String messagePattern, Object arg) {
-        return arrayFormat(messagePattern, new Object[]{arg});
+        return arrayFormat(messagePattern, new Object[] {arg});
     }
 
     /**
      * 根据给出的格式化参数，对格式化模板进行格式化。
      *
      * @param messagePattern 格式化模板。
-     * @param argA           第一个格式化参数。
-     * @param argB           第二个格式化参数。
+     * @param argA 第一个格式化参数。
+     * @param argB 第二个格式化参数。
      * @return 格式化后的结果。
      */
     static FormattingTuple format(String messagePattern, Object argA, Object argB) {
-        return arrayFormat(messagePattern, new Object[]{argA, argB});
+        return arrayFormat(messagePattern, new Object[] {argA, argB});
     }
 
     static Throwable getThrowableCandidate(Object[] argArray) {
@@ -221,7 +221,7 @@ final class MessageFormatter {
      * 根据给出的格式化参数集，对格式化模板进行格式化。
      *
      * @param messagePattern 格式化模板。
-     * @param argArray       格式化参数集。
+     * @param argArray 格式化参数集。
      * @return 格式化后的结果。
      */
     static FormattingTuple arrayFormat(final String messagePattern, final Object[] argArray) {

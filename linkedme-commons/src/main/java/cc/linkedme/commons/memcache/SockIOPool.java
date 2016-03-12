@@ -39,11 +39,12 @@ import cc.linkedme.commons.client.balancer.util.SystemTimer;
 import cc.linkedme.commons.log.ApiLogger;
 
 /**
- * This class is a connection pool for maintaning a pool of persistent
- * connections<br/> to memcached servers.
+ * This class is a connection pool for maintaning a pool of persistent connections<br/>
+ * to memcached servers.
  * <p>
  * The pool must be initialized prior to use. This should typically be early on<br/>
- * in the lifecycle of the JVM instance.<br/> <br/>
+ * in the lifecycle of the JVM instance.<br/>
+ * <br/>
  * <h3>An example of initializing using defaults:</h3>
  * <p>
  * <pre>
@@ -57,8 +58,7 @@ import cc.linkedme.commons.log.ApiLogger;
  * }
  * </pre>
  * <p>
- * <h3>An example of initializing using defaults and providing weights for
- * servers:</h3>
+ * <h3>An example of initializing using defaults and providing weights for servers:</h3>
  * <p>
  * <pre>
  * static {
@@ -109,11 +109,12 @@ import cc.linkedme.commons.log.ApiLogger;
  * }
  * </pre>
  * <p>
- * The easiest manner in which to initialize the pool is to set the servers and
- * rely on defaults as in the first example.<br/> After pool is initialized, a
- * client will request a SockIO object by calling getSock with the cache key<br/>
- * The client must always close the SockIO object when finished, which will
- * return the connection back to the pool.<br/>
+ * The easiest manner in which to initialize the pool is to set the servers and rely on defaults as
+ * in the first example.<br/>
+ * After pool is initialized, a client will request a SockIO object by calling getSock with the
+ * cache key<br/>
+ * The client must always close the SockIO object when finished, which will return the connection
+ * back to the pool.<br/>
  * <h3>An example of retrieving a SockIO object:</h3>
  * <p>
  * <pre>
@@ -239,8 +240,7 @@ public class SockIOPool {
     private boolean enableSwitcher = false;
 
     // empty constructor
-    protected SockIOPool() {
-    }
+    protected SockIOPool() {}
 
     /**
      * Factory to create/retrieve new pools given a unique poolName.
@@ -259,8 +259,8 @@ public class SockIOPool {
     }
 
     /**
-     * Single argument version of factory used for back compat. Simply creates a
-     * pool named "default".
+     * Single argument version of factory used for back compat. Simply creates a pool named
+     * "default".
      *
      * @return instance of SockIOPool
      */
@@ -274,8 +274,7 @@ public class SockIOPool {
     public void initialize() {
 
         // check to see if already initialized
-        if (initialized && (buckets != null || consistentBuckets != null)
-                && (socketPool != null)) {
+        if (initialized && (buckets != null || consistentBuckets != null) && (socketPool != null)) {
             log.error("++++ trying to initialize an already initialized pool");
             return;
         }
@@ -283,25 +282,22 @@ public class SockIOPool {
         initDeadLock.lock();
         try {
             // check to see if already initialized
-            if (initialized && (buckets != null || consistentBuckets != null)
-                    && (socketPool != null)) {
-                log
-                        .error("++++ trying to initialize an already initialized pool");
+            if (initialized && (buckets != null || consistentBuckets != null) && (socketPool != null)) {
+                log.error("++++ trying to initialize an already initialized pool");
                 return;
             }
 
             // pools
-            socketPool = new ConcurrentHashMap<String, ConcurrentMap<SockIO, Long>>(
-                    servers.length * initConn);
-            statusPool = new ConcurrentHashMap<String, ConcurrentMap<SockIO, Integer>>(
-                    servers.length * initConn);
-            usedPool = new ConcurrentHashMap<String, Queue<SockIO>>(
-                    servers.length * initConn);
+            socketPool = new ConcurrentHashMap<String, ConcurrentMap<SockIO, Long>>(servers.length * initConn);
+            statusPool = new ConcurrentHashMap<String, ConcurrentMap<SockIO, Integer>>(servers.length * initConn);
+            usedPool = new ConcurrentHashMap<String, Queue<SockIO>>(servers.length * initConn);
 
             hostDeadDur = new ConcurrentHashMap<String, Long>();
             hostDead = new ConcurrentHashMap<String, Date>();
-            maxCreate = (poolMultiplier > minConn) ? minConn : minConn
-                    / poolMultiplier; // only create up to maxCreate
+            maxCreate = (poolMultiplier > minConn) ? minConn : minConn / poolMultiplier; // only
+                                                                                         // create
+                                                                                         // up to
+                                                                                         // maxCreate
             // connections at once
 
             if (log.isDebugEnabled()) {
@@ -315,8 +311,7 @@ public class SockIOPool {
             // throw a runtime exception
             if (servers == null || servers.length <= 0) {
                 log.error("++++ trying to initialize with no servers");
-                throw new IllegalStateException(
-                        "++++ trying to initialize with no servers");
+                throw new IllegalStateException("++++ trying to initialize with no servers");
             }
 
             // initalize our internal hashing structures
@@ -329,8 +324,7 @@ public class SockIOPool {
             this.initialized = true;
 
             // start maint thread
-            if (this.maintSleep > 0)
-                this.startMaintThread();
+            if (this.maintSleep > 0) this.startMaintThread();
 
         } finally {
             initDeadLock.unlock();
@@ -353,9 +347,7 @@ public class SockIOPool {
     }
 
     private void populateBuckets() {
-        if (log.isDebugEnabled())
-            log
-                    .debug("++++ initializing internal hashing structure for consistent hashing");
+        if (log.isDebugEnabled()) log.debug("++++ initializing internal hashing structure for consistent hashing");
 
         // store buckets in tree map
         this.buckets = new ArrayList<String>();
@@ -364,26 +356,20 @@ public class SockIOPool {
             if (this.weights != null && this.weights.length > i) {
                 for (int k = 0; k < this.weights[i].intValue(); k++) {
                     this.buckets.add(servers[i]);
-                    if (log.isDebugEnabled())
-                        log.debug("++++ added " + servers[i]
-                                + " to server bucket");
+                    if (log.isDebugEnabled()) log.debug("++++ added " + servers[i] + " to server bucket");
                 }
             } else {
                 this.buckets.add(servers[i]);
-                if (log.isDebugEnabled())
-                    log.debug("++++ added " + servers[i] + " to server bucket");
+                if (log.isDebugEnabled()) log.debug("++++ added " + servers[i] + " to server bucket");
             }
 
             // create initial connections
-            if (log.isDebugEnabled())
-                log.debug("+++ creating initial connections (" + initConn
-                        + ") for host: " + servers[i]);
+            if (log.isDebugEnabled()) log.debug("+++ creating initial connections (" + initConn + ") for host: " + servers[i]);
 
             for (int j = 0; j < initConn; j++) {
                 SockIO socket = createSocket(servers[i]);
                 if (socket == null) {
-                    log.error("++++ failed to create connection to: "
-                            + servers[i] + " -- only " + j + " created.");
+                    log.error("++++ failed to create connection to: " + servers[i] + " -- only " + j + " created.");
                     break;
                 }
                 Queue<SockIO> queue = usedPool.get(servers[i]);
@@ -392,11 +378,8 @@ public class SockIOPool {
                     usedPool.put(servers[i], queue);
                 }
                 queue.add(socket);
-                addSocketToPool(socketPool, servers[i], socket, System
-                        .currentTimeMillis(), true);
-                if (log.isDebugEnabled())
-                    log.debug("++++ created and added socket: "
-                            + socket.toString() + " for host " + servers[i]);
+                addSocketToPool(socketPool, servers[i], socket, System.currentTimeMillis(), true);
+                if (log.isDebugEnabled()) log.debug("++++ created and added socket: " + socket.toString() + " for host " + servers[i]);
             }
             if (statusPool.get(servers[i]) == null) {
                 statusPool.putIfAbsent(servers[i], new ConcurrentHashMap<SockIO, Integer>());
@@ -405,9 +388,7 @@ public class SockIOPool {
     }
 
     private void populateConsistentBuckets() {
-        if (log.isDebugEnabled())
-            log
-                    .debug("++++ initializing internal hashing structure for consistent hashing");
+        if (log.isDebugEnabled()) log.debug("++++ initializing internal hashing structure for consistent hashing");
 
         // store buckets in tree map
         this.consistentBuckets = new TreeMap<Long, String>();
@@ -415,48 +396,38 @@ public class SockIOPool {
         MessageDigest md5 = MD5.get();
         if (this.totalWeight <= 0 && this.weights != null) {
             for (int i = 0; i < this.weights.length; i++)
-                this.totalWeight += (this.weights[i] == null) ? 1
-                        : this.weights[i];
+                this.totalWeight += (this.weights[i] == null) ? 1 : this.weights[i];
         } else if (this.weights == null) {
             this.totalWeight = this.servers.length;
         }
 
         for (int i = 0; i < servers.length; i++) {
             int thisWeight = 1;
-            if (this.weights != null && this.weights[i] != null)
-                thisWeight = this.weights[i];
+            if (this.weights != null && this.weights[i] != null) thisWeight = this.weights[i];
 
-            double factor = Math
-                    .floor(((double) (40 * this.servers.length * thisWeight))
-                            / (double) this.totalWeight);
+            double factor = Math.floor(((double) (40 * this.servers.length * thisWeight)) / (double) this.totalWeight);
 
             for (long j = 0; j < factor; j++) {
                 byte[] d = md5.digest((servers[i] + "-" + j).getBytes());
                 for (int h = 0; h < 4; h++) {
-                    Long k = ((long) (d[3 + h * 4] & 0xFF) << 24)
-                            | ((long) (d[2 + h * 4] & 0xFF) << 16)
-                            | ((long) (d[1 + h * 4] & 0xFF) << 8)
-                            | ((long) (d[0 + h * 4] & 0xFF));
+                    Long k = ((long) (d[3 + h * 4] & 0xFF) << 24) | ((long) (d[2 + h * 4] & 0xFF) << 16)
+                            | ((long) (d[1 + h * 4] & 0xFF) << 8) | ((long) (d[0 + h * 4] & 0xFF));
                     k = k % Integer.MAX_VALUE;
                     if (k < 0) {
                         k = -1 * k;
                     }
                     consistentBuckets.put(k, servers[i]);
-                    log.info("++++ added " + servers[i]
-                            + " to server bucket, consistent key=" + k);
+                    log.info("++++ added " + servers[i] + " to server bucket, consistent key=" + k);
                 }
             }
 
             // create initial connections
-            if (log.isDebugEnabled())
-                log.debug("+++ creating initial connections (" + initConn
-                        + ") for host: " + servers[i]);
+            if (log.isDebugEnabled()) log.debug("+++ creating initial connections (" + initConn + ") for host: " + servers[i]);
 
             for (int j = 0; j < initConn; j++) {
                 SockIO socket = createSocket(servers[i]);
                 if (socket == null) {
-                    log.error("++++ failed to create connection to: "
-                            + servers[i] + " -- only " + j + " created.");
+                    log.error("++++ failed to create connection to: " + servers[i] + " -- only " + j + " created.");
                     break;
                 }
 
@@ -466,11 +437,8 @@ public class SockIOPool {
                     usedPool.put(servers[i], queue);
                 }
                 queue.add(socket);
-                addSocketToPool(socketPool, servers[i], socket, System
-                        .currentTimeMillis(), true);
-                if (log.isDebugEnabled())
-                    log.debug("++++ created and added socket: "
-                            + socket.toString() + " for host " + servers[i]);
+                addSocketToPool(socketPool, servers[i], socket, System.currentTimeMillis(), true);
+                if (log.isDebugEnabled()) log.debug("++++ created and added socket: " + socket.toString() + " for host " + servers[i]);
             }
 
             if (statusPool.get(servers[i]) == null) {
@@ -482,9 +450,9 @@ public class SockIOPool {
     /**
      * Creates a new SockIO obj for the given server.
      * <p>
-     * If server fails to connect, then return null and do not try<br/> again
-     * until a duration has passed. This duration will grow<br/> by doubling
-     * after each failed attempt to connect.
+     * If server fails to connect, then return null and do not try<br/>
+     * again until a duration has passed. This duration will grow<br/>
+     * by doubling after each failed attempt to connect.
      *
      * @param host host:port to connect to
      * @return SockIO obj or null if failed to create
@@ -509,15 +477,13 @@ public class SockIOPool {
         boolean tcpNodelay = this.nagle ? false : true;
 
         try {
-            socket = this.enableSwitcher ? new SwitcherSupportSockIO(this, host, this.socketTO,
-                    this.socketConnectTO, tcpNodelay) : new SockIO(this, host, this.socketTO,
-                    this.socketConnectTO, tcpNodelay);
+            socket = this.enableSwitcher
+                    ? new SwitcherSupportSockIO(this, host, this.socketTO, this.socketConnectTO, tcpNodelay)
+                    : new SockIO(this, host, this.socketTO, this.socketConnectTO, tcpNodelay);
 
             if (!socket.isConnected()) {
-                log.error("++++ failed to get SockIO obj for: " + host
-                        + " -- new socket is not connected");
-                addSocketToPool(statusPool, host, socket, SOCKET_STATUS_DEAD,
-                        true);
+                log.error("++++ failed to get SockIO obj for: " + host + " -- new socket is not connected");
+                addSocketToPool(statusPool, host, socket, SOCKET_STATUS_DEAD, true);
                 // socket = null;
             }
         } catch (Exception ex) {
@@ -537,24 +503,17 @@ public class SockIOPool {
                 Date now = new Date();
                 hostDead.put(host, now);
 
-                long expire = (hostDeadDur.containsKey(host)) ? (((Long) hostDeadDur
-                        .get(host)).longValue() * 2)
-                        : 1000;
+                long expire = (hostDeadDur.containsKey(host)) ? (((Long) hostDeadDur.get(host)).longValue() * 2) : 1000;
 
-                if (expire > MAX_RETRY_DELAY)
-                    expire = MAX_RETRY_DELAY;
+                if (expire > MAX_RETRY_DELAY) expire = MAX_RETRY_DELAY;
 
                 hostDeadDur.put(host, new Long(expire));
-                if (log.isDebugEnabled())
-                    log.debug("++++ ignoring dead host: " + host + " for "
-                            + expire + " ms");
+                if (log.isDebugEnabled()) log.debug("++++ ignoring dead host: " + host + " for " + expire + " ms");
 
                 // also clear all entries for this host from availPool
                 clearHostFromPool(host);
             } else {
-                if (log.isDebugEnabled())
-                    log.debug("++++ created socket (" + socket.toString()
-                            + ") for host: " + host);
+                if (log.isDebugEnabled()) log.debug("++++ created socket (" + socket.toString() + ") for host: " + host);
                 if (hostDead.containsKey(host) || hostDeadDur.containsKey(host)) {
                     hostDead.remove(host);
                     hostDeadDur.remove(host);
@@ -619,39 +578,35 @@ public class SockIOPool {
     }
 
     /**
-     * Returns appropriate SockIO object given string cache key and optional
-     * hashcode.
+     * Returns appropriate SockIO object given string cache key and optional hashcode.
      * <p>
-     * Trys to get SockIO from pool. Fails over to additional pools in event of
-     * server failure.
+     * Trys to get SockIO from pool. Fails over to additional pools in event of server failure.
      *
-     * @param key      hashcode for cache key
+     * @param key hashcode for cache key
      * @param hashCode if not null, then the int hashcode to use
      * @return SockIO obj connected to server
      */
     public SockIO getSock(String key, Integer hashCode) {
         long start = SystemTimer.currentTimeMillis();
         try {
-            if (log.isDebugEnabled())
-                log.debug("cache socket pick " + key + " " + hashCode);
+            if (log.isDebugEnabled()) log.debug("cache socket pick " + key + " " + hashCode);
 
             if (!this.initialized) {
                 log.error("attempting to get SockIO from uninitialized pool!");
-                throw new IllegalStateException("Error: u should init the mc client first. Found attempting to get SockIO from uninitialized pool!");
-                //return null;
+                throw new IllegalStateException(
+                        "Error: u should init the mc client first. Found attempting to get SockIO from uninitialized pool!");
+                // return null;
             }
 
             // if no servers return null
-            if ((this.hashingAlg == CONSISTENT_HASH && consistentBuckets.size() == 0)
-                    || (buckets != null && buckets.size() == 0))
+            if ((this.hashingAlg == CONSISTENT_HASH && consistentBuckets.size() == 0) || (buckets != null && buckets.size() == 0))
                 return null;
 
             // if only one server, return it
-            if ((this.hashingAlg == CONSISTENT_HASH && consistentBuckets.size() == 0)
-                    || (buckets != null && buckets.size() == 1)) {
+            if ((this.hashingAlg == CONSISTENT_HASH && consistentBuckets.size() == 0) || (buckets != null && buckets.size() == 1)) {
 
-                SockIO sock = (this.hashingAlg == CONSISTENT_HASH) ? getConnection(consistentBuckets
-                        .get(consistentBuckets.firstKey()))
+                SockIO sock = (this.hashingAlg == CONSISTENT_HASH)
+                        ? getConnection(consistentBuckets.get(consistentBuckets.firstKey()))
                         : getConnection(buckets.get(0));
 
                 if (sock != null && sock.isConnected()) {
@@ -659,8 +614,7 @@ public class SockIOPool {
                         if (!sock.isAlive()) {
                             sock.close();
                             try {
-                                if (statusPool.get(sock.getHost()) != null)
-                                    statusPool.get(sock.getHost()).remove(sock);
+                                if (statusPool.get(sock.getHost()) != null) statusPool.get(sock.getHost()).remove(sock);
 
                                 sock.trueClose();
                             } catch (IOException ioe) {
@@ -672,8 +626,7 @@ public class SockIOPool {
                     }
                 } else {
                     if (sock != null) {
-                        addSocketToPool(statusPool, sock.host, sock,
-                                SOCKET_STATUS_DEAD, true);
+                        addSocketToPool(statusPool, sock.host, sock, SOCKET_STATUS_DEAD, true);
                         // sock = null;
                     }
                 }
@@ -688,17 +641,14 @@ public class SockIOPool {
 
             // get initial bucket
             long bucket = getBucket(key, hashCode);
-            String server = (this.hashingAlg == CONSISTENT_HASH) ? consistentBuckets
-                    .get(bucket)
-                    : buckets.get((int) bucket);
+            String server = (this.hashingAlg == CONSISTENT_HASH) ? consistentBuckets.get(bucket) : buckets.get((int) bucket);
 
             while (!tryServers.isEmpty()) {
 
                 // try to get socket from bucket
                 SockIO sock = getConnection(server);
 
-                if (log.isDebugEnabled())
-                    log.debug("cache choose " + server + " for " + key);
+                if (log.isDebugEnabled()) log.debug("cache choose " + server + " for " + key);
 
                 if (sock != null && sock.isConnected()) {
                     if (aliveCheck) {
@@ -708,8 +658,7 @@ public class SockIOPool {
                             sock.close();
                             try {
 
-                                if (statusPool.get(sock.getHost()) != null)
-                                    statusPool.get(sock.getHost()).remove(sock);
+                                if (statusPool.get(sock.getHost()) != null) statusPool.get(sock.getHost()).remove(sock);
 
                                 sock.trueClose();
 
@@ -723,25 +672,23 @@ public class SockIOPool {
                     }
                 } else {
                     if (sock != null) {
-                        addSocketToPool(statusPool, sock.host, sock,
-                                SOCKET_STATUS_DEAD, true);
+                        addSocketToPool(statusPool, sock.host, sock, SOCKET_STATUS_DEAD, true);
                         // sock = null;
                     }
                 }
 
                 // if we do not want to failover, then bail here
-                //jiajun3 added: the fail-over strategy will only be effective under the condition
-                //of consistent-hash-mode. IF native or compact hash is used ,which means the fail
-                //over will be covered by the master-slave mechanism，this fail-over option will be ignored
+                // jiajun3 added: the fail-over strategy will only be effective under the condition
+                // of consistent-hash-mode. IF native or compact hash is used ,which means the fail
+                // over will be covered by the master-slave mechanism，this fail-over option will be
+                // ignored
 
-                if (this.hashingAlg != CONSISTENT_HASH || !failover)
-                    return null;
+                if (this.hashingAlg != CONSISTENT_HASH || !failover) return null;
 
                 // log that we tried
                 tryServers.remove(server);
 
-                if (tryServers.isEmpty())
-                    break;
+                if (tryServers.isEmpty()) break;
 
                 // if we failed to get a socket from this server
                 // then we try again by adding an incrementer to the
@@ -749,17 +696,13 @@ public class SockIOPool {
                 int rehashTries = 0;
                 while (!tryServers.contains(server)) {
 
-                    String newKey = new StringBuffer().append(rehashTries).append(
-                            key).toString();
+                    String newKey = new StringBuffer().append(rehashTries).append(key).toString();
 
                     // String.format( "%s%s", rehashTries, key );
-                    if (log.isDebugEnabled())
-                        log.debug("rehashing with: " + newKey);
+                    if (log.isDebugEnabled()) log.debug("rehashing with: " + newKey);
 
                     bucket = getBucket(newKey, null);
-                    server = (this.hashingAlg == CONSISTENT_HASH) ? consistentBuckets
-                            .get(bucket)
-                            : buckets.get((int) bucket);
+                    server = (this.hashingAlg == CONSISTENT_HASH) ? consistentBuckets.get(bucket) : buckets.get((int) bucket);
 
                     rehashTries++;
                 }
@@ -767,10 +710,11 @@ public class SockIOPool {
 
             return null;
         } finally {
-            //add slow log
+            // add slow log
             long useTime = SystemTimer.currentTimeMillis() - start;
             if (useTime > ApiLogger.MC_FIRE_TIME) {
-                ApiLogger.fire(new StringBuilder(40).append("MC ").append(key).append(" get connection too slow :").append(useTime).toString());
+                ApiLogger.fire(
+                        new StringBuilder(40).append("MC ").append(key).append(" get connection too slow :").append(useTime).toString());
             }
         }
     }
@@ -778,8 +722,9 @@ public class SockIOPool {
     /**
      * Returns a SockIO object from the pool for the passed in host.
      * <p>
-     * Meant to be called from a more intelligent method<br/> which handles
-     * choosing appropriate server<br/> and failover.
+     * Meant to be called from a more intelligent method<br/>
+     * which handles choosing appropriate server<br/>
+     * and failover.
      *
      * @param host host from which to retrieve object
      * @return SockIO object or null if fail to retrieve one
@@ -791,8 +736,7 @@ public class SockIOPool {
             return null;
         }
 
-        if (host == null)
-            return null;
+        if (host == null) return null;
 
         // if we have items in the pool
         // then we can return it
@@ -802,20 +746,16 @@ public class SockIOPool {
             while ((socket = aSockets.poll()) != null) {
                 if (socket.isConnected()) {
 
-                    addSocketToPool(socketPool, host, socket, System
-                            .currentTimeMillis(), true);
+                    addSocketToPool(socketPool, host, socket, System.currentTimeMillis(), true);
 
-                    if (log.isDebugEnabled())
-                        log.debug("++++ moving socket for host (" + host
-                                + ") to busy pool ... socket: " + socket);
+                    if (log.isDebugEnabled()) log.debug("++++ moving socket for host (" + host + ") to busy pool ... socket: " + socket);
 
                     // return socket
                     return socket;
 
                 } else {
                     // add to deadpool for later reaping
-                    addSocketToPool(statusPool, host, socket,
-                            SOCKET_STATUS_DEAD, true);
+                    addSocketToPool(statusPool, host, socket, SOCKET_STATUS_DEAD, true);
                 }
             }
         } else if (aSockets == null) {
@@ -826,8 +766,7 @@ public class SockIOPool {
         // create one socket -- let the maint thread take care of creating more
         SockIO socket = createSocket(host);
         if (socket != null) {
-            addSocketToPool(socketPool, host, socket, System
-                    .currentTimeMillis(), true);
+            addSocketToPool(socketPool, host, socket, System.currentTimeMillis(), true);
         }
 
         return socket;
@@ -836,13 +775,12 @@ public class SockIOPool {
     /**
      * Adds a socket and value to a given pool for the given host.
      *
-     * @param pool   pool to add to
-     * @param host   host this socket is connected to
+     * @param pool pool to add to
+     * @param host host this socket is connected to
      * @param socket socket to add
      */
-    protected <T> boolean addSocketToPool(
-            ConcurrentMap<String, ConcurrentMap<SockIO, T>> pool, String host,
-            SockIO socket, T value, boolean needReplace) {
+    protected <T> boolean addSocketToPool(ConcurrentMap<String, ConcurrentMap<SockIO, T>> pool, String host, SockIO socket, T value,
+            boolean needReplace) {
         boolean result = false;
 
         ConcurrentMap<SockIO, T> sockets = pool.get(host);
@@ -855,8 +793,7 @@ public class SockIOPool {
                 sockets.put(socket, value);
                 result = true;
             } else {
-                if (sockets.putIfAbsent(socket, value) == null)
-                    result = true;
+                if (sockets.putIfAbsent(socket, value) == null) result = true;
             }
         }
 
@@ -870,13 +807,12 @@ public class SockIOPool {
      * @param newStatus
      */
     protected void updateStatusPoole(String host, SockIO socket, int newStatus) {
-        if (statusPool.containsKey(host))
-            statusPool.get(host).replace(socket, newStatus);
+        if (statusPool.containsKey(host)) statusPool.get(host).replace(socket, newStatus);
     }
 
     /**
-     * Closes and removes all sockets from specified pool for host. THIS METHOD
-     * IS NOT THREADSAFE, SO BE CAREFUL WHEN USING!
+     * Closes and removes all sockets from specified pool for host. THIS METHOD IS NOT THREADSAFE,
+     * SO BE CAREFUL WHEN USING!
      * <p>
      * Internal utility method.
      *
@@ -893,13 +829,11 @@ public class SockIOPool {
                     sockets.remove(socket);
 
                     try {
-                        if (statusPool.get(host) != null)
-                            statusPool.get(host).remove(socket);
+                        if (statusPool.get(host) != null) statusPool.get(host).remove(socket);
 
                         socket.trueClose();
                     } catch (IOException ioe) {
-                        log.error("++++ failed to close socket: "
-                                + ioe.getMessage());
+                        log.error("++++ failed to close socket: " + ioe.getMessage());
                     }
 
                     socket = null;
@@ -912,27 +846,23 @@ public class SockIOPool {
     /**
      * Checks a SockIO object in with the pool.
      * <p>
-     * This will remove SocketIO from busy pool, and optionally<br/> add to
-     * avail pool.
+     * This will remove SocketIO from busy pool, and optionally<br/>
+     * add to avail pool.
      *
-     * @param socket     socket to return
+     * @param socket socket to return
      * @param addToAvail add to avail pool if true
      */
     private void checkIn(SockIO socket, boolean addToAvail) {
 
         String host = socket.getHost();
-        if (log.isDebugEnabled())
-            log.debug("++++ calling check-in on socket: " + socket.toString()
-                    + " for host: " + host);
+        if (log.isDebugEnabled()) log.debug("++++ calling check-in on socket: " + socket.toString() + " for host: " + host);
 
         if (socket.isConnected() && addToAvail) {
             Queue<SockIO> queue = usedPool.get(host);
             queue.add(socket);
 
             // add to avail pool
-            if (log.isDebugEnabled())
-                log.debug("++++ returning socket (" + socket.toString()
-                        + " to avail pool for host: " + host);
+            if (log.isDebugEnabled()) log.debug("++++ returning socket (" + socket.toString() + " to avail pool for host: " + host);
 
 
         } else {
@@ -945,9 +875,9 @@ public class SockIOPool {
     /**
      * Returns a socket to the avail pool.
      * <p>
-     * This is called from SockIO.close(). Calling this method<br/> directly
-     * without closing the SockIO object first<br/> will cause an IOException
-     * to be thrown.
+     * This is called from SockIO.close(). Calling this method<br/>
+     * directly without closing the SockIO object first<br/>
+     * will cause an IOException to be thrown.
      *
      * @param socket socket to return
      */
@@ -963,7 +893,7 @@ public class SockIOPool {
      * @param pool pool to close
      */
     protected void closeSocketPool() {
-        for (Iterator<String> i = socketPool.keySet().iterator(); i.hasNext(); ) {
+        for (Iterator<String> i = socketPool.keySet().iterator(); i.hasNext();) {
             String host = i.next();
             Map<SockIO, Long> sockets = socketPool.get(host);
 
@@ -971,8 +901,7 @@ public class SockIOPool {
                 sockets.remove(socket);
 
                 try {
-                    if (statusPool.get(host) != null)
-                        statusPool.get(host).remove(socket);
+                    if (statusPool.get(host) != null) statusPool.get(host).remove(socket);
 
                     socket.trueClose(false);
                 } catch (IOException ioe) {
@@ -987,12 +916,12 @@ public class SockIOPool {
     /**
      * Shuts down the pool.
      * <p>
-     * Cleanly closes all sockets.<br/> Stops the maint thread.<br/> Nulls out
-     * all internal maps<br/>
+     * Cleanly closes all sockets.<br/>
+     * Stops the maint thread.<br/>
+     * Nulls out all internal maps<br/>
      */
     public void shutDown() {
-        if (log.isDebugEnabled())
-            log.debug("++++ SockIOPool shutting down...");
+        if (log.isDebugEnabled()) log.debug("++++ SockIOPool shutting down...");
 
         if (maintThread != null && maintThread.isRunning()) {
             // stop the main thread
@@ -1000,22 +929,18 @@ public class SockIOPool {
 
             try {
                 Thread.sleep(2);
-            } catch (Exception ex) {
-            }
+            } catch (Exception ex) {}
 
             // wait for the thread to finish
             while (maintThread.isRunning()) {
-                if (log.isDebugEnabled())
-                    log.debug("++++ waiting for main thread to finish run +++");
+                if (log.isDebugEnabled()) log.debug("++++ waiting for main thread to finish run +++");
                 try {
                     Thread.sleep(20);
-                } catch (Exception ex) {
-                }
+                } catch (Exception ex) {}
             }
         }
 
-        if (log.isDebugEnabled())
-            log.debug("++++ closing all internal pools.");
+        if (log.isDebugEnabled()) log.debug("++++ closing all internal pools.");
         closeSocketPool();
 
         statusPool.clear();
@@ -1030,16 +955,16 @@ public class SockIOPool {
         hostDead = null;
         maintThread = null;
         initialized = false;
-        if (log.isDebugEnabled())
-            log.debug("++++ SockIOPool finished shutting down.");
+        if (log.isDebugEnabled()) log.debug("++++ SockIOPool finished shutting down.");
 
     }
 
     /**
      * Starts the maintenance thread.
      * <p>
-     * This thread will manage the size of the active pool<br/> as well as move
-     * any closed, but not checked in sockets<br/> back to the available pool.
+     * This thread will manage the size of the active pool<br/>
+     * as well as move any closed, but not checked in sockets<br/>
+     * back to the available pool.
      */
     protected void startMaintThread() {
 
@@ -1061,8 +986,7 @@ public class SockIOPool {
      * Stops the maintenance thread.
      */
     protected void stopMaintThread() {
-        if (maintThread != null && maintThread.isRunning())
-            maintThread.stopThread();
+        if (maintThread != null && maintThread.isRunning()) maintThread.stopThread();
     }
 
     /**
@@ -1071,15 +995,14 @@ public class SockIOPool {
      * This is typically called by the maintenance thread to manage pool size.
      */
     protected void selfMaint() {
-        if (log.isDebugEnabled())
-            log.debug("++++ Starting self maintenance....");
+        if (log.isDebugEnabled()) log.debug("++++ Starting self maintenance....");
 
         // go through avail sockets and create sockets
         // as needed to maintain pool settings
         Map<String, Integer> needSockets = new HashMap<String, Integer>();
 
         // find out how many to create
-        for (Iterator<String> i = socketPool.keySet().iterator(); i.hasNext(); ) {
+        for (Iterator<String> i = socketPool.keySet().iterator(); i.hasNext();) {
             String host = i.next();
             Map<SockIO, Long> sockets = socketPool.get(host);
 
@@ -1088,9 +1011,7 @@ public class SockIOPool {
             usedcount = sockets.size() - usedPool.get(host).size() - statusPool.get(host).size();
 
 
-            if (log.isDebugEnabled())
-                log.debug("++++ Size of avail pool for host (" + host + ") = "
-                        + sockets.size());
+            if (log.isDebugEnabled()) log.debug("++++ Size of avail pool for host (" + host + ") = " + sockets.size());
 
             // if pool is too small (n < minSpare)
             if (sockets != null && sockets.size() - usedcount < minConn) {
@@ -1104,15 +1025,12 @@ public class SockIOPool {
         for (String host : needSockets.keySet()) {
             Integer need = needSockets.get(host);
 
-            if (log.isDebugEnabled())
-                log.debug("++++ Need to create " + need
-                        + " new sockets for pool for host: " + host);
+            if (log.isDebugEnabled()) log.debug("++++ Need to create " + need + " new sockets for pool for host: " + host);
 
             for (int j = 0; j < need; j++) {
                 SockIO socket = createSocket(host);
 
-                if (socket == null)
-                    break;
+                if (socket == null) break;
 
                 Queue<SockIO> queue = usedPool.get(host);
                 if (queue == null) {
@@ -1120,19 +1038,16 @@ public class SockIOPool {
                     usedPool.put(host, queue);
                 }
                 queue.add(socket);
-                addSocketToPool(socketPool, host, socket, System
-                        .currentTimeMillis(), true);
+                addSocketToPool(socketPool, host, socket, System.currentTimeMillis(), true);
             }
 
         }
 
-        for (Iterator<String> i = socketPool.keySet().iterator(); i.hasNext(); ) {
+        for (Iterator<String> i = socketPool.keySet().iterator(); i.hasNext();) {
             String host = i.next();
             Map<SockIO, Long> sockets = socketPool.get(host);
 
-            if (log.isDebugEnabled())
-                log.debug("++++ Size of avail pool for host (" + host + ") = "
-                        + sockets.size());
+            if (log.isDebugEnabled()) log.debug("++++ Size of avail pool for host (" + host + ") = " + sockets.size());
 
             int usedcount = 0;
 
@@ -1140,49 +1055,41 @@ public class SockIOPool {
             if (sockets != null && (sockets.size() - usedcount > maxConn)) {
                 // need to close down some sockets
                 int diff = sockets.size() - usedcount - maxConn;
-                int needToClose = (diff <= poolMultiplier) ? diff : (diff)
-                        / poolMultiplier;
+                int needToClose = (diff <= poolMultiplier) ? diff : (diff) / poolMultiplier;
 
-                if (log.isDebugEnabled())
-                    log.debug("++++ need to remove " + needToClose
-                            + " spare sockets for pool for host: " + host);
+                if (log.isDebugEnabled()) log.debug("++++ need to remove " + needToClose + " spare sockets for pool for host: " + host);
 
                 Queue<SockIO> queue = usedPool.get(host);
                 SockIO socket;
                 while (needToClose > 0 && (socket = queue.poll()) != null) {
                     // remove from the availPool
-                    addSocketToPool(statusPool, host, socket,
-                            SOCKET_STATUS_DEAD, true);
+                    addSocketToPool(statusPool, host, socket, SOCKET_STATUS_DEAD, true);
                     needToClose--;
                 }
             }
         }
 
         // finally clean out the deadPool
-        for (Iterator<String> i = statusPool.keySet().iterator(); i.hasNext(); ) {
+        for (Iterator<String> i = statusPool.keySet().iterator(); i.hasNext();) {
             String host = i.next();
             Map<SockIO, Integer> sockets = statusPool.get(host);
 
             // loop through all connections and check to see if we have any hung
             // connections
 
-            for (Iterator<SockIO> j = sockets.keySet().iterator(); j.hasNext(); ) {
+            for (Iterator<SockIO> j = sockets.keySet().iterator(); j.hasNext();) {
                 // remove stale entries
                 SockIO socket = j.next();
 
                 try {
                     Integer status = null;
-                    if (sockets != null && socket != null)
-                        status = sockets.get(socket);
+                    if (sockets != null && socket != null) status = sockets.get(socket);
 
-                    if (status != null
-                            && status.intValue() == SOCKET_STATUS_DEAD) {
+                    if (status != null && status.intValue() == SOCKET_STATUS_DEAD) {
 
-                        if (socketPool.containsKey(host))
-                            socketPool.get(host).remove(socket);
+                        if (socketPool.containsKey(host)) socketPool.get(host).remove(socket);
 
-                        if (statusPool.containsKey(host))
-                            statusPool.get(host).remove(socket);
+                        if (statusPool.containsKey(host)) statusPool.get(host).remove(socket);
 
                         // bug: remove key wrong
                         // usedPool.remove(socket);
@@ -1200,8 +1107,7 @@ public class SockIOPool {
 
         }
 
-        if (log.isDebugEnabled())
-            log.debug("+++ ending self maintenance.");
+        if (log.isDebugEnabled()) log.debug("+++ ending self maintenance.");
 
     }
 
@@ -1267,8 +1173,8 @@ public class SockIOPool {
     }
 
     /**
-     * Returns the current setting for the initial number of connections per
-     * server in the available pool.
+     * Returns the current setting for the initial number of connections per server in the available
+     * pool.
      *
      * @return number of connections
      */
@@ -1277,8 +1183,7 @@ public class SockIOPool {
     }
 
     /**
-     * Sets the minimum number of spare connections to maintain in our available
-     * pool.
+     * Sets the minimum number of spare connections to maintain in our available pool.
      *
      * @param minConn number of connections
      */
@@ -1296,8 +1201,7 @@ public class SockIOPool {
     }
 
     /**
-     * Sets the maximum number of spare connections allowed in our available
-     * pool.
+     * Sets the maximum number of spare connections allowed in our available pool.
      *
      * @param maxConn number of connections
      */
@@ -1306,8 +1210,7 @@ public class SockIOPool {
     }
 
     /**
-     * Returns the maximum number of spare connections allowed in available
-     * pool.
+     * Returns the maximum number of spare connections allowed in available pool.
      *
      * @return number of connections
      */
@@ -1352,8 +1255,8 @@ public class SockIOPool {
     }
 
     /**
-     * Set the sleep time between runs of the pool maintenance thread. If set to
-     * 0, then the maint thread will not be started.
+     * Set the sleep time between runs of the pool maintenance thread. If set to 0, then the maint
+     * thread will not be started.
      *
      * @param maintSleep sleep time in ms
      */
@@ -1409,10 +1312,10 @@ public class SockIOPool {
     /**
      * Sets the failover flag for the pool.
      * <p>
-     * If this flag is set to true, and a socket fails to connect,<br/> the
-     * pool will attempt to return a socket from another server<br/> if one
-     * exists. If set to false, then getting a socket<br/> will return null if
-     * it fails to connect to the requested server.
+     * If this flag is set to true, and a socket fails to connect,<br/>
+     * the pool will attempt to return a socket from another server<br/>
+     * if one exists. If set to false, then getting a socket<br/>
+     * will return null if it fails to connect to the requested server.
      *
      * @param failover true/false
      */
@@ -1432,8 +1335,8 @@ public class SockIOPool {
     /**
      * Sets the failback flag for the pool.
      * <p>
-     * If this is true and we have marked a host as dead, will try to bring it
-     * back. If it is false, we will never try to resurrect a dead host.
+     * If this is true and we have marked a host as dead, will try to bring it back. If it is false,
+     * we will never try to resurrect a dead host.
      *
      * @param failback true/false
      */
@@ -1453,10 +1356,9 @@ public class SockIOPool {
     /**
      * Sets the aliveCheck flag for the pool.
      * <p>
-     * When true, this will attempt to talk to the server on every connection
-     * checkout to make sure the connection is still valid. This adds extra
-     * network chatter and thus is defaulted off. May be useful if you want to
-     * ensure you do not have any problems talking to the server on a dead
+     * When true, this will attempt to talk to the server on every connection checkout to make sure
+     * the connection is still valid. This adds extra network chatter and thus is defaulted off. May
+     * be useful if you want to ensure you do not have any problems talking to the server on a dead
      * connection.
      *
      * @param aliveCheck true/false
@@ -1499,10 +1401,9 @@ public class SockIOPool {
      * <p>
      * The types are as follows.
      * <p>
-     * SockIOPool.NATIVE_HASH (0) - native String.hashCode() - fast (cached) but
-     * not compatible with other clients SockIOPool.OLD_COMPAT_HASH (1) -
-     * original compatibility hashing alg (works with other clients)
-     * SockIOPool.NEW_COMPAT_HASH (2) - new CRC32 based compatibility hashing
+     * SockIOPool.NATIVE_HASH (0) - native String.hashCode() - fast (cached) but not compatible with
+     * other clients SockIOPool.OLD_COMPAT_HASH (1) - original compatibility hashing alg (works with
+     * other clients) SockIOPool.NEW_COMPAT_HASH (2) - new CRC32 based compatibility hashing
      * algorithm (fast and works with other clients)
      *
      * @param alg int value representing hashing algorithm
@@ -1529,8 +1430,8 @@ public class SockIOPool {
     /**
      * Internal private hashing method.
      * <p>
-     * This is the original hashing algorithm from other clients. Found to be
-     * slow and have poor distribution.
+     * This is the original hashing algorithm from other clients. Found to be slow and have poor
+     * distribution.
      *
      * @param key String to hash
      * @return hashCode for this string using our own hashing algorithm
@@ -1549,8 +1450,8 @@ public class SockIOPool {
     /**
      * Internal private hashing method.
      * <p>
-     * This is the new hashing algorithm from other clients. Found to be fast
-     * and have very good distribution.
+     * This is the new hashing algorithm from other clients. Found to be fast and have very good
+     * distribution.
      * <p>
      * UPDATE: This is dog slow under java
      *
@@ -1572,16 +1473,16 @@ public class SockIOPool {
      * @param key
      * @return
      */
-//	private static long md5HashingAlg(String key) {
-//		MessageDigest md5 = MD5.get();
-//		md5.reset();
-//		md5.update(key.getBytes());
-//		byte[] bKey = md5.digest();
-//		long res = ((long) (bKey[3] & 0xFF) << 24)
-//				| ((long) (bKey[2] & 0xFF) << 16)
-//				| ((long) (bKey[1] & 0xFF) << 8) | (long) (bKey[0] & 0xFF);
-//		return res;
-//	}
+    // private static long md5HashingAlg(String key) {
+    // MessageDigest md5 = MD5.get();
+    // md5.reset();
+    // md5.update(key.getBytes());
+    // byte[] bKey = md5.digest();
+    // long res = ((long) (bKey[3] & 0xFF) << 24)
+    // | ((long) (bKey[2] & 0xFF) << 16)
+    // | ((long) (bKey[1] & 0xFF) << 8) | (long) (bKey[0] & 0xFF);
+    // return res;
+    // }
 
     /**
      * Returns a bucket to check for a given key.
@@ -1605,7 +1506,7 @@ public class SockIOPool {
                 case NEW_COMPAT_HASH:
                     return newCompatHashingAlg(key);
                 case CONSISTENT_HASH:
-                    //return md5HashingAlg(key);
+                    // return md5HashingAlg(key);
                     int hash = key.hashCode();
                     return (long) (hash >= 0 ? hash : -1 * hash);
                 default:
@@ -1623,15 +1524,14 @@ public class SockIOPool {
             return findPointFor(hc);
         } else {
             long bucket = hc % buckets.size();
-            if (bucket < 0)
-                bucket *= -1;
+            if (bucket < 0) bucket *= -1;
             return bucket;
         }
     }
 
     /**
-     * Gets the first available key equal or above the given one, if none found,
-     * returns the first k in the bucket
+     * Gets the first available key equal or above the given one, if none found, returns the first k
+     * in the bucket
      *
      * @param k key
      * @return
@@ -1643,8 +1543,7 @@ public class SockIOPool {
 
         SortedMap<Long, String> tmap = this.consistentBuckets.tailMap(hv);
 
-        return (tmap.isEmpty()) ? this.consistentBuckets.firstKey() : tmap
-                .firstKey();
+        return (tmap.isEmpty()) ? this.consistentBuckets.firstKey() : tmap.firstKey();
     }
 
     /**
@@ -1694,8 +1593,7 @@ public class SockIOPool {
 
                     // if pool is initialized, then
                     // run the maintenance method on itself
-                    if (pool.isInitialized())
-                        pool.selfMaint();
+                    if (pool.isInitialized()) pool.selfMaint();
 
                 } catch (Exception e) {
                     if (e instanceof java.lang.InterruptedException)
@@ -1744,19 +1642,18 @@ public class SockIOPool {
 
 
         /**
-         * creates a new SockIO object wrapping a socket connection to
-         * host:port, and its input and output streams
+         * creates a new SockIO object wrapping a socket connection to host:port, and its input and
+         * output streams
          *
-         * @param host           hostname:port
-         * @param timeout        read timeout value for connected socket
+         * @param host hostname:port
+         * @param timeout read timeout value for connected socket
          * @param connectTimeout timeout for initial connections
-         * @param noDelay        TCP NODELAY option?
-         * @throws IOException          if an io error occurrs when creating socket
+         * @param noDelay TCP NODELAY option?
+         * @throws IOException if an io error occurrs when creating socket
          * @throws UnknownHostException if hostname is invalid
          */
-        public SockIO(SockIOPool pool, String host, int timeout,
-                      int connectTimeout, boolean noDelay) throws IOException,
-                UnknownHostException {
+        public SockIO(SockIOPool pool, String host, int timeout, int connectTimeout, boolean noDelay)
+                throws IOException, UnknownHostException {
             this.pool = pool;
             recBuf = new byte[recBufSize];
             this.host = host;
@@ -1768,8 +1665,7 @@ public class SockIOPool {
             // get socket: default is to use non-blocking connect
             sock = getSocket(ip[0], Integer.parseInt(ip[1]), connectTimeout);
 
-            if (timeout >= 0)
-                this.sock.setSoTimeout(timeout);
+            if (timeout >= 0) this.sock.setSoTimeout(timeout);
 
             // set tcpnodelay， careful: nodelay equals to !nagle fishermen 2015.12.18
             sock.setTcpNoDelay(noDelay);
@@ -1782,14 +1678,13 @@ public class SockIOPool {
         /**
          * Method which gets a connection from SocketChannel.
          *
-         * @param host    host to establish connection to
-         * @param port    port on that host
+         * @param host host to establish connection to
+         * @param port port on that host
          * @param timeout connection timeout in ms
          * @return connected socket
          * @throws IOException if errors connecting or if connection times out
          */
-        protected static Socket getSocket(String host, int port, int timeout)
-                throws IOException {
+        protected static Socket getSocket(String host, int port, int timeout) throws IOException {
             SocketChannel sock = SocketChannel.open();
             sock.socket().connect(new InetSocketAddress(host, port), timeout);
             return sock.socket();
@@ -1828,8 +1723,7 @@ public class SockIOPool {
          * @throws IOException if fails to close streams or socket
          */
         public void trueClose(boolean addToDeadPool) throws IOException {
-            if (log.isDebugEnabled())
-                log.debug("++++ Closing socket for real: " + addToDeadPool + ", " + toString());
+            if (log.isDebugEnabled()) log.debug("++++ Closing socket for real: " + addToDeadPool + ", " + toString());
 
             recBuf = new byte[recBufSize];
             recIndex = 0;
@@ -1839,8 +1733,7 @@ public class SockIOPool {
 
             if (in == null || out == null || sock == null) {
                 err = true;
-                errMsg
-                        .append("++++ socket or its streams already null in trueClose call");
+                errMsg.append("++++ socket or its streams already null in trueClose call");
             }
 
             if (in != null) {
@@ -1849,10 +1742,7 @@ public class SockIOPool {
                 } catch (IOException ioe) {
                     log.error("++++ error closing input stream for socket: host " + getHost());
                     log.error(ioe.getMessage(), ioe);
-                    errMsg
-                            .append("++++ error closing input stream for socket: host "
-                                    + getHost()
-                                    + "\n");
+                    errMsg.append("++++ error closing input stream for socket: host " + getHost() + "\n");
                     errMsg.append(ioe.getMessage());
                     err = true;
                 }
@@ -1864,10 +1754,7 @@ public class SockIOPool {
                 } catch (IOException ioe) {
                     log.error("++++ error closing output stream for socket:  host " + getHost());
                     log.error(ioe.getMessage(), ioe);
-                    errMsg
-                            .append("++++ error closing output stream for socket:  host "
-                                    + getHost()
-                                    + "\n");
+                    errMsg.append("++++ error closing output stream for socket:  host " + getHost() + "\n");
                     errMsg.append(ioe.getMessage());
                     err = true;
                 }
@@ -1895,23 +1782,20 @@ public class SockIOPool {
             out = null;
             sock = null;
 
-            if (err)
-                throw new IOException(errMsg.toString());
+            if (err) throw new IOException(errMsg.toString());
         }
 
         /**
-         * sets closed flag and checks in to connection pool but does not close
-         * connections
+         * sets closed flag and checks in to connection pool but does not close connections
          */
         void close() {
             // check in to pool
             if (log.isDebugEnabled())
-                log.debug("++++ marking socket (" + this.toString()
-                        + ") as closed and available to return to avail pool");
+                log.debug("++++ marking socket (" + this.toString() + ") as closed and available to return to avail pool");
 
-            //使用重置，减少一次对象生成，也减少一次回收
+            // 使用重置，减少一次对象生成，也减少一次回收
             Arrays.fill(recBuf, (byte) 0);
-            ///recBuf = new byte[recBufSize];
+            /// recBuf = new byte[recBufSize];
             recIndex = 0;
 
             pool.checkIn(this);
@@ -1933,8 +1817,7 @@ public class SockIOPool {
          */
         boolean isAlive() {
 
-            if (!isConnected())
-                return false;
+            if (!isConnected()) return false;
 
             // try to talk to the server w/ a dumb query to ask its version
             try {
@@ -1951,8 +1834,7 @@ public class SockIOPool {
         public byte[] readBytes(int length) throws IOException {
             if (sock == null || !sock.isConnected()) {
                 log.error("++++ attempting to read from closed socket");
-                throw new IOException(
-                        "++++ attempting to read from closed socket");
+                throw new IOException("++++ attempting to read from closed socket");
             }
 
             byte[] result = null;
@@ -1963,9 +1845,7 @@ public class SockIOPool {
 
                 byte[] newBuf = new byte[recBufSize];
 
-                if (recIndex > length)
-                    System.arraycopy(recBuf, length, newBuf, 0, recIndex
-                            - length);
+                if (recIndex > length) System.arraycopy(recBuf, length, newBuf, 0, recIndex - length);
 
                 recBuf = newBuf;
                 recIndex = recIndex - length;
@@ -1991,8 +1871,7 @@ public class SockIOPool {
                         } else {
                             bos.write(recBuf, 0, totalread);
                             byte[] newBuf = new byte[recBufSize];
-                            System.arraycopy(recBuf, totalread, newBuf, 0,
-                                    readCount - totalread);
+                            System.arraycopy(recBuf, totalread, newBuf, 0, readCount - totalread);
 
                             recBuf = newBuf;
                             recIndex = readCount - totalread;
@@ -2006,18 +1885,15 @@ public class SockIOPool {
 
             result = bos.toByteArray();
 
-            if (result == null
-                    || (result != null && result.length <= 0 && recIndex <= 0)) {
-                throw new IOException(
-                        "++++ Stream appears to be dead, so closing it down");
+            if (result == null || (result != null && result.length <= 0 && recIndex <= 0)) {
+                throw new IOException("++++ Stream appears to be dead, so closing it down");
             }
 
             return result;
         }
 
         /**
-         * reads a line intentionally not using the deprecated readLine method
-         * from DataInputStream
+         * reads a line intentionally not using the deprecated readLine method from DataInputStream
          *
          * @return String that was read in
          * @throws IOException if io problems during read
@@ -2025,8 +1901,7 @@ public class SockIOPool {
         public byte[] readLineBytes() throws IOException {
             if (sock == null || !sock.isConnected()) {
                 log.error("++++ attempting to read from closed socket");
-                throw new IOException(
-                        "++++ attempting to read from closed socket");
+                throw new IOException("++++ attempting to read from closed socket");
             }
 
             byte[] result = null;
@@ -2038,20 +1913,16 @@ public class SockIOPool {
                 return bos.toByteArray();
             }
 
-            while ((readCount = in.read(recBuf, recIndex, recBuf.length
-                    - recIndex)) > 0) {
+            while ((readCount = in.read(recBuf, recIndex, recBuf.length - recIndex)) > 0) {
                 recIndex = recIndex + readCount;
 
-                if (read(bos))
-                    break;
+                if (read(bos)) break;
             }
 
             result = bos.toByteArray();
 
-            if (result == null
-                    || (result != null && result.length <= 0 && recIndex <= 0)) {
-                throw new IOException(
-                        "++++ Stream appears to be dead, so closing it down");
+            if (result == null || (result != null && result.length <= 0 && recIndex <= 0)) {
+                throw new IOException("++++ Stream appears to be dead, so closing it down");
             }
 
             return result;
@@ -2074,9 +1945,7 @@ public class SockIOPool {
 
                 byte[] newBuf = new byte[recBufSize];
 
-                if (recIndex > index + 2)
-                    System.arraycopy(recBuf, index + 2, newBuf, 0, recIndex
-                            - index - 2);
+                if (recIndex > index + 2) System.arraycopy(recBuf, index + 2, newBuf, 0, recIndex - index - 2);
 
                 recBuf = newBuf;
                 recIndex = recIndex - index - 2;
@@ -2087,13 +1956,13 @@ public class SockIOPool {
                 if (recBuf[recIndex - 1] == 13) {
                     bos.write(recBuf, 0, recIndex - 1);
                     Arrays.fill(recBuf, (byte) 0);
-                    //recBuf = new byte[recBufSize];
+                    // recBuf = new byte[recBufSize];
                     recBuf[0] = 13;
                     recIndex = 1;
                 } else {
                     bos.write(recBuf, 0, recIndex);
                     Arrays.fill(recBuf, (byte) 0);
-                    //recBuf = new byte[recBufSize];
+                    // recBuf = new byte[recBufSize];
                     recIndex = 0;
                 }
 
@@ -2114,8 +1983,7 @@ public class SockIOPool {
         void flush() throws IOException {
             if (sock == null || !sock.isConnected()) {
                 log.error("++++ attempting to write to closed socket");
-                throw new IOException(
-                        "++++ attempting to write to closed socket");
+                throw new IOException("++++ attempting to write to closed socket");
             }
             out.flush();
         }
@@ -2129,8 +1997,7 @@ public class SockIOPool {
         void write(byte[] b) throws IOException {
             if (sock == null || !sock.isConnected()) {
                 log.error("++++ attempting to write to closed socket");
-                throw new IOException(
-                        "++++ attempting to write to closed socket");
+                throw new IOException("++++ attempting to write to closed socket");
             }
             out.write(b);
         }
@@ -2161,8 +2028,7 @@ public class SockIOPool {
         protected void finalize() throws Throwable {
             try {
                 if (sock != null) {
-                    log
-                            .error("++++ closing potentially leaked socket in finalize");
+                    log.error("++++ closing potentially leaked socket in finalize");
                     sock.close();
                     sock = null;
                 }

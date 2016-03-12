@@ -97,7 +97,7 @@ public class LMLinkServiceImpl implements LMLinkService {
     }
 
     /**
-     * construction  function
+     * construction function
      */
 
     public LMLinkServiceImpl() {

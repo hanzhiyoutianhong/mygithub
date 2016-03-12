@@ -27,8 +27,7 @@ public class TraceableFutureTask<V> extends FutureTask<V> {
         super(runnable, result);
     }
 
-    public V get(long timeout, TimeUnit unit, boolean cancelTask)
-            throws InterruptedException, ExecutionException, TimeoutException {
+    public V get(long timeout, TimeUnit unit, boolean cancelTask) throws InterruptedException, ExecutionException, TimeoutException {
         try {
             return super.get(timeout, unit);
         } catch (TimeoutException e) {
@@ -40,8 +39,7 @@ public class TraceableFutureTask<V> extends FutureTask<V> {
     }
 
     @Override
-    public V get(long timeout, TimeUnit unit)
-            throws InterruptedException, ExecutionException, TimeoutException {
+    public V get(long timeout, TimeUnit unit) throws InterruptedException, ExecutionException, TimeoutException {
         return get(timeout, unit, true);
     }
 

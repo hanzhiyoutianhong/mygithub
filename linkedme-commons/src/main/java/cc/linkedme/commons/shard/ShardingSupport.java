@@ -30,8 +30,7 @@ public interface ShardingSupport<T> {
     DbTable getDbTable(long id, Date date);
 
     /**
-     * key: dbIndex
-     * value: splitIds
+     * key: dbIndex value: splitIds
      */
     Map<Integer, List<Long>> getDbSharding(long[] ids);
 

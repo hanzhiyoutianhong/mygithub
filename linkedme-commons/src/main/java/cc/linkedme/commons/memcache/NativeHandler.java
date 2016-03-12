@@ -1,18 +1,13 @@
 /**
- * MemCached Java client
- * Copyright (c) 2007 Greg Whalin
- * All rights reserved.
+ * MemCached Java client Copyright (c) 2007 Greg Whalin All rights reserved.
  * <p>
- * This library is free software; you can redistribute it and/or
- * modify it under the terms of the BSD license
+ * This library is free software; you can redistribute it and/or modify it under the terms of the
+ * BSD license
  * <p>
- * This library is distributed in the hope that it will be
- * useful, but WITHOUT ANY WARRANTY; without even the implied
- * warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR
- * PURPOSE.
+ * This library is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without
+ * even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
  * <p>
- * You should have received a copy of the BSD License along with this
- * library.
+ * You should have received a copy of the BSD License along with this library.
  *
  * @author Greg Whalin <greg@meetup.com>
  * @version 2.0
@@ -22,65 +17,62 @@ package cc.linkedme.commons.memcache;
 import java.util.Date;
 
 /**
- * Handle encoding standard Java types directly which can result in significant
- * memory savings:
+ * Handle encoding standard Java types directly which can result in significant memory savings:
  * <p>
- * Currently the Memcached driver for Java supports the setSerialize() option.
- * This can increase performance in some situations but has a few issues:
+ * Currently the Memcached driver for Java supports the setSerialize() option. This can increase
+ * performance in some situations but has a few issues:
  * <p>
- * Code that performs class casting will throw ClassCastExceptions when
- * setSerialize is enabled. For example:
+ * Code that performs class casting will throw ClassCastExceptions when setSerialize is enabled. For
+ * example:
  * <p>
  * mc.set( "foo", new Integer( 1 ) ); Integer output = (Integer)mc.get("foo");
  * <p>
- * Will work just file when setSerialize is true but when its false will just throw
- * a ClassCastException.
+ * Will work just file when setSerialize is true but when its false will just throw a
+ * ClassCastException.
  * <p>
- * Also internally it doesn't support Boolean and since toString is called wastes a
- * lot of memory and causes additional performance issue.  For example an Integer
- * can take anywhere from 1 byte to 10 bytes.
+ * Also internally it doesn't support Boolean and since toString is called wastes a lot of memory
+ * and causes additional performance issue. For example an Integer can take anywhere from 1 byte to
+ * 10 bytes.
  * <p>
- * Due to the way the memcached slab allocator works it seems like a LOT of wasted
- * memory to store primitive types as serialized objects (from a performance and
- * memory perspective).  In our applications we have millions of small objects and
- * wasted memory would become a big problem.
+ * Due to the way the memcached slab allocator works it seems like a LOT of wasted memory to store
+ * primitive types as serialized objects (from a performance and memory perspective). In our
+ * applications we have millions of small objects and wasted memory would become a big problem.
  * <p>
- * For example a Serialized Boolean takes 47 bytes which means it will fit into the
- * 64byte LRU.  Using 1 byte means it will fit into the 8 byte LRU thus saving 8x
- * the memory.  This also saves the CPU performance since we don't have to
- * serialize bytes back and forth and we can compute the byte[] value directly.
+ * For example a Serialized Boolean takes 47 bytes which means it will fit into the 64byte LRU.
+ * Using 1 byte means it will fit into the 8 byte LRU thus saving 8x the memory. This also saves the
+ * CPU performance since we don't have to serialize bytes back and forth and we can compute the
+ * byte[] value directly.
  * <p>
- * One problem would be when the user calls get() because doing so would require
- * the app to know the type of the object stored as a bytearray inside memcached
- * (since the user will probably cast).
+ * One problem would be when the user calls get() because doing so would require the app to know the
+ * type of the object stored as a bytearray inside memcached (since the user will probably cast).
  * <p>
- * If we assume the basic types are interned we could use the first byte as the
- * type with the remaining bytes as the value.  Then on get() we could read the
- * first byte to determine the type and then construct the correct object for it.
- * This would prevent the ClassCastException I talked about above.
+ * If we assume the basic types are interned we could use the first byte as the type with the
+ * remaining bytes as the value. Then on get() we could read the first byte to determine the type
+ * and then construct the correct object for it. This would prevent the ClassCastException I talked
+ * about above.
  * <p>
- * We could remove the setSerialize() option and just assume that standard VM types
- * are always internd in this manner.
+ * We could remove the setSerialize() option and just assume that standard VM types are always
+ * internd in this manner.
  * <p>
  * mc.set( "foo", new Boolean.TRUE ); Boolean b = (Boolean)mc.get( "foo" );
  * <p>
- * And the type casts would work because internally we would create a new Boolean
- * to return back to the client.
+ * And the type casts would work because internally we would create a new Boolean to return back to
+ * the client.
  * <p>
- * This would reduce memory footprint and allow for a virtual implementation of the
- * Externalizable interface which is much faster than Serialzation.
+ * This would reduce memory footprint and allow for a virtual implementation of the Externalizable
+ * interface which is much faster than Serialzation.
  * <p>
  * Currently the memory improvements would be:
  * <p>
- * java.lang.Boolean - 8x performance improvement (now just two bytes)
- * java.lang.Integer - 16x performance improvement (now just 5 bytes)
+ * java.lang.Boolean - 8x performance improvement (now just two bytes) java.lang.Integer - 16x
+ * performance improvement (now just 5 bytes)
  * <p>
- * Most of the other primitive types would benefit from this optimization.
- * java.lang.Character being another obvious example.
+ * Most of the other primitive types would benefit from this optimization. java.lang.Character being
+ * another obvious example.
  * <p>
- * I know it seems like I'm being really picky here but for our application I'd
- * save 1G of memory right off the bat.  We'd go down from 1.152G of memory used
- * down to 144M of memory used which is much better IMO.
+ * I know it seems like I'm being really picky here but for our application I'd save 1G of memory
+ * right off the bat. We'd go down from 1.152G of memory used down to 144M of memory used which is
+ * much better IMO.
  * <p>
  * http://java.sun.com/docs/books/tutorial/native1.1/integrating/types.html
  *
@@ -97,23 +89,10 @@ public class NativeHandler {
      */
     public static boolean isHandled(Object value) {
 
-        return (
-                value instanceof Byte ||
-                        value instanceof Boolean ||
-                        value instanceof Integer ||
-                        value instanceof Long ||
-                        value instanceof Character ||
-                        value instanceof String ||
-                        value instanceof StringBuffer ||
-                        value instanceof Float ||
-                        value instanceof Short ||
-                        value instanceof Double ||
-                        value instanceof Date ||
-                        value instanceof StringBuilder ||
-                        value instanceof byte[]
-        )
-                ? true
-                : false;
+        return (value instanceof Byte || value instanceof Boolean || value instanceof Integer || value instanceof Long
+                || value instanceof Character || value instanceof String || value instanceof StringBuffer || value instanceof Float
+                || value instanceof Short || value instanceof Double || value instanceof Date || value instanceof StringBuilder
+                || value instanceof byte[]) ? true : false;
     }
 
     /**
@@ -124,44 +103,31 @@ public class NativeHandler {
      */
     public static int getMarkerFlag(Object value) {
 
-        if (value instanceof Byte)
-            return MemCachedClient.MARKER_BYTE;
+        if (value instanceof Byte) return MemCachedClient.MARKER_BYTE;
 
-        if (value instanceof Boolean)
-            return MemCachedClient.MARKER_BOOLEAN;
+        if (value instanceof Boolean) return MemCachedClient.MARKER_BOOLEAN;
 
-        if (value instanceof Integer)
-            return MemCachedClient.MARKER_INTEGER;
+        if (value instanceof Integer) return MemCachedClient.MARKER_INTEGER;
 
-        if (value instanceof Long)
-            return MemCachedClient.MARKER_LONG;
+        if (value instanceof Long) return MemCachedClient.MARKER_LONG;
 
-        if (value instanceof Character)
-            return MemCachedClient.MARKER_CHARACTER;
+        if (value instanceof Character) return MemCachedClient.MARKER_CHARACTER;
 
-        if (value instanceof String)
-            return MemCachedClient.MARKER_STRING;
+        if (value instanceof String) return MemCachedClient.MARKER_STRING;
 
-        if (value instanceof StringBuffer)
-            return MemCachedClient.MARKER_STRINGBUFFER;
+        if (value instanceof StringBuffer) return MemCachedClient.MARKER_STRINGBUFFER;
 
-        if (value instanceof Float)
-            return MemCachedClient.MARKER_FLOAT;
+        if (value instanceof Float) return MemCachedClient.MARKER_FLOAT;
 
-        if (value instanceof Short)
-            return MemCachedClient.MARKER_SHORT;
+        if (value instanceof Short) return MemCachedClient.MARKER_SHORT;
 
-        if (value instanceof Double)
-            return MemCachedClient.MARKER_DOUBLE;
+        if (value instanceof Double) return MemCachedClient.MARKER_DOUBLE;
 
-        if (value instanceof Date)
-            return MemCachedClient.MARKER_DATE;
+        if (value instanceof Date) return MemCachedClient.MARKER_DATE;
 
-        if (value instanceof StringBuilder)
-            return MemCachedClient.MARKER_STRINGBUILDER;
+        if (value instanceof StringBuilder) return MemCachedClient.MARKER_STRINGBUILDER;
 
-        if (value instanceof byte[])
-            return MemCachedClient.MARKER_BYTEARR;
+        if (value instanceof byte[]) return MemCachedClient.MARKER_BYTEARR;
 
         return -1;
     }
@@ -175,44 +141,31 @@ public class NativeHandler {
      */
     public static byte[] encode(Object value) throws Exception {
 
-        if (value instanceof Byte)
-            return encode((Byte) value);
+        if (value instanceof Byte) return encode((Byte) value);
 
-        if (value instanceof Boolean)
-            return encode((Boolean) value);
+        if (value instanceof Boolean) return encode((Boolean) value);
 
-        if (value instanceof Integer)
-            return encode(((Integer) value).intValue());
+        if (value instanceof Integer) return encode(((Integer) value).intValue());
 
-        if (value instanceof Long)
-            return encode(((Long) value).longValue());
+        if (value instanceof Long) return encode(((Long) value).longValue());
 
-        if (value instanceof Character)
-            return encode((Character) value);
+        if (value instanceof Character) return encode((Character) value);
 
-        if (value instanceof String)
-            return encode((String) value);
+        if (value instanceof String) return encode((String) value);
 
-        if (value instanceof StringBuffer)
-            return encode((StringBuffer) value);
+        if (value instanceof StringBuffer) return encode((StringBuffer) value);
 
-        if (value instanceof Float)
-            return encode(((Float) value).floatValue());
+        if (value instanceof Float) return encode(((Float) value).floatValue());
 
-        if (value instanceof Short)
-            return encode((Short) value);
+        if (value instanceof Short) return encode((Short) value);
 
-        if (value instanceof Double)
-            return encode(((Double) value).doubleValue());
+        if (value instanceof Double) return encode(((Double) value).doubleValue());
 
-        if (value instanceof Date)
-            return encode((Date) value);
+        if (value instanceof Date) return encode((Date) value);
 
-        if (value instanceof StringBuilder)
-            return encode((StringBuilder) value);
+        if (value instanceof StringBuilder) return encode((StringBuilder) value);
 
-        if (value instanceof byte[])
-            return encode((byte[]) value);
+        if (value instanceof byte[]) return encode((byte[]) value);
 
         return null;
     }
@@ -310,48 +263,34 @@ public class NativeHandler {
      */
     public static Object decode(byte[] b, int flag) throws Exception {
 
-        if (b.length < 1)
-            return null;
+        if (b.length < 1) return null;
 
 
-        if ((flag & MemCachedClient.MARKER_BYTE) == MemCachedClient.MARKER_BYTE)
-            return decodeByte(b);
+        if ((flag & MemCachedClient.MARKER_BYTE) == MemCachedClient.MARKER_BYTE) return decodeByte(b);
 
-        if ((flag & MemCachedClient.MARKER_BOOLEAN) == MemCachedClient.MARKER_BOOLEAN)
-            return decodeBoolean(b);
+        if ((flag & MemCachedClient.MARKER_BOOLEAN) == MemCachedClient.MARKER_BOOLEAN) return decodeBoolean(b);
 
-        if ((flag & MemCachedClient.MARKER_INTEGER) == MemCachedClient.MARKER_INTEGER)
-            return decodeInteger(b);
+        if ((flag & MemCachedClient.MARKER_INTEGER) == MemCachedClient.MARKER_INTEGER) return decodeInteger(b);
 
-        if ((flag & MemCachedClient.MARKER_LONG) == MemCachedClient.MARKER_LONG)
-            return decodeLong(b);
+        if ((flag & MemCachedClient.MARKER_LONG) == MemCachedClient.MARKER_LONG) return decodeLong(b);
 
-        if ((flag & MemCachedClient.MARKER_CHARACTER) == MemCachedClient.MARKER_CHARACTER)
-            return decodeCharacter(b);
+        if ((flag & MemCachedClient.MARKER_CHARACTER) == MemCachedClient.MARKER_CHARACTER) return decodeCharacter(b);
 
-        if ((flag & MemCachedClient.MARKER_STRING) == MemCachedClient.MARKER_STRING)
-            return decodeString(b);
+        if ((flag & MemCachedClient.MARKER_STRING) == MemCachedClient.MARKER_STRING) return decodeString(b);
 
-        if ((flag & MemCachedClient.MARKER_STRINGBUFFER) == MemCachedClient.MARKER_STRINGBUFFER)
-            return decodeStringBuffer(b);
+        if ((flag & MemCachedClient.MARKER_STRINGBUFFER) == MemCachedClient.MARKER_STRINGBUFFER) return decodeStringBuffer(b);
 
-        if ((flag & MemCachedClient.MARKER_FLOAT) == MemCachedClient.MARKER_FLOAT)
-            return decodeFloat(b);
+        if ((flag & MemCachedClient.MARKER_FLOAT) == MemCachedClient.MARKER_FLOAT) return decodeFloat(b);
 
-        if ((flag & MemCachedClient.MARKER_SHORT) == MemCachedClient.MARKER_SHORT)
-            return decodeShort(b);
+        if ((flag & MemCachedClient.MARKER_SHORT) == MemCachedClient.MARKER_SHORT) return decodeShort(b);
 
-        if ((flag & MemCachedClient.MARKER_DOUBLE) == MemCachedClient.MARKER_DOUBLE)
-            return decodeDouble(b);
+        if ((flag & MemCachedClient.MARKER_DOUBLE) == MemCachedClient.MARKER_DOUBLE) return decodeDouble(b);
 
-        if ((flag & MemCachedClient.MARKER_DATE) == MemCachedClient.MARKER_DATE)
-            return decodeDate(b);
+        if ((flag & MemCachedClient.MARKER_DATE) == MemCachedClient.MARKER_DATE) return decodeDate(b);
 
-        if ((flag & MemCachedClient.MARKER_STRINGBUILDER) == MemCachedClient.MARKER_STRINGBUILDER)
-            return decodeStringBuilder(b);
+        if ((flag & MemCachedClient.MARKER_STRINGBUILDER) == MemCachedClient.MARKER_STRINGBUILDER) return decodeStringBuilder(b);
 
-        if ((flag & MemCachedClient.MARKER_BYTEARR) == MemCachedClient.MARKER_BYTEARR)
-            return decodeByteArr(b);
+        if ((flag & MemCachedClient.MARKER_BYTEARR) == MemCachedClient.MARKER_BYTEARR) return decodeByteArr(b);
 
         return null;
     }
@@ -413,27 +352,20 @@ public class NativeHandler {
     }
 
     /**
-     * This works by taking each of the bit patterns and converting them to
-     * ints taking into account 2s complement and then adding them..
+     * This works by taking each of the bit patterns and converting them to ints taking into account
+     * 2s complement and then adding them..
      *
      * @param b
      * @return
      */
     protected static int toInt(byte[] b) {
-        return (((((int) b[3]) & 0xFF) << 32) +
-                ((((int) b[2]) & 0xFF) << 40) +
-                ((((int) b[1]) & 0xFF) << 48) +
-                ((((int) b[0]) & 0xFF) << 56));
+        return (((((int) b[3]) & 0xFF) << 32) + ((((int) b[2]) & 0xFF) << 40) + ((((int) b[1]) & 0xFF) << 48)
+                + ((((int) b[0]) & 0xFF) << 56));
     }
 
     protected static long toLong(byte[] b) {
-        return ((((long) b[7]) & 0xFF) +
-                ((((long) b[6]) & 0xFF) << 8) +
-                ((((long) b[5]) & 0xFF) << 16) +
-                ((((long) b[4]) & 0xFF) << 24) +
-                ((((long) b[3]) & 0xFF) << 32) +
-                ((((long) b[2]) & 0xFF) << 40) +
-                ((((long) b[1]) & 0xFF) << 48) +
-                ((((long) b[0]) & 0xFF) << 56));
+        return ((((long) b[7]) & 0xFF) + ((((long) b[6]) & 0xFF) << 8) + ((((long) b[5]) & 0xFF) << 16) + ((((long) b[4]) & 0xFF) << 24)
+                + ((((long) b[3]) & 0xFF) << 32) + ((((long) b[2]) & 0xFF) << 40) + ((((long) b[1]) & 0xFF) << 48)
+                + ((((long) b[0]) & 0xFF) << 56));
     }
 }

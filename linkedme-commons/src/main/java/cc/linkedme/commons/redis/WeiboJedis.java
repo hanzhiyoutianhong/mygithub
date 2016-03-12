@@ -39,14 +39,14 @@ public class WeiboJedis extends Jedis {
     private Object getEvalResult() {
         Object result = client.getOne();
 
-        if (result instanceof byte[])
-            return SafeEncoder.encode((byte[]) result);
+        if (result instanceof byte[]) return SafeEncoder.encode((byte[]) result);
 
         if (result instanceof List<?>) {
             List<?> list = (List<?>) result;
             List<Object> listResult = new ArrayList<Object>(list.size());
             for (Object bin : list) {
-                // Jedis at this just call listResult.add(SafeEncoder.encode((byte[]) bin)); that may be throw ClassCastException
+                // Jedis at this just call listResult.add(SafeEncoder.encode((byte[]) bin)); that
+                // may be throw ClassCastException
                 if (bin instanceof byte[]) {
                     listResult.add(SafeEncoder.encode((byte[]) bin));
                 } else {

@@ -46,7 +46,7 @@ public class JedisMSServer extends JedisPort {
     }
 
     public JedisMSServer(final long hashMin, final long hashMax) {
-        //super(poolConfig, hashMin, hashMax);
+        // super(poolConfig, hashMin, hashMax);
         this();
         this.hashMin = hashMin;
         this.hashMax = hashMax;
@@ -141,7 +141,8 @@ public class JedisMSServer extends JedisPort {
      * @return
      */
     private JedisPort createConnect(RedisConfig redisConfig) {
-        log.info(String.format("Create jedis client to {}:{}:{}", redisConfig.getHostname(), redisConfig.getPort(), redisConfig.getDbName()));
+        log.info(String.format("Create jedis client to {}:{}:{}", redisConfig.getHostname(), redisConfig.getPort(),
+                redisConfig.getDbName()));
 
         final JedisPort p = new JedisPort();
         p.setRedisConfig(redisConfig);
@@ -478,8 +479,7 @@ public class JedisMSServer extends JedisPort {
         if (master != null && master.isAlive()) {
             return master.hget(key, field);
         }
-        log.warn(master + " [redis server all dead] hget, key: " + CodecHandler.toStr(key) + ",field:"
-                + CodecHandler.toStr(field));
+        log.warn(master + " [redis server all dead] hget, key: " + CodecHandler.toStr(key) + ",field:" + CodecHandler.toStr(field));
         throw new JedisException("redis server all dead: " + master + " " + slave);
     }
 
@@ -724,8 +724,7 @@ public class JedisMSServer extends JedisPort {
         if (master != null && master.isAlive()) {
             return master.hmget(key, fields);
         }
-        log.warn(master + " [redis server all dead] mget, key: " + CodecHandler.toStr(key) + ",filed:"
-                + CodecHandler.toString(fields));
+        log.warn(master + " [redis server all dead] mget, key: " + CodecHandler.toStr(key) + ",filed:" + CodecHandler.toString(fields));
         throw new JedisException("redis server all dead: " + master + " " + slave);
     }
 
@@ -955,10 +954,7 @@ public class JedisMSServer extends JedisPort {
     }
 
     /**
-     * returns：
-     * 空字串：cache不存在
-     * 1：成功
-     * 0：不成功
+     * returns： 空字串：cache不存在 1：成功 0：不成功
      */
     @Override
     public Boolean lsput(String key, long... values) {
@@ -969,10 +965,7 @@ public class JedisMSServer extends JedisPort {
     }
 
     /**
-     * returns：
-     * 空字串：cache不存在
-     * 1：成功
-     * 0：不成功
+     * returns： 空字串：cache不存在 1：成功 0：不成功
      */
     @Override
     public Boolean lsdel(String key, long... values) {
@@ -983,8 +976,7 @@ public class JedisMSServer extends JedisPort {
     }
 
     /**
-     * returns
-     * 和values一一对应；返回null说明cache不存在
+     * returns 和values一一对应；返回null说明cache不存在
      */
     @Override
     public Set<Long> lsmexists(String key, long... values) {
@@ -1131,14 +1123,12 @@ public class JedisMSServer extends JedisPort {
     }
 
     /*
-     * @Override public Long lpush(byte[] key, byte[]... values) { Long result =
-     * null, result2 = null; if (first != null && first.isAlive()) { result =
-     * first.lpush(key,values); } if (doubleWrite && second != null &&
-     * second.isAlive()) { if (setSecond) { if (result != null) {
-     * second.lpush(key,values); } } else { result2 = second.lpush(key,values);
-     * } } if(result!=null){ return result; } if(result2 != null){ return
-     * result2; } throw new JedisException("redis server all dead: " + first +
-     * " " + second); }
+     * @Override public Long lpush(byte[] key, byte[]... values) { Long result = null, result2 =
+     * null; if (first != null && first.isAlive()) { result = first.lpush(key,values); } if
+     * (doubleWrite && second != null && second.isAlive()) { if (setSecond) { if (result != null) {
+     * second.lpush(key,values); } } else { result2 = second.lpush(key,values); } }
+     * if(result!=null){ return result; } if(result2 != null){ return result2; } throw new
+     * JedisException("redis server all dead: " + first + " " + second); }
      */
     @Override
     public Long lpush(byte[] key, byte[] value) {
@@ -1590,8 +1580,7 @@ public class JedisMSServer extends JedisPort {
     }
 
     /**
-     * ================================================
-     * methods for sorted set zset
+     * ================================================ methods for sorted set zset
      * ================================================
      */
     @Override
@@ -1740,8 +1729,7 @@ public class JedisMSServer extends JedisPort {
     }
 
     @Override
-    public Set<byte[]> zrangeByScore(byte[] key, double min, double max, int offset,
-                                     int count) {
+    public Set<byte[]> zrangeByScore(byte[] key, double min, double max, int offset, int count) {
         if (slave != null && slave.isAlive()) {
             return slave.zrangeByScore(key, min, max, offset, count);
         }
@@ -1765,8 +1753,7 @@ public class JedisMSServer extends JedisPort {
     }
 
     @Override
-    public Set<Tuple> zrangeByScoreWithScores(byte[] key, double min, double max,
-                                              int offset, int count) {
+    public Set<Tuple> zrangeByScoreWithScores(byte[] key, double min, double max, int offset, int count) {
         if (slave != null && slave.isAlive()) {
             return slave.zrangeByScoreWithScores(key, min, max, offset, count);
         }
@@ -1814,8 +1801,7 @@ public class JedisMSServer extends JedisPort {
     }
 
     @Override
-    public Set<Tuple> zrevrangeByScoreWithScores(final byte[] key, final double max, final double min,
-                                                 final int offset, final int count) {
+    public Set<Tuple> zrevrangeByScoreWithScores(final byte[] key, final double max, final double min, final int offset, final int count) {
         if (slave != null && slave.isAlive()) {
             return slave.zrevrangeByScoreWithScores(key, max, min, offset, count);
         }
@@ -2094,25 +2080,25 @@ public class JedisMSServer extends JedisPort {
 
     @Override
     public String getset(String key, String newValue) {
-//		String result = null;
+        // String result = null;
         if (master != null && master.isAlive()) {
             return master.getset(key, newValue);
         }
-//		if (result != null) {
-//			return result;
-//		}
+        // if (result != null) {
+        // return result;
+        // }
         throw new JedisException("master server dead: " + master);
     }
 
     @Override
     public byte[] getset(byte[] key, byte[] newValue) {
-//		byte[] result = null;
+        // byte[] result = null;
         if (master != null && master.isAlive()) {
             return master.getset(key, newValue);
         }
-//		if (result != null) {
-//			return result;
-//		}
+        // if (result != null) {
+        // return result;
+        // }
         throw new JedisException("master server dead: " + master);
     }
 

@@ -1,17 +1,15 @@
 /*
  * Copyright 2002-2007 the original author or authors.
  *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except
+ * in compliance with the License. You may obtain a copy of the License at
  *
- *      http://www.apache.org/licenses/LICENSE-2.0
+ * http://www.apache.org/licenses/LICENSE-2.0
  *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
+ * Unless required by applicable law or agreed to in writing, software distributed under the License
+ * is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express
+ * or implied. See the License for the specific language governing permissions and limitations under
+ * the License.
  */
 
 package cc.linkedme.data.dao.util;
@@ -28,8 +26,8 @@ import org.springframework.jdbc.core.PreparedStatementSetter;
 import org.springframework.jdbc.core.StatementCreatorUtils;
 
 /**
- * Simple adapter for PreparedStatementSetter that applies
- * given arrays of arguments and JDBC argument types.
+ * Simple adapter for PreparedStatementSetter that applies given arrays of arguments and JDBC
+ * argument types.
  */
 @SuppressWarnings({"rawtypes"})
 class ArgTypePreparedStatementSetter implements PreparedStatementSetter, ParameterDisposer {
@@ -42,12 +40,11 @@ class ArgTypePreparedStatementSetter implements PreparedStatementSetter, Paramet
     /**
      * Create a new ArgTypePreparedStatementSetter for the given arguments.
      *
-     * @param args     the arguments to set
+     * @param args the arguments to set
      * @param argTypes the corresponding SQL types of the arguments
      */
     public ArgTypePreparedStatementSetter(Object[] args, int[] argTypes) {
-        if ((args != null && argTypes == null) || (args == null && argTypes != null) ||
-                (args != null && args.length != argTypes.length)) {
+        if ((args != null && argTypes == null) || (args == null && argTypes != null) || (args != null && args.length != argTypes.length)) {
             throw new InvalidDataAccessApiUsageException("args and argTypes parameters must match");
         }
         this.args = args;
@@ -61,7 +58,7 @@ class ArgTypePreparedStatementSetter implements PreparedStatementSetter, Paramet
                 Object arg = this.args[i];
                 if (arg instanceof Collection && this.argTypes[i] != Types.ARRAY) {
                     Collection entries = (Collection) arg;
-                    for (Iterator it = entries.iterator(); it.hasNext(); ) {
+                    for (Iterator it = entries.iterator(); it.hasNext();) {
                         Object entry = it.next();
                         if (entry instanceof Object[]) {
                             Object[] valueArray = ((Object[]) entry);

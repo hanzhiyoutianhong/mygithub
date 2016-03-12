@@ -14,8 +14,7 @@ public class McqUtil {
     private volatile static boolean systemInitSuccess = false;
 
     /**
-     * 等待系统初始化成功
-     * 如果systemInitSuccess为true，或者已经尝试3min，则开始执行读操作
+     * 等待系统初始化成功 如果systemInitSuccess为true，或者已经尝试3min，则开始执行读操作
      */
     public static void waitForInit(String mcqProcessName) {
         int total = 0;
@@ -23,8 +22,8 @@ public class McqUtil {
         try {
             while (!systemInitSuccess && total++ < 90) {
                 safeSleep(2000); // sleep 1s
-                msg = new StringBuilder(64).append(mcqProcessName + " wait for system init! systemInitSuccess:")
-                        .append(systemInitSuccess).append("\tcount:").append(total).toString();
+                msg = new StringBuilder(64).append(mcqProcessName + " wait for system init! systemInitSuccess:").append(systemInitSuccess)
+                        .append("\tcount:").append(total).toString();
                 ApiLogger.info(msg);
                 System.out.println(msg);
             }
@@ -37,8 +36,7 @@ public class McqUtil {
     public static void safeSleep(int millis) {
         try {
             Thread.sleep(millis);
-        } catch (InterruptedException e) {
-        }
+        } catch (InterruptedException e) {}
     }
 
     /**

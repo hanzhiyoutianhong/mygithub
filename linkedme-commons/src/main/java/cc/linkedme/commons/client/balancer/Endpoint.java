@@ -31,10 +31,7 @@ public class Endpoint<R> {
 
     @Override
     public String toString() {
-        StringBuilder sb = new StringBuilder(64)
-                .append("[id=").append(id)
-                .append(", ip=").append(ipAddress)
-                .append(", port=").append(port)
+        StringBuilder sb = new StringBuilder(64).append("[id=").append(id).append(", ip=").append(ipAddress).append(", port=").append(port)
                 .append(", resourceClient=").append(resourceClient);
         return sb.toString();
     }
@@ -55,9 +52,7 @@ public class Endpoint<R> {
         }
 
         final Endpoint<R> epObj = (Endpoint) obj;
-        return this.id == epObj.id
-                && this.ipAddress.equals(epObj.ipAddress)
-                && this.port == epObj.port
+        return this.id == epObj.id && this.ipAddress.equals(epObj.ipAddress) && this.port == epObj.port
                 && this.resourceClient.equals(epObj.resourceClient);
     }
 }

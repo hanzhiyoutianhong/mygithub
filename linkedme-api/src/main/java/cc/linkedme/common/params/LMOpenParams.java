@@ -25,10 +25,10 @@ public class LMOpenParams extends LMBaseParams {
      * construction function
      */
 
-    public LMOpenParams(String linkedMeKey, String sdk, String retryNumber, String debug, String identifyId,
-                        String deviceFingerprintId, String adTrackingEnabled, String linkIdentifier, String isReferable, String os,
-                        String osVersion, String appVersion, String update, String uriScheme, String iOSBundleId,
-                        String iOSTeamId, String spotlightIdentifier, String universalLinkUrl, String latVal) {
+    public LMOpenParams(String linkedMeKey, String sdk, String retryNumber, String debug, String identifyId, String deviceFingerprintId,
+            String adTrackingEnabled, String linkIdentifier, String isReferable, String os, String osVersion, String appVersion,
+            String update, String uriScheme, String iOSBundleId, String iOSTeamId, String spotlightIdentifier, String universalLinkUrl,
+            String latVal) {
         super(linkedMeKey, sdk, retryNumber, debug);
         this.identifyId = identifyId;
         this.deviceFingerprintId = deviceFingerprintId;

@@ -1,8 +1,8 @@
 package cc.linkedme.commons.log;
 
 /**
- * <b>Log Format</b>
- * <br>[host name] [date time] [unique log id] [module] [schema] [type] [data]
+ * <b>Log Format</b> <br>
+ * [host name] [date time] [unique log id] [module] [schema] [type] [data]
  */
 public interface LogCollector {
 

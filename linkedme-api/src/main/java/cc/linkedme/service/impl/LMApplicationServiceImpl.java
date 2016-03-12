@@ -50,8 +50,7 @@ public class LMApplicationServiceImpl implements LMApplicationService {
      * construction function
      */
 
-    public LMApplicationServiceImpl() {
-    }
+    public LMApplicationServiceImpl() {}
 
     /**
      * get and set function

@@ -20,8 +20,8 @@ final class FormattingTuple {
     /**
      * 指定格式化后的字符串、格式化的参数数组和异常原因，生成一个包含格式化结果的 {@link FormattingTuple}。
      *
-     * @param message   格式化后的字符串。
-     * @param argArray  格式化的参数数组。
+     * @param message 格式化后的字符串。
+     * @param argArray 格式化的参数数组。
      * @param throwable 异常原因。
      */
     FormattingTuple(String message, Object[] argArray, Throwable throwable) {

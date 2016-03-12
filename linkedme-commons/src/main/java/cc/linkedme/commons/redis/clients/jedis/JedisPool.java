@@ -19,8 +19,7 @@ public class JedisPool extends Pool<Jedis> {
         this(host, Protocol.DEFAULT_PORT);
     }
 
-    public JedisPool(final Config poolConfig, final String host, int port,
-                     int timeout, final String password) {
+    public JedisPool(final Config poolConfig, final String host, int port, int timeout, final String password) {
         this(poolConfig, host, port, timeout, password, Protocol.DEFAULT_DATABASE);
     }
 
@@ -32,8 +31,7 @@ public class JedisPool extends Pool<Jedis> {
         this(poolConfig, host, port, timeout, null, Protocol.DEFAULT_DATABASE);
     }
 
-    public JedisPool(final Config poolConfig, final String host, int port, int timeout, final String password,
-                     final int database) {
+    public JedisPool(final Config poolConfig, final String host, int port, int timeout, final String password, final int database) {
         super(poolConfig, new JedisFactory(host, port, timeout, password, database));
     }
 
@@ -56,8 +54,7 @@ public class JedisPool extends Pool<Jedis> {
         private final String password;
         private final int database;
 
-        public JedisFactory(final String host, final int port,
-                            final int timeout, final String password, final int database) {
+        public JedisFactory(final String host, final int port, final int timeout, final String password, final int database) {
             super();
             this.host = host;
             this.port = port;
@@ -87,8 +84,7 @@ public class JedisPool extends Pool<Jedis> {
                     try {
                         try {
                             jedis.quit();
-                        } catch (Exception e) {
-                        }
+                        } catch (Exception e) {}
                         jedis.disconnect();
                     } catch (Exception e) {
 

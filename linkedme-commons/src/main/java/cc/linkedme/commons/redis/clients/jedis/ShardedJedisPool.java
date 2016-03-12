@@ -10,23 +10,19 @@ import cc.linkedme.commons.redis.clients.util.Hashing;
 import cc.linkedme.commons.redis.clients.util.Pool;
 
 public class ShardedJedisPool extends Pool<ShardedJedis> {
-    public ShardedJedisPool(final GenericObjectPool.Config poolConfig,
-                            List<JedisShardInfo> shards) {
+    public ShardedJedisPool(final GenericObjectPool.Config poolConfig, List<JedisShardInfo> shards) {
         this(poolConfig, shards, Hashing.MURMUR_HASH);
     }
 
-    public ShardedJedisPool(final GenericObjectPool.Config poolConfig,
-                            List<JedisShardInfo> shards, Hashing algo) {
+    public ShardedJedisPool(final GenericObjectPool.Config poolConfig, List<JedisShardInfo> shards, Hashing algo) {
         this(poolConfig, shards, algo, null);
     }
 
-    public ShardedJedisPool(final GenericObjectPool.Config poolConfig,
-                            List<JedisShardInfo> shards, Pattern keyTagPattern) {
+    public ShardedJedisPool(final GenericObjectPool.Config poolConfig, List<JedisShardInfo> shards, Pattern keyTagPattern) {
         this(poolConfig, shards, Hashing.MURMUR_HASH, keyTagPattern);
     }
 
-    public ShardedJedisPool(final GenericObjectPool.Config poolConfig,
-                            List<JedisShardInfo> shards, Hashing algo, Pattern keyTagPattern) {
+    public ShardedJedisPool(final GenericObjectPool.Config poolConfig, List<JedisShardInfo> shards, Hashing algo, Pattern keyTagPattern) {
         super(poolConfig, new ShardedJedisFactory(shards, algo, keyTagPattern));
     }
 
@@ -38,8 +34,7 @@ public class ShardedJedisPool extends Pool<ShardedJedis> {
         private Hashing algo;
         private Pattern keyTagPattern;
 
-        public ShardedJedisFactory(List<JedisShardInfo> shards, Hashing algo,
-                                   Pattern keyTagPattern) {
+        public ShardedJedisFactory(List<JedisShardInfo> shards, Hashing algo, Pattern keyTagPattern) {
             this.shards = shards;
             this.algo = algo;
             this.keyTagPattern = keyTagPattern;

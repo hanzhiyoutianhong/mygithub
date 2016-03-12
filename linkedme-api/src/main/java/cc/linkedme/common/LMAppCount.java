@@ -17,8 +17,7 @@ public class LMAppCount {
      * construction function
      */
 
-    public LMAppCount() {
-    }
+    public LMAppCount() {}
 
     /**
      * get and set function

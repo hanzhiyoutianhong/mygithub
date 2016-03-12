@@ -138,8 +138,8 @@ public abstract class McqProcessor implements StartReadingAble {
         }
         if (!writeRs) {
             ApiLogger.error(new StringBuilder(128).append("Write mcq false, key=").append(key).append(", msg=").append(msg));
-            throw new IllegalArgumentException(new StringBuilder(128).append("Write mcq false, key=").append(key).append(", msg=")
-                    .append(msg).toString());
+            throw new IllegalArgumentException(
+                    new StringBuilder(128).append("Write mcq false, key=").append(key).append(", msg=").append(msg).toString());
         }
     }
 
@@ -176,13 +176,12 @@ public abstract class McqProcessor implements StartReadingAble {
         }
         if (!writeRs) {
             ApiLogger.error(new StringBuilder(128).append("Write mcq false, key=").append(key).append(", msg=").append(msg));
-            throw new IllegalArgumentException(new StringBuilder(128).append("Write mcq false, key=").append(key).append(", msg=")
-                    .append(msg).toString());
+            throw new IllegalArgumentException(
+                    new StringBuilder(128).append("Write mcq false, key=").append(key).append(", msg=").append(msg).toString());
         }
     }
 
-    protected void startExtWork() {
-    }
+    protected void startExtWork() {}
 
     protected abstract String getRawReadKey();
 
@@ -235,9 +234,8 @@ public abstract class McqProcessor implements StartReadingAble {
                         }
 
                     } catch (Exception e) {
-                        ApiLogger.warn(
-                                new StringBuilder(128).append("Error: processing the msg frm mq error, ").append(portInfo).append(", msg=")
-                                        .append(msg), e);
+                        ApiLogger.warn(new StringBuilder(128).append("Error: processing the msg frm mq error, ").append(portInfo)
+                                .append(", msg=").append(msg), e);
                     } finally {
                         if (readKey != null) {
                             long end = System.currentTimeMillis();

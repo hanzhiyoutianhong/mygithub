@@ -8,12 +8,12 @@ import cc.linkedme.commons.log.ApiLogger;
 import cc.linkedme.commons.json.JsonBuilder;
 
 public class TimeStatUtil {
-    //规则：第一位表示资源类型，第二位表示是否批量，后五位表示端口
+    // 规则：第一位表示资源类型，第二位表示是否批量，后五位表示端口
     public final static int MC_TYPE = 1000000;
     public final static int REDIS_TYPE = 2000000;
     public final static int DB_TYPE = 3000000;
     public final static int HBASE_TYPE = 4000000;
-    public final static int[] TIMEARR = new int[]{1, 5, 10, 20, 30, 50, 100, 200, 300, 500};// 区间值列表
+    public final static int[] TIMEARR = new int[] {1, 5, 10, 20, 30, 50, 100, 200, 300, 500};// 区间值列表
     public final static int MULTI_TYPE = 100000;
     public final static int TOTAL_COUNT = 0;
     public final static int ERROR_COUNT = -1;
@@ -25,13 +25,13 @@ public class TimeStatUtil {
 
     private static class TimeStat {
 
-        //定义两个map用来存储上下行各区间计数，避免获取时拼接字符串做key，影响性能
+        // 定义两个map用来存储上下行各区间计数，避免获取时拼接字符串做key，影响性能
         ConcurrentHashMap<Integer, AtomicLong> wTimeMap = new ConcurrentHashMap<Integer, AtomicLong>();
         ConcurrentHashMap<Integer, AtomicLong> rTimeMap = new ConcurrentHashMap<Integer, AtomicLong>();
-        AtomicLong wTotal = new AtomicLong(0);//上行总计数
-        AtomicLong rTotal = new AtomicLong(0);//下行总计数
+        AtomicLong wTotal = new AtomicLong(0);// 上行总计数
+        AtomicLong rTotal = new AtomicLong(0);// 下行总计数
 
-        //初始化
+        // 初始化
         {
             for (int t : TIMEARR) {
                 wTimeMap.put(t, new AtomicLong(0));
@@ -43,7 +43,8 @@ public class TimeStatUtil {
 
     public static ConcurrentHashMap<Integer, TimeStat> map = new ConcurrentHashMap<Integer, TimeStat>();
 
-    public static ConcurrentHashMap<Integer, ConcurrentHashMap<Integer, AtomicLong>> retryMap = new ConcurrentHashMap<Integer, ConcurrentHashMap<Integer, AtomicLong>>();
+    public static ConcurrentHashMap<Integer, ConcurrentHashMap<Integer, AtomicLong>> retryMap =
+            new ConcurrentHashMap<Integer, ConcurrentHashMap<Integer, AtomicLong>>();
 
     private static Thread printThread;
 
@@ -52,32 +53,30 @@ public class TimeStatUtil {
             public void run() {
                 while (true) {
                     printMap();
-//					printRetryMap();
+                    // printRetryMap();
                     try {
-                        //5分钟执行一次
+                        // 5分钟执行一次
                         Thread.sleep(300000);
-                    } catch (InterruptedException e) {
-                    }
+                    } catch (InterruptedException e) {}
                 }
             }
         };
-        //将线程设置为守护线程
+        // 将线程设置为守护线程
         try {
             printThread.setDaemon(true);
-        } catch (Exception e) {
-        }
+        } catch (Exception e) {}
         printThread.start();
     }
 
-    //用来校验重试机制及查看各区间的百分比，全量上线会废弃掉
+    // 用来校验重试机制及查看各区间的百分比，全量上线会废弃掉
     public static void addElapseTimeStat(int name, int type) {
         try {
             name = name > MULTI_TYPE ? (name - MULTI_TYPE) : name;
             if (retryMap.get(name) == null) {
                 ConcurrentHashMap<Integer, AtomicLong> newMap = new ConcurrentHashMap<Integer, AtomicLong>();
                 {
-                    newMap.put(TOTAL_COUNT, new AtomicLong(0));//total
-                    newMap.put(ERROR_COUNT, new AtomicLong(0));//error_count
+                    newMap.put(TOTAL_COUNT, new AtomicLong(0));// total
+                    newMap.put(ERROR_COUNT, new AtomicLong(0));// error_count
                     for (int i = 1; i < max_try_time + 1; i++) {
                         newMap.put(i, new AtomicLong(0));
                     }
@@ -95,8 +94,8 @@ public class TimeStatUtil {
             ConcurrentHashMap<Integer, AtomicLong> test = retryMap.get(key);
             ConcurrentHashMap<Integer, AtomicLong> newMap = new ConcurrentHashMap<Integer, AtomicLong>();
             {
-                newMap.put(TOTAL_COUNT, new AtomicLong(0));//total
-                newMap.put(ERROR_COUNT, new AtomicLong(0));//error_count
+                newMap.put(TOTAL_COUNT, new AtomicLong(0));// total
+                newMap.put(ERROR_COUNT, new AtomicLong(0));// error_count
                 for (int i = 1; i < max_try_time + 1; i++) {
                     newMap.put(i, new AtomicLong(0));
                 }
@@ -120,14 +119,13 @@ public class TimeStatUtil {
                 map.put(key, new TimeStat());
                 try {
                     printStat(key, timeStat);
-                } catch (Exception e) {
-                }
+                } catch (Exception e) {}
             }
         }
 
     }
 
-    //第一次执行时注册
+    // 第一次执行时注册
     public static void register(int name) {
         if (map.get(name) == null) {
             map.putIfAbsent(name, new TimeStat());
@@ -147,9 +145,8 @@ public class TimeStatUtil {
 
     }
 
-    //每次操作，将处理时间插入对应的区间内
-    public static void addElapseTimeStat(int name, boolean isWriter,
-                                         long startTime, long cost) {
+    // 每次操作，将处理时间插入对应的区间内
+    public static void addElapseTimeStat(int name, boolean isWriter, long startTime, long cost) {
         try {
             TimeStat timeStat = getTimeStat(name);
             if (cost == -1) {
@@ -167,18 +164,17 @@ public class TimeStatUtil {
                     return;
                 }
             }
-            //如果以上条件都不满足，说明大于数据最大值，则只在总数中记录
+            // 如果以上条件都不满足，说明大于数据最大值，则只在总数中记录
             if (isWriter) {
                 timeStat.wTotal.incrementAndGet();
             } else {
                 timeStat.rTotal.incrementAndGet();
             }
-        } catch (Exception e) {
-        }
+        } catch (Exception e) {}
 
     }
 
-    //线程10分钟执行一次，将map中所有端口的数据输出到日志中
+    // 线程10分钟执行一次，将map中所有端口的数据输出到日志中
     public static void printStat(int key, TimeStat timestat) {
         String module;
         int port;
@@ -227,7 +223,7 @@ public class TimeStatUtil {
             rjb.append(TIMEARR[i] + "", timestat.rTimeMap.get(TIMEARR[i]).get());
         }
         // 调用LogCollector
-        //对于调用为0的不做记录
+        // 对于调用为0的不做记录
         if (wt > 0) {
             LogCollectorFactory.getLogCollector().log("resourceInterval", module + "writer", wjb.flip().toString());
         }

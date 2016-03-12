@@ -62,9 +62,7 @@ public class IPUtils {
     }
 
     /**
-     * 将ip转化为数字，并且保持ip的大小顺序不变
-     * 如 ipToInt("10.75.0.1") > ipToInt("10.75.0.0")
-     * 如果ip不合法则返回 0
+     * 将ip转化为数字，并且保持ip的大小顺序不变 如 ipToInt("10.75.0.1") > ipToInt("10.75.0.0") 如果ip不合法则返回 0
      *
      * @param ipAddress
      * @return
@@ -73,18 +71,12 @@ public class IPUtils {
         return ipToInt(addr, false);
     }
 
-    private static long[][] intranet_ip_ranges = new long[][]{
-            {ipToInt("10.0.0.0"), ipToInt("10.255.255.255")},
-            {ipToInt("172.16.0.0"), ipToInt("172.31.255.255")},
-            {ipToInt("192.168.0.0"), ipToInt("192.168.255.255")}
-    };
+    private static long[][] intranet_ip_ranges = new long[][] {{ipToInt("10.0.0.0"), ipToInt("10.255.255.255")},
+            {ipToInt("172.16.0.0"), ipToInt("172.31.255.255")}, {ipToInt("192.168.0.0"), ipToInt("192.168.255.255")}};
 
     /**
-     * 是否为内网ip
-     * A类  10.0.0.0-10.255.255.255
-     * B类  172.16.0.0-172.31.255.255
-     * C类  192.168.0.0-192.168.255.255
-     * 不包括回环ip
+     * 是否为内网ip A类 10.0.0.0-10.255.255.255 B类 172.16.0.0-172.31.255.255 C类
+     * 192.168.0.0-192.168.255.255 不包括回环ip
      *
      * @param ip
      * @return
@@ -135,7 +127,7 @@ public class IPUtils {
     }
 
     /**
-     * 获取服务器ip 判断规则  eth0 > eth1 > ... ethN > wlan > lo
+     * 获取服务器ip 判断规则 eth0 > eth1 > ... ethN > wlan > lo
      * <p>
      * yuanming@staff
      *
@@ -211,8 +203,7 @@ public class IPUtils {
             ds = new DatagramSocket(port);
             ds.setReuseAddress(true);
             return true;
-        } catch (IOException e) {
-        } finally {
+        } catch (IOException e) {} finally {
             if (ds != null) {
                 ds.close();
             }

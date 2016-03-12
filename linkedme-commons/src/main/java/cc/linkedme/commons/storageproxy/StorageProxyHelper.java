@@ -24,9 +24,11 @@ import cc.linkedme.commons.util.Constants;
  */
 public class StorageProxyHelper<T> {
 
-    public static Switcher dirtyCacheSwitcher = SwitcherManagerFactoryLoader.getSwitcherManagerFactory().getSwitcherManager().getSwitcher("feature.status.cache.dirty");
+    public static Switcher dirtyCacheSwitcher =
+            SwitcherManagerFactoryLoader.getSwitcherManagerFactory().getSwitcherManager().getSwitcher("feature.status.cache.dirty");
 
-    public static ThreadPoolExecutor proxyPool = new TraceableThreadExecutor(48, 48, 0L, TimeUnit.MILLISECONDS, new LinkedBlockingQueue<Runnable>(), new AbortPolicy());
+    public static ThreadPoolExecutor proxyPool =
+            new TraceableThreadExecutor(48, 48, 0L, TimeUnit.MILLISECONDS, new LinkedBlockingQueue<Runnable>(), new AbortPolicy());
 
     private static int MAX_COUNT_IN_QUEUE = 10000;
 
@@ -52,7 +54,8 @@ public class StorageProxyHelper<T> {
         return null;
     }
 
-    public static Future<Boolean> submit(StorageAble preferStorage, Map<String, ? extends Object> kvs, String[] leftKeys, StorageAble backupStorage) {
+    public static Future<Boolean> submit(StorageAble preferStorage, Map<String, ? extends Object> kvs, String[] leftKeys,
+            StorageAble backupStorage) {
         if (proxyPool.getQueue().size() < MAX_COUNT_IN_QUEUE) {
             ProxyRecacheTask task = new ProxyRecacheTask(preferStorage, kvs, leftKeys, backupStorage);
             return proxyPool.submit(task);
@@ -98,36 +101,39 @@ public class StorageProxyHelper<T> {
                     boolean isDirty = false;
                     boolean isContentMissed = false;
                     boolean isUserTypeMissed = false;
-//                    if (value instanceof DoubleLongitudeVectorItem) {
-//                        isDirty = ((DoubleLongitudeVectorItem) value).isDirty();
-//                    } else if (value instanceof VectorItem) {
-//                        isDirty = ((VectorItem) value).isDirty();
-//                    } else if ( value instanceof byte[]){
-//                      String suffix = StorageAble.getKeySuffix(key);
-//                      if (StorageAble.CacheSuffix.META_VECTOR_STATUS_DATE.equals(suffix)
-//                          || StorageAble.CacheSuffix.META_VECTOR_STATUS_LATEST.equals(suffix)
-//                          || StorageAble.CacheSuffix.PAGE_VECTOR_STATUS_DATE.equals(suffix)) {
-//                        MetaItem item = MetaItemPBUtil.toItem((byte[]) value);
-//                        isDirty = MetaItemPBUtil.isDirty(item);
-//                        isContentMissed = MetaItemPBUtil.isContentMissed(item);
-//                        isUserTypeMissed = MetaItemPBUtil.isUserTypeMissed(item);
-//                      }
+                    // if (value instanceof DoubleLongitudeVectorItem) {
+                    // isDirty = ((DoubleLongitudeVectorItem) value).isDirty();
+                    // } else if (value instanceof VectorItem) {
+                    // isDirty = ((VectorItem) value).isDirty();
+                    // } else if ( value instanceof byte[]){
+                    // String suffix = StorageAble.getKeySuffix(key);
+                    // if (StorageAble.CacheSuffix.META_VECTOR_STATUS_DATE.equals(suffix)
+                    // || StorageAble.CacheSuffix.META_VECTOR_STATUS_LATEST.equals(suffix)
+                    // || StorageAble.CacheSuffix.PAGE_VECTOR_STATUS_DATE.equals(suffix)) {
+                    // MetaItem item = MetaItemPBUtil.toItem((byte[]) value);
+                    // isDirty = MetaItemPBUtil.isDirty(item);
+                    // isContentMissed = MetaItemPBUtil.isContentMissed(item);
+                    // isUserTypeMissed = MetaItemPBUtil.isUserTypeMissed(item);
+                    // }
                 }
-//                    if((isContentMissed || isUserTypeMissed) && dirtyDataWriteSwitcher.isClose()){
-//                        continue;
-//                    } else if (isDirty && dirtyCacheSwitcher.isOpen()) {
-//                        preferStorage.set(key, value, Constants.EXPTIME_VECTOR_DIRTY);
-//                        ApiLogger.warn("StorageProxyHelper cache set dirty value. key:" + key + ", expire: + " + Constants.EXPTIME_VECTOR_DIRTY.getTime());
-//                    } else if (isContentMissed && dirtyCacheSwitcher.isOpen()) {
-//                        preferStorage.set(key, value, Constants.EXPTIME_META_VECTOR_CONTENT_MISSED);
-//                        ApiLogger.warn("StorageProxyHelper cache set dirty value. key:" + key + ", expire: + " + Constants.EXPTIME_META_VECTOR_CONTENT_MISSED.getTime());
-//                    } else if (isUserTypeMissed && dirtyCacheSwitcher.isOpen()) {
-//                        preferStorage.set(key, value, Constants.EXPTIME_META_VECTOR_USERTYPE_MISSED);
-//                        ApiLogger.warn("StorageProxyHelper cache set usertype dirty value. key:" + key + ", expire: + " + Constants.EXPTIME_META_VECTOR_USERTYPE_MISSED.getTime());
-//                    } else {
-//                        preferStorage.set(key, value);
-//                    }
-//                }
+                // if((isContentMissed || isUserTypeMissed) && dirtyDataWriteSwitcher.isClose()){
+                // continue;
+                // } else if (isDirty && dirtyCacheSwitcher.isOpen()) {
+                // preferStorage.set(key, value, Constants.EXPTIME_VECTOR_DIRTY);
+                // ApiLogger.warn("StorageProxyHelper cache set dirty value. key:" + key + ",
+                // expire: + " + Constants.EXPTIME_VECTOR_DIRTY.getTime());
+                // } else if (isContentMissed && dirtyCacheSwitcher.isOpen()) {
+                // preferStorage.set(key, value, Constants.EXPTIME_META_VECTOR_CONTENT_MISSED);
+                // ApiLogger.warn("StorageProxyHelper cache set dirty value. key:" + key + ",
+                // expire: + " + Constants.EXPTIME_META_VECTOR_CONTENT_MISSED.getTime());
+                // } else if (isUserTypeMissed && dirtyCacheSwitcher.isOpen()) {
+                // preferStorage.set(key, value, Constants.EXPTIME_META_VECTOR_USERTYPE_MISSED);
+                // ApiLogger.warn("StorageProxyHelper cache set usertype dirty value. key:" + key +
+                // ", expire: + " + Constants.EXPTIME_META_VECTOR_USERTYPE_MISSED.getTime());
+                // } else {
+                // preferStorage.set(key, value);
+                // }
+                // }
             }
             return true;
         }

@@ -7,8 +7,7 @@ public abstract class TransactionBlock extends Transaction {
         super(client);
     }
 
-    public TransactionBlock() {
-    }
+    public TransactionBlock() {}
 
     public abstract void execute() throws JedisException;
 

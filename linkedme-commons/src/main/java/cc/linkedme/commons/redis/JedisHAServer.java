@@ -16,7 +16,8 @@ import cc.linkedme.commons.redis.clients.jedis.exceptions.JedisException;
  * @author fishermen use clientBalancer
  * @author tangfulin
  *         <p>
- *         JedisMSServer 与 JedisPort的关系是组装会更好，但是因为上层应用已经是普遍是注入JedisPort，而非JedisClient（JedisPort实现的接口）,
+ *         JedisMSServer 与
+ *         JedisPort的关系是组装会更好，但是因为上层应用已经是普遍是注入JedisPort，而非JedisClient（JedisPort实现的接口）,
  *         为避免太多变动，所以本次暂时不改这个地方，待上线稳定后，再来一次全面修改 fishermen 2012.9.10
  *         <p>
  *         2 JedisPorts, for HA
@@ -41,7 +42,7 @@ public class JedisHAServer extends JedisPort {
     }
 
     public JedisHAServer(final long hashMin, final long hashMax) {
-        //super(hashMin, hashMax);
+        // super(hashMin, hashMax);
         this();
         this.hashMin = hashMin;
         this.hashMax = hashMax;
@@ -59,17 +60,17 @@ public class JedisHAServer extends JedisPort {
         return first;
     }
 
-//	public void setFirst(JedisPort first) {
-//		this.first = first;
-//	}
+    // public void setFirst(JedisPort first) {
+    // this.first = first;
+    // }
 
     public JedisPort getSecond() {
         return second;
     }
 
-//	public void setSecond(JedisPort second) {
-//		this.second = second;
-//	}
+    // public void setSecond(JedisPort second) {
+    // this.second = second;
+    // }
 
     public List<JedisPort> getClients() {
         List<JedisPort> clients = new ArrayList<JedisPort>();
@@ -151,7 +152,7 @@ public class JedisHAServer extends JedisPort {
             throw new IllegalStateException("JedisHAServer's server list is empty!");
         }
 
-        //this.firstServer = this.servers.get(0);
+        // this.firstServer = this.servers.get(0);
         this.first = createJedisPort(this.serverConfigs.get(0));
         this.first.throwJedisException = true;
         this.first.setReadOnly(readOnly);
@@ -177,7 +178,7 @@ public class JedisHAServer extends JedisPort {
     public JedisPort createJedisPort(RedisConfig redisConfig) {
         log.info("init connection to " + redisConfig.getServerPortDb());
 
-        //redisConfig.setServerPortDb(server);
+        // redisConfig.setServerPortDb(server);
         final JedisPort p = new JedisPort();
         p.setRedisConfig(redisConfig);
         p.init();
@@ -471,8 +472,7 @@ public class JedisHAServer extends JedisPort {
         if (result2 != null) {
             return result2;
         }
-        throw new JedisException("redis server all dead: " + first + " "
-                + second);
+        throw new JedisException("redis server all dead: " + first + " " + second);
 
     }
 
@@ -509,8 +509,7 @@ public class JedisHAServer extends JedisPort {
         if (result2 != null) {
             return result2;
         }
-        throw new JedisException("redis server all dead: " + first + " "
-                + second);
+        throw new JedisException("redis server all dead: " + first + " " + second);
     }
 
     @Override
@@ -637,8 +636,7 @@ public class JedisHAServer extends JedisPort {
         if (second != null && second.isAlive()) {
             return second.hget(key, field);
         }
-        log.warn(first + " [redis server all dead] hget, key: " + CodecHandler.toStr(key) + ",field:"
-                + CodecHandler.toStr(field));
+        log.warn(first + " [redis server all dead] hget, key: " + CodecHandler.toStr(key) + ",field:" + CodecHandler.toStr(field));
         throw new JedisException("redis server all dead: " + first + " " + second);
     }
 
@@ -802,8 +800,7 @@ public class JedisHAServer extends JedisPort {
         if (second != null && second.isAlive()) {
             return second.hmget(key, fields);
         }
-        log.warn(first + " [redis server all dead] mget, key: " + CodecHandler.toStr(key) + ",filed:"
-                + CodecHandler.toString(fields));
+        log.warn(first + " [redis server all dead] mget, key: " + CodecHandler.toStr(key) + ",filed:" + CodecHandler.toString(fields));
         throw new JedisException("redis server all dead: " + first + " " + second);
     }
 
@@ -1001,10 +998,7 @@ public class JedisHAServer extends JedisPort {
     }
 
     /**
-     * returns：
-     * 空字串：cache不存在
-     * 1：成功
-     * 0：不成功
+     * returns： 空字串：cache不存在 1：成功 0：不成功
      */
     @Override
     public Boolean lsput(String key, long... values) {
@@ -1031,10 +1025,7 @@ public class JedisHAServer extends JedisPort {
     }
 
     /**
-     * returns：
-     * 空字串：cache不存在
-     * 1：成功
-     * 0：不成功
+     * returns： 空字串：cache不存在 1：成功 0：不成功
      */
     @Override
     public Boolean lsdel(String key, long... values) {
@@ -1061,8 +1052,7 @@ public class JedisHAServer extends JedisPort {
     }
 
     /**
-     * returns
-     * 和values一一对应；返回null说明cache不存在
+     * returns 和values一一对应；返回null说明cache不存在
      */
     @Override
     public Set<Long> lsmexists(String key, long... values) {
@@ -1143,14 +1133,12 @@ public class JedisHAServer extends JedisPort {
     }
 
     /*
-     * @Override public Long lpush(byte[] key, byte[]... values) { Long result =
-     * null, result2 = null; if (first != null && first.isAlive()) { result =
-     * first.lpush(key,values); } if (doubleWrite && second != null &&
-     * second.isAlive()) { if (setSecond) { if (result != null) {
-     * second.lpush(key,values); } } else { result2 = second.lpush(key,values);
-     * } } if(result!=null){ return result; } if(result2 != null){ return
-     * result2; } throw new JedisException("redis server all dead: " + first +
-     * " " + second); }
+     * @Override public Long lpush(byte[] key, byte[]... values) { Long result = null, result2 =
+     * null; if (first != null && first.isAlive()) { result = first.lpush(key,values); } if
+     * (doubleWrite && second != null && second.isAlive()) { if (setSecond) { if (result != null) {
+     * second.lpush(key,values); } } else { result2 = second.lpush(key,values); } }
+     * if(result!=null){ return result; } if(result2 != null){ return result2; } throw new
+     * JedisException("redis server all dead: " + first + " " + second); }
      */
     @Override
     public Long lpush(byte[] key, byte[] value) {
@@ -1815,8 +1803,7 @@ public class JedisHAServer extends JedisPort {
     }
 
     @Override
-    public Set<byte[]> zrangeByScore(byte[] key, double min, double max, int offset,
-                                     int count) {
+    public Set<byte[]> zrangeByScore(byte[] key, double min, double max, int offset, int count) {
         if (first != null && first.isAlive()) {
             return first.zrangeByScore(key, min, max, offset, count);
         }
@@ -1840,8 +1827,7 @@ public class JedisHAServer extends JedisPort {
     }
 
     @Override
-    public Set<Tuple> zrangeByScoreWithScores(byte[] key, double min, double max,
-                                              int offset, int count) {
+    public Set<Tuple> zrangeByScoreWithScores(byte[] key, double min, double max, int offset, int count) {
         if (first != null && first.isAlive()) {
             return first.zrangeByScoreWithScores(key, min, max, offset, count);
         }

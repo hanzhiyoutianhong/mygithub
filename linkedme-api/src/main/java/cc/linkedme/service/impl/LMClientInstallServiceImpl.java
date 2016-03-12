@@ -27,7 +27,8 @@ public class LMClientInstallServiceImpl implements LMClientInstallService {
         try {
             rowResult = lmClientInstallDao.getOneClientInstall(identityId);
         } catch (Exception e) {
-            throw new LMException(LMExceptionFactor.LM_FAILURE_DB_OP, this.getClass().getName() + ".LMClientInstallEntity LMClientInstallEntity(" + identityId + ");");
+            throw new LMException(LMExceptionFactor.LM_FAILURE_DB_OP,
+                    this.getClass().getName() + ".LMClientInstallEntity LMClientInstallEntity(" + identityId + ");");
         }
         return rowResult;
     }

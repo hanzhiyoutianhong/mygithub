@@ -30,10 +30,10 @@ public class SampleStatsLocalCache<T> {
     private static final int RESULT_NUM = 50;
 
 
-    private int cycleDuration;//每隔多久转换一次buffer
-    private int segDuration;//每隔多久进行一次统计
-    private int resultNum;//最终结果保存大小
-    private int minHitRate;//最少访问次数后，才进行set
+    private int cycleDuration;// 每隔多久转换一次buffer
+    private int segDuration;// 每隔多久进行一次统计
+    private int resultNum;// 最终结果保存大小
+    private int minHitRate;// 最少访问次数后，才进行set
 
 
     private CacheBuffer<T> currentBuffer;
@@ -46,7 +46,7 @@ public class SampleStatsLocalCache<T> {
 
     private static final SwitcherManager sm = SwitcherManagerFactoryLoader.getSwitcherManagerFactory().getSwitcherManager();
     private static final Switcher switcher = sm.registerSwitcher("feature.localcache.enable_sample_localcache", true);
-    private static final long MAX_EXPIRE_TIME = 100 * 1000;//如果交换失败，则多长时间后，不再使用缓存
+    private static final long MAX_EXPIRE_TIME = 100 * 1000;// 如果交换失败，则多长时间后，不再使用缓存
 
     private long lastSwitchTime = System.currentTimeMillis();
 
@@ -80,8 +80,7 @@ public class SampleStatsLocalCache<T> {
         try {
             T result = this.currentBuffer.get(key);
 
-            long totalCount = totalCounter.incrementAndGet(), hitCount = this.hitCounter.get();
-            ;
+            long totalCount = totalCounter.incrementAndGet(), hitCount = this.hitCounter.get();;
             if (System.currentTimeMillis() - this.lastSwitchTime >= MAX_EXPIRE_TIME) {
                 result = null;
             }
@@ -113,23 +112,24 @@ public class SampleStatsLocalCache<T> {
                     }
                     op = true;
                 } catch (Throwable e) {
-                    //需要避免因为异常抛出，导致后面lock没有unlock
+                    // 需要避免因为异常抛出，导致后面lock没有unlock
                     ApiLogger.error("catch a throwable:", e);
                 }
                 lock.unlock();
                 if (op) {
                     boolean isStated = this.backupBuffer.isInStat(key);
                     this.backupBuffer.stat(key);
-                    if (result != null && !isStated) {//每一轮交换，对于第一个key，都让其穿透，从而保证cache的数据最长不超过CYCLE_DURATION，同时命中率不会太低
-                        result = null;//让此次请求穿透，从而更新备份缓存
+                    if (result != null && !isStated) {// 每一轮交换，对于第一个key，都让其穿透，从而保证cache的数据最长不超过CYCLE_DURATION，同时命中率不会太低
+                        result = null;// 让此次请求穿透，从而更新备份缓存
                     }
                 }
             }
             if (result != null) {
                 hitCount = this.hitCounter.incrementAndGet();
             }
-            if (totalCount % 1000 == 0 && totalCount != 0) {//每隔一千个，打印一次日志
-                ApiLogger.info("[SampleStatsCache." + this.name + ".get]total:" + totalCount + ",hit:" + hitCount + ", hitRate:" + ((double) hitCount / (double) totalCount));
+            if (totalCount % 1000 == 0 && totalCount != 0) {// 每隔一千个，打印一次日志
+                ApiLogger.info("[SampleStatsCache." + this.name + ".get]total:" + totalCount + ",hit:" + hitCount + ", hitRate:"
+                        + ((double) hitCount / (double) totalCount));
             }
             return result;
         } catch (Exception e) {
@@ -146,7 +146,7 @@ public class SampleStatsLocalCache<T> {
             return;
         }
         try {
-            if (this.currentBuffer.isInStat(key) || this.backupBuffer.isInStat(key)) {//控制临时缓存对象数量，数量等于CYCLE_DURATION/SEG_NUM
+            if (this.currentBuffer.isInStat(key) || this.backupBuffer.isInStat(key)) {// 控制临时缓存对象数量，数量等于CYCLE_DURATION/SEG_NUM
                 this.backupBuffer.set(key, value);
             }
         } catch (Exception e) {
@@ -162,7 +162,8 @@ public class SampleStatsLocalCache<T> {
         this.backupBuffer = new CacheBuffer<T>(this.name, this.resultNum, this.minHitRate);
         this.lastSwitchTime = System.currentTimeMillis();
         ApiLogger.info("[SampleStatsCache." + this.name + ".switching]hit:" + this.hitCounter + ", totalCounter:" + this.totalCounter);
-//		ApiLogger.info("[SampleStatsCache."+this.name+".switching]cache items:"+currentBuffer.statList.toString());
+        // ApiLogger.info("[SampleStatsCache."+this.name+".switching]cache
+        // items:"+currentBuffer.statList.toString());
         totalCounter.set(0);
         hitCounter.set(0);
         this.lastSeq = 0;
@@ -181,7 +182,7 @@ public class SampleStatsLocalCache<T> {
         public CacheBuffer(String name, int capacity, int hitRate) {
             this.capacity = capacity;
             this.hitRate = hitRate;
-            this.cache = new ConcurrentHashMap<String, T>();//当前的set逻辑，是之前一个时间段，被统计的，以及当前时间段被统计的总数，所以最多可能有两倍
+            this.cache = new ConcurrentHashMap<String, T>();// 当前的set逻辑，是之前一个时间段，被统计的，以及当前时间段被统计的总数，所以最多可能有两倍
             this.statList = Collections.synchronizedList(new ArrayList<Item<T>>(100));
             this.statSet = Collections.synchronizedSet(new HashSet<String>(100));
             this.name = name;
@@ -267,25 +268,19 @@ public class SampleStatsLocalCache<T> {
             public int hashCode() {
                 final int prime = 31;
                 int result = 1;
-                result = prime * result
-                        + ((name == null) ? 0 : name.hashCode());
+                result = prime * result + ((name == null) ? 0 : name.hashCode());
                 return result;
             }
 
             @Override
             public boolean equals(Object obj) {
-                if (this == obj)
-                    return true;
-                if (obj == null)
-                    return false;
-                if (getClass() != obj.getClass())
-                    return false;
+                if (this == obj) return true;
+                if (obj == null) return false;
+                if (getClass() != obj.getClass()) return false;
                 Item other = (Item) obj;
                 if (name == null) {
-                    if (other.name != null)
-                        return false;
-                } else if (!name.equals(other.name))
-                    return false;
+                    if (other.name != null) return false;
+                } else if (!name.equals(other.name)) return false;
                 return true;
             }
         }

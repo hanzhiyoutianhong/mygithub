@@ -4,8 +4,7 @@ public class SwitcherNotFindException extends SwitcherException {
 
     private static final long serialVersionUID = -1279964914956915480L;
 
-    public SwitcherNotFindException() {
-    }
+    public SwitcherNotFindException() {}
 
     /**
      * @param message

@@ -4,7 +4,9 @@ import org.springframework.beans.factory.xml.NamespaceHandlerSupport;
 
 public class WfcNamespaceHandler extends NamespaceHandlerSupport {
 
-    /* (non-Javadoc)
+    /*
+     * (non-Javadoc)
+     * 
      * @see org.springframework.beans.factory.xml.NamespaceHandler#init()
      */
     @Override

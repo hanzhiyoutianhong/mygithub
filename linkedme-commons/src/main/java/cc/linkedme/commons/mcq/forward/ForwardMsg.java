@@ -3,7 +3,7 @@ package cc.linkedme.commons.mcq.forward;
 public class ForwardMsg {
     private String type;
     private String msg;
-    private long flag; // some writer need flag 
+    private long flag; // some writer need flag
 
     public ForwardMsg(String type, String msg) {
         this.type = type;

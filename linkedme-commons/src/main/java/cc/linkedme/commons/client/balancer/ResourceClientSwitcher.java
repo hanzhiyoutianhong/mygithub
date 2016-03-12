@@ -15,7 +15,8 @@ import cc.linkedme.commons.client.balancer.util.ClientBalancerLog;
 
 public class ResourceClientSwitcher {
 
-    private static Map<EndpointBalancerConfig, EndpointPool> endpointPools = new ConcurrentHashMap<EndpointBalancerConfig, EndpointPool>(100);
+    private static Map<EndpointBalancerConfig, EndpointPool> endpointPools =
+            new ConcurrentHashMap<EndpointBalancerConfig, EndpointPool>(100);
 
     /**
      * register a endpointPool
@@ -49,15 +50,15 @@ public class ResourceClientSwitcher {
 
         int pauseCount = 0;
         for (EndpointBalancerConfig config : endpointPools.keySet()) {
-            if (StringUtils.equals(config.getHostname(), hostname)
-                    && config.getPort() == port) {
+            if (StringUtils.equals(config.getHostname(), hostname) && config.getPort() == port) {
                 endpointPools.get(config).pauseService();
                 ClientBalancerLog.log.info("ClientSwither - pauseService success! hostname={}, port={}", hostname, port);
                 pauseCount++;
             }
         }
 
-        ClientBalancerLog.log.warn("ClientSwither - pause endpointPool count={}, hostname:port={}:{}", new Object[]{pauseCount, hostname, port});
+        ClientBalancerLog.log.warn("ClientSwither - pause endpointPool count={}, hostname:port={}:{}",
+                new Object[] {pauseCount, hostname, port});
         return true;
     }
 
@@ -72,15 +73,15 @@ public class ResourceClientSwitcher {
         ClientBalancerLog.log.warn("ClientSwither - restartService start, hostname={}, port={}", hostname, port);
         int restartCount = 0;
         for (EndpointBalancerConfig config : endpointPools.keySet()) {
-            if (StringUtils.equals(config.getHostname(), hostname)
-                    && config.getPort() == port) {
+            if (StringUtils.equals(config.getHostname(), hostname) && config.getPort() == port) {
                 endpointPools.get(config).restartService();
                 ClientBalancerLog.log.warn("ClientSwither - restart endpointPool success! hostname={}, port={}", hostname, port);
                 restartCount++;
             }
         }
 
-        ClientBalancerLog.log.warn("ClientSwither - restart endpointPool count={}, hostname:port={}:{}", new Object[]{restartCount, hostname, port});
+        ClientBalancerLog.log.warn("ClientSwither - restart endpointPool count={}, hostname:port={}:{}",
+                new Object[] {restartCount, hostname, port});
         return true;
     }
 

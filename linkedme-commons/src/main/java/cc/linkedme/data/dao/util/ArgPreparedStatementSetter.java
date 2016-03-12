@@ -10,8 +10,7 @@ import org.springframework.jdbc.core.SqlTypeValue;
 import org.springframework.jdbc.core.StatementCreatorUtils;
 
 /**
- * Simple adapter for PreparedStatementSetter that applies
- * a given array of arguments.
+ * Simple adapter for PreparedStatementSetter that applies a given array of arguments.
  */
 class ArgPreparedStatementSetter implements PreparedStatementSetter, ParameterDisposer {
 

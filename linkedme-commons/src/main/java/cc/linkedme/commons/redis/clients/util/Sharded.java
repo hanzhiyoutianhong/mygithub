@@ -18,15 +18,13 @@ public class Sharded<R, S extends ShardInfo<R>> {
     private final Map<ShardInfo<R>, R> resources = new LinkedHashMap<ShardInfo<R>, R>();
 
     /**
-     * The default pattern used for extracting a key tag. The pattern must have
-     * a group (between parenthesis), which delimits the tag to be hashed. A
-     * null pattern avoids applying the regular expression for each lookup,
-     * improving performance a little bit is key tags aren't being used.
+     * The default pattern used for extracting a key tag. The pattern must have a group (between
+     * parenthesis), which delimits the tag to be hashed. A null pattern avoids applying the regular
+     * expression for each lookup, improving performance a little bit is key tags aren't being used.
      */
     private Pattern tagPattern = null;
     // the tag is anything between {}
-    public static final Pattern DEFAULT_KEY_TAG_PATTERN = Pattern
-            .compile("\\{(.+?)\\}");
+    public static final Pattern DEFAULT_KEY_TAG_PATTERN = Pattern.compile("\\{(.+?)\\}");
 
     public Sharded(List<S> shards) {
         this(shards, Hashing.MURMUR_HASH); // MD5 is really not good as we works
@@ -88,19 +86,18 @@ public class Sharded<R, S extends ShardInfo<R>> {
     }
 
     /**
-     * A key tag is a special pattern inside a key that, if preset, is the only
-     * part of the key hashed in order to select the server for this key.
+     * A key tag is a special pattern inside a key that, if preset, is the only part of the key
+     * hashed in order to select the server for this key.
      *
      * @param key
      * @return The tag if it exists, or the original key
      * @see http://code.google.com/p/redis/wiki/FAQ#I
-     * 'm_using_some_form_of_key_hashing_for_partitioning,_but_wh
+     *      'm_using_some_form_of_key_hashing_for_partitioning,_but_wh
      */
     public String getKeyTag(String key) {
         if (tagPattern != null) {
             Matcher m = tagPattern.matcher(key);
-            if (m.find())
-                return m.group(1);
+            if (m.find()) return m.group(1);
         }
         return key;
     }

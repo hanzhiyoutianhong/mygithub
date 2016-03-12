@@ -1,17 +1,13 @@
 /**
- * Copyright (c) 2007 Greg Whalin
- * All rights reserved.
+ * Copyright (c) 2007 Greg Whalin All rights reserved.
  * <p>
- * This library is free software; you can redistribute it and/or
- * modify it under the terms of the BSD license
+ * This library is free software; you can redistribute it and/or modify it under the terms of the
+ * BSD license
  * <p>
- * This library is distributed in the hope that it will be
- * useful, but WITHOUT ANY WARRANTY; without even the implied
- * warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR
- * PURPOSE.
+ * This library is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without
+ * even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
  * <p>
- * You should have received a copy of the BSD License along with this
- * library.
+ * You should have received a copy of the BSD License along with this library.
  *
  * @author greg whalin <greg@meetup.com>
  * @version 2.0
@@ -29,12 +25,11 @@ public final class ByteBufArrayInputStream extends InputStream implements LineIn
     private int currentBuf = 0;
 
     public ByteBufArrayInputStream(List<ByteBuffer> bufs) throws Exception {
-        this(bufs.toArray(new ByteBuffer[]{}));
+        this(bufs.toArray(new ByteBuffer[] {}));
     }
 
     public ByteBufArrayInputStream(ByteBuffer[] bufs) throws Exception {
-        if (bufs == null || bufs.length == 0)
-            throw new Exception("buffer is empty");
+        if (bufs == null || bufs.length == 0) throw new Exception("buffer is empty");
 
         this.bufs = bufs;
         for (ByteBuffer b : bufs)
@@ -43,11 +38,9 @@ public final class ByteBufArrayInputStream extends InputStream implements LineIn
 
     public int read() {
         do {
-            if (bufs[currentBuf].hasRemaining())
-                return bufs[currentBuf].get();
+            if (bufs[currentBuf].hasRemaining()) return bufs[currentBuf].get();
             currentBuf++;
-        }
-        while (currentBuf < bufs.length);
+        } while (currentBuf < bufs.length);
 
         currentBuf--;
         return -1;
@@ -63,8 +56,7 @@ public final class ByteBufArrayInputStream extends InputStream implements LineIn
                 bufPos += n;
             }
             currentBuf++;
-        }
-        while (currentBuf < bufs.length && bufPos < len);
+        } while (currentBuf < bufs.length && bufPos < len);
 
         currentBuf--;
 
@@ -84,8 +76,7 @@ public final class ByteBufArrayInputStream extends InputStream implements LineIn
                 eol = true;
             } else {
                 if (eol) {
-                    if (b[0] == 10)
-                        break;
+                    if (b[0] == 10) break;
                     eol = false;
                 }
             }
@@ -115,8 +106,7 @@ public final class ByteBufArrayInputStream extends InputStream implements LineIn
             }
 
             if (eol) {
-                if (b[0] == 10)
-                    break;
+                if (b[0] == 10) break;
                 eol = false;
             }
         }
@@ -127,8 +117,7 @@ public final class ByteBufArrayInputStream extends InputStream implements LineIn
         sb.append(bufs.length).append(" bufs of sizes: \n");
 
         for (int i = 0; i < bufs.length; i++) {
-            sb.append("                                        ")
-                    .append(i).append(":  ").append(bufs[i]).append("\n");
+            sb.append("                                        ").append(i).append(":  ").append(bufs[i]).append("\n");
         }
         return sb.toString();
     }

@@ -66,8 +66,7 @@ public class LMRedisServiceImpl implements LMRedisService {
      * construction function
      */
 
-    public LMRedisServiceImpl() {
-    }
+    public LMRedisServiceImpl() {}
 
     /**
      * get and set function

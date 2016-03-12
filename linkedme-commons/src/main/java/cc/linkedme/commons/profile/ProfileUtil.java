@@ -64,15 +64,15 @@ public class ProfileUtil {
         try {
             AccessStatisticItem item = getStatisticItem(key, currentTimeMillis, slowThredshold);
             item.statistic(currentTimeMillis, costTimeMillis);
-        } catch (Exception e) {
-        }
+        } catch (Exception e) {}
     }
 
     public static AccessStatisticItem getStatisticItem(String key, long currentTime, long slowThredshold) {
         AccessStatisticItem item = accessStatistics.get(key);
 
         if (item == null) {
-            accessStatistics.putIfAbsent(key, new AccessStatisticItem(key, currentTime, ProfileConstants.STATISTIC_PEROID * 2, slowThredshold));
+            accessStatistics.putIfAbsent(key,
+                    new AccessStatisticItem(key, currentTime, ProfileConstants.STATISTIC_PEROID * 2, slowThredshold));
             item = accessStatistics.get(key);
         }
 
@@ -108,9 +108,9 @@ public class ProfileUtil {
                 jsonBuilder.append("total_count", 0);
                 jsonBuilder.append("slow_count", 0);
                 jsonBuilder.append("avg_time", 0.00);
-//			    jsonBuilder.append("avg_tps", 0);
-//			    jsonBuilder.append("max_tps", 0);
-//			    jsonBuilder.append("min_tps", 0);
+                // jsonBuilder.append("avg_tps", 0);
+                // jsonBuilder.append("max_tps", 0);
+                // jsonBuilder.append("min_tps", 0);
                 jsonBuilder.append("interval1", 0);
                 jsonBuilder.append("interval2", 0);
                 jsonBuilder.append("interval3", 0);
@@ -121,9 +121,10 @@ public class ProfileUtil {
                 jsonBuilder.append("total_count", result.totalCount);
                 jsonBuilder.append("slow_count", result.slowCount);
                 jsonBuilder.append("avg_time", mbFormat.format(result.costTime / result.totalCount));
-//                jsonBuilder.append("avg_tps", result.totalCount / ProfileConstants.STATISTIC_PEROID);
-//                jsonBuilder.append("max_tps", result.maxCount);
-//                jsonBuilder.append("min_tps", result.minCount > 0 ? result.minCount : 0);
+                // jsonBuilder.append("avg_tps", result.totalCount /
+                // ProfileConstants.STATISTIC_PEROID);
+                // jsonBuilder.append("max_tps", result.maxCount);
+                // jsonBuilder.append("min_tps", result.minCount > 0 ? result.minCount : 0);
                 jsonBuilder.append("interval1", result.intervalCounts[0]);
                 jsonBuilder.append("interval2", result.intervalCounts[1]);
                 jsonBuilder.append("interval3", result.intervalCounts[2]);
@@ -167,7 +168,8 @@ public class ProfileUtil {
             this.interval4 = initAtomicIntegerArr(length);
             this.interval5 = initAtomicIntegerArr(length);
             this.currentIndex = getIndex(currentTimeMillis, length);
-            this.histogram = InternalMetricsFactory.getRegistryInstance(name).histogram(MetricRegistry.name(AccessStatisticItem.class, "costTimeMillis"));
+            this.histogram = InternalMetricsFactory.getRegistryInstance(name)
+                    .histogram(MetricRegistry.name(AccessStatisticItem.class, "costTimeMillis"));
         }
 
         private AtomicInteger[] initAtomicIntegerArr(int size) {
@@ -245,18 +247,22 @@ public class ProfileUtil {
             } else if (type.equals(ProfileType.HBASE.value()) || type.equals(ProfileType.HBASEFAILFAST.value())) {
                 if (costTimeMillis < ProfileConstants.STORAGE_RESOURCE_INTERVAL1) {
                     interval1[currentIndex].incrementAndGet();
-                } else if (costTimeMillis >= ProfileConstants.STORAGE_RESOURCE_INTERVAL1 && costTimeMillis < ProfileConstants.STORAGE_RESOURCE_INTERVAL2) {
+                } else if (costTimeMillis >= ProfileConstants.STORAGE_RESOURCE_INTERVAL1
+                        && costTimeMillis < ProfileConstants.STORAGE_RESOURCE_INTERVAL2) {
                     interval2[currentIndex].incrementAndGet();
-                } else if (costTimeMillis >= ProfileConstants.STORAGE_RESOURCE_INTERVAL2 && costTimeMillis < ProfileConstants.STORAGE_RESOURCE_INTERVAL3) {
+                } else if (costTimeMillis >= ProfileConstants.STORAGE_RESOURCE_INTERVAL2
+                        && costTimeMillis < ProfileConstants.STORAGE_RESOURCE_INTERVAL3) {
                     interval3[currentIndex].incrementAndGet();
-                } else if (costTimeMillis >= ProfileConstants.STORAGE_RESOURCE_INTERVAL3 && costTimeMillis < ProfileConstants.STORAGE_RESOURCE_INTERVAL4) {
+                } else if (costTimeMillis >= ProfileConstants.STORAGE_RESOURCE_INTERVAL3
+                        && costTimeMillis < ProfileConstants.STORAGE_RESOURCE_INTERVAL4) {
                     interval4[currentIndex].incrementAndGet();
                 } else {
                     interval5[currentIndex].incrementAndGet();
                 }
             }
             histogram.update(costTimeMillis);
-            InternalMetricsFactory.getRegistryInstance(name).histogram(MetricRegistry.name(AccessStatisticItem.class, "costTimeMillis")).update(costTimeMillis);
+            InternalMetricsFactory.getRegistryInstance(name).histogram(MetricRegistry.name(AccessStatisticItem.class, "costTimeMillis"))
+                    .update(costTimeMillis);
         }
 
         public void statistic(long currentTimeMillis, int[] intervals) {
@@ -288,7 +294,8 @@ public class ProfileUtil {
             interval4[currentIndex].addAndGet(intervals[3]);
             interval5[currentIndex].addAndGet(intervals[4]);
             histogram.update(sum);
-            InternalMetricsFactory.getRegistryInstance(name).histogram(MetricRegistry.name(AccessStatisticItem.class, "costTimeMillis")).update(sum);
+            InternalMetricsFactory.getRegistryInstance(name).histogram(MetricRegistry.name(AccessStatisticItem.class, "costTimeMillis"))
+                    .update(sum);
         }
 
         private int getIndex(long currentTimeMillis, int periodSecond) {

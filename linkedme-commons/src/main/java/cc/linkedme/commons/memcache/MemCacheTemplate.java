@@ -25,23 +25,20 @@ import cc.linkedme.commons.thread.TraceableThreadExecutor;
  * <b> To get MemCacheTemplate from m-s memcache. </b>
  * <p/>
  * <p>
- * m is master and masterL1List.
- * s is slave and slaveL1List.
+ * m is master and masterL1List. s is slave and slaveL1List.
  * </p>
  *
  * @author yangwm Oct 13, 2012 6:35:46 PM
  */
 public class MemCacheTemplate<T> implements CacheAble<T> {
-    
+
     /*
-     * TODO 
-     * 1. data format : java serialization, java byte buffer, kryo, protocal buffers, 
-     * 2. key type: 
-     * 3. balance  : master vs slave 
-     * 4. evenly distributed expire : master and slave's expireTime, masterL1List and slaveL1List's expireTimeL1 
-     *      example configure: expireTimeL1 = expireTime / 2 (keep L1 data hot, so L1 capacity = master/slave capacity / 2) 
-     * 5. masterAsOneL1 : master as one L1  
-     * 6. setIfExist or  : set master and slave, but set masterL1List and slaveL1List IfExist (keep L1 data hot) 
+     * TODO 1. data format : java serialization, java byte buffer, kryo, protocal buffers, 2. key
+     * type: 3. balance : master vs slave 4. evenly distributed expire : master and slave's
+     * expireTime, masterL1List and slaveL1List's expireTimeL1 example configure: expireTimeL1 =
+     * expireTime / 2 (keep L1 data hot, so L1 capacity = master/slave capacity / 2) 5.
+     * masterAsOneL1 : master as one L1 6. setIfExist or : set master and slave, but set
+     * masterL1List and slaveL1List IfExist (keep L1 data hot)
      * 
      */
 
@@ -54,14 +51,14 @@ public class MemCacheTemplate<T> implements CacheAble<T> {
     // 供异步更新的缓存
     private List<MemcacheClient> extendSlaveL1List;
 
-    //开关Name
+    // 开关Name
     private String switchName;
-    //localCache开关
+    // localCache开关
     private Switcher CLIENT_GLOBAL_HOT_SWITCHER;
 
-    //cacheMonitor
+    // cacheMonitor
     private LocalCacheMonitor localCacheMonitor;
-    //localCache
+    // localCache
     private CacheWrapper localCache;
 
     /**
@@ -78,33 +75,31 @@ public class MemCacheTemplate<T> implements CacheAble<T> {
     private boolean asyncWriteExtL1 = false;
 
     private Date expireTime;
-    private Date expireTimeL1;  //  use expireTimeL1 or expireTime, example configure: expireTimeL1 = less than expireTime / 2 
+    private Date expireTimeL1; // use expireTimeL1 or expireTime, example configure: expireTimeL1 =
+                               // less than expireTime / 2
 
     private TraceableThreadExecutor updateL1CacheExecutor;
 
     public void init() {
         if (asyncWriteL1 || asyncWriteExtL1) {
-            updateL1CacheExecutor = new TraceableThreadExecutor(1, 1, 0L, TimeUnit.MILLISECONDS,
-                    new LinkedBlockingQueue<Runnable>(300), new ThreadPoolExecutor.DiscardPolicy());
+            updateL1CacheExecutor = new TraceableThreadExecutor(1, 1, 0L, TimeUnit.MILLISECONDS, new LinkedBlockingQueue<Runnable>(300),
+                    new ThreadPoolExecutor.DiscardPolicy());
             if (master != null) {
                 StatLog.registerExecutor("updateL1CacheExecutor_" + master.toString().split(",")[0].split(":")[1], updateL1CacheExecutor);
             }
         }
     }
     /*
-     * serialize/deserialize type
-     * 0 is java serialize/deserialize 
-     * 1 is pb serialize/deserialize
-     * ... 
+     * serialize/deserialize type 0 is java serialize/deserialize 1 is pb serialize/deserialize ...
      */
-    //private int codecType;
+    // private int codecType;
 
     @Override
     public T get(String key) {
 
         T value = null;
         /**
-         *   从localCache获取数据
+         * 从localCache获取数据
          */
         value = getLocalCache(key);
 
@@ -116,7 +111,7 @@ public class MemCacheTemplate<T> implements CacheAble<T> {
         }
 
         /*
-         * get 
+         * get
          */
         MemcacheClient oneL1 = null;
         if (masterL1List != null && masterL1List.size() > 0) {
@@ -136,21 +131,21 @@ public class MemCacheTemplate<T> implements CacheAble<T> {
         if (value == null && slave != null) {
             value = get(key, slave);
 
-            // set back for master 
+            // set back for master
             if (value != null && setbackMaster == true) {
                 set(key, value, expireTime, master);
             }
         }
 
         /*
-         * set back for L1 
+         * set back for L1
          */
         if (value != null && oneL1 != null) {
             set(key, value, getExpireTimeL1(), oneL1);
         }
 
         /**
-         *  回写localCache
+         * 回写localCache
          */
         putLocalCache(value, key);
 
@@ -168,7 +163,7 @@ public class MemCacheTemplate<T> implements CacheAble<T> {
     public Map<String, T> getMultiMc(String[] keys) {
         Map<String, T> values = new HashMap<String, T>();
         /*
-         * multi get 
+         * multi get
          */
         MemcacheClient oneL1 = null;
 
@@ -186,14 +181,14 @@ public class MemCacheTemplate<T> implements CacheAble<T> {
         if (keys.length > values.size() && slave != null) {
             String[] leftkeysSlave = getMulti(values, keys, slave);
 
-            // set back for master 
+            // set back for master
             if (leftkeysSlave != null && setbackMaster == true) {
                 set(values, leftkeysSlave, expireTime, master);
             }
         }
-        
+
         /*
-         * set back for L1 
+         * set back for L1
          */
         if (oneL1 != null && leftkeys != null) {
             set(values, leftkeys, getExpireTimeL1(), oneL1);
@@ -220,7 +215,7 @@ public class MemCacheTemplate<T> implements CacheAble<T> {
     @SuppressWarnings("unchecked")
     private String[] getMulti(Map<String, T> results, String[] keys, MemcacheClient mc) {
         /*
-         * leftKeys 
+         * leftKeys
          */
         if (keys.length - results.size() <= 0) {
             return null;
@@ -235,7 +230,7 @@ public class MemCacheTemplate<T> implements CacheAble<T> {
             return null;
         }
         String[] leftKeys = leftKeyList.toArray(new String[0]);
-        
+
         /*
          * multi get
          */
@@ -243,9 +238,9 @@ public class MemCacheTemplate<T> implements CacheAble<T> {
         if (values.size() <= 0) {
             return null;
         }
-        
+
         /*
-         * values merge to results 
+         * values merge to results
          */
         for (String key : leftKeys) {
             T obj = values.get(key);
@@ -264,7 +259,8 @@ public class MemCacheTemplate<T> implements CacheAble<T> {
     @Override
     public boolean set(final String key, final T value, Date expdate) {
         if (expdate != null && expdate.getTime() > maxLowerExpireDate.getTime() && expdate.getTime() < maxUpperExpireDate.getTime()) {
-            ApiLogger.warn("MemCacheTemplate set invalid expdate, expdate'minute:" + (expdate.getTime() / 1000 / 60) + ", so use maxLowerExpire:" + maxLowerExpire);
+            ApiLogger.warn("MemCacheTemplate set invalid expdate, expdate'minute:" + (expdate.getTime() / 1000 / 60)
+                    + ", so use maxLowerExpire:" + maxLowerExpire);
             expdate = maxLowerExpireDate;
         }
 
@@ -289,7 +285,8 @@ public class MemCacheTemplate<T> implements CacheAble<T> {
     @Override
     public boolean add(String key, T value, Date expdate) {
         if (expdate != null && expdate.getTime() > maxLowerExpireDate.getTime() && expdate.getTime() < maxUpperExpireDate.getTime()) {
-            ApiLogger.warn("MemCacheTemplate add invalid expdate, expdate'minute:" + (expdate.getTime() / 1000 / 60) + ", so use maxLowerExpire:" + maxLowerExpire);
+            ApiLogger.warn("MemCacheTemplate add invalid expdate, expdate'minute:" + (expdate.getTime() / 1000 / 60)
+                    + ", so use maxLowerExpire:" + maxLowerExpire);
             expdate = maxLowerExpireDate;
         }
 
@@ -329,9 +326,9 @@ public class MemCacheTemplate<T> implements CacheAble<T> {
 
     private boolean add(String key, T value, Date expdate, MemcacheClient mc) {
         boolean result = mc.add(key, value, expdate);
-//        if (result == false) {
-//            ApiLogger.warn("MemCacheTemplate add key:" + key + ", result:" + result);
-//        }
+        // if (result == false) {
+        // ApiLogger.warn("MemCacheTemplate add key:" + key + ", result:" + result);
+        // }
         return result;
     }
 
@@ -372,7 +369,7 @@ public class MemCacheTemplate<T> implements CacheAble<T> {
         boolean result = true;
         if (mcList != null) {
             for (final MemcacheClient client : mcList) {
-                if (get(key, client) == null) { // not IfExist 
+                if (get(key, client) == null) { // not IfExist
                     continue;
                 }
                 if (async && updateL1CacheExecutor != null) {
@@ -397,26 +394,27 @@ public class MemCacheTemplate<T> implements CacheAble<T> {
     @Override
     public CasValue<T> getCas(String key) {
         CasValue<T> value = (CasValue<T>) master.gets(key);
-        /* is bug, because cas to master(is null) will be false 
-        if (value == null && slave != null) {
-            value = (CasValue<T>) slave.gets(key);
-        }*/
+        /*
+         * is bug, because cas to master(is null) will be false if (value == null && slave != null)
+         * { value = (CasValue<T>) slave.gets(key); }
+         */
         return value;
     }
 
     @Override
     public boolean cas(String key, CasValue<T> casValue) {
         boolean result = cas(key, casValue, expireTime);
-//        if (result == false) {
-//            ApiLogger.warn("MemCacheTemplate cas key:" + key + ", result:" + result);
-//        }
+        // if (result == false) {
+        // ApiLogger.warn("MemCacheTemplate cas key:" + key + ", result:" + result);
+        // }
         return result;
     }
 
     @Override
     public boolean cas(String key, CasValue<T> casValue, Date expdate) {
         if (expdate != null && expdate.getTime() > maxLowerExpireDate.getTime() && expdate.getTime() < maxUpperExpireDate.getTime()) {
-            ApiLogger.warn("MemCacheTemplate cas invalid expdate, expdate'minute:" + (expdate.getTime() / 1000 / 60) + ", so use maxLowerExpire:" + maxLowerExpire);
+            ApiLogger.warn("MemCacheTemplate cas invalid expdate, expdate'minute:" + (expdate.getTime() / 1000 / 60)
+                    + ", so use maxLowerExpire:" + maxLowerExpire);
             expdate = maxLowerExpireDate;
         }
 
@@ -424,7 +422,7 @@ public class MemCacheTemplate<T> implements CacheAble<T> {
         if (rs == false) {
             return rs;
         }
-        //除master外，其他应该是set; 因为master的cas unique key,不一定等于slave的cas unique key          
+        // 除master外，其他应该是set; 因为master的cas unique key,不一定等于slave的cas unique key
         if (slave != null) {
             set(key, casValue.getValue(), expdate, slave);
         }
@@ -475,14 +473,14 @@ public class MemCacheTemplate<T> implements CacheAble<T> {
 
     private boolean delete(String key, MemcacheClient mc) {
         boolean result = mc.delete(key);
-        // 无法区分NOT FOUND，还是ERROR，前者居多，所以不记录log 
-//        if (result == false) {
-//            ApiLogger.warn("MemCacheTemplate delete key:" + key + ", result:" + result);
-//        }
+        // 无法区分NOT FOUND，还是ERROR，前者居多，所以不记录log
+        // if (result == false) {
+        // ApiLogger.warn("MemCacheTemplate delete key:" + key + ", result:" + result);
+        // }
         return result;
     }
 
-    // --------------------------- inner -------------------------- 
+    // --------------------------- inner --------------------------
     /**
      * 以len/(len + 1)的概率调用L1，剩余请求穿透
      *
@@ -659,9 +657,8 @@ public class MemCacheTemplate<T> implements CacheAble<T> {
 
         this.switchName = switchName;
 
-        CLIENT_GLOBAL_HOT_SWITCHER = SwitcherManagerFactoryLoader
-                .getSwitcherManagerFactory().getSwitcherManager()
-                .registerSwitcher(switchName, false);
+        CLIENT_GLOBAL_HOT_SWITCHER =
+                SwitcherManagerFactoryLoader.getSwitcherManagerFactory().getSwitcherManager().registerSwitcher(switchName, false);
 
         ApiLogger.info("create SWITCH :" + CLIENT_GLOBAL_HOT_SWITCHER + "  switchName:" + switchName);
     }
@@ -676,9 +673,9 @@ public class MemCacheTemplate<T> implements CacheAble<T> {
 
     public Map<String, T> getMultiFromMcAndLocal(String[] keys) {
 
-        Map map = new HashMap<String, T>(keys.length);  //最终返回结果
+        Map map = new HashMap<String, T>(keys.length); // 最终返回结果
 
-        ArrayList<String> mcList = new ArrayList<String>(keys.length); //需要请求mc的keys
+        ArrayList<String> mcList = new ArrayList<String>(keys.length); // 需要请求mc的keys
 
         for (String key : keys) {
 
@@ -694,7 +691,7 @@ public class MemCacheTemplate<T> implements CacheAble<T> {
             map.put(key, obj);
         }
 
-        Map<String, T> mcMap = this.getMultiMc(mcList.toArray(new String[]{}));
+        Map<String, T> mcMap = this.getMultiMc(mcList.toArray(new String[] {}));
 
         for (Map.Entry<String, T> entry : mcMap.entrySet()) {
 
@@ -710,9 +707,7 @@ public class MemCacheTemplate<T> implements CacheAble<T> {
     private boolean isUseLocalCache() {
 
         /**
-         * 判断 1.开关（存在&&开启）
-         *     2.monitor 已配置
-         *     3.createCache 内部已同步
+         * 判断 1.开关（存在&&开启） 2.monitor 已配置 3.createCache 内部已同步
          */
         if (null != CLIENT_GLOBAL_HOT_SWITCHER && CLIENT_GLOBAL_HOT_SWITCHER.isOpen() && null != localCacheMonitor) {
 

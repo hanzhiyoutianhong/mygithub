@@ -36,9 +36,8 @@ public class CodecHandler {
             e.printStackTrace();
             thrown = e;
         } finally {
-            if (null != thrown)
-                throw new RuntimeException("Error decoding byte[] data to instantiate java object - "
-                        + "data at key may not have been of this type or even an object", thrown);
+            if (null != thrown) throw new RuntimeException("Error decoding byte[] data to instantiate java object - "
+                    + "data at key may not have been of this type or even an object", thrown);
         }
         return t;
     }

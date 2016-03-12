@@ -57,8 +57,8 @@ public class ApiDateUtil {
         try {
             return formatter.get().format(date);
         } catch (RuntimeException e) {
-            ApiLogger.error(new StringBuilder(64).append("Error: in ApiUtil.formatDate, date=").append(date)
-                    .append(", default_value=").append(defaultValue), e);
+            ApiLogger.error(new StringBuilder(64).append("Error: in ApiUtil.formatDate, date=").append(date).append(", default_value=")
+                    .append(defaultValue), e);
         }
         return null;
     }
@@ -170,8 +170,7 @@ public class ApiDateUtil {
             Calendar dest = Calendar.getInstance();
             dest.setTime(date);
             Calendar now = Calendar.getInstance();
-            return now.get(Calendar.YEAR) == dest.get(Calendar.YEAR)
-                    && now.get(Calendar.MONTH) == dest.get(Calendar.MONTH);
+            return now.get(Calendar.YEAR) == dest.get(Calendar.YEAR) && now.get(Calendar.MONTH) == dest.get(Calendar.MONTH);
         }
         return false;
     }
@@ -180,7 +179,7 @@ public class ApiDateUtil {
      * calculate days between two time stamps.
      *
      * @param from represented by time stamp;
-     * @param to   represented by time stamp;
+     * @param to represented by time stamp;
      * @return number of between days.
      */
     public static int daysBetween(long from, long to) {

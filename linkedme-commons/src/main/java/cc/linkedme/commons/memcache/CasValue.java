@@ -6,8 +6,7 @@ public class CasValue<T> {
     protected long casUnique;
     protected boolean hasCasUnique = false;
 
-    public CasValue() {
-    }
+    public CasValue() {}
 
     public CasValue(T value, long casUnique) {
         this.value = value;

@@ -34,8 +34,7 @@ public class LMApplicationCache {
      * construction function
      */
 
-    public LMApplicationCache() {
-    }
+    public LMApplicationCache() {}
 
     /**
      * get and set function

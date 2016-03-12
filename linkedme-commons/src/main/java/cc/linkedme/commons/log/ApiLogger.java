@@ -8,11 +8,11 @@ import org.perf4j.log4j.Log4JStopWatch;
 import cc.linkedme.commons.util.RequestTraceContext;
 
 public class ApiLogger {
-    public static long MC_FIRE_TIME = 50; //MC操作超时
+    public static long MC_FIRE_TIME = 50; // MC操作超时
 
-    public static long DB_FIRE_TIME = 100; //DB操作超时
+    public static long DB_FIRE_TIME = 100; // DB操作超时
 
-    public static long REDIS_FIRE_TIME = 50; //Redis操作超时
+    public static long REDIS_FIRE_TIME = 50; // Redis操作超时
 
     private static Logger log = Logger.getLogger("api");
     private static Logger infoLog = Logger.getLogger("info");
@@ -70,7 +70,7 @@ public class ApiLogger {
             if (log.isDebugEnabled()) {
                 log.debug(msg);
             } else {
-                //如果没有开启debug级别，记录vip日志时用info级别
+                // 如果没有开启debug级别，记录vip日志时用info级别
                 printVipLog(msg);
             }
         }
@@ -81,7 +81,7 @@ public class ApiLogger {
     }
 
     public static void debug(Object msg, String debugType, Throwable t) {
-        //vip 用户记录 日志
+        // vip 用户记录 日志
         if (log.isDebugEnabled()) {
             msg = assembleDebugMsg(msg, debugType);
             log.info(msg, t);
@@ -89,11 +89,10 @@ public class ApiLogger {
     }
 
     private static Object assembleDebugMsg(Object msg, String debugType) {
-        //日志最后添加reuqestid，格式为r=1
+        // 日志最后添加reuqestid，格式为r=1
         String requestIdMsg = getRequestId();
-        //如果已经打印过requestid，就不再打印
-        if (msg == null || StringUtils.isBlank(requestIdMsg)
-                || msg.toString().indexOf(requestIdMsg) < 0) {
+        // 如果已经打印过requestid，就不再打印
+        if (msg == null || StringUtils.isBlank(requestIdMsg) || msg.toString().indexOf(requestIdMsg) < 0) {
             msg = assembleRequestId(msg);
         }
         if (StringUtils.isBlank(debugType)) {
@@ -129,7 +128,7 @@ public class ApiLogger {
             msg = assembleRequestId(msg);
             fireLog.info(msg);
 
-            //如果是vip用户，记录日志
+            // 如果是vip用户，记录日志
             debug(msg, DebugType.fire.name());
         }
     }
@@ -143,51 +142,48 @@ public class ApiLogger {
         if (autoTriggerLog.isInfoEnabled()) {
             autoTriggerLog.info(msg, null);
 
-            //如果是vip用户，记录日志
+            // 如果是vip用户，记录日志
             debug(msg, DebugType.autoTrigger.name());
         }
     }
 
     /**
-     * 输出一条用于辅助触发自动降级策略的日志消息。内容根据格式化模板和格式化参数输出。
-     * 如果自动触发被禁用，此方法调用会避免无用的日志内容创建过程。
+     * 输出一条用于辅助触发自动降级策略的日志消息。内容根据格式化模板和格式化参数输出。 如果自动触发被禁用，此方法调用会避免无用的日志内容创建过程。
      *
      * @param format 格式化模板。
-     * @param arg    格式化参数。
+     * @param arg 格式化参数。
      */
     public static void autoTrigger(String format, Object arg) {
         if (autoTriggerLog.isInfoEnabled()) {
             FormattingTuple tuple = MessageFormatter.format(format, arg);
             autoTriggerLog.info(tuple.getMessage(), tuple.getThrowable());
 
-            //如果是vip用户，记录日志
+            // 如果是vip用户，记录日志
             debug(tuple.getMessage(), DebugType.autoTrigger.name(), tuple.getThrowable());
         }
     }
 
     /**
-     * 输出一条用于辅助触发自动降级策略的日志消息。内容根据格式化模板和格式化参数输出。
-     * 如果自动触发被禁用，此方法调用会避免无用的日志内容创建过程。
+     * 输出一条用于辅助触发自动降级策略的日志消息。内容根据格式化模板和格式化参数输出。 如果自动触发被禁用，此方法调用会避免无用的日志内容创建过程。
      *
      * @param format 格式化模板。
-     * @param argA   第一个格式化参数。
-     * @param argB   第二个格式化参数。
+     * @param argA 第一个格式化参数。
+     * @param argB 第二个格式化参数。
      */
     public static void autoTrigger(String format, Object argA, Object argB) {
         if (autoTriggerLog.isInfoEnabled()) {
             FormattingTuple tuple = MessageFormatter.format(format, argA, argB);
             autoTriggerLog.info(tuple.getMessage(), tuple.getThrowable());
 
-            //如果是vip用户，记录日志
+            // 如果是vip用户，记录日志
             debug(tuple.getMessage(), DebugType.autoTrigger.name(), tuple.getThrowable());
         }
     }
 
     /**
-     * 输出一条用于辅助触发自动降级策略的日志消息。内容根据格式化模板和格式化参数输出。
-     * 如果自动触发被禁用，此方法调用会避免无用的日志内容创建过程。
+     * 输出一条用于辅助触发自动降级策略的日志消息。内容根据格式化模板和格式化参数输出。 如果自动触发被禁用，此方法调用会避免无用的日志内容创建过程。
      *
-     * @param format    格式化模板。
+     * @param format 格式化模板。
      * @param arguments 三个以上一系列的格式化参数。
      */
     public static void autoTrigger(String format, Object... arguments) {
@@ -195,7 +191,7 @@ public class ApiLogger {
             FormattingTuple tuple = MessageFormatter.arrayFormat(format, arguments);
             autoTriggerLog.info(tuple.getMessage(), tuple.getThrowable());
 
-            //如果是vip用户，记录日志
+            // 如果是vip用户，记录日志
             debug(tuple.getMessage(), DebugType.autoTrigger.name(), tuple.getThrowable());
         }
     }
@@ -212,21 +208,20 @@ public class ApiLogger {
 
     public static void info(Object msg) {
         if (infoLog.isInfoEnabled()) {
-            //日志最后添加reuqestid，格式为r=1
+            // 日志最后添加reuqestid，格式为r=1
             msg = assembleRequestId(msg);
             infoLog.info(msg);
 
-            //如果是vip用户，记录日志
+            // 如果是vip用户，记录日志
             debug(msg, DebugType.info.name());
         }
     }
 
     /**
-     * 输出一条用于 INFO 日志。内容根据格式化模板和格式化参数输出。
-     * 如果 INFO 级别被禁用，此方法调用会避免无用的日志内容创建过程。
+     * 输出一条用于 INFO 日志。内容根据格式化模板和格式化参数输出。 如果 INFO 级别被禁用，此方法调用会避免无用的日志内容创建过程。
      *
      * @param format 格式化模板。
-     * @param arg    格式化参数。
+     * @param arg 格式化参数。
      */
     public static void info(String format, Object arg) {
         if (infoLog.isInfoEnabled()) {
@@ -234,18 +229,17 @@ public class ApiLogger {
             Object msg = assembleRequestId(tuple.getMessage());
             infoLog.info(msg, tuple.getThrowable());
 
-            //如果是vip用户，记录日志
+            // 如果是vip用户，记录日志
             debug(msg, DebugType.info.name(), tuple.getThrowable());
         }
     }
 
     /**
-     * 输出一条 INFO 日志。内容根据格式化模板和格式化参数输出。
-     * 如果 INFO 级别被禁用，此方法调用会避免无用的日志内容创建过程。
+     * 输出一条 INFO 日志。内容根据格式化模板和格式化参数输出。 如果 INFO 级别被禁用，此方法调用会避免无用的日志内容创建过程。
      *
      * @param format 格式化模板。
-     * @param argA   第一个格式化参数。
-     * @param argB   第二个格式化参数。
+     * @param argA 第一个格式化参数。
+     * @param argB 第二个格式化参数。
      */
     public static void info(String format, Object argA, Object argB) {
         if (infoLog.isInfoEnabled()) {
@@ -253,16 +247,15 @@ public class ApiLogger {
             Object msg = assembleRequestId(tuple.getMessage());
             infoLog.info(msg, tuple.getThrowable());
 
-            //如果是vip用户，记录日志
+            // 如果是vip用户，记录日志
             debug(msg, DebugType.info.name(), tuple.getThrowable());
         }
     }
 
     /**
-     * 输出一条 INFO 日志。内容根据格式化模板和格式化参数输出。
-     * 如果 INFO 级别被禁用，此方法调用会避免无用的日志内容创建过程。
+     * 输出一条 INFO 日志。内容根据格式化模板和格式化参数输出。 如果 INFO 级别被禁用，此方法调用会避免无用的日志内容创建过程。
      *
-     * @param format    格式化模板。
+     * @param format 格式化模板。
      * @param arguments 三个以上一系列的格式化参数。
      */
     public static void info(String format, Object... arguments) {
@@ -271,55 +264,51 @@ public class ApiLogger {
             Object msg = assembleRequestId(tuple.getMessage());
             infoLog.info(msg, tuple.getThrowable());
 
-            //如果是vip用户，记录日志
+            // 如果是vip用户，记录日志
             debug(msg, DebugType.info.name(), tuple.getThrowable());
         }
     }
 
     public static void warn(Object msg) {
-        //日志最后添加reuqestid，格式为r=1
+        // 日志最后添加reuqestid，格式为r=1
         msg = assembleRequestId(msg);
         warnLog.warn(msg);
 
-        //如果是vip用户，记录日志
+        // 如果是vip用户，记录日志
         debug(msg, DebugType.warn.name());
     }
 
     public static void warn(Object msg, Throwable e) {
-        //日志最后添加reuqestid，格式为r=1
+        // 日志最后添加reuqestid，格式为r=1
         msg = assembleRequestId(msg);
         warnLog.warn(msg, e);
 
-        //如果是vip用户，记录日志
+        // 如果是vip用户，记录日志
         debug(msg, DebugType.warn.name(), e);
     }
 
     public static void error(Object msg) {
-        //日志最后添加reuqestid，格式为r=1
+        // 日志最后添加reuqestid，格式为r=1
         msg = assembleRequestId(msg);
         errorLog.error(msg);
 
-        //如果是vip用户，记录日志
+        // 如果是vip用户，记录日志
         debug(msg, DebugType.error.name());
     }
 
     public static void error(Object msg, Throwable e) {
-        //日志最后添加reuqestid，格式为r=1
+        // 日志最后添加reuqestid，格式为r=1
         msg = assembleRequestId(msg);
         errorLog.error(msg, e);
 
-        //如果是vip用户，记录日志
+        // 如果是vip用户，记录日志
         debug(msg, DebugType.error.name(), e);
     }
 
     /**
      * start a perflog session <br/>
-     * PerfLogSession perfSession = ApiLogger.perf("codeblock");
-     * perfSession.start();
-     * perfSession.step("codeblock_step1");
-     * ....
-     * perfSession.step("codeblock_step2");
-     * ....
+     * PerfLogSession perfSession = ApiLogger.perf("codeblock"); perfSession.start();
+     * perfSession.step("codeblock_step1"); .... perfSession.step("codeblock_step2"); ....
      * perfSession.end();
      *
      * @param tag
@@ -344,7 +333,7 @@ public class ApiLogger {
 
     public static Object assembleRequestId(Object msg) {
         if (msg != null) {
-            //日志最后添加reuqestid，格式为r=1
+            // 日志最后添加reuqestid，格式为r=1
             msg = assembleRequestId(msg.toString(), " ");
         } else {
             msg = assembleRequestId("null", " ");
@@ -355,7 +344,7 @@ public class ApiLogger {
     public static String assembleRequestId(String msg, String spit) {
         String requestid = getRequestId();
         StringBuffer buf = new StringBuffer(msg);
-        //日志最后添加reuqestid，格式为r=1,requestid为空时不添加
+        // 日志最后添加reuqestid，格式为r=1,requestid为空时不添加
         if (!StringUtils.isEmpty(requestid)) {
             buf.append(spit).append(requestid);
             msg = buf.toString();
@@ -374,9 +363,8 @@ public class ApiLogger {
         return requestid;
     }
 
-    //记录vip 日志时标明原来的日志。
+    // 记录vip 日志时标明原来的日志。
     public static enum DebugType {
-        debug, info, warn, error, exposure, trace, fire,
-        autoTrigger, apierror, exposureLog, apistatLog;
+        debug, info, warn, error, exposure, trace, fire, autoTrigger, apierror, exposureLog, apistatLog;
     }
 }

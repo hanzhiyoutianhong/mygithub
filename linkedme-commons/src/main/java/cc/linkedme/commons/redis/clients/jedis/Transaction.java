@@ -7,8 +7,7 @@ import java.util.Set;
 import cc.linkedme.commons.redis.clients.jedis.BinaryClient.LIST_POSITION;
 
 public class Transaction extends BinaryTransaction {
-    public Transaction() {
-    }
+    public Transaction() {}
 
     public Transaction(final Client client) {
         super(client);
@@ -74,8 +73,7 @@ public class Transaction extends BinaryTransaction {
         return getResponse(BuilderFactory.BOOLEAN);
     }
 
-    public Response<String> getrange(String key, long startOffset,
-                                     long endOffset) {
+    public Response<String> getrange(String key, long startOffset, long endOffset) {
         client.getrange(key, startOffset, endOffset);
         return getResponse(BuilderFactory.STRING);
     }
@@ -165,8 +163,7 @@ public class Transaction extends BinaryTransaction {
         return getResponse(BuilderFactory.STRING);
     }
 
-    public Response<Long> linsert(String key, LIST_POSITION where,
-                                  String pivot, String value) {
+    public Response<Long> linsert(String key, LIST_POSITION where, String pivot, String value) {
         client.linsert(key, where, pivot, value);
         return getResponse(BuilderFactory.LONG);
     }
@@ -346,14 +343,12 @@ public class Transaction extends BinaryTransaction {
         return getResponse(BuilderFactory.STRING_LIST);
     }
 
-    public Response<List<String>> sort(String key,
-                                       SortingParams sortingParameters) {
+    public Response<List<String>> sort(String key, SortingParams sortingParameters) {
         client.sort(key, sortingParameters);
         return getResponse(BuilderFactory.STRING_LIST);
     }
 
-    public Response<List<String>> sort(String key,
-                                       SortingParams sortingParameters, String dstkey) {
+    public Response<List<String>> sort(String key, SortingParams sortingParameters, String dstkey) {
         client.sort(key, sortingParameters, dstkey);
         return getResponse(BuilderFactory.STRING_LIST);
     }
@@ -433,8 +428,7 @@ public class Transaction extends BinaryTransaction {
         return getResponse(BuilderFactory.LONG);
     }
 
-    public Response<Long> zinterstore(String dstkey, ZParams params,
-                                      String... sets) {
+    public Response<Long> zinterstore(String dstkey, ZParams params, String... sets) {
         client.zinterstore(dstkey, params, sets);
         return getResponse(BuilderFactory.LONG);
     }
@@ -444,32 +438,27 @@ public class Transaction extends BinaryTransaction {
         return getResponse(BuilderFactory.STRING_ZSET);
     }
 
-    public Response<Set<String>> zrangeByScore(String key, double min,
-                                               double max) {
+    public Response<Set<String>> zrangeByScore(String key, double min, double max) {
         client.zrangeByScore(key, min, max);
         return getResponse(BuilderFactory.STRING_ZSET);
     }
 
-    public Response<Set<String>> zrangeByScore(String key, String min,
-                                               String max) {
+    public Response<Set<String>> zrangeByScore(String key, String min, String max) {
         client.zrangeByScore(key, min, max);
         return getResponse(BuilderFactory.STRING_ZSET);
     }
 
-    public Response<Set<String>> zrangeByScore(String key, double min,
-                                               double max, int offset, int count) {
+    public Response<Set<String>> zrangeByScore(String key, double min, double max, int offset, int count) {
         client.zrangeByScore(key, min, max, offset, count);
         return getResponse(BuilderFactory.STRING_ZSET);
     }
 
-    public Response<Set<Tuple>> zrangeByScoreWithScores(String key, double min,
-                                                        double max) {
+    public Response<Set<Tuple>> zrangeByScoreWithScores(String key, double min, double max) {
         client.zrangeByScoreWithScores(key, min, max);
         return getResponse(BuilderFactory.TUPLE_ZSET);
     }
 
-    public Response<Set<Tuple>> zrangeByScoreWithScores(String key, double min,
-                                                        double max, int offset, int count) {
+    public Response<Set<Tuple>> zrangeByScoreWithScores(String key, double min, double max, int offset, int count) {
         client.zrangeByScoreWithScores(key, min, max, offset, count);
         return getResponse(BuilderFactory.TUPLE_ZSET);
     }
@@ -504,8 +493,7 @@ public class Transaction extends BinaryTransaction {
         return getResponse(BuilderFactory.STRING_ZSET);
     }
 
-    public Response<Set<Tuple>> zrevrangeWithScores(String key, int start,
-                                                    int end) {
+    public Response<Set<Tuple>> zrevrangeWithScores(String key, int start, int end) {
         client.zrevrangeWithScores(key, start, end);
         return getResponse(BuilderFactory.TUPLE_ZSET);
     }
@@ -525,8 +513,7 @@ public class Transaction extends BinaryTransaction {
         return getResponse(BuilderFactory.LONG);
     }
 
-    public Response<Long> zunionstore(String dstkey, ZParams params,
-                                      String... sets) {
+    public Response<Long> zunionstore(String dstkey, ZParams params, String... sets) {
         client.zunionstore(dstkey, params, sets);
         return getResponse(BuilderFactory.LONG);
     }
@@ -551,8 +538,7 @@ public class Transaction extends BinaryTransaction {
         return getResponse(BuilderFactory.STRING);
     }
 
-    public Response<String> brpoplpush(String source, String destination,
-                                       int timeout) {
+    public Response<String> brpoplpush(String source, String destination, int timeout) {
         client.brpoplpush(source, destination, timeout);
         return getResponse(BuilderFactory.STRING);
     }

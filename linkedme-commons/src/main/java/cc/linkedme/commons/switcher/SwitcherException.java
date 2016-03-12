@@ -3,8 +3,7 @@ package cc.linkedme.commons.switcher;
 public class SwitcherException extends RuntimeException {
     private static final long serialVersionUID = -2968779530742478292L;
 
-    public SwitcherException() {
-    }
+    public SwitcherException() {}
 
     /**
      * @param message

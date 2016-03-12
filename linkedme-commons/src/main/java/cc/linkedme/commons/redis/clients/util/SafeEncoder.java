@@ -21,8 +21,7 @@ public class SafeEncoder {
     public static byte[] encode(final String str) {
         try {
             if (str == null) {
-                throw new JedisDataException(
-                        "value sent to redis cannot be null");
+                throw new JedisDataException("value sent to redis cannot be null");
             }
             return str.getBytes(Protocol.CHARSET);
         } catch (UnsupportedEncodingException e) {
