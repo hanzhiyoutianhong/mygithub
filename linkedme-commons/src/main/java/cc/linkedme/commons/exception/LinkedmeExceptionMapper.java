@@ -34,7 +34,7 @@ public class LinkedmeExceptionMapper implements ExceptionMapper<RuntimeException
                 ApiLogger.error("Unknow WebApplicationException Status:" + status);
                 apiException = new LMException(LMExceptionFactor.LM_ILLEGAL_REQUEST);
             } else if (status == 503) {
-                apiException = new LMException(LMExceptionFactor.LM_SYS_ERROR);
+                apiException = new LMException(LMExceptionFactor.LM_SERVICE_UNAVAILABLE);
             } else {
                 apiException = new LMException(LMExceptionFactor.LM_SYS_ERROR);
                 ApiLogger.error(
@@ -48,8 +48,8 @@ public class LinkedmeExceptionMapper implements ExceptionMapper<RuntimeException
     }
 
     private Response buildResponse(LMException e) {
-        int status = e.getFactor().getErrorCode();// 之后换成http的标准错误码
-        ResponseBuilder builder = Response.status(status).entity(e.formatExceptionInfo(request.getServletPath()));
+        int status = e.getFactor().getHttpStatus().value();
+        ResponseBuilder builder = Response.status(status).entity(e.formatExceptionInfo());
         return builder.build();
     }
 }

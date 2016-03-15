@@ -17,7 +17,7 @@ public class DeepLinkService {
 
     public int addDeepLink(DeepLink deepLink) {
         int result = 0;
-        // insert dao
+        // insert mysql
         result = deepLinkDao.addDeepLink(deepLink);
         // counter
         return result;

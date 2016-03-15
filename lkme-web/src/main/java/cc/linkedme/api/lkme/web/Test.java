@@ -18,6 +18,8 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.MediaType;
 
+import cc.linkedme.commons.switcher.Switcher;
+import cc.linkedme.commons.switcher.SwitcherManagerFactoryLoader;
 import org.apache.commons.httpclient.HttpClient;
 import org.apache.commons.httpclient.HttpException;
 import org.apache.commons.httpclient.HttpMethod;
@@ -34,11 +36,17 @@ import cc.linkedme.commons.thread.TraceableThreadExecutor;
 @Path("test")
 @Component
 public class Test {
+
+    private static Switcher testSwitcher =
+            SwitcherManagerFactoryLoader.getSwitcherManagerFactory().getSwitcherManager().registerSwitcher("linkedme.test.enable", true);
+
     @Path("/getJson")
     @GET
     @Produces({MediaType.APPLICATION_JSON})
-    public String getTestJson(@QueryParam("input") String param,
-                              @QueryParam("input1") String param1) {
+    public String getTestJson(@QueryParam("input") String param, @QueryParam("input1") String param1) {
+        if (testSwitcher.isOpen()) {
+            return "{\"hello\":\"linkedME\",\"input\":\"" + param + "\"input1:switcher open\":\"" + param1 + "\"}";
+        }
         return "{\"hello\":\"linkedME\",\"input\":\"" + param + "\"input1\":\"" + param1 + "\"}";
     }
 
@@ -52,7 +60,7 @@ public class Test {
     public static void main(String[] args) {
         HttpClient client = new HttpClient();
 
-        //get request
+        // get request
         HttpMethod method = new GetMethod("http://localhost:8080/test/getJson?input=receive");
         try {
             client.executeMethod(method);
@@ -67,7 +75,7 @@ public class Test {
         }
         method.releaseConnection();
 
-        //post
+        // post
         PostMethod postMethod = new PostMethod("http://localhost:8080/test/update");
         try {
             postMethod.addParameter("input", "send");
@@ -86,9 +94,10 @@ public class Test {
 
     }
 
-    //Redis test code
+    // Redis test code
 
-    public static final ThreadPoolExecutor DOWN_STREAM_REDIS_POOL = new TraceableThreadExecutor(50, 50, 0L, TimeUnit.SECONDS, new LinkedBlockingQueue<Runnable>(1000), new ThreadPoolExecutor.DiscardOldestPolicy());
+    public static final ThreadPoolExecutor DOWN_STREAM_REDIS_POOL = new TraceableThreadExecutor(50, 50, 0L, TimeUnit.SECONDS,
+            new LinkedBlockingQueue<Runnable>(1000), new ThreadPoolExecutor.DiscardOldestPolicy());
 
     private ShardingSupport<JedisPort> mgetShardingSupport;
 

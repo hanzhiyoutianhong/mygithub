@@ -18,6 +18,7 @@ public class MemCacheTemplateTest {
 
     @Test
     public void testSet() {
+
         memCacheTemplate.set("adfa", "afaadfvalue");
     }
 

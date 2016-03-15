@@ -1,7 +1,5 @@
 package cc.linkedme.commons.switcher;
 
-import cc.linkedme.commons.switcher.ValueChangeSupport;
-
 public class Switcher extends ValueChangeSupport<Boolean> {
 
     public static final Switcher OPEN_SWITCHER = new Switcher("OPEN_SWITCHER", true) {
