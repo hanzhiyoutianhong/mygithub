@@ -33,7 +33,7 @@ public class MailSenderInfo {
         p.put("mail.smtp.host", mailServerHost);
         p.put("mail.smtp.port", mailServerPort);
         p.put("mail.smtp.auth", "true");
-        p.put("mail.debug", "true");
+        p.put("mail.debug", "false");
         return p;
     }
 
