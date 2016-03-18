@@ -8,6 +8,21 @@
         http://www.springframework.org/schema/context
         http://www.springframework.org/schema/context/spring-context.xsd">
 
-    <import resource="spring/resource-context.xml"/>
+    <import resource="classpath:commons-resource.xml" />
+    <import resource="classpath:api-resource.xml" />
+
+    <import resource="spring/webapi-context.xml"/>
+
     <context:component-scan base-package="cc.linkedme.api.test.resources"/>
+    <context:component-scan base-package="cc.linkedme.api.app.resources"/>
+
+
+    <bean class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">
+        <property name="locations">
+            <list>
+                <value>classpath:jdbc.properties</value>
+                <value>classpath:redis.properties</value>
+            </list>
+        </property>
+    </bean>
 </beans>

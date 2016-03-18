@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:schemaLocation="
+       http://www.springframework.org/schema/beans
+       http://www.springframework.org/schema/beans/spring-beans.xsd ">
+
+    <bean id="appDao" class="cc.linkedme.dao.webapi.impl.AppDaoImpl">
+        <property name="tableContainer">
+            <bean class="cc.linkedme.data.dao.strategy.TableContainer">
+                <property name="tablesItems">
+                    <map>
+                        <entry key="appInfo" value-ref="appInfo"/>
+                    </map>
+                </property>
+            </bean>
+        </property>
+    </bean>
+
+    <bean id="appInfo" class="cc.linkedme.data.dao.strategy.TableItem">
+        <property name="itemName" value="appInfo"/>
+        <property name="dbNamePrefix" value="app"/>
+        <property name="dbCount" value="1"/>
+
+        <property name="tableNamePrefix" value="app_info"/>
+        <property name="tableCount" value="1"/>
+        <property name="sqls">
+            <map>
+                <entry key="ADD_APP"
+                       value="insert into $db$.$tb$ (id, app_name, user_id, register_time, last_update_time) values(?, ?, ?, now(), now())"/>
+                <entry key="UPDATE_APP"
+                       value="update $db$.$tb$ set vflag = ?, mflag=? where status_id = ? and vflag in (0,6,7) and cmt_id = ?"/>
+                <entry key="GET_APPS_BY_USERID" value="select id, app_name, uri_scheme,  path_prefix, app_live_key, app_test_key, android_not_url, package_name, android_custom_url, ios_store_url, ios_custom_url, ios_not_url, ios_bundle_id, ios_team_id, desktop_url from $db$.$tb$ where user_id = ?"/>
+            </map>
+        </property>
+        <property name="jdbcTemplates">
+            <list>
+                <ref bean="app_jdbctemplate_0"/>
+                <!--<ref bean="deeplink_jdbctemplate_1"/> -->
+            </list>
+        </property>
+    </bean>
+
+    <bean id="appService" class="cc.linkedme.service.webapi.impl.AppServiceImpl" />
+
+
+</beans>

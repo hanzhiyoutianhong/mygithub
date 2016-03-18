@@ -1,4 +1,4 @@
-package cc.linkedme.dao;
+package cc.linkedme.dao.sdkapi;
 
 import cc.linkedme.data.model.DeepLink;
 

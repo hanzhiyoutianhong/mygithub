@@ -76,4 +76,26 @@
         </property>
     </bean>
 
+    <!-- ############################### -->
+
+    <wfc:mysql id="datasources_app_0_m" parent="dataSource"
+               strategy="master">
+        <property name="jdbcUrl" value="${app.datasource.master_0.jdbcUrl}"/>
+    </wfc:mysql>
+    <wfc:mysql id="datasources_app_0_s" parent="dataSource"
+               strategy="slave">
+        <property name="jdbcUrl" value="${app.datasource.slave_0.jdbcUrl}"/>
+    </wfc:mysql>
+
+    <bean id="app_jdbctemplate_0" class="cc.linkedme.data.dao.util.JdbcTemplate">
+        <property name="dataSource">
+            <ref bean="datasources_app_0_m"/>
+        </property>
+        <property name="dataSourceSlaves">
+            <list>
+                <ref bean="datasources_app_0_s"/>
+            </list>
+        </property>
+    </bean>
+
 </beans>

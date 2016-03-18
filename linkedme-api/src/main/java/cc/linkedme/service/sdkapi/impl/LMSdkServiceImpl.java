@@ -1,4 +1,6 @@
-package cc.linkedme.service.impl;
+package cc.linkedme.service.sdkapi.impl;
+
+import javax.annotation.Resource;
 
 import cc.linkedme.commons.log.ApiLogger;
 import cc.linkedme.commons.redis.JedisPort;
@@ -16,9 +18,8 @@ import cc.linkedme.exception.LMException;
 import cc.linkedme.exception.LMExceptionFactor;
 import cc.linkedme.mcq.DeepLinkMsgPusher;
 import cc.linkedme.service.LMSdkService;
-import com.google.common.base.Joiner;
 
-import javax.annotation.Resource;
+import com.google.common.base.Joiner;
 
 /**
  * Created by LinkedME00 on 16/1/15.

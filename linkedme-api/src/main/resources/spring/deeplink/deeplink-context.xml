@@ -15,7 +15,7 @@
         <property name="apiMcqWriter" ref="apiMcqWriter" />
     </bean>
 
-    <bean id="deepLinkDao" class="cc.linkedme.dao.impl.DeepLinkDaoImpl">
+    <bean id="deepLinkDao" class="cc.linkedme.dao.sdkapi.impl.DeepLinkDaoImpl">
         <property name="tableContainer">
             <bean class="cc.linkedme.data.dao.strategy.TableContainer">
                 <property name="tablesItems">

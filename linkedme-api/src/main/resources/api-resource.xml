@@ -12,6 +12,7 @@
     <import resource="spring/mysql/mysql.xml"/>
     <import resource="classpath:spring/mcq/mcq-context.xml" />
     <import resource="classpath:spring/deeplink/deeplink-context.xml" />
+    <import resource="classpath:spring/app/app-context.xml" />
 
     <context:component-scan base-package="cc.linkedme.service"/>
     <context:component-scan base-package="cc.linkedme.dao"/>

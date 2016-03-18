@@ -51,13 +51,13 @@ public class LMExceptionFactor implements Serializable {
      * 数据库操作失败
      */
     public static final LMExceptionFactor LM_FAILURE_DB_OP =
-            new LMExceptionFactor(HttpStatus.SERVICE_UNAVAILABLE, 50303, "failure on database operation", "数据库操作失败");
+            new LMExceptionFactor(HttpStatus.SERVICE_UNAVAILABLE, 50303, "operation database failed", "数据库操作失败");
 
     /**
      * 创建uuid失败
      */
     public static final LMExceptionFactor LM_UUID_ERROR =
-            new LMExceptionFactor(HttpStatus.SERVICE_UNAVAILABLE, 50304, "Creat uuid failed!", "发号失败!");
+            new LMExceptionFactor(HttpStatus.SERVICE_UNAVAILABLE, 50304, "creat uuid failed!", "发号失败!");
 
 
 

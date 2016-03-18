@@ -1,12 +1,13 @@
-package cc.linkedme.dao.impl;
+package cc.linkedme.dao.sdkapi.impl;
+
+import cc.linkedme.dao.sdkapi.DeepLinkDao;
+import org.springframework.dao.DataAccessException;
 
 import cc.linkedme.commons.log.ApiLogger;
 import cc.linkedme.dao.BaseDao;
-import cc.linkedme.dao.DeepLinkDao;
 import cc.linkedme.data.dao.strategy.TableChannel;
 import cc.linkedme.data.dao.util.DaoUtil;
 import cc.linkedme.data.model.DeepLink;
-import org.springframework.dao.DataAccessException;
 
 /**
  * Created by LinkedME01 on 16/3/8.
