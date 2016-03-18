@@ -9,6 +9,8 @@ import cc.linkedme.data.dao.strategy.TableChannel;
 import cc.linkedme.data.dao.util.DaoUtil;
 import cc.linkedme.data.model.DeepLink;
 
+import java.util.Date;
+
 /**
  * Created by LinkedME01 on 16/3/8.
  */
@@ -24,7 +26,6 @@ public class DeepLinkDaoImpl extends BaseDao implements DeepLinkDao {
         String deeplink_md5 = deepLink.getDeeplink_md5();
         String linkedme_key = deepLink.getLinkedme_key();
         String identity_id = deepLink.getIdentity_id();
-        String create_time = "2016-03-10 00:00:00";
         String tags = deepLink.getTags();
         String alias = deepLink.getAlias();
         String channel = deepLink.getChannel();
@@ -34,10 +35,10 @@ public class DeepLinkDaoImpl extends BaseDao implements DeepLinkDao {
         String params = deepLink.getParams();
         String source = deepLink.getSource();
         String sdk_version = deepLink.getSdk_version();
-        TableChannel tableChannel = tableContainer.getTableChannel("deeplink", ADD_DEEPLINK, deeplink_id, deeplink_id);
+        TableChannel tableChannel = tableContainer.getTableChannel("deeplink", ADD_DEEPLINK, deeplink_id, new Date());
         try {
             result += tableChannel.getJdbcTemplate().update(tableChannel.getSql(), new Object[] {deeplink_id, deeplink_md5, linkedme_key,
-                    identity_id, create_time, tags, alias, channel, feature, stage, campaign, params, source, sdk_version});
+                    identity_id, tags, alias, channel, feature, stage, campaign, params, source, sdk_version});
         } catch (DataAccessException e) {
             if (DaoUtil.isDuplicateInsert(e)) {
                 ApiLogger.info(new StringBuilder(128).append("Duplicate insert deepLink, id=").append(deeplink_id));
