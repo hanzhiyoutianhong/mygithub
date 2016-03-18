@@ -5,7 +5,7 @@ package cc.linkedme.commons.utils;
  */
 public class FingerPrintUtils {
 
-    public static String browserFingerPrintId(String appId, String ip, String os, String osVersion, String brand, String deviceModel) {
+    public static String browserFingerprintId(String appId, String ip, String os, String osVersion, String brand, String deviceModel) {
 
         String result;
         StringBuffer buffer = new StringBuffer();
@@ -19,7 +19,7 @@ public class FingerPrintUtils {
         return result;
     }
 
-    public static String deviceFingerPrintId(String appId, String ip, String os, String osVersion, String brand, String deviceModel) {
+    public static String deviceFingerprintId(String appId, String ip, String os, String osVersion, String brand, String deviceModel) {
         StringBuffer buffer = new StringBuffer();
         buffer.append(appId);
         buffer.append(ip);

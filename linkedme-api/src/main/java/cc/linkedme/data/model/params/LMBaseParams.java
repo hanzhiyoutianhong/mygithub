@@ -5,22 +5,24 @@ package cc.linkedme.data.model.params;
  */
 public class LMBaseParams {
     public String identityId;
-    public String deviceFingerPrintId;
+    public String deviceFingerprintId;
     public String linkedmeKey;
     public String sdkVersion;
     public int retryTimes;
-    public int debug;
+    public boolean isDebug;
 
     /**
      * construction function
      */
 
-    public LMBaseParams(String linkedmeKey, String identityId, String deviceFingerPrintId, String sdkVersion, int retryTimes, int debug) {
+    public LMBaseParams() {}
+
+    public LMBaseParams(String linkedmeKey, String identityId, String deviceFingerprintId, String sdkVersion, int retryTimes, boolean isDebug) {
         this.linkedmeKey = linkedmeKey;
         this.identityId = identityId;
-        this.deviceFingerPrintId = deviceFingerPrintId;
+        this.deviceFingerprintId = deviceFingerprintId;
         this.sdkVersion = sdkVersion;
         this.retryTimes = retryTimes;
-        this.debug = debug;
+        this.isDebug = isDebug;
     }
 }

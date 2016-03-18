@@ -24,6 +24,7 @@ public class DeepLinkDaoImpl extends BaseDao implements DeepLinkDao {
         }
         long deeplink_id = deepLink.getDeeplink_id();
         String deeplink_md5 = deepLink.getDeeplink_md5();
+        long appid = deepLink.getAppid();
         String linkedme_key = deepLink.getLinkedme_key();
         String identity_id = deepLink.getIdentity_id();
         String tags = deepLink.getTags();
@@ -35,7 +36,7 @@ public class DeepLinkDaoImpl extends BaseDao implements DeepLinkDao {
         String params = deepLink.getParams();
         String source = deepLink.getSource();
         String sdk_version = deepLink.getSdk_version();
-        TableChannel tableChannel = tableContainer.getTableChannel("deeplink", ADD_DEEPLINK, deeplink_id, new Date());
+        TableChannel tableChannel = tableContainer.getTableChannel("deeplink", ADD_DEEPLINK, appid, new Date());
         try {
             result += tableChannel.getJdbcTemplate().update(tableChannel.getSql(), new Object[] {deeplink_id, deeplink_md5, linkedme_key,
                     identity_id, tags, alias, channel, feature, stage, campaign, params, source, sdk_version});

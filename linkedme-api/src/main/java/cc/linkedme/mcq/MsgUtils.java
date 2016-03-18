@@ -14,6 +14,7 @@ public class MsgUtils {
         JsonBuilder info = new JsonBuilder();
         info.append("deeplink_id", deepLink.getDeeplink_id());
         info.append("identity_id", deepLink.getIdentity_id());
+        info.append("appid", deepLink.getAppid());
         info.append("linkedme_key", deepLink.getLinkedme_key());
         info.append("deeplink_md5", deepLink.getDeeplink_md5());
         info.append("tags", deepLink.getTags());
@@ -32,6 +33,7 @@ public class MsgUtils {
         DeepLink deepLink = new DeepLink();
         deepLink.setDeeplink_id(deepLinkMsg.getLong("deeplink_id"));
         deepLink.setIdentity_id(deepLinkMsg.getString("identity_id"));
+        deepLink.setAppid(deepLinkMsg.getLong("appid"));
         deepLink.setLinkedme_key(deepLinkMsg.getString("linkedme_key"));
         deepLink.setDeeplink_md5(deepLinkMsg.getString("deeplink_md5"));
         deepLink.setTags(deepLinkMsg.getString("tags"));

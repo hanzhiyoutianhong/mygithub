@@ -77,34 +77,26 @@ public class LMSdkResources {
     }
 
     @Path("/open")
-    @POST
+    @GET
     @Produces({MediaType.APPLICATION_JSON})
-    public String open(@FormParam("Linkedme_key") String linkedMeKey,
-                       @FormParam("identity_id") String identifyId,
-                       @FormParam("device_fingerprint_id") String deviceFingerprintId,
-                       @FormParam("ad_tracking_enabled") String adTrackingEnabled,
-                       @FormParam("link_identifier") String linkIdentifier,
-                       @FormParam("is_referable") String isReferable,
-                       @FormParam("os") String os,
-                       @FormParam("os_version") String osVersion,
-                       @FormParam("app_version") String appVersion,
-                       @FormParam("sdk") String sdk,
-                       @FormParam("update") String update,
-                       @FormParam("uri_scheme") String uriScheme,
-                       @FormParam("ios_bundle_id") String iOSBundleId,
-                       @FormParam("ios_team_id") String iOSTeamId,
-                       @FormParam("spotlight_identifier") String spotlightIdentifier,
-                       @FormParam("universal_link_url") String universalLinkUrl,
-                       @FormParam("lat_val") String latVal,
-                       @FormParam("retry_number") String retryNumber,
-                       @FormParam("debug") String debug) {
+    public String open(@QueryParam("device_fingerprint_id") String device_fingerprint_id,
+                       @QueryParam("identity_id") String identity_id,
+                       @QueryParam("is_referrable") boolean is_referrable,
+                       @QueryParam("app_version") String app_version,
+                       @QueryParam("os_version") String os_version,
+                       @QueryParam("sdk_update") int sdk_update,
+                       @QueryParam("os") String os,
+                       @QueryParam("is_debug") boolean is_debug,
+                       @QueryParam("lat_val") String lat_val,
+                       @QueryParam("sdk_version") String sdk_version,
+                       @QueryParam("retry_times") int retry_times,
+                       @QueryParam("linkedme_key") String linkedme_key,
+                       @QueryParam("sign") String sign) {
 
-//        LMOpenParams lmOpenParams = new LMOpenParams(linkedMeKey, sdk, retryNumber, debug, identifyId,
-//                                                        deviceFingerprintId, adTrackingEnabled, linkIdentifier, isReferable, os,
-//                                                        osVersion, appVersion, update, uriScheme, iOSBundleId,
-//                                                        iOSTeamId, spotlightIdentifier, universalLinkUrl, latVal);
-//
-//        String result = lmSdkService.open(lmOpenParams);
+        LMOpenParams lmOpenParams = new LMOpenParams(device_fingerprint_id, identity_id, is_referrable, app_version, os_version, sdk_update,
+                os, is_debug, lat_val, sdk_version, retry_times, linkedme_key);
+
+        String result = lmSdkService.open(lmOpenParams);
 
         return "";
 
@@ -135,8 +127,9 @@ public class LMSdkResources {
     @POST
     @Produces({MediaType.APPLICATION_JSON})
     public String url(@FormParam("linkedme_key") String linkedmeKey,
+                      @FormParam("appid") long appid,
                       @FormParam("identity_id") String identityId,
-                      @FormParam("device_fingerprint_id") String deviceFingerPrintId,
+                      @FormParam("device_fingerprint_id") String deviceFingerprintId,
                       @FormParam("tags") String tags,
                       @FormParam("alias") String alias,
                       @FormParam("channel") String channel,
@@ -150,7 +143,7 @@ public class LMSdkResources {
                       @FormParam("retry_times") int retryTimes,
                       @FormParam("debug") int debug) {
 
-        LMUrlParams lmUrlParams = new LMUrlParams(linkedmeKey, identityId, deviceFingerPrintId, sdkVersion, retryTimes, debug, tags, alias,
+        LMUrlParams lmUrlParams = new LMUrlParams(linkedmeKey, appid, identityId, deviceFingerprintId, sdkVersion, retryTimes, debug, tags, alias,
                 channel, feature, stage, campaign, params, source, sessionId);
 
         String url = lmSdkService.url(lmUrlParams);
