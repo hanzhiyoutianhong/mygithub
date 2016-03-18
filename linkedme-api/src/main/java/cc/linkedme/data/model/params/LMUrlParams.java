@@ -19,7 +19,7 @@ public class LMUrlParams extends LMBaseParams {
      * construction function
      */
 
-    public LMUrlParams(String linkedmeKey, long appid, String identityId, String deviceFingerprintId, String sdkVersion, int retryTimes, int debug,
+    public LMUrlParams(String linkedmeKey, long appid, String identityId, String deviceFingerprintId, String sdkVersion, int retryTimes, boolean debug,
             String tags, String alias, String channel, String feature, String stage, String campaign, String params, String source,
             String sessionId) {
         super(linkedmeKey, identityId, deviceFingerprintId, sdkVersion, retryTimes, debug);

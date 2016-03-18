@@ -141,7 +141,7 @@ public class LMSdkResources {
                       @FormParam("sdk_version") String sdkVersion,
                       @FormParam("session_id") String sessionId,
                       @FormParam("retry_times") int retryTimes,
-                      @FormParam("debug") int debug) {
+                      @FormParam("debug") boolean debug) {
 
         LMUrlParams lmUrlParams = new LMUrlParams(linkedmeKey, appid, identityId, deviceFingerprintId, sdkVersion, retryTimes, debug, tags, alias,
                 channel, feature, stage, campaign, params, source, sessionId);
