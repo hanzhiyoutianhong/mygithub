@@ -4,8 +4,8 @@ import cc.linkedme.commons.exception.LMException;
 import cc.linkedme.commons.exception.LMExceptionFactor;
 import cc.linkedme.commons.json.JsonBuilder;
 import cc.linkedme.commons.util.Constants;
-import cc.linkedme.data.model.ClientInfo;
 import cc.linkedme.data.model.params.LMCloseParams;
+import cc.linkedme.data.model.params.LMInstallParams;
 import cc.linkedme.data.model.params.LMOpenParams;
 import cc.linkedme.data.model.params.LMUrlParams;
 
@@ -67,26 +67,9 @@ public class LMSdkResources {
 
         }
 
-        ClientInfo clientInfo = new ClientInfo();
-        clientInfo.setLinkedmeKey(linkedMEKey);
-        clientInfo.setDeviceId(deviceId);
-        clientInfo.setDeviceType(deviceType);
-        clientInfo.setDeviceBrand(deviceBrand);
-        clientInfo.setDeviceModel(deviceModel);
-        clientInfo.setOs(os);
-        clientInfo.setOsVersion(osVersion);
-        clientInfo.setScreenDpi(screenDpi);
-        clientInfo.setScreenHeight(screenHeight);
-        clientInfo.setScreenWidth(screenWidth);
-        clientInfo.setLatVal(latVal);
-        clientInfo.setCarrier(carrier);
-        clientInfo.setAppVersion(appVersion);
-        clientInfo.setSdkUpdate(sdkUpdate);
-        clientInfo.setIosTeamId(iOSTeamId);
-        clientInfo.setIosBundleId(iOSBundleId);
-
-        int result = lmSdkService.install(clientInfo);
-        return String.valueOf(result);
+        LMInstallParams lmInstallParams = new LMInstallParams(linkedMEKey, 0L, null, sdkVersion, retryTimes, isDebug, deviceId, deviceType, deviceBrand, deviceModel, hasBluetooth, hasNfc, hasSim, os, osVersion, screenDpi, screenHeight, screenWidth, isWifi, isReferable, latVal, carrier, appVersion, iOSTeamId, iOSBundleId);
+        String result = lmSdkService.install(lmInstallParams);
+        return result;
     }
 
     @Path("/open")

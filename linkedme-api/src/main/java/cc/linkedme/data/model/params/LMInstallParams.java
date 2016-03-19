@@ -4,132 +4,108 @@ package cc.linkedme.data.model.params;
  * Created by LinkedME00 on 16/1/20.
  */
 public class LMInstallParams extends LMBaseParams {
-    public String hardwareId;
-    public String googleAdvertisingId;
-    public String isHardwareIdReal;
-    public String adTrackingEnabled;
-    public String brand;
-    public String carrier;
-    public String iOSBundleId;
-    public String isReferable;
+
+    public String deviceId;
+    public Byte deviceType;
+    public String deviceBrand;
+    public String deviceModel;
+    public boolean hasBluetooth;
+    public boolean hasNfc;
+    public boolean hasSim;
     public String os;
     public String osVersion;
+    public int screenDpi;
+    public int screenHeight;
+    public int screenWidth;
+    public boolean isWifi;
+    public boolean isReferable;
+    public String vatVal;
+    public String carrier;
     public String appVersion;
-    public String update;
-    public String uriScheme;
     public String iOSTeamId;
-    public String universalLinkUrl;
-    public String SpotlightIdentifier;
-    public String latVal;
-    public String wifi;
-    public String hasNfc;
-    public String hasTelephone;
-    public String bluetooth;
-    public String screenDpi;
-    public String screenHeight;
-    public String ScreenWidth;
+    public String iOSBundleId;
 
-    /**
-     * construction function
-     */
-
-    public LMInstallParams(String linkedMeKey, String sdk, boolean debug, int retryNumber, String hardwareId, String googleAdvertisingId,
-            String isHardwareIdReal, String adTrackingEnabled, String brand, String carrier, String iOSBundleId, String isReferable,
-            String os, String osVersion, String appVersion, String update, String uriScheme, String iOSTeamId, String universalLinkUrl,
-            String spotlightIdentifier, String latVal, String wifi, String hasNfc, String hasTelephone, String bluetooth, String screenDpi,
-            String screenHeight, String screenWidth) {
-        super(linkedMeKey, 123L, "", "", retryNumber, debug);
-        this.hardwareId = hardwareId;
-        this.googleAdvertisingId = googleAdvertisingId;
-        this.isHardwareIdReal = isHardwareIdReal;
-        this.adTrackingEnabled = adTrackingEnabled;
-        this.brand = brand;
-        this.carrier = carrier;
-        this.iOSBundleId = iOSBundleId;
-        this.isReferable = isReferable;
+    public LMInstallParams(String linkedMEKey, long identityId, String deviceFingerprintId, String sdkVersion, int retryTimes,
+                           boolean isDebug, String deviceId, Byte deviceType, String deviceBrand, String deviceModel,
+                           boolean hasBluetooth, boolean hasNfc, boolean hasSim, String os, String osVersion,
+                           int screenDpi, int screenHeight, int screenWidth, boolean isWifi, boolean isReferable,
+                           String vatVal, String carrier, String appVersion, String iOSTeamId, String iOSBundleId) {
+        super(linkedMEKey, identityId, deviceFingerprintId, sdkVersion, retryTimes, isDebug);
+        this.deviceId = deviceId;
+        this.deviceType = deviceType;
+        this.deviceBrand = deviceBrand;
+        this.deviceModel = deviceModel;
+        this.hasBluetooth = hasBluetooth;
+        this.hasNfc = hasNfc;
+        this.hasSim = hasSim;
         this.os = os;
         this.osVersion = osVersion;
-        this.appVersion = appVersion;
-        this.update = update;
-        this.uriScheme = uriScheme;
-        this.iOSTeamId = iOSTeamId;
-        this.universalLinkUrl = universalLinkUrl;
-        this.SpotlightIdentifier = spotlightIdentifier;
-        this.latVal = latVal;
-        this.wifi = wifi;
-        this.hasNfc = hasNfc;
-        this.hasTelephone = hasTelephone;
-        this.bluetooth = bluetooth;
         this.screenDpi = screenDpi;
         this.screenHeight = screenHeight;
-        this.ScreenWidth = screenWidth;
-    }
-
-    /**
-     * get and set function
-     */
-    public String getHardwareId() {
-        return hardwareId;
-    }
-
-    public void setHardwareId(String hardwareId) {
-        this.hardwareId = hardwareId;
-    }
-
-    public String getGoogleAdvertisingId() {
-        return googleAdvertisingId;
-    }
-
-    public void setGoogleAdvertisingId(String googleAdvertisingId) {
-        this.googleAdvertisingId = googleAdvertisingId;
-    }
-
-    public String getIsHardwareIdReal() {
-        return isHardwareIdReal;
-    }
-
-    public void setIsHardwareIdReal(String isHardwareIdReal) {
-        this.isHardwareIdReal = isHardwareIdReal;
-    }
-
-    public String getAdTrackingEnabled() {
-        return adTrackingEnabled;
-    }
-
-    public void setAdTrackingEnabled(String adTrackingEnabled) {
-        this.adTrackingEnabled = adTrackingEnabled;
-    }
-
-    public String getBrand() {
-        return brand;
-    }
-
-    public void setBrand(String brand) {
-        this.brand = brand;
-    }
-
-    public String getCarrier() {
-        return carrier;
-    }
-
-    public void setCarrier(String carrier) {
+        this.screenWidth = screenWidth;
+        this.isWifi = isWifi;
+        this.isReferable = isReferable;
+        this.vatVal = vatVal;
         this.carrier = carrier;
-    }
-
-    public String getiOSBundleId() {
-        return iOSBundleId;
-    }
-
-    public void setiOSBundleId(String iOSBundleId) {
+        this.appVersion = appVersion;
+        this.iOSTeamId = iOSTeamId;
         this.iOSBundleId = iOSBundleId;
     }
 
-    public String getIsReferable() {
-        return isReferable;
+    public String getDeviceId() {
+        return deviceId;
     }
 
-    public void setIsReferable(String isReferable) {
-        this.isReferable = isReferable;
+    public void setDeviceId(String deviceId) {
+        this.deviceId = deviceId;
+    }
+
+    public Byte getDeviceType() {
+        return deviceType;
+    }
+
+    public void setDeviceType(Byte deviceType) {
+        this.deviceType = deviceType;
+    }
+
+    public String getDeviceBrand() {
+        return deviceBrand;
+    }
+
+    public void setDeviceBrand(String deviceBrand) {
+        this.deviceBrand = deviceBrand;
+    }
+
+    public String getDeviceModel() {
+        return deviceModel;
+    }
+
+    public void setDeviceModel(String deviceModel) {
+        this.deviceModel = deviceModel;
+    }
+
+    public boolean isHasBluetooth() {
+        return hasBluetooth;
+    }
+
+    public void setHasBluetooth(boolean hasBluetooth) {
+        this.hasBluetooth = hasBluetooth;
+    }
+
+    public boolean isHasNfc() {
+        return hasNfc;
+    }
+
+    public void setHasNfc(boolean hasNfc) {
+        this.hasNfc = hasNfc;
+    }
+
+    public boolean isHasSim() {
+        return hasSim;
+    }
+
+    public void setHasSim(boolean hasSim) {
+        this.hasSim = hasSim;
     }
 
     public String getOs() {
@@ -148,28 +124,68 @@ public class LMInstallParams extends LMBaseParams {
         this.osVersion = osVersion;
     }
 
+    public int getScreenDpi() {
+        return screenDpi;
+    }
+
+    public void setScreenDpi(int screenDpi) {
+        this.screenDpi = screenDpi;
+    }
+
+    public int getScreenHeight() {
+        return screenHeight;
+    }
+
+    public void setScreenHeight(int screenHeight) {
+        this.screenHeight = screenHeight;
+    }
+
+    public int getScreenWidth() {
+        return screenWidth;
+    }
+
+    public void setScreenWidth(int screenWidth) {
+        this.screenWidth = screenWidth;
+    }
+
+    public boolean isWifi() {
+        return isWifi;
+    }
+
+    public void setWifi(boolean wifi) {
+        isWifi = wifi;
+    }
+
+    public boolean isReferable() {
+        return isReferable;
+    }
+
+    public void setReferable(boolean referable) {
+        isReferable = referable;
+    }
+
+    public String getVatVal() {
+        return vatVal;
+    }
+
+    public void setVatVal(String vatVal) {
+        this.vatVal = vatVal;
+    }
+
+    public String getCarrier() {
+        return carrier;
+    }
+
+    public void setCarrier(String carrier) {
+        this.carrier = carrier;
+    }
+
     public String getAppVersion() {
         return appVersion;
     }
 
     public void setAppVersion(String appVersion) {
         this.appVersion = appVersion;
-    }
-
-    public String getUpdate() {
-        return update;
-    }
-
-    public void setUpdate(String update) {
-        this.update = update;
-    }
-
-    public String getUriScheme() {
-        return uriScheme;
-    }
-
-    public void setUriScheme(String uriScheme) {
-        this.uriScheme = uriScheme;
     }
 
     public String getiOSTeamId() {
@@ -180,83 +196,11 @@ public class LMInstallParams extends LMBaseParams {
         this.iOSTeamId = iOSTeamId;
     }
 
-    public String getUniversalLinkUrl() {
-        return universalLinkUrl;
+    public String getiOSBundleId() {
+        return iOSBundleId;
     }
 
-    public void setUniversalLinkUrl(String universalLinkUrl) {
-        this.universalLinkUrl = universalLinkUrl;
-    }
-
-    public String getSpotlightIdentifier() {
-        return SpotlightIdentifier;
-    }
-
-    public void setSpotlightIdentifier(String spotlightIdentifier) {
-        SpotlightIdentifier = spotlightIdentifier;
-    }
-
-    public String getLatVal() {
-        return latVal;
-    }
-
-    public void setLatVal(String latVal) {
-        this.latVal = latVal;
-    }
-
-    public String getWifi() {
-        return wifi;
-    }
-
-    public void setWifi(String wifi) {
-        this.wifi = wifi;
-    }
-
-    public String getHasNfc() {
-        return hasNfc;
-    }
-
-    public void setHasNfc(String hasNfc) {
-        this.hasNfc = hasNfc;
-    }
-
-    public String getHasTelephone() {
-        return hasTelephone;
-    }
-
-    public void setHasTelephone(String hasTelephone) {
-        this.hasTelephone = hasTelephone;
-    }
-
-    public String getBluetooth() {
-        return bluetooth;
-    }
-
-    public void setBluetooth(String bluetooth) {
-        this.bluetooth = bluetooth;
-    }
-
-    public String getScreenDpi() {
-        return screenDpi;
-    }
-
-    public void setScreenDpi(String screenDpi) {
-        this.screenDpi = screenDpi;
-    }
-
-    public String getScreenHeight() {
-        return screenHeight;
-    }
-
-    public void setScreenHeight(String screenHeight) {
-        this.screenHeight = screenHeight;
-    }
-
-    public String getScreenWidth() {
-        return ScreenWidth;
-    }
-
-    public void setScreenWidth(String screenWidth) {
-        ScreenWidth = screenWidth;
+    public void setiOSBundleId(String iOSBundleId) {
+        this.iOSBundleId = iOSBundleId;
     }
 }
