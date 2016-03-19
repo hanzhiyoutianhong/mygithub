@@ -4,7 +4,7 @@ import cc.linkedme.commons.log.ApiLogger;
 import cc.linkedme.commons.mcq.reader.McqProcessor;
 import cc.linkedme.commons.util.ApiUtil;
 import cc.linkedme.commons.util.UseTimeStasticsMonitor;
-import cc.linkedme.data.model.DeepLink_bak;
+import cc.linkedme.data.model.DeepLink;
 import cc.linkedme.mcq.MsgUtils;
 import cc.linkedme.service.DeepLinkService;
 import net.sf.json.JSONObject;
@@ -79,7 +79,7 @@ public class MsgMcqProcessor extends McqProcessor {
 
     private int processDeepLinkMsg(int type, JSONObject info) {
         int result = ApiUtil.MQ_PROCESS_ABORT; // 默认为丢弃
-        DeepLink_bak deepLink = MsgUtils.toDeepLinkObj(info);
+        DeepLink deepLink = MsgUtils.toDeepLinkObj(info);
         if (type == 11) {
             // add deepLink
             addDeepLink(deepLink);
@@ -91,7 +91,7 @@ public class MsgMcqProcessor extends McqProcessor {
         return result;
     }
 
-    protected int addDeepLink(DeepLink_bak deepLink) {
+    protected int addDeepLink(DeepLink deepLink) {
         int result = 0;
         if (updateDb) {
             result = deepLinkService.addDeepLink(deepLink);

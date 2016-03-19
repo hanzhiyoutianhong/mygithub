@@ -16,7 +16,7 @@ public class LMOpenParams extends LMBaseParams {
      * construction function
      */
 
-    public LMOpenParams(String deviceFingerprintId, String identityId, boolean isReferable, String appVersion, String osVersion, int sdkUpdate,
+    public LMOpenParams(String deviceFingerprintId, long identityId, boolean isReferable, String appVersion, String osVersion, int sdkUpdate,
             String os, boolean isDebug, String latVal, String sdkVersion, int retryTimes, String linkedmeKey) {
 
         super(linkedmeKey, identityId, deviceFingerprintId, sdkVersion, retryTimes, isDebug);

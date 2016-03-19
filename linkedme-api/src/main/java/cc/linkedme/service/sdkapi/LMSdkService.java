@@ -1,4 +1,4 @@
-package cc.linkedme.service;
+package cc.linkedme.service.sdkapi;
 
 
 import cc.linkedme.data.model.params.LMCloseParams;

@@ -5,7 +5,7 @@ import cc.linkedme.data.model.params.LMCloseParams;
 import cc.linkedme.data.model.params.LMInstallParams;
 import cc.linkedme.data.model.params.LMOpenParams;
 import cc.linkedme.data.model.params.LMUrlParams;
-import cc.linkedme.service.LMSdkService;
+import cc.linkedme.service.sdkapi.LMSdkService;
 
 import com.google.common.base.Strings;
 import org.springframework.stereotype.Component;
@@ -80,8 +80,8 @@ public class LMSdkResources {
     @GET
     @Produces({MediaType.APPLICATION_JSON})
     public String open(@QueryParam("device_fingerprint_id") String device_fingerprint_id,
-                       @QueryParam("identity_id") String identity_id,
-                       @QueryParam("is_referrable") boolean is_referrable,
+                       @QueryParam("identity_id") long identity_id,
+                       @QueryParam("is_referrable") boolean is_referable,
                        @QueryParam("app_version") String app_version,
                        @QueryParam("os_version") String os_version,
                        @QueryParam("sdk_update") int sdk_update,
@@ -93,7 +93,7 @@ public class LMSdkResources {
                        @QueryParam("linkedme_key") String linkedme_key,
                        @QueryParam("sign") String sign) {
 
-        LMOpenParams lmOpenParams = new LMOpenParams(device_fingerprint_id, identity_id, is_referrable, app_version, os_version, sdk_update,
+        LMOpenParams lmOpenParams = new LMOpenParams(device_fingerprint_id, identity_id, is_referable, app_version, os_version, sdk_update,
                 os, is_debug, lat_val, sdk_version, retry_times, linkedme_key);
 
         String result = lmSdkService.open(lmOpenParams);
@@ -128,7 +128,7 @@ public class LMSdkResources {
     @Produces({MediaType.APPLICATION_JSON})
     public String url(@FormParam("linkedme_key") String linkedmeKey,
                       @FormParam("appid") long appid,
-                      @FormParam("identity_id") String identityId,
+                      @FormParam("identity_id") long identityId,
                       @FormParam("device_fingerprint_id") String deviceFingerprintId,
                       @FormParam("tags") String tags,
                       @FormParam("alias") String alias,

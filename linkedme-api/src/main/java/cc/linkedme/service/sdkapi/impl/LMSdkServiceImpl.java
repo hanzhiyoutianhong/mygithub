@@ -9,7 +9,7 @@ import cc.linkedme.commons.util.Base62;
 import cc.linkedme.commons.util.Constants;
 import cc.linkedme.commons.util.MD5Utils;
 import cc.linkedme.commons.uuid.UuidCreator;
-import cc.linkedme.data.model.DeepLink_bak;
+import cc.linkedme.data.model.DeepLink;
 import cc.linkedme.data.model.params.LMCloseParams;
 import cc.linkedme.data.model.params.LMInstallParams;
 import cc.linkedme.data.model.params.LMOpenParams;
@@ -17,9 +17,12 @@ import cc.linkedme.data.model.params.LMUrlParams;
 import cc.linkedme.exception.LMException;
 import cc.linkedme.exception.LMExceptionFactor;
 import cc.linkedme.mcq.DeepLinkMsgPusher;
-import cc.linkedme.service.LMSdkService;
+import cc.linkedme.service.sdkapi.LMSdkService;
 
 import com.google.common.base.Joiner;
+
+import java.text.SimpleDateFormat;
+import java.util.Date;
 
 /**
  * Created by LinkedME00 on 16/1/15.
@@ -121,9 +124,11 @@ public class LMSdkServiceImpl implements LMSdkService {
         }
 
         long deepLinkId = uuidCreator.nextId(0);
-        DeepLink_bak link = new DeepLink_bak(deepLinkId, deepLinkMd5, lmUrlParams.appid, lmUrlParams.linkedmeKey, lmUrlParams.identityId, lmUrlParams.tags,
+        DeepLink link = new DeepLink(deepLinkId, deepLinkMd5, lmUrlParams.appid, lmUrlParams.linkedmeKey, lmUrlParams.identityId, lmUrlParams.tags,
                 lmUrlParams.alias, lmUrlParams.channel, lmUrlParams.feature, lmUrlParams.stage, lmUrlParams.campaign, lmUrlParams.params,
                 lmUrlParams.source, lmUrlParams.sdkVersion);
+        SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        link.setCreateTime(df.format(new Date()));
         // 写mc和redis
         redisClient.set(deepLinkMd5, deepLinkId);
         // set mc

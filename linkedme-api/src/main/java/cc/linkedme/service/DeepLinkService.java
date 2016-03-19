@@ -1,7 +1,8 @@
 package cc.linkedme.service;
 
 import cc.linkedme.dao.sdkapi.DeepLinkDao;
-import cc.linkedme.data.model.DeepLink_bak;
+import cc.linkedme.dao.sdkapi.DeepLinkParamDao;
+import cc.linkedme.data.model.DeepLink;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
@@ -15,10 +16,16 @@ public class DeepLinkService {
     @Resource
     private DeepLinkDao deepLinkDao;
 
-    public int addDeepLink(DeepLink_bak deepLink) {
+    @Resource
+    private DeepLinkParamDao deepLinkParamDao;
+
+    public int addDeepLink(DeepLink deepLink) {
         int result = 0;
-        // insert mysql
+        // insert deepLink table;
         result = deepLinkDao.addDeepLink(deepLink);
+
+        //insert deeplinkparam table
+        result = deepLinkParamDao.addDeepLinkParam(deepLink);
         // counter
         return result;
     }

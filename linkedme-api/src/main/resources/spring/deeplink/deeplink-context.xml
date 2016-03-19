@@ -37,7 +37,7 @@
         <property name="tableCount" value="1" />           <!-- 这个参数和tableNamePostFix有关系，如果是日期就不用了。 -->
         <property name="sqls">
             <map>
-                <entry key="ADD_DEEPLINK" value="insert into $db$.$tb$ (deeplink_id, deeplink_md5, linkedme_key, identity_id, create_time, tags, alias, channel, feature, stage, campaign, params, source, sdk_version, update_time) values(?, ?, ?, ?, now(), ?, ?, ?, ?, ?, ?, ?, ?, ?, now())"/>
+                <entry key="ADD_DEEPLINK" value="insert into $db$.$tb$ (deeplink_id, deeplink_md5, linkedme_key, identity_id, create_time, tags, alias, channel, feature, stage, campaign, source, sdk_version, update_time) values(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, now())"/>
                 <entry key="UPDATE_STATUS_CMT_STATE" value="update $db$.$tb$ set vflag = ?, mflag=? where status_id = ? and vflag in (0,6,7) and cmt_id = ?"/>
                 <entry key="GET_STATUS_COMMENT_ALL_IN_MONTH" value="select cmt_id from $db$.$tb$ where status_id=? and vflag=?"/>
             </map>

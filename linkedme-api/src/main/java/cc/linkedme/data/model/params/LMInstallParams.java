@@ -38,7 +38,7 @@ public class LMInstallParams extends LMBaseParams {
             String os, String osVersion, String appVersion, String update, String uriScheme, String iOSTeamId, String universalLinkUrl,
             String spotlightIdentifier, String latVal, String wifi, String hasNfc, String hasTelephone, String bluetooth, String screenDpi,
             String screenHeight, String screenWidth) {
-        super(linkedMeKey, sdk, "", "", retryNumber, debug);
+        super(linkedMeKey, 123L, "", "", retryNumber, debug);
         this.hardwareId = hardwareId;
         this.googleAdvertisingId = googleAdvertisingId;
         this.isHardwareIdReal = isHardwareIdReal;

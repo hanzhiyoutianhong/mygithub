@@ -7,8 +7,9 @@ import cc.linkedme.commons.log.ApiLogger;
 import cc.linkedme.dao.BaseDao;
 import cc.linkedme.data.dao.strategy.TableChannel;
 import cc.linkedme.data.dao.util.DaoUtil;
-import cc.linkedme.data.model.DeepLink_bak;
+import cc.linkedme.data.model.DeepLink;
 
+import java.sql.Timestamp;
 import java.util.Date;
 
 /**
@@ -17,29 +18,29 @@ import java.util.Date;
 public class DeepLinkDaoImpl extends BaseDao implements DeepLinkDao {
     private static final String ADD_DEEPLINK = "ADD_DEEPLINK";
 
-    public int addDeepLink(DeepLink_bak deepLink) {
+    public int addDeepLink(DeepLink deepLink) {
         int result = 0;
         if (deepLink == null) {
             ApiLogger.error("DeepLinkDaoImpl.addDeepLink Deeplink is null, add failed");
         }
-        long deeplink_id = deepLink.getDeeplink_id();
-        String deeplink_md5 = deepLink.getDeeplink_md5();
-        long appid = deepLink.getAppid();
-        String linkedme_key = deepLink.getLinkedme_key();
-        String identity_id = deepLink.getIdentity_id();
+        long deeplink_id = deepLink.getDeeplinkId();
+        String deeplink_md5 = deepLink.getDeeplinkMd5();
+        long appid = deepLink.getAppId();
+        String linkedme_key = deepLink.getLinkedmeKey();
+        long identity_id = deepLink.getIdentityId();
+        String create_time = deepLink.getCreateTime();
         String tags = deepLink.getTags();
         String alias = deepLink.getAlias();
         String channel = deepLink.getChannel();
         String feature = deepLink.getFeature();
         String stage = deepLink.getStage();
         String campaign = deepLink.getCampaign();
-        String params = deepLink.getParams();
         String source = deepLink.getSource();
-        String sdk_version = deepLink.getSdk_version();
+        String sdk_version = deepLink.getSdkVersion();
         TableChannel tableChannel = tableContainer.getTableChannel("deeplink", ADD_DEEPLINK, appid, new Date());
         try {
             result += tableChannel.getJdbcTemplate().update(tableChannel.getSql(), new Object[] {deeplink_id, deeplink_md5, linkedme_key,
-                    identity_id, tags, alias, channel, feature, stage, campaign, params, source, sdk_version});
+                    identity_id, create_time, tags, alias, channel, feature, stage, campaign, source, sdk_version});
         } catch (DataAccessException e) {
             if (DaoUtil.isDuplicateInsert(e)) {
                 ApiLogger.info(new StringBuilder(128).append("Duplicate insert deepLink, id=").append(deeplink_id));

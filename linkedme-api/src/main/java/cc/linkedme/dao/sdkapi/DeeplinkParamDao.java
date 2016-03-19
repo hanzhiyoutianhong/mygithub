@@ -1,10 +1,10 @@
 package cc.linkedme.dao.sdkapi;
 
-import cc.linkedme.data.model.DeepLink_bak;
+import cc.linkedme.data.model.DeepLink;
 
 /**
  * Created by LinkedME01 on 16/3/19.
  */
-public interface DeeplinkParamDao {
-    public int addDeepLinkParam(DeepLink_bak deepLink);
+public interface DeepLinkParamDao {
+    int addDeepLinkParam(DeepLink deepLink);
 }

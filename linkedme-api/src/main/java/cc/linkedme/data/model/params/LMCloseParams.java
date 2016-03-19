@@ -16,7 +16,7 @@ public class LMCloseParams extends LMBaseParams {
 
     public LMCloseParams(String linkedmeKey, String sdkVersion, int retryTimes, boolean debug, String identifyId, String deviceFingerprintId,
             String sessionId) {
-        super("", deviceFingerprintId, linkedmeKey, sdkVersion, retryTimes, debug);
+        super("", 123L, linkedmeKey, sdkVersion, retryTimes, debug);
         this.identifyId = identifyId;
         this.deviceFingerprintId = deviceFingerprintId;
         this.sessionId = sessionId;
