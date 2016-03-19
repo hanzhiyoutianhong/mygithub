@@ -13,6 +13,7 @@ import cc.linkedme.commons.uuid.UuidCreator;
 import cc.linkedme.dao.sdkapi.ClientDao;
 import cc.linkedme.data.model.ClientInfo;
 import cc.linkedme.data.model.DeepLink;
+import cc.linkedme.data.model.params.LMCloseParams;
 import cc.linkedme.data.model.params.LMOpenParams;
 import cc.linkedme.data.model.params.LMUrlParams;
 import cc.linkedme.exception.LMException;
@@ -101,6 +102,11 @@ public class LMSdkServiceImpl implements LMSdkService {
         String result = Constants.DEEPLINK_HTTP_PREFIX + Base62.encode(appId) + "/" + Base62.encode(deepLinkId);
 
         return result; // linkedme_key & tags & alias & channel & feature & stage & params
+    }
+
+    public void close(LMCloseParams lmCloseParams) {
+        //清空session
+        ApiLogger.info("");//记录日志
     }
 
     public String preInstall(String linkClickId) {

@@ -1,6 +1,7 @@
 package cc.linkedme.service.sdkapi;
 
 import cc.linkedme.data.model.ClientInfo;
+import cc.linkedme.data.model.params.LMCloseParams;
 import cc.linkedme.data.model.params.LMOpenParams;
 import cc.linkedme.data.model.params.LMUrlParams;
 
@@ -14,6 +15,8 @@ public interface LMSdkService {
     String url(LMUrlParams lmUrlParams);
 
     String open(LMOpenParams lmOpenParams);
+
+    void close(LMCloseParams lmCloseParams);
 
     String preInstall(String linkClickId);
 

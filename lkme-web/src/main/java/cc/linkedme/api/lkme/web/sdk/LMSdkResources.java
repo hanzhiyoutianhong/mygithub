@@ -1,8 +1,11 @@
 package cc.linkedme.api.lkme.web.sdk;
 
+import cc.linkedme.commons.exception.LMException;
+import cc.linkedme.commons.exception.LMExceptionFactor;
 import cc.linkedme.commons.json.JsonBuilder;
 import cc.linkedme.commons.util.Constants;
 import cc.linkedme.data.model.ClientInfo;
+import cc.linkedme.data.model.params.LMCloseParams;
 import cc.linkedme.data.model.params.LMOpenParams;
 import cc.linkedme.data.model.params.LMUrlParams;
 
@@ -12,7 +15,12 @@ import org.springframework.stereotype.Component;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
-import javax.ws.rs.*;
+import javax.ws.rs.FormParam;
+import javax.ws.rs.GET;
+import javax.ws.rs.POST;
+import javax.ws.rs.Path;
+import javax.ws.rs.Produces;
+import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 
@@ -126,23 +134,26 @@ public class LMSdkResources {
     }
     
     @Path("/close")
-    @GET
+    @POST
     @Produces({MediaType.APPLICATION_JSON})
-    public String close(@QueryParam("linkedme_key") String linkedMeKey,
-                        @QueryParam("identity_id") String identifyId,
-                        @QueryParam("device_fingerprint_id") String deviceFingerprintId,
-                        @QueryParam("sdk") String sdk,
-                        @QueryParam("session_id") String sessionId,
-                        @QueryParam("retry_number") String retryNumber,
+    public String close(@FormParam("device_fingerprint_id") String device_fingerprint_id,
+                        @FormParam("identity_id") long identity_id,
+                        @FormParam("session_id") String session_id,
+                        @FormParam("sdk_version") String sdk_version,
+                        @FormParam("retry_times") int retry_times,
+                        @FormParam("linkedme_key") String linkedme_key,
                         @Context HttpServletRequest request) {
-        if (Strings.isNullOrEmpty(linkedMeKey)) {
 
+        if (Strings.isNullOrEmpty(linkedme_key)) {
+            throw new LMException(LMExceptionFactor.LM_MISSING_PARAM);
         }
 
-//        LMCloseParams lmCloseParams = new LMCloseParams(linkedMeKey, sdk, retryNumber, null, identifyId,
-//                                                            deviceFingerprintId, sessionId);
-//        String result = lmSdkService.close(lmCloseParams);
-        return "";
+        LMCloseParams lmCloseParams =
+                new LMCloseParams(device_fingerprint_id, identity_id, session_id, sdk_version, retry_times, linkedme_key);
+        lmSdkService.close(lmCloseParams);
+        JsonBuilder resultJson = new JsonBuilder();
+        resultJson.append("res", "ok");
+        return resultJson.flip().toString();
     }
 
     @Path("/url")
