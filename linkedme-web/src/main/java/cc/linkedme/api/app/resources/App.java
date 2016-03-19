@@ -24,7 +24,7 @@ import java.util.List;
  * Created by LinkedME01 on 16/3/17.
  */
 
-@Path("v1")
+@Path("app")
 @Component
 public class App {
     @Resource
