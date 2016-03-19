@@ -34,6 +34,7 @@ public class MsgUtils {
 
     public static DeepLink toDeepLinkObj(JSONObject deepLinkMsg) {
         DeepLink deepLink = new DeepLink();
+
         deepLink.setDeeplinkId(deepLinkMsg.getLong("deeplink_id"));
         deepLink.setIdentityId(deepLinkMsg.getLong("identity_id"));
         deepLink.setAppId(deepLinkMsg.getLong("appid"));

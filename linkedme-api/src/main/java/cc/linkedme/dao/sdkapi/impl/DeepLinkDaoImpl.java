@@ -23,6 +23,7 @@ public class DeepLinkDaoImpl extends BaseDao implements DeepLinkDao {
         if (deepLink == null) {
             ApiLogger.error("DeepLinkDaoImpl.addDeepLink Deeplink is null, add failed");
         }
+
         long deeplink_id = deepLink.getDeeplinkId();
         String deeplink_md5 = deepLink.getDeeplinkMd5();
         long appid = deepLink.getAppId();
@@ -38,6 +39,7 @@ public class DeepLinkDaoImpl extends BaseDao implements DeepLinkDao {
         String source = deepLink.getSource();
         String sdk_version = deepLink.getSdkVersion();
         TableChannel tableChannel = tableContainer.getTableChannel("deeplink", ADD_DEEPLINK, appid, new Date());
+
         try {
             result += tableChannel.getJdbcTemplate().update(tableChannel.getSql(), new Object[] {deeplink_id, deeplink_md5, linkedme_key,
                     identity_id, create_time, tags, alias, channel, feature, stage, campaign, source, sdk_version});

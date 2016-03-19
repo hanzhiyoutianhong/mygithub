@@ -50,7 +50,7 @@
         </property>
     </bean>
 
-    <bean id="deepLinkParamDao" class="cc.linkedme.dao.sdkapi.impl.DeepLinkParamDapImpl">
+    <bean id="deepLinkParamDao" class="cc.linkedme.dao.sdkapi.impl.DeepLinkParamDaoImpl">
         <property name="tableContainer">
             <bean class="cc.linkedme.data.dao.strategy.TableContainer">
                 <property name="tablesItems">

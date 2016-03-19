@@ -13,6 +13,7 @@ import java.sql.Timestamp;
 @Entity
 @Table(name = "deeplink_info_1603", schema = "deeplink_0", catalog = "")
 public class DeepLink {
+
     private long deeplinkId;
     private String deeplinkMd5;
     private long appId;
