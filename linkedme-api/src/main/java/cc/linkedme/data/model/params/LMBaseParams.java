@@ -9,18 +9,22 @@ public class LMBaseParams {
     public String linkedMEKey;
     public String sdkVersion;
     public int retryTimes;
-    public int debug;
+    public boolean isDebug;
 
     /**
      * construction function
      */
 
-    public LMBaseParams(String linkedMEKey, long identityId, String deviceFingerprintId, String sdkVersion, int retryTimes, int debug) {
+
+    public LMBaseParams() {}
+
+    public LMBaseParams(String linkedMEKey, long identityId, String deviceFingerprintId, String sdkVersion, int retryTimes,
+            boolean isDebug) {
         this.linkedMEKey = linkedMEKey;
         this.identityId = identityId;
         this.deviceFingerprintId = deviceFingerprintId;
         this.sdkVersion = sdkVersion;
         this.retryTimes = retryTimes;
-        this.debug = debug;
+        this.isDebug = isDebug;
     }
 }

@@ -5,7 +5,7 @@ public class Base62 {
     /**
      * code Table
      */
-    private static final String ALPHABET = "ABCDEFGH_123456789IJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz";
+    private static final String ALPHABET = "ABCDEFGH0123456789IJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz";
 
     /**
      * encoding long num
@@ -35,6 +35,9 @@ public class Base62 {
      * @return
      */
     private static String encode(long num, int base) {
+        if(num == 0) {
+            return "0";
+        }
         if (num < 1) throw new IllegalArgumentException("num must be greater than 0.");
 
         StringBuilder sb = new StringBuilder();

@@ -4,6 +4,7 @@ package cc.linkedme.data.model.params;
  * Created by LinkedME00 on 16/1/20.
  */
 public class LMUrlParams extends LMBaseParams {
+    public long appid;
     public String tags;
     public String alias;
     public String channel;
@@ -18,10 +19,11 @@ public class LMUrlParams extends LMBaseParams {
      * construction function
      */
 
-    public LMUrlParams(String linkedmeKey, long identityId, String deviceFingerPrintId, String sdkVersion, int retryTimes, int debug,
-            String tags, String alias, String channel, String feature, String stage, String campaign, String params, String source,
-            String sessionId) {
-        super(linkedmeKey, identityId, deviceFingerPrintId, sdkVersion, retryTimes, debug);
+    public LMUrlParams(String linkedmeKey, long appid, long identityId, String deviceFingerprintId, String sdkVersion, int retryTimes,
+            boolean debug, String tags, String alias, String channel, String feature, String stage, String campaign, String params,
+            String source, String sessionId) {
+        super(linkedmeKey, identityId, deviceFingerprintId, sdkVersion, retryTimes, debug);
+        this.appid = appid;
 
         this.tags = tags;
         this.alias = alias;
