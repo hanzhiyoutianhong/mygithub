@@ -12,6 +12,7 @@ import cc.linkedme.commons.uuid.UuidCreator;
 import cc.linkedme.dao.sdkapi.ClientDao;
 import cc.linkedme.data.model.ClientInfo;
 import cc.linkedme.data.model.DeepLink;
+import cc.linkedme.data.model.params.LMInstallParams;
 import cc.linkedme.data.model.params.LMOpenParams;
 import cc.linkedme.data.model.params.LMUrlParams;
 import cc.linkedme.exception.LMException;
@@ -40,11 +41,19 @@ public class LMSdkServiceImpl implements LMSdkService {
     @Resource
     public ClientDao clientDao;
 
-    public int install(ClientInfo clientInfo) {
+    public String install(LMInstallParams lmInstallParams) {
 
-        int result = 0;
+        String result = null;
+
         try {
-            result = clientDao.addClient(clientInfo);
+
+            ClientInfo clientInfo = new ClientInfo();
+            clientInfo.setLinkedmeKey(lmInstallParams.linkedMEKey);
+
+
+
+
+
         } catch (Exception e) {
 
         }

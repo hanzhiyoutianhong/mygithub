@@ -11,9 +11,7 @@
        http://www.springframework.org/schema/wfc
        http://www.springframework.org/schema/wfc.xsd ">
 
-    <bean id="deepLinkMsgPusher" class="cc.linkedme.mcq.DeepLinkMsgPusher">
-        <property name="apiMcqWriter" ref="apiMcqWriter" />
-    </bean>
+    <bean id="deepLinkMsgPusher" class="cc.linkedme.mcq.DeepLinkMsgPusher" />
 
     <bean id="deepLinkDao" class="cc.linkedme.dao.sdkapi.impl.DeepLinkDaoImpl">
         <property name="tableContainer">
