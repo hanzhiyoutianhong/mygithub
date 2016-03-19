@@ -98,7 +98,7 @@ public class MsgMcqProcessor extends McqProcessor {
         }
 
         if (updateMc) {
-
+            deepLinkService.addDeepLinkToCache(deepLink);
         }
         return result;
     }

@@ -7,4 +7,5 @@ import cc.linkedme.data.model.DeepLink;
  */
 public interface DeepLinkParamDao {
     int addDeepLinkParam(DeepLink deepLink);
+    String getAddDeeplinkParam(long deepLinkId);
 }

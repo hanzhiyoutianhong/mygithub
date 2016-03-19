@@ -10,6 +10,7 @@
 
     <import resource="spring/redis/redis.xml"/>
     <import resource="spring/mysql/mysql.xml"/>
+    <import resource="spring/mc/mc.xml"/>
     <import resource="classpath:spring/mcq/mcq-context.xml" />
     <import resource="classpath:spring/deeplink/deeplink-context.xml" />
     <import resource="classpath:spring/app/app-context.xml" />
