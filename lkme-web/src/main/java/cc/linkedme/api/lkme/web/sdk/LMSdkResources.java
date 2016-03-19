@@ -1,18 +1,16 @@
 package cc.linkedme.api.lkme.web.sdk;
 
 import cc.linkedme.commons.json.JsonBuilder;
-import cc.linkedme.data.model.params.LMCloseParams;
-import cc.linkedme.data.model.params.LMInstallParams;
-import cc.linkedme.data.model.params.LMOpenParams;
+import cc.linkedme.data.model.ClientInfo;
 import cc.linkedme.data.model.params.LMUrlParams;
-import cc.linkedme.service.LMSdkService;
 
+
+import cc.linkedme.service.sdkapi.LMSdkService;
 import com.google.common.base.Strings;
 import org.springframework.stereotype.Component;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpSession;
 import javax.ws.rs.*;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
@@ -24,56 +22,67 @@ public class LMSdkResources {
     @Resource
     private LMSdkService lmSdkService;
 
+    public void setLmSdkService(LMSdkService lmSdkService) {
+        this.lmSdkService = lmSdkService;
+    }
+
     @Path("/install")
     @GET
     @Produces({MediaType.APPLICATION_JSON})
-    public String install(@QueryParam("linkedme_key") String linkedMeKey,
-                          @QueryParam("hardware_id") String hardwareId,
-                          @QueryParam("google_advertising_id") String googleAdvertisingId,
-                          @QueryParam("is_hardware_id_real") String isHardwareIdReal,
-                          @QueryParam("ad_tracking_enabled") String adTrackingEnabled,
-                          @QueryParam("brand") String brand,
-                          @QueryParam("carrier") String carrier,
-                          @QueryParam("ios_bundle_id") String iOSBundleId,
-                          @QueryParam("is_referable") String isReferable,
+    public String install(@QueryParam("linkedme_key") String linkedMEKey,
+                          @QueryParam("device_id") String deviceId,
+                          @QueryParam("device_type") Byte deviceType,
+                          @QueryParam("device_brand") String deviceBrand,
+                          @QueryParam("device_model") String deviceModel,
+                          @QueryParam("has_bluetooth") boolean hasBluetooth,
+                          @QueryParam("has_nfc") boolean hasNfc,
+                          @QueryParam("has_sim") boolean hasSim,
                           @QueryParam("os") String os,
-                          @QueryParam("osVersion") String osVersion,
-                          @QueryParam("app_version") String appVersion,
-                          @QueryParam("sdk") String sdk,
-                          @QueryParam("update") String update,
-                          @QueryParam("uri_scheme") String uriScheme,
-                          @QueryParam("ios_team_id") String iOSTeamId,
-                          @QueryParam("universal_link_url") String universalLinkUrl,
-                          @QueryParam("spotlight_identifier") String spotlightIdentifier,
+                          @QueryParam("os_version") String osVersion,
+                          @QueryParam("screen_dpi") int screenDpi,
+                          @QueryParam("screen_height") int screenHeight,
+                          @QueryParam("screen_width") int screenWidth,
+                          @QueryParam("is_wifi") boolean isWifi,
+                          @QueryParam("is_referable") boolean isReferable,
                           @QueryParam("lat_val") String latVal,
-                          @QueryParam("wifi") String wifi,
-                          @QueryParam("has_nfc") String hasNfc,
-                          @QueryParam("has_telephone") String hasTelephone,
-                          @QueryParam("bluetooth") String bluetooth,
-                          @QueryParam("screen_dpi") String screenDpi,
-                          @QueryParam("screen_height") String screenHeight,
-                          @QueryParam("screen_width") String screenWidth,
-                          @QueryParam("retry_number") String retryNumber,
-                          @QueryParam("debug") String debug,
+                          @QueryParam("carrier") String carrier,
+                          @QueryParam("app_version") String appVersion,
+                          @QueryParam("sdk_update") String sdkUpdate,
+                          @QueryParam("sdk_version") String sdkVersion,
+                          @QueryParam("iOS_team_id") String iOSTeamId,
+                          @QueryParam("iOS_bundle_id") String iOSBundleId,
+                          @QueryParam("is_debug") boolean isDebug ,
+                          @QueryParam("retry_times") int retryTimes,
                           @Context HttpServletRequest request) {
-        if (Strings.isNullOrEmpty(linkedMeKey)) {
+        if (Strings.isNullOrEmpty(linkedMEKey)) {
 
         }
 
-        // request info
-        String ip = request.getRemoteAddr();
-        HttpSession httpSession = request.getSession();
-        httpSession.setMaxInactiveInterval(1);  //set expire time
-        String sessionId = httpSession.getId().substring(8, 24);
+        ClientInfo clientInfo = new ClientInfo();
+        clientInfo.setLinkedmeKey(linkedMEKey);
+        clientInfo.setDeviceId(deviceId);
+        clientInfo.setDeviceType(deviceType);
+        clientInfo.setDeviceBrand(deviceBrand);
+        clientInfo.setDeviceModel(deviceModel);
+        clientInfo.setHasBlutooth(hasBluetooth);
+        clientInfo.setHasNfc(hasNfc);
+        clientInfo.setHasSim(hasSim);
+        clientInfo.setOs(os);
+        clientInfo.setOsVersion(osVersion);
+        clientInfo.setScreenDpi(screenDpi);
+        clientInfo.setScreenHeight(screenHeight);
+        clientInfo.setScreenWidth(screenWidth);
+        clientInfo.setIsWifi(isWifi);
+        clientInfo.setIsReferable(isReferable);
+        clientInfo.setLatVal(latVal);
+        clientInfo.setCarrier(carrier);
+        clientInfo.setAppVersion(appVersion);
+        clientInfo.setSdkUpdate(sdkUpdate);
+        clientInfo.setIosTeamId(iOSTeamId);
+        clientInfo.setIosBundleId(iOSBundleId);
 
-//        LMInstallParams lmInstallParams = new LMInstallParams(linkedMeKey, sdk, debug, retryNumber, hardwareId,
-//                                                                googleAdvertisingId, isHardwareIdReal, adTrackingEnabled, brand, carrier,
-//                                                                iOSBundleId, isReferable, os, osVersion, appVersion,
-//                                                                update,  uriScheme, iOSTeamId, universalLinkUrl, spotlightIdentifier,
-//                                                                latVal, wifi, hasNfc, hasTelephone, bluetooth,
-//                                                                screenDpi, screenHeight, screenWidth);
-//        String result = lmSdkService.install(lmInstallParams);
-        return "";
+        int result = lmSdkService.install(clientInfo);
+        return String.valueOf(result);
     }
 
     @Path("/open")
@@ -135,7 +144,7 @@ public class LMSdkResources {
     @POST
     @Produces({MediaType.APPLICATION_JSON})
     public String url(@FormParam("linkedme_key") String linkedmeKey,
-                      @FormParam("identity_id") String identityId,
+                      @FormParam("identity_id") long identityId,
                       @FormParam("device_fingerprint_id") String deviceFingerPrintId,
                       @FormParam("tags") String tags,
                       @FormParam("alias") String alias,

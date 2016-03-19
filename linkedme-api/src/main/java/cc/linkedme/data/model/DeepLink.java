@@ -8,7 +8,7 @@ public class DeepLink {
     private String deeplink; // base62(deeplink_id)
     private String deeplink_md5;
     private String linkedme_key;
-    private String identity_id;
+    private long identity_id;
     private String tags;
     private String alias;
     private String channel;
@@ -23,7 +23,7 @@ public class DeepLink {
 
     }
 
-    public DeepLink(long deeplink_id, String deeplink_md5, String linkedme_key, String identity_id, String tags, String alias,
+    public DeepLink(long deeplink_id, String deeplink_md5, String linkedme_key, long identity_id, String tags, String alias,
             String channel, String feature, String stage, String campaign, String params, String source, String sdk_version) {
         this.deeplink_id = deeplink_id;
         this.deeplink_md5 = deeplink_md5;
@@ -56,11 +56,11 @@ public class DeepLink {
         this.deeplink = deeplink;
     }
 
-    public String getIdentity_id() {
+    public long getIdentity_id() {
         return identity_id;
     }
 
-    public void setIdentity_id(String identity_id) {
+    public void setIdentity_id(long identity_id) {
         this.identity_id = identity_id;
     }
 
