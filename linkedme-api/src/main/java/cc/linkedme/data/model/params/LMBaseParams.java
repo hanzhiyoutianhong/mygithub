@@ -4,23 +4,27 @@ package cc.linkedme.data.model.params;
  * Created by LinkedME00 on 16/1/20.
  */
 public class LMBaseParams {
-    public String identityId;
-    public String deviceFingerPrintId;
-    public String linkedmeKey;
+    public long identityId;
+    public String deviceFingerprintId;
+    public String linkedMEKey;
     public String sdkVersion;
     public int retryTimes;
-    public int debug;
+    public boolean isDebug;
 
     /**
      * construction function
      */
 
-    public LMBaseParams(String linkedmeKey, String identityId, String deviceFingerPrintId, String sdkVersion, int retryTimes, int debug) {
-        this.linkedmeKey = linkedmeKey;
+
+    public LMBaseParams() {}
+
+    public LMBaseParams(String linkedMEKey, long identityId, String deviceFingerprintId, String sdkVersion, int retryTimes,
+            boolean isDebug) {
+        this.linkedMEKey = linkedMEKey;
         this.identityId = identityId;
-        this.deviceFingerPrintId = deviceFingerPrintId;
+        this.deviceFingerprintId = deviceFingerprintId;
         this.sdkVersion = sdkVersion;
         this.retryTimes = retryTimes;
-        this.debug = debug;
+        this.isDebug = isDebug;
     }
 }

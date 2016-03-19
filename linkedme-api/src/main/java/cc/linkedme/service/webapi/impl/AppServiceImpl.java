@@ -42,4 +42,9 @@ public class AppServiceImpl implements AppService {
         }
         return appList;
     }
+
+    public int deleteApp(AppParams appParams)
+    {
+        return appDao.delApp( appParams );
+    }
 }

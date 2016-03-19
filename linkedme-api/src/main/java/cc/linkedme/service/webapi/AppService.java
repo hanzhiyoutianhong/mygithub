@@ -11,4 +11,5 @@ import java.util.List;
 public interface AppService {
     long createApp(AppParams appParams);
     List<AppInfo> getAppsByUserId(long userId);
+    int deleteApp(AppParams appParams);
 }

@@ -1,6 +1,7 @@
 package cc.linkedme.dao.webapi;
 
 import cc.linkedme.data.model.AppInfo;
+import cc.linkedme.data.model.params.AppParams;
 
 import java.util.List;
 
@@ -10,4 +11,5 @@ import java.util.List;
 public interface AppDao {
     public int insertApp(AppInfo appInfo);
     public List<AppInfo> getAppsByUserId(long userId);
+    int delApp(AppParams appParams);
 }

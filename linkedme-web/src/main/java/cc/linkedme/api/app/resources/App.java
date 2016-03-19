@@ -30,6 +30,26 @@ public class App {
     @Resource
     private AppService appService;
 
+    @Path("/get_apps")
+    @GET
+    @Produces({MediaType.APPLICATION_JSON})
+    public String getApps(@QueryParam("user_id") long user_id,
+                          @QueryParam("token") String token) {
+
+        if(user_id <= 0) {
+            throw new LMException(LMExceptionFactor.LM_ILLEGAL_PARAM_VALUE);
+        }
+        List<AppInfo> apps = appService.getAppsByUserId(user_id);
+        JSONArray jsonArray = new JSONArray();
+        for(AppInfo app: apps) {
+            jsonArray.add(app.toJson());
+        }
+        JSONObject resultJson = new JSONObject();
+        resultJson.put("counts", apps.size());
+        resultJson.put("data", jsonArray);
+        return resultJson.toString();
+    }
+
     @Path("/create_app")
     @POST
     @Produces({MediaType.APPLICATION_JSON})
@@ -50,24 +70,19 @@ public class App {
         return resultJson.flip().toString();
     }
 
-    @Path("/get_apps")
-    @GET
+    @Path("/delete_app")
+    @POST
     @Produces({MediaType.APPLICATION_JSON})
-    public String getApps(@QueryParam("user_id") long user_id,
-                            @QueryParam("token") String token) {
-
-        if(user_id <= 0) {
-            throw new LMException(LMExceptionFactor.LM_ILLEGAL_PARAM_VALUE);
-        }
-        List<AppInfo> apps = appService.getAppsByUserId(user_id);
-        JSONArray jsonArray = new JSONArray();
-        for(AppInfo app: apps) {
-            jsonArray.add(app.toJson());
-        }
-        JSONObject resultJson = new JSONObject();
-        resultJson.put("counts", apps.size());
-        resultJson.put("data", jsonArray);
-        return resultJson.toString();
+    public String deleteApp(@FormParam("user_id") long user_id,
+                            @FormParam("appname") String appname,
+                            @FormParam("token") String token)
+    {
+        AppParams appParams = new AppParams( appname, user_id );
+        if( appService.deleteApp(appParams) == 1 )
+            return "{\"ret\":\"true\"}";
+        else
+            return "{\"error\"}";
     }
+
 
 }

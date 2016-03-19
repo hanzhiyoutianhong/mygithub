@@ -9,17 +9,20 @@ import cc.linkedme.commons.util.Base62;
 import cc.linkedme.commons.util.Constants;
 import cc.linkedme.commons.util.MD5Utils;
 import cc.linkedme.commons.uuid.UuidCreator;
+import cc.linkedme.dao.sdkapi.ClientDao;
+import cc.linkedme.data.model.ClientInfo;
 import cc.linkedme.data.model.DeepLink;
-import cc.linkedme.data.model.params.LMCloseParams;
-import cc.linkedme.data.model.params.LMInstallParams;
 import cc.linkedme.data.model.params.LMOpenParams;
 import cc.linkedme.data.model.params.LMUrlParams;
 import cc.linkedme.exception.LMException;
 import cc.linkedme.exception.LMExceptionFactor;
 import cc.linkedme.mcq.DeepLinkMsgPusher;
-import cc.linkedme.service.LMSdkService;
+import cc.linkedme.service.sdkapi.LMSdkService;
 
 import com.google.common.base.Joiner;
+
+import java.text.SimpleDateFormat;
+import java.util.Date;
 
 /**
  * Created by LinkedME00 on 16/1/15.
@@ -34,80 +37,42 @@ public class LMSdkServiceImpl implements LMSdkService {
     @Resource
     public ShardingSupportHash<JedisPort> deepLinkShardingSupport;
 
-    public String install(LMInstallParams lmInstallParams) {
-        String result = null;
+    @Resource
+    public ClientDao clientDao;
 
+    public int install(ClientInfo clientInfo) {
+
+        int result = 0;
         try {
-
-            // hardware_id equals identify_id, and identify_id and link_click_id are in the redis
-
-            // browser_fingerprint_id equals device_fingerprint_id
-
-            // add the info into mysql
-
+            result = clientDao.addClient(clientInfo);
         } catch (Exception e) {
-            // error log
-            ApiLogger.error("");
-            throw new LMException(LMExceptionFactor.LM_FAILURE_DB_OP, this.getClass().getName() + ".install");
 
         }
 
-        // info log
-        ApiLogger.info("");
-
-
         return result;
+
     }
+
 
     public String open(LMOpenParams lmOpenParams) {
-        String result = null;
 
+        String result = null;
         try {
 
-            // get the linkIdentifier by redis
-
-            // add the info into mysql
-
         } catch (Exception e) {
-            // error log
-            ApiLogger.error("");
-            throw new LMException(LMExceptionFactor.LM_FAILURE_DB_OP, this.getClass().getName() + ".open");
 
         }
 
-        // info log
-        ApiLogger.info("");
-
         return result;
-    }
 
-    public String close(LMCloseParams lmCloseParams) {
-
-        String result = null;
-
-        try {
-
-            // add this into mysql
-
-        } catch (Exception e) {
-            // error log
-            ApiLogger.error("");
-            throw new LMException(LMExceptionFactor.LM_FAILURE_DB_OP, this.getClass().getName() + ".close");
-
-        }
-
-        // info log
-        ApiLogger.info("");
-
-        return result;
     }
 
     public String url(LMUrlParams lmUrlParams) {
         Joiner joiner = Joiner.on("&").skipNulls();
-        String urlParamsStr = joiner.join(lmUrlParams.linkedmeKey, lmUrlParams.tags, lmUrlParams.alias, lmUrlParams.channel,
+        String urlParamsStr = joiner.join(lmUrlParams.linkedMEKey, lmUrlParams.tags, lmUrlParams.alias, lmUrlParams.channel,
                 lmUrlParams.feature, lmUrlParams.stage, lmUrlParams.params);
         String deepLinkMd5 = MD5Utils.md5(urlParamsStr);
-        String appId = ""; // get appId
+        long appId = lmUrlParams.appid; // get appId
         // 从redis里查找md5是否存在
         // 如果存在,找出对应的deeplink_id,base62进行编码,
         // 根据linkedmeKey从redis里查找出appId,生成短链,返回 //http://lkme.cc/abc/qwerk
@@ -121,14 +86,16 @@ public class LMSdkServiceImpl implements LMSdkService {
         }
 
         long deepLinkId = uuidCreator.nextId(0);
-        DeepLink link = new DeepLink(deepLinkId, deepLinkMd5, lmUrlParams.linkedmeKey, lmUrlParams.identityId, lmUrlParams.tags,
+        DeepLink link = new DeepLink(deepLinkId, deepLinkMd5, lmUrlParams.appid, lmUrlParams.linkedMEKey, lmUrlParams.identityId, lmUrlParams.tags,
                 lmUrlParams.alias, lmUrlParams.channel, lmUrlParams.feature, lmUrlParams.stage, lmUrlParams.campaign, lmUrlParams.params,
                 lmUrlParams.source, lmUrlParams.sdkVersion);
+        SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        link.setCreateTime(df.format(new Date()));
         // 写mc和redis
         redisClient.set(deepLinkMd5, deepLinkId);
         // set mc
         deepLinkMsgPusher.addDeepLink(link);
-        String result = Constants.DEEPLINK_HTTP_PREFIX + appId + "/" + Base62.encode(deepLinkId);
+        String result = Constants.DEEPLINK_HTTP_PREFIX + Base62.encode(appId) + "/" + Base62.encode(deepLinkId);
 
         return result; // linkedme_key & tags & alias & channel & feature & stage & params
     }

@@ -33,12 +33,12 @@ public class LMInstallParams extends LMBaseParams {
      * construction function
      */
 
-    public LMInstallParams(String linkedMeKey, String sdk, int debug, int retryNumber, String hardwareId, String googleAdvertisingId,
+    public LMInstallParams(String linkedMeKey, String sdk, boolean debug, int retryNumber, String hardwareId, String googleAdvertisingId,
             String isHardwareIdReal, String adTrackingEnabled, String brand, String carrier, String iOSBundleId, String isReferable,
             String os, String osVersion, String appVersion, String update, String uriScheme, String iOSTeamId, String universalLinkUrl,
             String spotlightIdentifier, String latVal, String wifi, String hasNfc, String hasTelephone, String bluetooth, String screenDpi,
             String screenHeight, String screenWidth) {
-        super(linkedMeKey, sdk, "", "", retryNumber, debug);
+        super(linkedMeKey, 123L, "", "", retryNumber, debug);
         this.hardwareId = hardwareId;
         this.googleAdvertisingId = googleAdvertisingId;
         this.isHardwareIdReal = isHardwareIdReal;
