@@ -1,14 +1,14 @@
 package cc.linkedme.mcq;
 
 import cc.linkedme.commons.json.JsonBuilder;
-import cc.linkedme.data.model.DeepLink;
+import cc.linkedme.data.model.DeepLink_bak;
 import net.sf.json.JSONObject;
 
 /**
  * Created by LinkedME01 on 16/3/8.
  */
 public class MsgUtils {
-    public static String toDeepLinkMsgJson(DeepLink deepLink) {
+    public static String toDeepLinkMsgJson(DeepLink_bak deepLink) {
         JsonBuilder deepLinkMsg = new JsonBuilder();
         deepLinkMsg.append("type", 11);
         JsonBuilder info = new JsonBuilder();
@@ -29,8 +29,8 @@ public class MsgUtils {
         return deepLinkMsg.flip().toString();
     }
 
-    public static DeepLink toDeepLinkObj(JSONObject deepLinkMsg) {
-        DeepLink deepLink = new DeepLink();
+    public static DeepLink_bak toDeepLinkObj(JSONObject deepLinkMsg) {
+        DeepLink_bak deepLink = new DeepLink_bak();
         deepLink.setDeeplink_id(deepLinkMsg.getLong("deeplink_id"));
         deepLink.setIdentity_id(deepLinkMsg.getString("identity_id"));
         deepLink.setAppid(deepLinkMsg.getLong("appid"));

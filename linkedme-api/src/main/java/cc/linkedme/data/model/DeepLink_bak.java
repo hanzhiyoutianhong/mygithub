@@ -3,7 +3,7 @@ package cc.linkedme.data.model;
 /**
  * Created by LinkedME01 on 16/3/8.
  */
-public class DeepLink {
+public class DeepLink_bak {
     private long deeplink_id;
     private String deeplink; // base62(deeplink_id)
     private String deeplink_md5;
@@ -20,12 +20,12 @@ public class DeepLink {
     private String source;
     private String sdk_version;
 
-    public DeepLink() {
+    public DeepLink_bak() {
 
     }
 
-    public DeepLink(long deeplink_id, String deeplink_md5, long appid, String linkedme_key, String identity_id, String tags, String alias,
-            String channel, String feature, String stage, String campaign, String params, String source, String sdk_version) {
+    public DeepLink_bak(long deeplink_id, String deeplink_md5, long appid, String linkedme_key, String identity_id, String tags, String alias,
+                        String channel, String feature, String stage, String campaign, String params, String source, String sdk_version) {
         this.deeplink_id = deeplink_id;
         this.deeplink_md5 = deeplink_md5;
         this.identity_id = identity_id;

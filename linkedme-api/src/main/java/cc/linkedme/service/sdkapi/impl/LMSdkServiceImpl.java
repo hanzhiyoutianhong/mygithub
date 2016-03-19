@@ -9,7 +9,7 @@ import cc.linkedme.commons.util.Base62;
 import cc.linkedme.commons.util.Constants;
 import cc.linkedme.commons.util.MD5Utils;
 import cc.linkedme.commons.uuid.UuidCreator;
-import cc.linkedme.data.model.DeepLink;
+import cc.linkedme.data.model.DeepLink_bak;
 import cc.linkedme.data.model.params.LMCloseParams;
 import cc.linkedme.data.model.params.LMInstallParams;
 import cc.linkedme.data.model.params.LMOpenParams;
@@ -121,7 +121,7 @@ public class LMSdkServiceImpl implements LMSdkService {
         }
 
         long deepLinkId = uuidCreator.nextId(0);
-        DeepLink link = new DeepLink(deepLinkId, deepLinkMd5, lmUrlParams.appid, lmUrlParams.linkedmeKey, lmUrlParams.identityId, lmUrlParams.tags,
+        DeepLink_bak link = new DeepLink_bak(deepLinkId, deepLinkMd5, lmUrlParams.appid, lmUrlParams.linkedmeKey, lmUrlParams.identityId, lmUrlParams.tags,
                 lmUrlParams.alias, lmUrlParams.channel, lmUrlParams.feature, lmUrlParams.stage, lmUrlParams.campaign, lmUrlParams.params,
                 lmUrlParams.source, lmUrlParams.sdkVersion);
         // 写mc和redis

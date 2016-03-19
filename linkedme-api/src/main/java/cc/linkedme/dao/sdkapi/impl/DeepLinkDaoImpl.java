@@ -7,7 +7,7 @@ import cc.linkedme.commons.log.ApiLogger;
 import cc.linkedme.dao.BaseDao;
 import cc.linkedme.data.dao.strategy.TableChannel;
 import cc.linkedme.data.dao.util.DaoUtil;
-import cc.linkedme.data.model.DeepLink;
+import cc.linkedme.data.model.DeepLink_bak;
 
 import java.util.Date;
 
@@ -17,7 +17,7 @@ import java.util.Date;
 public class DeepLinkDaoImpl extends BaseDao implements DeepLinkDao {
     private static final String ADD_DEEPLINK = "ADD_DEEPLINK";
 
-    public int addDeepLink(DeepLink deepLink) {
+    public int addDeepLink(DeepLink_bak deepLink) {
         int result = 0;
         if (deepLink == null) {
             ApiLogger.error("DeepLinkDaoImpl.addDeepLink Deeplink is null, add failed");

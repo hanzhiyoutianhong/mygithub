@@ -1,7 +1,7 @@
 package cc.linkedme.service;
 
 import cc.linkedme.dao.sdkapi.DeepLinkDao;
-import cc.linkedme.data.model.DeepLink;
+import cc.linkedme.data.model.DeepLink_bak;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
@@ -15,7 +15,7 @@ public class DeepLinkService {
     @Resource
     private DeepLinkDao deepLinkDao;
 
-    public int addDeepLink(DeepLink deepLink) {
+    public int addDeepLink(DeepLink_bak deepLink) {
         int result = 0;
         // insert mysql
         result = deepLinkDao.addDeepLink(deepLink);
