@@ -24,7 +24,7 @@ public class AppServiceImpl implements AppService {
     private AppDao appDao;
 
     public long createApp(AppParams appParams) {
-        long appId = uuidCreator.nextId(1);
+        long appId = uuidCreator.nextId(2); //2表示发号器的app业务
         AppInfo appInfo = new AppInfo();
         appInfo.setAppid(appId);
         appInfo.setAppName(appParams.appName);

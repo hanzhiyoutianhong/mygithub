@@ -23,32 +23,32 @@ public class ClientDaoImpl extends BaseDao implements ClientDao {
         String linkedMEKey = clientInfo.getLinkedmeKey();
         String deviceId = clientInfo.getDeviceId();
         int deviceType = clientInfo.getDeviceType();
-        String deviceBrand = clientInfo.getDeviceBrand();
         String deviceModel = clientInfo.getDeviceModel();
-        int hasBluetooth = clientInfo.getHasBlutooth();
-        int hasNfc = clientInfo.getHasNfc();
-        int hasSim = clientInfo.getHasSim();
+        String deviceBrand = clientInfo.getDeviceBrand();
+        boolean hasBluetooth = clientInfo.getHasBlutooth();
+        boolean hasNfc = clientInfo.getHasNfc();
+        boolean hasSim = clientInfo.getHasSim();
         String os = clientInfo.getOs();
         String osVersion = clientInfo.getOsVersion();
         int screenDpi = clientInfo.getScreenDpi();
         int screenHeight = clientInfo.getScreenHeight();
         int screenWidth = clientInfo.getScreenWidth();
-        int isWifi = clientInfo.getIsWifi();
-        int isReferable = clientInfo.getIsReferable();
+        boolean isWifi = clientInfo.getIsWifi();
+        boolean isReferable = clientInfo.getIsReferable();
         String latVal = clientInfo.getLatVal();
         String carrier = clientInfo.getCarrier();
         String appVersion = clientInfo.getAppVersion();
-        String iOSTeamId  = clientInfo.getIosTeamId();
+        String sdk_update = clientInfo.getSdkUpdate();
+        String iOSTeamId = clientInfo.getIosTeamId();
         String iOSBundle = clientInfo.getIosBundleId();
 
-        TableChannel tableChannel = tableContainer.getTableChannel("client", ADD_CLIENT, identityId, identityId);
+        TableChannel tableChannel = tableContainer.getTableChannel("clientInfo", ADD_CLIENT, identityId, identityId);
 
         try {
-            result += tableChannel.getJdbcTemplate().update(tableChannel.getSql(), new Object[] {identityId, linkedMEKey, deviceId, deviceType, deviceBrand,
-                    deviceModel, hasBluetooth, hasNfc, hasSim, os,
-                    osVersion, screenDpi, screenHeight, screenWidth, isWifi,
-                    isReferable, latVal, carrier, appVersion, iOSTeamId,
-                    iOSBundle, null, null});
+            result += tableChannel.getJdbcTemplate().update(tableChannel.getSql(),
+                    new Object[] {identityId, linkedMEKey, deviceId, deviceType, deviceModel, deviceBrand, hasBluetooth, hasNfc, hasSim, os,
+                            osVersion, screenDpi, screenHeight, screenWidth, isWifi, isReferable, latVal, carrier, appVersion, sdk_update,
+                            iOSTeamId, iOSBundle});
         } catch (DataAccessException e) {
             if (DaoUtil.isDuplicateInsert(e)) {
                 ApiLogger.info(new StringBuilder(128).append("Duplicate insert client, id=").append(identityId));

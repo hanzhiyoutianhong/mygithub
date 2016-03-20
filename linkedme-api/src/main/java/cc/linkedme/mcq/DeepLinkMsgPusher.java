@@ -19,7 +19,4 @@ public class DeepLinkMsgPusher {
         apiMcqWriter.writeMsg(deepLinkMsg);
     }
 
-    public void setApiMcqWriter(McqBaseWriter apiMcqWriter) {
-        this.apiMcqWriter = apiMcqWriter;
-    }
 }

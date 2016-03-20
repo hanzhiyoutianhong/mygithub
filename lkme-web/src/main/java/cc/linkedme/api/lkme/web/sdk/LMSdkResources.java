@@ -31,10 +31,6 @@ public class LMSdkResources {
     @Resource
     private LMSdkService lmSdkService;
 
-    public void setLmSdkService(LMSdkService lmSdkService) {
-        this.lmSdkService = lmSdkService;
-    }
-
     @Path("/install")
     @GET
     @Produces({MediaType.APPLICATION_JSON})
@@ -64,10 +60,10 @@ public class LMSdkResources {
                           @QueryParam("retry_times") int retryTimes,
                           @Context HttpServletRequest request) {
         if (Strings.isNullOrEmpty(linkedMEKey)) {
-
+            throw new LMException(LMExceptionFactor.LM_MISSING_PARAM);
         }
 
-        LMInstallParams lmInstallParams = new LMInstallParams(linkedMEKey, 0L, null, sdkVersion, retryTimes, isDebug, deviceId, deviceType, deviceBrand, deviceModel, hasBluetooth, hasNfc, hasSim, os, osVersion, screenDpi, screenHeight, screenWidth, isWifi, isReferable, latVal, carrier, appVersion, iOSTeamId, iOSBundleId);
+        LMInstallParams lmInstallParams = new LMInstallParams(linkedMEKey, 0L, null, sdkVersion, retryTimes, isDebug, deviceId, deviceType, deviceBrand, deviceModel, hasBluetooth, hasNfc, hasSim, os, osVersion, screenDpi, screenHeight, screenWidth, isWifi, isReferable, latVal, carrier, appVersion, sdkUpdate, iOSTeamId, iOSBundleId);
         String result = lmSdkService.install(lmInstallParams);
         return result;
     }
