@@ -94,46 +94,7 @@ public class StorageProxy<T> extends StorageAble<T> {
         if (value == null && needSearchBackupStorage(backupStorage, key)) {
             value = backupStorage.get(key);
 
-            // if(value != null
-            // && value instanceof UserAttentions
-            // && ((UserAttentions)value).getAttentions().length > Constants.MAX_FRIEND_CACHE_SIZE){
-            // setUserFollowers((UserAttentions)value, key);
-            // }else if(value != null){
-            // // FIXME 2011/12/31之前将set改为add，以解决并发问题, by daoru
-            // boolean isDirty = false;
-            // boolean isContentMissed = false;
-            // boolean isUserTypeMissed = false;
-            // if (value instanceof DoubleLongitudeVectorItem) {
-            // isDirty = ((DoubleLongitudeVectorItem) value).isDirty();
-            // } else if (value instanceof VectorItem) {
-            // isDirty = ((VectorItem) value).isDirty();
-            // } else if ( value instanceof byte[]){
-            // String suffix = StorageAble.getKeySuffix(key);
-            // if (StorageAble.CacheSuffix.META_VECTOR_STATUS_DATE.equals(suffix)
-            // || StorageAble.CacheSuffix.META_VECTOR_STATUS_LATEST.equals(suffix)
-            // || StorageAble.CacheSuffix.PAGE_VECTOR_STATUS_DATE.equals(suffix)) {
-            // MetaItem item = MetaItemPBUtil.toItem((byte[]) value);
-            // isDirty = MetaItemPBUtil.isDirty(item);
-            // isContentMissed = MetaItemPBUtil.isContentMissed(item);
-            // isUserTypeMissed = MetaItemPBUtil.isUserTypeMissed(item);
-            // }
-            // }
-            // if (isDirty && dirtyCacheSwitcher.isOpen()) {
-            // preferedStorage.set(key, value, Constants.EXPTIME_VECTOR_DIRTY);
-            // ApiLogger.warn("StorageProxy cache set dirty value. key:" + key + ", expire: + " +
-            // Constants.EXPTIME_VECTOR_DIRTY.getTime());
-            // } else if (isContentMissed && dirtyCacheSwitcher.isOpen()){
-            // preferedStorage.set(key, value, Constants.EXPTIME_META_VECTOR_CONTENT_MISSED);
-            // ApiLogger.warn("StorageProxy cache set dirty value. key:" + key + ", expire: + " +
-            // Constants.EXPTIME_META_VECTOR_CONTENT_MISSED.getTime());
-            // } else if (isUserTypeMissed && dirtyCacheSwitcher.isOpen()) {
-            // preferedStorage.set(key, value, Constants.EXPTIME_META_VECTOR_USERTYPE_MISSED);
-            // ApiLogger.warn("StorageProxy cache set usertype dirty value. key:" + key + ", expire:
-            // + " + Constants.EXPTIME_META_VECTOR_USERTYPE_MISSED.getTime());
-            // } else {
-            // preferedStorage.set(key, value);
-            // }
-            // }
+
         }
 
         return value;

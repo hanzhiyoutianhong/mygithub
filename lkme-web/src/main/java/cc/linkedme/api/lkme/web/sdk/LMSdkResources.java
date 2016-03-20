@@ -1,7 +1,11 @@
 package cc.linkedme.api.lkme.web.sdk;
 
+import cc.linkedme.commons.exception.LMException;
+import cc.linkedme.commons.exception.LMExceptionFactor;
 import cc.linkedme.commons.json.JsonBuilder;
-import cc.linkedme.data.model.ClientInfo;
+import cc.linkedme.commons.util.Constants;
+import cc.linkedme.data.model.params.LMCloseParams;
+import cc.linkedme.data.model.params.LMInstallParams;
 import cc.linkedme.data.model.params.LMOpenParams;
 import cc.linkedme.data.model.params.LMUrlParams;
 
@@ -11,7 +15,12 @@ import org.springframework.stereotype.Component;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
-import javax.ws.rs.*;
+import javax.ws.rs.FormParam;
+import javax.ws.rs.GET;
+import javax.ws.rs.POST;
+import javax.ws.rs.Path;
+import javax.ws.rs.Produces;
+import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 
@@ -58,26 +67,9 @@ public class LMSdkResources {
 
         }
 
-        ClientInfo clientInfo = new ClientInfo();
-        clientInfo.setLinkedmeKey(linkedMEKey);
-        clientInfo.setDeviceId(deviceId);
-        clientInfo.setDeviceType(deviceType);
-        clientInfo.setDeviceBrand(deviceBrand);
-        clientInfo.setDeviceModel(deviceModel);
-        clientInfo.setOs(os);
-        clientInfo.setOsVersion(osVersion);
-        clientInfo.setScreenDpi(screenDpi);
-        clientInfo.setScreenHeight(screenHeight);
-        clientInfo.setScreenWidth(screenWidth);
-        clientInfo.setLatVal(latVal);
-        clientInfo.setCarrier(carrier);
-        clientInfo.setAppVersion(appVersion);
-        clientInfo.setSdkUpdate(sdkUpdate);
-        clientInfo.setIosTeamId(iOSTeamId);
-        clientInfo.setIosBundleId(iOSBundleId);
-
-        int result = lmSdkService.install(clientInfo);
-        return String.valueOf(result);
+        LMInstallParams lmInstallParams = new LMInstallParams(linkedMEKey, 0L, null, sdkVersion, retryTimes, isDebug, deviceId, deviceType, deviceBrand, deviceModel, hasBluetooth, hasNfc, hasSim, os, osVersion, screenDpi, screenHeight, screenWidth, isWifi, isReferable, latVal, carrier, appVersion, iOSTeamId, iOSBundleId);
+        String result = lmSdkService.install(lmInstallParams);
+        return result;
     }
 
     @Path("/open")
@@ -85,8 +77,9 @@ public class LMSdkResources {
     @Produces({MediaType.APPLICATION_JSON})
     public String open(@QueryParam("device_fingerprint_id") String device_fingerprint_id,
                        @QueryParam("identity_id") long identity_id,
-                       @QueryParam("is_referrable") boolean is_referable,
+                       @QueryParam("is_referable") boolean is_referable,
                        @QueryParam("app_version") String app_version,
+                       @QueryParam("extra_uri_data") String extra_uri_data,
                        @QueryParam("os_version") String os_version,
                        @QueryParam("sdk_update") int sdk_update,
                        @QueryParam("os") String os,
@@ -97,41 +90,59 @@ public class LMSdkResources {
                        @QueryParam("linkedme_key") String linkedme_key,
                        @QueryParam("sign") String sign) {
 
-        LMOpenParams lmOpenParams = new LMOpenParams(device_fingerprint_id, identity_id, is_referable, app_version, os_version, sdk_update,
-                os, is_debug, lat_val, sdk_version, retry_times, linkedme_key);
+        LMOpenParams lmOpenParams = new LMOpenParams(device_fingerprint_id, identity_id, is_referable, app_version, extra_uri_data,
+                os_version, sdk_update, os, is_debug, lat_val, sdk_version, retry_times, linkedme_key);
 
-        String result = lmSdkService.open(lmOpenParams);
-
-        return "";
-
+        String deepLinkParam = "";
+        boolean clicked_linkedme_link = false;
+        if(!Strings.isNullOrEmpty(extra_uri_data)) {
+            if(extra_uri_data.startsWith(Constants.DEEPLINK_HTTPS_PREFIX) || extra_uri_data.startsWith(Constants.DEEPLINK_HTTP_PREFIX)) {
+                clicked_linkedme_link = true;
+                deepLinkParam = lmSdkService.open(lmOpenParams);
+            }
+        }
+        if (Strings.isNullOrEmpty(deepLinkParam)) {
+            deepLinkParam = "";
+        }
+        JsonBuilder resultJson = new JsonBuilder();
+        resultJson.append("session_id", System.currentTimeMillis());
+        resultJson.append("identity_id", identity_id);
+        resultJson.append("device_fingerprint_id", device_fingerprint_id);
+        resultJson.append("browser_fingerprint_id", "");
+        resultJson.append("link", extra_uri_data);
+        resultJson.append("params", deepLinkParam);
+        resultJson.append("is_first_session", true);
+        resultJson.append("clicked_linkedme_link", clicked_linkedme_link);
+        return resultJson.flip().toString();
     }
-
-
+    
     @Path("/close")
-    @GET
+    @POST
     @Produces({MediaType.APPLICATION_JSON})
-    public String close(@QueryParam("linkedme_key") String linkedMeKey,
-                        @QueryParam("identity_id") String identifyId,
-                        @QueryParam("device_fingerprint_id") String deviceFingerprintId,
-                        @QueryParam("sdk") String sdk,
-                        @QueryParam("session_id") String sessionId,
-                        @QueryParam("retry_number") String retryNumber,
+    public String close(@FormParam("device_fingerprint_id") String device_fingerprint_id,
+                        @FormParam("identity_id") long identity_id,
+                        @FormParam("session_id") String session_id,
+                        @FormParam("sdk_version") String sdk_version,
+                        @FormParam("retry_times") int retry_times,
+                        @FormParam("linkedme_key") String linkedme_key,
                         @Context HttpServletRequest request) {
-        if (Strings.isNullOrEmpty(linkedMeKey)) {
 
+        if (Strings.isNullOrEmpty(linkedme_key)) {
+            throw new LMException(LMExceptionFactor.LM_MISSING_PARAM);
         }
 
-//        LMCloseParams lmCloseParams = new LMCloseParams(linkedMeKey, sdk, retryNumber, null, identifyId,
-//                                                            deviceFingerprintId, sessionId);
-//        String result = lmSdkService.close(lmCloseParams);
-        return "";
+        LMCloseParams lmCloseParams =
+                new LMCloseParams(device_fingerprint_id, identity_id, session_id, sdk_version, retry_times, linkedme_key);
+        lmSdkService.close(lmCloseParams);
+        JsonBuilder resultJson = new JsonBuilder();
+        resultJson.append("res", "ok");
+        return resultJson.flip().toString();
     }
 
     @Path("/url")
     @POST
     @Produces({MediaType.APPLICATION_JSON})
     public String url(@FormParam("linkedme_key") String linkedmeKey,
-                      @FormParam("appid") long appid,
                       @FormParam("identity_id") long identityId,
                       @FormParam("device_fingerprint_id") String deviceFingerprintId,
                       @FormParam("tags") String tags,
@@ -147,7 +158,7 @@ public class LMSdkResources {
                       @FormParam("retry_times") int retryTimes,
                       @FormParam("debug") boolean debug) {
 
-        LMUrlParams lmUrlParams = new LMUrlParams(linkedmeKey, appid, identityId, deviceFingerprintId, sdkVersion, retryTimes, debug, tags, alias,
+        LMUrlParams lmUrlParams = new LMUrlParams(linkedmeKey, identityId, deviceFingerprintId, sdkVersion, retryTimes, debug, tags, alias,
                 channel, feature, stage, campaign, params, source, sessionId);
 
         String url = lmSdkService.url(lmUrlParams);

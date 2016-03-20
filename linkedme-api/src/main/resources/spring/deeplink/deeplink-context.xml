@@ -11,9 +11,7 @@
        http://www.springframework.org/schema/wfc
        http://www.springframework.org/schema/wfc.xsd ">
 
-    <bean id="deepLinkMsgPusher" class="cc.linkedme.mcq.DeepLinkMsgPusher">
-        <property name="apiMcqWriter" ref="apiMcqWriter" />
-    </bean>
+    <bean id="deepLinkMsgPusher" class="cc.linkedme.mcq.DeepLinkMsgPusher" />
 
     <bean id="deepLinkDao" class="cc.linkedme.dao.sdkapi.impl.DeepLinkDaoImpl">
         <property name="tableContainer">
@@ -55,14 +53,14 @@
             <bean class="cc.linkedme.data.dao.strategy.TableContainer">
                 <property name="tablesItems">
                     <map>
-                        <entry key="deeplinkParam" value-ref="deeplinkParam" />
+                        <entry key="deepLinkParam" value-ref="deepLinkParam" />
                     </map>
                 </property>
             </bean>
         </property>
     </bean>
 
-    <bean id="deeplinkParam" class="cc.linkedme.data.dao.strategy.TableItem">
+    <bean id="deepLinkParam" class="cc.linkedme.data.dao.strategy.TableItem">
         <property name="itemName" value="deeplinkParam"/>
         <property name="dbNamePrefix"  value="deeplink_param"/>
         <property name="dbCount"  value="4"/>
@@ -72,9 +70,9 @@
         <property name="tableCount" value="8" />           <!-- 这个参数和tableNamePostFix有关系，如果是日期就不用了。 -->
         <property name="sqls">
             <map>
-                <entry key="ADD_DEEPLINK" value="insert into $db$.$tb$ (deeplink_id, deeplink_md5, linkedme_key, identity_id, create_time, tags, alias, channel, feature, stage, campaign, params, source, sdk_version, update_time) values(?, ?, ?, ?, now(), ?, ?, ?, ?, ?, ?, ?, ?, ?, now())"/>
+                <entry key="ADD_DEEPLINK_PARAM" value="insert into $db$.$tb$ (deeplink_id, param) values(?, ?)"/>
                 <entry key="UPDATE_STATUS_CMT_STATE" value="update $db$.$tb$ set vflag = ?, mflag=? where status_id = ? and vflag in (0,6,7) and cmt_id = ?"/>
-                <entry key="GET_STATUS_COMMENT_ALL_IN_MONTH" value="select cmt_id from $db$.$tb$ where status_id=? and vflag=?"/>
+                <entry key="GET_DEEPLINK_PARAM" value="select param from $db$.$tb$ where deeplink_id=?"/>
             </map>
         </property>
         <property name="jdbcTemplates">

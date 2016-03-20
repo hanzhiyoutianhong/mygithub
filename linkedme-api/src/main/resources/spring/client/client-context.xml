@@ -5,6 +5,9 @@
        http://www.springframework.org/schema/beans
        http://www.springframework.org/schema/beans/spring-beans.xsd ">
 
+
+    <bean id="clientMsgPusher" class="cc.linkedme.mcq.ClientMsgPusher" />
+
     <bean id="clientDao" class="cc.linkedme.dao.sdkapi.impl.ClientDaoImpl">
         <property name="tableContainer">
             <bean class="cc.linkedme.data.dao.strategy.TableContainer">
@@ -40,9 +43,5 @@
             </list>
         </property>
     </bean>
-
-
-    <bean id="appService" class="cc.linkedme.service.webapi.impl.AppServiceImpl" />
-
 
 </beans>
