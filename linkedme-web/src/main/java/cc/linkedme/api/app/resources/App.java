@@ -118,28 +118,28 @@ public class App {
     @Produces({MediaType.APPLICATION_JSON})
     public String updateApp( @FormParam("app_id") long app_id,
                              @FormParam("app_name") String app_name,
-                             @FormParam("app_live_key") String app_live_key,
-                             @FormParam("app_live_secret") String app_live_secret,
-                             @FormParam("app_test_key") String app_test_key,
-                             @FormParam("app_test_secret") String app_test_secret,
+                             @FormParam("lkme_live_key") String app_live_key,
+                             @FormParam("lkme_live_secret") String app_live_secret,
+                             @FormParam("lkme_test_key") String app_test_key,
+                             @FormParam("lkme_test_secret") String app_test_secret,
                              @FormParam("ios_uri_scheme") String ios_uri_scheme,
-                             @FormParam("ios_not_url") String ios_not_url,
-                             @FormParam("ios_store_url") String ios_store_url,
+                             @FormParam("ios_search_option") String ios_not_url,
+                             @FormParam("apple_store_search") String ios_store_url,
                              @FormParam("ios_custom_url") String ios_custom_url,
-                             @FormParam("ios_bundle_id") String ios_bundle_id,
-                             @FormParam("ios_prefix") String ios_prefix,
-                             @FormParam("ios_team_id") String ios_team_id,
+                             @FormParam("bundle_id") String ios_bundle_id,
+                             @FormParam("app_prefix") String ios_prefix,
+                             @FormParam("ios_team_id") String ios_team_id,///
                              @FormParam("android_uri_scheme") String android_uri_scheme,
-                             @FormParam("android_not_url") String android_not_url,
-                             @FormParam("google_play_url") String google_play_url,
+                             @FormParam("android_search_option") String android_not_url,
+                             @FormParam("google_play_search") String google_play_url,
                              @FormParam("android_custom_url") String android_custom_url,
                              @FormParam("android_package_name") String android_package_name,
-                             @FormParam("android_prefix") String android_prefix,
+                             @FormParam("sha256_fingerprints") String android_prefix,
                              @FormParam("has_ios") int has_ios,
                              @FormParam("enable_ulink") int enable_ulink,
                              @FormParam("has_android") int has_android,
                              @FormParam("enable_applinks") int enable_applinks,
-                             @FormParam("desktop_url") String desktop_url)
+                             @FormParam("qc_code") String desktop_url)
     {
         AppParams appParams = new AppParams();
         appParams.appId = app_id;

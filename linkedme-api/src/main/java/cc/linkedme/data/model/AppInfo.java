@@ -271,7 +271,7 @@ public class AppInfo {
 
 
         JSONObject jsonObject = new JSONObject();
-        jsonObject.put( "appname",appName );
+        jsonObject.put( "app_name",appName );
         jsonObject.put( "lkme_test_key", appTestKey );
         jsonObject.put( "lkme_test_secret", appTestSecret );
         jsonObject.put( "lkme_live_key", appLiveKey );
