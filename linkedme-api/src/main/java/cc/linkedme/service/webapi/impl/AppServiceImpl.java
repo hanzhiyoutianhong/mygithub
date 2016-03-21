@@ -10,7 +10,6 @@ import org.apache.commons.collections.CollectionUtils;
 
 import javax.annotation.Resource;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 
 /**
@@ -19,14 +18,13 @@ import java.util.List;
 public class AppServiceImpl implements AppService {
     @Resource
     UuidCreator uuidCreator;
-
     @Resource
     private AppDao appDao;
 
     public long createApp(AppParams appParams) {
         long appId = uuidCreator.nextId(1);
         AppInfo appInfo = new AppInfo();
-        appInfo.setAppid(appId);
+        appInfo.setAppId(appId);
         appInfo.setAppName(appParams.appName);
         appInfo.setUserId(appParams.userId);
         if (appDao.insertApp(appInfo) > 0) {
@@ -46,5 +44,18 @@ public class AppServiceImpl implements AppService {
     public int deleteApp(AppParams appParams)
     {
         return appDao.delApp( appParams );
+    }
+
+    public AppInfo queryApp( AppParams appParams )
+    {
+        AppInfo appInfo = appDao.getAppsByAppId( appParams );
+
+
+        return appInfo;
+    }
+
+    public int updateApp( AppParams appParams )
+    {
+        return appDao.updateApp( appParams );
     }
 }

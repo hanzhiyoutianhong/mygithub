@@ -64,9 +64,9 @@ public class App {
             throw new LMException(LMExceptionFactor.LM_MISSING_PARAM);
         }
         AppParams appParam = new AppParams(app_name, user_id);
-        long appid = appService.createApp(appParam);
+        long app_id = appService.createApp(appParam);
         JsonBuilder resultJson = new JsonBuilder();
-        resultJson.append("appid", appid);
+        resultJson.append("app_id", app_id);
         return resultJson.flip().toString();
     }
 
@@ -74,15 +74,98 @@ public class App {
     @POST
     @Produces({MediaType.APPLICATION_JSON})
     public String deleteApp(@FormParam("user_id") long user_id,
-                            @FormParam("appname") String appname,
+                            @FormParam("app_name") String app_name,
                             @FormParam("token") String token)
     {
-        AppParams appParams = new AppParams( appname, user_id );
-        if( appService.deleteApp(appParams) == 1 )
-            return "{\"ret\":\"true\"}";
-        else
-            return "{\"error\"}";
+        AppParams appParams = new AppParams( app_name, user_id );
+        appService.deleteApp( appParams );
+
+        if(user_id <= 0)
+        {
+            throw new LMException(LMExceptionFactor.LM_ILLEGAL_PARAM_VALUE);
+        }
+        if(app_name == null)
+        {
+            throw new LMException(LMExceptionFactor.LM_MISSING_PARAM);
+        }
+
+        JsonBuilder resultJson = new JsonBuilder();
+        resultJson.append( "ret", "true" );
+        return resultJson.flip().toString();
     }
 
+    @Path("/query_app")
+    @POST
+    @Produces({MediaType.APPLICATION_JSON})
+    public String queryApp(@FormParam("app_id") long app_id,
+                           @FormParam("token") String token)
+    {
+        if( app_id <= 0 )
+        {
+            throw new LMException(LMExceptionFactor.LM_ILLEGAL_PARAM_VALUE);
+        }
+
+        AppParams appParams = new AppParams();
+        appParams.appId = app_id;
+
+        AppInfo appInfo = appService.queryApp(appParams);
+
+        return appInfo.toJson().toString();
+    }
+
+    @Path("/update_app")
+    @POST
+    @Produces({MediaType.APPLICATION_JSON})
+    public String updateApp( @FormParam("app_id") long app_id,
+                             @FormParam("app_name") String app_name,
+                             @FormParam("app_live_key") String app_live_key,
+                             @FormParam("app_test_key") String app_test_key,
+                             @FormParam("ios_uri_scheme") String ios_uri_scheme,
+                             @FormParam("ios_not_url") String ios_not_url,
+                             @FormParam("ios_store_url") String ios_store_url,
+                             @FormParam("ios_custom_url") String ios_custom_url,
+                             @FormParam("ios_bundle_id") String ios_bundle_id,
+                             @FormParam("ios_prefix") String ios_prefix,
+                             @FormParam("ios_team_id") String ios_team_id,
+                             @FormParam("android_uri_scheme") String android_uri_scheme,
+                             @FormParam("android_not_url") String android_not_url,
+                             @FormParam("google_play_url") String google_play_url,
+                             @FormParam("android_custom_url") String android_custom_url,
+                             @FormParam("android_package_name") String android_package_name,
+                             @FormParam("android_prefix") String android_prefix,
+                             @FormParam("has_ios") int has_ios,
+                             @FormParam("enable_ulink") int enable_ulink,
+                             @FormParam("has_android") int has_android,
+                             @FormParam("enable_applinks") int enable_applinks,
+                             @FormParam("desktop_url") String desktop_url)
+    {
+        AppParams appParams = new AppParams();
+        appParams.appId = app_id;
+        appParams.appName = app_name;
+        appParams.appLiveKey = app_live_key;
+        appParams.appTestKey = app_test_key;
+        appParams.iosUriScheme = ios_uri_scheme;
+        appParams.iosNotUrl = ios_not_url;
+        appParams.iosStoreUrl = ios_store_url;
+        appParams.iosCustomUrl = ios_custom_url;
+        appParams.iosBundleId = ios_bundle_id;
+        appParams.iosPrefix = ios_prefix;
+        appParams.iosTeamId = ios_team_id;
+        appParams.androidUriScheme = android_uri_scheme;
+        appParams.androidNotUrl = android_not_url;
+        appParams.googlePlayUrl = google_play_url;
+        appParams.androidCustomUrl = android_custom_url;
+        appParams.androidPackageName = android_package_name;
+        appParams.androidPrefix = android_prefix;
+        int ios_android_flag = ( has_ios << 3 ) + ( enable_ulink << 2 ) + ( has_android << 1 ) + enable_applinks;
+        appParams.iosAndroidFlag = ios_android_flag;
+        appParams.desktopUrl = desktop_url;
+
+        appService.updateApp( appParams );
+
+        JsonBuilder resultJson = new JsonBuilder();
+        resultJson.append( "ret", "true" );
+        return resultJson.flip().toString();
+    }
 
 }

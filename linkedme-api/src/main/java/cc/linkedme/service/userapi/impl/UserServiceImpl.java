@@ -8,6 +8,7 @@ import cc.linkedme.data.model.params.UserParams;
 import cc.linkedme.service.userapi.UserService;
 
 import javax.annotation.Resource;
+import java.text.DateFormat;
 import java.util.Date;
 
 /**
@@ -18,50 +19,55 @@ public class UserServiceImpl implements UserService {
     @Resource
     private UserDao userDao;
 
-    public boolean isValidRegister(UserParams userParams)
+    public boolean userRegister(UserParams userParams)
     {
-        if( userDao.emailExistenceQuery( userParams.email ) == false )
+        if( userDao.queryEmail( userParams.email ) == false )
         {
-            userDao.updateRegisterInfo( userParams );
+            userDao.updateUserInfo( userParams );
             return true;
         }
         return false;
     }
 
-    public boolean isValidLogin(UserParams userParams)
+    public boolean userLogin(UserParams userParams)
     {
         UserInfo userInfo = userDao.getUserInfo( userParams.email );
 
 
         if( userInfo.getPwd().equals( userParams.pwd ) )
-            return true;
-        else
-            return false;
-
-    }
-
-    public boolean isValidEmail( UserParams userParams )
-    {
-        if(userDao.emailExistenceQuery( userParams.email ))
         {
-            MailSender.sendTextMail("7306530@qq.com", "Change you PWD", "this is a test mail from java program");
+            String register_time = DateFormat.getDateTimeInstance().format( new Date() );
+            String current_login_time = register_time;
+            userParams.current_login_time = current_login_time;
+
+            userDao.resetLastLoginTime( userParams );
+
             return true;
         }
         else
             return false;
+
     }
 
-    public boolean isValidLogout( UserParams userParams )
+    public boolean validateEmail( UserParams userParams )
     {
-        return userDao.emailExistenceQuery( userParams.email );
+        if(userDao.queryEmail( userParams.email ))
+            return true;
+        else
+            return false;
     }
 
-    public boolean isValidChange( UserParams userParams )
+    public boolean userLogout( UserParams userParams )
+    {
+        return userDao.queryEmail( userParams.email );
+    }
+
+    public boolean resetUserPwd( UserParams userParams )
     {
         UserInfo userInfo = userDao.getUserInfo( userParams.email );
         if( userParams.old_pwd.equals( userInfo.getPwd() ) )
         {
-            userDao.pwdReset( userParams );
+            userDao.resetUserPwd( userParams );
             return true;
         }
         else
@@ -70,21 +76,28 @@ public class UserServiceImpl implements UserService {
         }
     }
 
-    public boolean isSetPwdSuccess( UserParams userParams )
+    public boolean forgotPwd( UserParams userParams )
     {
-        if( userDao.emailExistenceQuery( userParams.email ) )
+        if( userDao.queryEmail( userParams.email ) )
         {
-            userDao.pwdReset( userParams );
+            MailSender.sendTextMail( userParams.email, "Change you PWD", "this is a test mail from java program" );
             return true;
         }
         return false;
     }
 
-    public String getLastLoginTime(UserParams userParams )
+    public boolean resetForgottenPwd( UserParams userParams )
+    {
+        if( userDao.resetUserPwd( userParams ) == 1 )
+            return true;
+        else
+            return false;
+    }
+
+    public String getLastLoginTime( UserParams userParams )
     {
         UserInfo userInfo = userDao.getUserInfo( userParams.email );
-        String last_login_time = userInfo.getLast_login_time();
-        return last_login_time;
+        return userInfo.getLast_login_time();
     }
 
 }

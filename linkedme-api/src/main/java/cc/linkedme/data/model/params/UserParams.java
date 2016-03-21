@@ -8,11 +8,13 @@ public class UserParams {
     public String pwd;
     public String name;
     public String company;
-    public String role_id;
+    public int role_id;
     public String last_logout_time;
     public String old_pwd;
     public String new_pwd;
     public String token;
+    public String register_time;
+    public String current_login_time;
 
 
     /**
@@ -46,70 +48,4 @@ public class UserParams {
         this.token = token;
     }
 
-    /**
-     * get and set functions
-     */
-    public String getEmail(){
-        return email;
-    }
-
-    public void setEmail( String email ){
-        this.email = email;
-    }
-
-    public String getPwd(){
-        return pwd;
-    }
-
-    public void setPwd( String passwd ){
-        this.pwd = passwd;
-    }
-
-    public String getName(){
-        return name;
-    }
-
-    public void setName( String name ) {
-        this.name = name;
-    }
-
-    public String getCompany() {
-        return company;
-    }
-
-    public void setCompany( String company ) {
-        this.company = company;
-    }
-
-    public String getLast_logout_time() {
-        return last_logout_time;
-    }
-
-    public void setLast_logout_time( String last_logout_time ) {
-        this.last_logout_time = last_logout_time;
-    }
-
-    public String getOld_pwd() {
-        return old_pwd;
-    }
-
-    public void setOld_pwd( String old_pwd ) {
-        this.old_pwd = old_pwd;
-    }
-
-    public String getNew_pwd() {
-        return new_pwd;
-    }
-
-    public void setNew_pwd( String new_pwd ) {
-        this.new_pwd = new_pwd;
-    }
-
-    public String getToken(){
-        return token;
-    }
-
-    public void setToken( String token ){
-        this.token = token;
-    }
 }

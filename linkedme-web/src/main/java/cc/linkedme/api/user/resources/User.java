@@ -1,5 +1,9 @@
 package cc.linkedme.api.user.resources;
 
+import cc.linkedme.commons.exception.LMException;
+import cc.linkedme.commons.exception.LMExceptionFactor;
+import cc.linkedme.commons.json.JsonBuilder;
+import cc.linkedme.commons.mail.MailAuthenticator;
 import cc.linkedme.data.model.params.UserParams;
 import cc.linkedme.service.userapi.UserService;
 import org.springframework.stereotype.Component;
@@ -29,10 +33,15 @@ public class User {
     ) {
         UserParams userParams = new UserParams(email, pwd, name, company, token);
 
-        if (userService.isValidRegister(userParams)) {
-            return "{\"ret\":\"true\"}";
-        } else {
-            return "{\"err_coed\":40400,\"err_msg\":\"xxx\"}";
+        if (userService.userRegister(userParams))
+        {
+            JsonBuilder resultJson = new JsonBuilder();
+            resultJson.append( "ret", "true" );
+            return resultJson.flip().toString();
+        }
+        else
+        {
+            throw new LMException(LMExceptionFactor.LM_ILLEGAL_PARAM_VALUE);
         }
     }
 
@@ -42,17 +51,21 @@ public class User {
     @Produces({MediaType.APPLICATION_JSON})
     public String login(@FormParam("email") String email,
                         @FormParam("pwd") String pwd,
-                        @FormParam("token") String token) {
+                        @FormParam("token") String token)
+    {
         UserParams userParams = new UserParams();
-        userParams.setEmail( email );
-        userParams.setPwd( pwd );
+        userParams.email = email;
+        userParams.pwd = pwd;
 
-        //need correct
-        if ( userService.isValidLogin( userParams ) ) {
-            String last_login_time = userService.getLastLoginTime(userParams);
-            return "{\"last_login_time\"" + ":" + last_login_time + "}";
-        } else {
-            return "{\"err\":{\"err_code\":400,\"desc\":\"error\"},\"ret\":null}";
+        if ( userService.userLogin( userParams ) )
+        {
+            JsonBuilder resultJson = new JsonBuilder();
+            resultJson.append( "last_login_time", userService.getLastLoginTime(userParams) );
+            return resultJson.flip().toString();
+        }
+        else
+        {
+            throw new LMException(LMExceptionFactor.LM_ILLEGAL_PARAM_VALUE);
         }
     }
 
@@ -64,13 +77,15 @@ public class User {
                          @FormParam("token") String token) {
         UserParams userParams = new UserParams(email, last_logout_time, token);
 
-        if (userService.isValidLogout(userParams))
+        if (userService.userLogout(userParams))
         {
-            return "{\"ret\":\"true\"";
+            JsonBuilder resultJson = new JsonBuilder();
+            resultJson.append( "ret", "true" );
+            return resultJson.flip().toString();
         }
         else
         {
-            return "{\"err\":{\"err_code\":\"405\",\"desc\":\"error\"},\"ret\":null}";
+            throw new LMException( LMExceptionFactor.LM_ILLEGAL_PARAM_VALUE );
         }
     }
 
@@ -78,12 +93,18 @@ public class User {
     @GET
     @Produces({MediaType.APPLICATION_JSON})
     public String validate_email(@QueryParam("email") String email,
-                                 @QueryParam("token") String token) {
+                                 @QueryParam("token") String token)
+    {
         UserParams userParams = new UserParams(email, token);
-        if (userService.isValidEmail(userParams)) {
-            return "{\"ret\":\"true\"}";
-        } else {
-            return "{\"err\":{\"err_code\":\"401\",\"desc\":\"error\"},\"ret\":null}";
+        if (userService.validateEmail(userParams))
+        {
+            JsonBuilder resultJson = new JsonBuilder();
+            resultJson.append( "ret", "true" );
+            return resultJson.flip().toString();
+        }
+        else
+        {
+            throw new LMException( LMExceptionFactor.LM_ILLEGAL_PARAM_VALUE );
         }
     }
 
@@ -96,13 +117,15 @@ public class User {
                                   @FormParam("token") String token) {
         UserParams userParams = new UserParams(email, old_pwd, new_pwd, token);
 
-        if (userService.isValidChange(userParams))
+        if (userService.resetUserPwd(userParams))
         {
-            return "{\"ret\":\"true\"}";
+            JsonBuilder resultJson = new JsonBuilder();
+            resultJson.append( "ret", "true" );
+            return resultJson.flip().toString();
         }
         else
         {
-            return "{\"err\":{\"err_code\":\"408\",\"desc\":\"error\"},\"ret\":null}";
+            throw new LMException( LMExceptionFactor.LM_ILLEGAL_PARAM_VALUE );
         }
     }
 
@@ -112,13 +135,15 @@ public class User {
     public String forgot_password(@FormParam("email") String email,
                                  @FormParam("token") String token) {
         UserParams userParams = new UserParams(email, token);
-        if (userService.isValidEmail(userParams))
+        if (userService.forgotPwd(userParams))
         {
-            return "{\"ret\":\"true\"}";
+            JsonBuilder resultJson = new JsonBuilder();
+            resultJson.append( "ret", "true" );
+            return resultJson.flip().toString();
         }
         else
         {
-            return "{\"err\":{\"err_code\":\"408\",\"desc\":\"error\"},\"ret\":null}";
+            throw new LMException( LMExceptionFactor.LM_ILLEGAL_PARAM_VALUE );
         }
     }
 
@@ -129,10 +154,15 @@ public class User {
                                @FormParam("new_pwd") String new_pwd,
                                @FormParam("token") String token) {
         UserParams userParams = new UserParams(email, null, new_pwd, token);
-        if (userService.isSetPwdSuccess(userParams)) {
-            return "{\"ret\":\"true\"}";
-        } else {
-            return "{\"err\":{\"err_code\":\"408\",\"desc\":\"error\"},\"ret\":null}";
+        if (userService.resetForgottenPwd(userParams))
+        {
+            JsonBuilder resultJson = new JsonBuilder();
+            resultJson.append( "ret", "true" );
+            return resultJson.flip().toString();
+        }
+        else
+        {
+            throw new LMException( LMExceptionFactor.LM_FAILURE_DB_OP );
         }
     }
 }

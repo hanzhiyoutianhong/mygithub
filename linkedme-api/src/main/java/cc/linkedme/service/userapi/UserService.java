@@ -1,6 +1,7 @@
 package cc.linkedme.service.userapi;
 
 import cc.linkedme.data.model.params.UserParams;
+import com.sun.tools.internal.xjc.reader.xmlschema.bindinfo.BIConversion;
 
 import java.util.Date;
 
@@ -8,43 +9,20 @@ import java.util.Date;
  * Created by Vontroy on 16/3/19.
  */
 public interface UserService {
-    /**
-     * 登录验证
-     * @param lmUserParams
-     * @return
-     */
-    boolean isValidLogin(UserParams userParams);
 
-    /**
-     * 注册信息验证
-     * @param lmUserParams
-     * @return
-     */
-    boolean isValidRegister(UserParams userParams);
+    boolean userLogin(UserParams userParams);
 
-    /**
-     * 邮箱是否存在
-     * @param
-     * @return
-     */
-    boolean isValidEmail(UserParams userParams);
+    boolean userRegister(UserParams userParams);
 
-    /**
-     * 不存在返回false
-     * 存在返回true
-     * @param lmUserParams
-     * @return
-     */
-    boolean isValidLogout(UserParams userParams);
+    boolean validateEmail(UserParams userParams);
 
-    /**
-     * passwd reset
-     * @param lmUserParams
-     * @return
-     */
-    boolean isValidChange(UserParams userParams);
+    boolean userLogout(UserParams userParams);
 
-    boolean isSetPwdSuccess( UserParams userParams );
+    boolean resetUserPwd(UserParams userParams);
+
+    boolean forgotPwd( UserParams userParams );
+
+    boolean resetForgottenPwd( UserParams userParams );
 
     String getLastLoginTime( UserParams userParams );
 

@@ -10,6 +10,7 @@ import cc.linkedme.data.dao.util.DaoUtil;
 import cc.linkedme.data.dao.util.JdbcTemplate;
 import cc.linkedme.data.model.UserInfo;
 import cc.linkedme.data.model.params.UserParams;
+import com.sun.tools.internal.xjc.reader.xmlschema.bindinfo.BIConversion;
 import org.hibernate.annotations.Table;
 import org.springframework.dao.DataAccessException;
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
@@ -31,10 +32,10 @@ public class UserDaoImpl extends BaseDao implements UserDao
 {
     public static final String REGISTER = "REGISTER";
     public static final String USER_INFO_QUERY = "USER_INFO_QUERY";
-    public static final String EMAIL_EXISTANCE_QUERY = "EMAIL_EXISTANCE_QUERY";
+    public static final String EMAIL_EXISTENCE_QUERY = "EMAIL_EXISTENCE_QUERY";
     public static final String PWD_RESET = "PWD_RESET";
-
-    public int updateRegisterInfo(UserParams userParams)
+    public static final String LAST_LOGIN_TIME_RESET = "LAST_LOGIN_TIME_RESET";
+    public int updateUserInfo(UserParams userParams)
     {
         int res = 0;
         TableChannel tableChannel = tableContainer.getTableChannel( "userInfo", REGISTER, 0L, 0L );
@@ -52,7 +53,7 @@ public class UserDaoImpl extends BaseDao implements UserDao
         return res;
     }
 
-    public int pwdReset( UserParams userParams )
+    public int resetUserPwd( UserParams userParams )
     {
         int res = 0;
         TableChannel tableChannel = tableContainer.getTableChannel("userInfo", PWD_RESET, 0L, 0L);
@@ -63,7 +64,24 @@ public class UserDaoImpl extends BaseDao implements UserDao
         } catch( DataAccessException e ) {
             if( DaoUtil.isDuplicateInsert( e ) )
             {
-                ApiLogger.warn( new StringBuffer(128).append("Duplicate insert user, userEmail=").append(userParams.email ), e );
+                ApiLogger.warn( new StringBuffer(128).append( "Duplicate insert user, userEmail=" ).append( userParams.email ), e );
+            }
+            throw new LMException( LMExceptionFactor.LM_FAILURE_DB_OP );
+        }
+        return res;
+    }
+
+    public int resetLastLoginTime( UserParams userParams )
+    {
+        int res = 0;
+        TableChannel tableChannel = tableContainer.getTableChannel( "userInfo", LAST_LOGIN_TIME_RESET, 0L, 0L );
+        try
+        {
+            res += tableChannel.getJdbcTemplate().update( tableChannel.getSql(), new Object[] {userParams.last_logout_time, userParams.email});
+        } catch( DataAccessException e ) {
+            if( DaoUtil.isDuplicateInsert( e ) )
+            {
+                ApiLogger.warn( new StringBuffer(128).append( "Duplicate insert user, userEmail=" ).append( userParams.email ), e );
             }
             throw new LMException( LMExceptionFactor.LM_FAILURE_DB_OP );
         }
@@ -105,9 +123,9 @@ public class UserDaoImpl extends BaseDao implements UserDao
             return userInfos.get( 0 );
     }
 
-    public boolean emailExistenceQuery( String email )
+    public boolean queryEmail( String email )
     {
-        TableChannel tableChannel = tableContainer.getTableChannel( "userInfo", EMAIL_EXISTANCE_QUERY, 0L, 0L );
+        TableChannel tableChannel = tableContainer.getTableChannel( "userInfo", EMAIL_EXISTENCE_QUERY, 0L, 0L );
         JdbcTemplate jdbcTemplate = tableChannel.getJdbcTemplate();
         Object[] values = {email};
 
