@@ -61,7 +61,9 @@ public class AppDaoImpl extends BaseDao implements AppDao {
                 app.setAppId( resultSet.getLong( "id" ) );
                 app.setAppName( resultSet.getString( "app_name" ) );
                 app.setAppLiveKey( resultSet.getString( "app_live_key" ) );
+                app.setAppLiveSecret( resultSet.getString( "app_live_secret" ) );
                 app.setAppTestKey( resultSet.getString( "app_test_key" ) );
+                app.setAppTestSecret( resultSet.getString( "app_test_secret" ) );
                 app.setIosUriScheme( resultSet.getString( "ios_uri_scheme" ) );
                 app.setIosNotUrl( resultSet.getString( "ios_not_url" ) );
                 app.setIosStoreUrl( resultSet.getString( "ios_store_url" ) );
@@ -116,7 +118,9 @@ public class AppDaoImpl extends BaseDao implements AppDao {
                 app.setUserId( resultSet.getLong( "user_id" ) );
                 app.setAppName( resultSet.getString( "app_name" ) );
                 app.setAppLiveKey( resultSet.getString( "app_live_key" ) );
+                app.setAppLiveSecret( resultSet.getString( "app_live_secret" ) );
                 app.setAppTestKey( resultSet.getString( "app_test_key" ) );
+                app.setAppTestSecret( resultSet.getString( "app_test_secret" ) );
                 app.setIosUriScheme( resultSet.getString( "ios_uri_scheme" ) );
                 app.setIosNotUrl( resultSet.getString( "ios_not_url" ) );
                 app.setIosStoreUrl( resultSet.getString( "ios_store_url" ) );
@@ -150,7 +154,7 @@ public class AppDaoImpl extends BaseDao implements AppDao {
         TableChannel tableChannel = tableContainer.getTableChannel( "appInfo", UPDATE_APP_BY_APPID, appParams.userId, appParams.userId );
         JdbcTemplate jdbcTemplate = tableChannel.getJdbcTemplate();
 
-        Object []values = {appParams.appName, appParams.appLiveKey, appParams.appTestKey, appParams.iosUriScheme, appParams.iosNotUrl, appParams.iosStoreUrl, appParams.iosCustomUrl, appParams.iosBundleId, appParams.iosPrefix, appParams.iosTeamId, appParams.androidUriScheme, appParams.androidNotUrl, appParams.googlePlayUrl, appParams.androidCustomUrl, appParams.androidPackageName, appParams.androidPrefix, appParams.iosAndroidFlag, appParams.desktopUrl, appParams.appId};
+        Object []values = {appParams.appName, appParams.appLiveKey, appParams.appLiveSecret, appParams.appTestKey, appParams.appTestSecret, appParams.iosUriScheme, appParams.iosNotUrl, appParams.iosStoreUrl, appParams.iosCustomUrl, appParams.iosBundleId, appParams.iosPrefix, appParams.iosTeamId, appParams.androidUriScheme, appParams.androidNotUrl, appParams.googlePlayUrl, appParams.androidCustomUrl, appParams.androidPackageName, appParams.androidPrefix, appParams.iosAndroidFlag, appParams.desktopUrl, appParams.appId};
 
         try
         {

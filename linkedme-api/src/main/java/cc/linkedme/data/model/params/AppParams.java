@@ -8,7 +8,9 @@ public class AppParams {
     public long userId;
     public String appName;
     public String appLiveKey;
+    public String appLiveSecret;
     public String appTestKey;
+    public String appTestSecret;
 
     public String iosUriScheme;
     public String iosNotUrl;

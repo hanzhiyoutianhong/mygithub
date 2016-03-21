@@ -95,10 +95,10 @@ public class App {
     }
 
     @Path("/query_app")
-    @POST
+    @GET
     @Produces({MediaType.APPLICATION_JSON})
-    public String queryApp(@FormParam("app_id") long app_id,
-                           @FormParam("token") String token)
+    public String queryApp(@QueryParam("app_id") long app_id,
+                           @QueryParam("token") String token)
     {
         if( app_id <= 0 )
         {
@@ -110,7 +110,7 @@ public class App {
 
         AppInfo appInfo = appService.queryApp(appParams);
 
-        return appInfo.toJson().toString();
+        return appInfo.toJson();
     }
 
     @Path("/update_app")
@@ -119,7 +119,9 @@ public class App {
     public String updateApp( @FormParam("app_id") long app_id,
                              @FormParam("app_name") String app_name,
                              @FormParam("app_live_key") String app_live_key,
+                             @FormParam("app_live_secret") String app_live_secret,
                              @FormParam("app_test_key") String app_test_key,
+                             @FormParam("app_test_secret") String app_test_secret,
                              @FormParam("ios_uri_scheme") String ios_uri_scheme,
                              @FormParam("ios_not_url") String ios_not_url,
                              @FormParam("ios_store_url") String ios_store_url,
@@ -143,7 +145,9 @@ public class App {
         appParams.appId = app_id;
         appParams.appName = app_name;
         appParams.appLiveKey = app_live_key;
+        appParams.appLiveSecret = app_live_secret;
         appParams.appTestKey = app_test_key;
+        appParams.appTestSecret = app_test_secret;
         appParams.iosUriScheme = ios_uri_scheme;
         appParams.iosNotUrl = ios_not_url;
         appParams.iosStoreUrl = ios_store_url;

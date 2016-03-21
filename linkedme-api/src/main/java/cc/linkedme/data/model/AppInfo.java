@@ -1,6 +1,10 @@
 package cc.linkedme.data.model;
 
 import cc.linkedme.commons.json.JsonBuilder;
+import net.sf.json.JSON;
+import net.sf.json.JSONObject;
+
+import java.util.ArrayList;
 
 /**
  * Created by LinkedME01 on 16/3/18.
@@ -10,7 +14,9 @@ public class AppInfo {
     private long userId;
     private String appName;
     private String appLiveKey;
+    private String appLiveSecret;
     private String appTestKey;
+    private String appTestSecret;
 
     private String iosUriScheme;
     private String iosNotUrl;
@@ -64,12 +70,32 @@ public class AppInfo {
         this.appLiveKey = appLiveKey;
     }
 
+    public void setAppLiveSecret( String appLiveSecret )
+    {
+        this.appLiveSecret = appLiveSecret;
+    }
+
+    public String getAppLiveSecret()
+    {
+        return appLiveSecret;
+    }
+
     public String getAppTestKey() {
         return appTestKey;
     }
 
     public void setAppTestKey(String appTestKey) {
         this.appTestKey = appTestKey;
+    }
+
+    public void setAppTestSecret( String appTestSecret )
+    {
+        this.appTestSecret = appTestSecret;
+    }
+
+    public String getAppTestSecret()
+    {
+        return appTestSecret;
     }
 
     public void setIosUriScheme( String iosUriScheme )
@@ -206,108 +232,53 @@ public class AppInfo {
         this.desktopUrl = desktopUrl;
     }
 
-
-
-
-
-
-
-    public String toJson() {
-        JsonBuilder jb = new JsonBuilder();
-        jb.append("app_id", appId);
-        jb.append("user_id", userId);
-        jb.append("app_name", appName);
-
-        if( appLiveKey != null )
-        {
-            jb.append( "app_live_key", appLiveKey );
-        }
-
-        if( appTestKey != null )
-        {
-            jb.append( "app_test_key", appTestKey );
-        }
-
-        if( iosUriScheme != null )
-        {
-            jb.append( "ios_uri_scheme", iosUriScheme );
-        }
-
-        if( iosNotUrl != null )
-        {
-            jb.append( "ios_not_url", iosNotUrl );
-        }
-
-        if( iosStoreUrl != null )
-        {
-            jb.append( "ios_store_url", iosStoreUrl );
-        }
-
-        if( iosCustomUrl != null )
-        {
-            jb.append( "ios_custom_url", iosCustomUrl );
-        }
-
-        if( iosBundleId != null )
-        {
-            jb.append( "ios_bundle_id", iosBundleId );
-        }
-
-        if( iosPrefix != null )
-        {
-            jb.append( "ios_prefix", iosPrefix );
-        }
-
-        if( iosTeamId != null )
-        {
-            jb.append( "ios_team_id", iosTeamId );
-        }
-
-        if( androidUriScheme != null )
-        {
-            jb.append( "android_uri_scheme", androidUriScheme );
-        }
-
-        if( androidNotUrl != null )
-        {
-            jb.append( "android_not_url", androidNotUrl );
-        }
-
-        if( googlePlayUrl != null )
-        {
-            jb.append( "google_play_url", googlePlayUrl );
-        }
-
-        if( androidCustomUrl != null )
-        {
-            jb.append( "android_custom_url", androidCustomUrl );
-        }
-
-        if( androidPackageName != null )
-        {
-            jb.append( "android_package_name", androidPackageName );
-        }
-
-        if( androidPrefix != null )
-        {
-            jb.append( "android_prefix", androidPrefix );
-        }
-
+    public String toJson()
+    {
         int has_ios = ( iosAndroidFlag & 8 ) >> 3;
         int enable_ulink = ( iosAndroidFlag & 4 ) >> 2;
         int has_android = ( iosAndroidFlag & 2 ) >> 1;
         int enable_applinks = iosAndroidFlag & 1;
-        jb.append( "has_ios", has_ios );
-        jb.append( "enable_ulink", enable_ulink );
-        jb.append( "has_android", has_android );
-        jb.append( "enable_applinks", enable_applinks );
 
-        if( desktopUrl != null )
-        {
-            jb.append( "desktop_url", desktopUrl );
-        }
+        JSONObject ios = new JSONObject();
+        ios.put( "has_ios", has_ios );
+        ios.put( "uri_scheme", iosUriScheme );
+        ios.put( "search_option", iosNotUrl );
+        ios.put( "apple_store_url", iosStoreUrl );
+        ios.put( "custom_url", iosCustomUrl );
+        ios.put( "enable_ulink", enable_ulink );
+        ios.put( "bundle_id", iosBundleId );
+        ios.put( "app_prefix", iosPrefix );
 
-        return jb.flip().toString();
+        JSONObject android = new JSONObject();
+        android.put( "has_android", has_android );
+        android.put( "uri_scheme", androidUriScheme );
+        android.put( "search_option", androidNotUrl );
+        android.put( "google_play_url", googlePlayUrl );
+        android.put( "custom_apk_url", androidCustomUrl );
+        android.put( "package_name", androidPackageName );
+        android.put( "enable_applinks", enable_applinks );
+        android.put( "sha256_fingerprints", androidPrefix );
+
+        JSONObject desktop = new JSONObject();
+        desktop.put( "qc_code", desktopUrl );
+
+
+        JSONObject link_setting = new JSONObject();
+        link_setting.put( "ios", ios );
+        link_setting.put( "android", android );
+        link_setting.put( "desktop", desktop );
+
+
+
+        JSONObject jsonObject = new JSONObject();
+        jsonObject.put( "appname",appName );
+        jsonObject.put( "lkme_test_key", appTestKey );
+        jsonObject.put( "lkme_test_secret", appTestSecret );
+        jsonObject.put( "lkme_live_key", appLiveKey );
+        jsonObject.put( "lkme_live_secret", appLiveSecret );
+        jsonObject.put( "link_setting", link_setting );
+
+        return jsonObject.toString();
     }
 
 }
