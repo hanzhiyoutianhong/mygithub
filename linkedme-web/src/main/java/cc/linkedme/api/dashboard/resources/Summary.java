@@ -44,7 +44,7 @@ public class Summary {
                           @QueryParam("orderby") String orderby) {
 
         SummaryDeepLinkParams summaryDeepLinkParams = new SummaryDeepLinkParams(appid, start_date, end_date, feature, campaign, stage, channel, tag, unique, return_number, skip_number, orderby);
-        String result = summaryService.getDeepLinkSummary();
+        String result = summaryService.getDeepLinkSummary( summaryDeepLinkParams );
         return result;
     }
 }

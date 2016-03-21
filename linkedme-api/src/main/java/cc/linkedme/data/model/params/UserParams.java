@@ -13,7 +13,6 @@ public class UserParams {
     public String old_pwd;
     public String new_pwd;
     public String token;
-    public String register_time;
     public String current_login_time;
 
 
