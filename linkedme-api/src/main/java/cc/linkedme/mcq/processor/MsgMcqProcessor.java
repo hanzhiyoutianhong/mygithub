@@ -4,9 +4,12 @@ import cc.linkedme.commons.log.ApiLogger;
 import cc.linkedme.commons.mcq.reader.McqProcessor;
 import cc.linkedme.commons.util.ApiUtil;
 import cc.linkedme.commons.util.UseTimeStasticsMonitor;
+import cc.linkedme.data.model.ClientInfo;
 import cc.linkedme.data.model.DeepLink;
 import cc.linkedme.mcq.MsgUtils;
 import cc.linkedme.service.DeepLinkService;
+import cc.linkedme.service.sdkapi.ClientService;
+import net.sf.json.JSONException;
 import net.sf.json.JSONObject;
 
 import javax.annotation.Resource;
@@ -32,6 +35,9 @@ public class MsgMcqProcessor extends McqProcessor {
 
     @Resource
     private DeepLinkService deepLinkService;
+
+    @Resource
+    private ClientService clientService;
 
 
     // 处理收到的消息
@@ -64,17 +70,19 @@ public class MsgMcqProcessor extends McqProcessor {
     }
 
     public int process(String mcqMsg) throws Exception {
+        int result = 0;
         // 根据不同的消息作不同的处理
         JSONObject msgJson = JSONObject.fromObject(mcqMsg);
         int type = msgJson.getInt("type");
         JSONObject info = msgJson.getJSONObject("info");
         if (MsgUtils.isDeeplinkMsgType(type)) {
             // deepLink消息
-            processDeepLinkMsg(type, info);
-        } else {
-            //
+            result = processDeepLinkMsg(type, info);
+        } else if(MsgUtils.isClientMsgType(type)) {
+            // client消息(安装app)
+            result = processClientMsg(type, info);
         }
-        return 0;
+        return result;
     }
 
     private int processDeepLinkMsg(int type, JSONObject info) {
@@ -82,7 +90,7 @@ public class MsgMcqProcessor extends McqProcessor {
         DeepLink deepLink = MsgUtils.toDeepLinkObj(info);
         if (type == 11) {
             // add deepLink
-            addDeepLink(deepLink);
+            result = addDeepLink(deepLink);
         } else if (type == 12) {
             // delete deepLink
         } else if (type == 13) {
@@ -91,7 +99,21 @@ public class MsgMcqProcessor extends McqProcessor {
         return result;
     }
 
-    protected int addDeepLink(DeepLink deepLink) {
+    private int processClientMsg(int type, JSONObject info) {
+        int result = ApiUtil.MQ_PROCESS_ABORT;
+        ClientInfo clientInfo = MsgUtils.toClientInfoObj(info);
+        long deepLinkId = info.getLong("deeplink_id");
+        if(type == 21) {
+            result = addClint(clientInfo, deepLinkId);
+        }else if(type == 22) {
+
+        }else if(type == 23) {
+
+        }
+        return result;
+    }
+
+    private int addDeepLink(DeepLink deepLink) {
         int result = 0;
         if (updateDb) {
             result = deepLinkService.addDeepLink(deepLink);
@@ -99,6 +121,17 @@ public class MsgMcqProcessor extends McqProcessor {
 
         if (updateMc) {
             deepLinkService.addDeepLinkToCache(deepLink);
+        }
+        return result;
+    }
+
+    private int addClint(ClientInfo clientInfo, long deepLinkId) {
+        int result = 0;
+        if(updateDb) {
+            result = clientService.addClient(clientInfo, deepLinkId);
+        }
+        if(updateMc) {
+
         }
         return result;
     }

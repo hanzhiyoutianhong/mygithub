@@ -7,6 +7,7 @@
 
 
     <bean id="clientMsgPusher" class="cc.linkedme.mcq.ClientMsgPusher" />
+    <bean id="clientService" class="cc.linkedme.service.sdkapi.impl.ClientServiceImpl" />
 
     <bean id="clientDao" class="cc.linkedme.dao.sdkapi.impl.ClientDaoImpl">
         <property name="tableContainer">
@@ -23,14 +24,14 @@
     <bean id="clientInfo" class="cc.linkedme.data.dao.strategy.TableItem">
         <property name="itemName" value="clientInfo"/>
         <property name="dbNamePrefix" value="client"/>
-        <property name="dbCount" value="1"/>
+        <property name="dbCount" value="4"/>
 
         <property name="tableNamePrefix" value="client_info"/>
-        <property name="tableCount" value="1"/>
+        <property name="tableCount" value="8"/>
         <property name="sqls">
             <map>
                 <entry key="ADD_CLIENT"
-                       value="insert into $db$.$tb$ (identity_id, linkedme_key, device_id, device_type, device_brand, device_model, has_bluetooth, has_nfc, has_sim, os, os_version, screen_dpi, screen_height, screen_width, is_wifi, is_referable, lat_val, carrier, app_version, iOS_team_id, iOS_bundle_id, register_time, last_update_time) values(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, now(), now())"/>
+                       value="insert into $db$.$tb$ (identity_id, linkedme_key, device_id, device_type, device_model, device_brand, has_blutooth, has_nfc, has_sim, os, os_version, screen_dpi, screen_height, screen_width, is_wifi, is_referable, lat_val, carrier, app_version, sdk_update, ios_team_id, ios_bundle_id, timestamp) values(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, now())"/>
                 <entry key="UPDATE_APP"
                        value="update $db$.$tb$ set vflag = ?, mflag=? where status_id = ? and vflag in (0,6,7) and cmt_id = ?"/>
                 <entry key="GET_APPS_BY_USERID" value="select id, app_name, uri_scheme,  path_prefix, app_live_key, app_test_key, android_not_url, package_name, android_custom_url, ios_store_url, ios_custom_url, ios_not_url, ios_bundle_id, ios_team_id, desktop_url from $db$.$tb$ where user_id = ?"/>

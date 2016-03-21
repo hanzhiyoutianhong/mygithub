@@ -51,9 +51,7 @@ public class MsgUtils {
     }
 
 
-    public static String toClientMsgJson(ClientInfo clientInfo) {
-        JsonBuilder clientMsg = new JsonBuilder();
-        clientMsg.append("type", 21);
+    public static JsonBuilder toClientMsgJson(ClientInfo clientInfo) {
         JsonBuilder info = new JsonBuilder();
         info.append("identityId", clientInfo.getIdentityId());
         info.append("deviceId", clientInfo.getDeviceId());
@@ -76,34 +74,26 @@ public class MsgUtils {
         info.append("sdkVersion", clientInfo.getSdkUpdate());
         info.append("iOSTeamId", clientInfo.getIosTeamId());
         info.append("iOSBundleId", clientInfo.getIosBundleId());
-        clientMsg.append("info", info.flip());
-        return clientMsg.flip().toString();
+        return info;
     }
 
-    public static ClientInfo  toClientInfoObj(JSONObject clientMsg) {
+    public static ClientInfo toClientInfoObj(JSONObject clientMsg) {
         ClientInfo clientInfo = new ClientInfo();
-        int temp = 0;
         clientInfo.setIdentityId(clientMsg.getLong("identityId"));
         clientInfo.setDeviceId(clientMsg.getString("deviceId"));
-        temp = clientMsg.getInt("deviceType");
-        clientInfo.setDeviceType((byte)temp);
+        clientInfo.setDeviceType(clientMsg.getInt("deviceType"));
         clientInfo.setDeviceModel(clientMsg.getString("deviceModel"));
         clientInfo.setDeviceBrand(clientMsg.getString("deviceBrand"));
-        temp = clientMsg.getInt("hasBluetooth");
-        clientInfo.setHasBlutooth((byte)temp);
-        temp = clientMsg.getInt("hasNfc");
-        clientInfo.setHasNfc((byte)temp);
-        temp = clientMsg.getInt("hasSim");
-        clientInfo.setHasSim((byte)temp);
+        clientInfo.setHasBlutooth(clientMsg.getBoolean("hasBluetooth"));
+        clientInfo.setHasNfc(clientMsg.getBoolean("hasNfc"));
+        clientInfo.setHasSim(clientMsg.getBoolean("hasSim"));
         clientInfo.setOs(clientMsg.getString("os"));
         clientInfo.setOsVersion(clientMsg.getString("osVersion"));
         clientInfo.setScreenDpi(clientMsg.getInt("screenDpi"));
         clientInfo.setScreenHeight(clientMsg.getInt("screenHeight"));
         clientInfo.setScreenWidth(clientMsg.getInt("screenWidth"));
-        temp = clientMsg.getInt("isWifi");
-        clientInfo.setIsWifi((byte)temp);
-        temp = clientMsg.getInt("isReferable");
-        clientInfo.setIsReferable((byte)temp);
+        clientInfo.setIsWifi(clientMsg.getBoolean("isWifi"));
+        clientInfo.setIsReferable(clientMsg.getBoolean("isReferable"));
         clientInfo.setLatVal(clientMsg.getString("latVal"));
         clientInfo.setCarrier(clientMsg.getString("carrier"));
         clientInfo.setAppVersion(clientMsg.getString("appVersion"));
@@ -115,6 +105,11 @@ public class MsgUtils {
     public static boolean isDeeplinkMsgType(int type) {
         return (McqMsgType.ADD_DEEPLINK.getType() == type || McqMsgType.UPDATE_DEEPLINK.getType() == type
                 || McqMsgType.DELETE_DEEPLINK.getType() == type);
+    }
+
+    public static boolean isClientMsgType(int type) {
+        return (McqMsgType.ADD_CLIENT.getType() == type || McqMsgType.UPDATE_CLIENT.getType() == type
+                || McqMsgType.DELETE_CLIENT.getType() == type);
     }
 
 }
