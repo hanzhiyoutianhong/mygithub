@@ -33,28 +33,80 @@ import cc.linkedme.commons.shard.ShardingSupport;
 import cc.linkedme.commons.thread.ExecutorServiceUtil;
 import cc.linkedme.commons.thread.TraceableThreadExecutor;
 
-@Path("test")
+@Path("v1")
 @Component
 public class Test {
 
     private static Switcher testSwitcher =
             SwitcherManagerFactoryLoader.getSwitcherManagerFactory().getSwitcherManager().registerSwitcher("linkedme.test.enable", true);
 
-    @Path("/getJson")
+    @Path("/getJson.json")
     @GET
-    @Produces({MediaType.APPLICATION_JSON})
-    public String getTestJson(@QueryParam("input") String param, @QueryParam("input1") String param1) {
-        if (testSwitcher.isOpen()) {
-            return "{\"hello\":\"linkedME\",\"input\":\"" + param + "\"input1:switcher open\":\"" + param1 + "\"}";
-        }
-        return "{\"hello\":\"linkedME\",\"input\":\"" + param + "\"input1\":\"" + param1 + "\"}";
+    @Produces({"application/json"})
+    public String getTestJson(@QueryParam("input") String param) {
+        return "{\"hello\":\"linkedME\",\"input\":\"" + param + "\"}";
     }
 
-    @Path("/update")
+    @Path("/update.json")
     @POST
-    @Produces({MediaType.APPLICATION_JSON})
+    @Produces({"application/json"})
     public String update(@FormParam("input") String param) {
         return "{\"hello\":\"linkedME\",\"data\":\"" + param + "\"}";
+    }
+
+    @Path("install")
+    @POST
+    @Produces({"application/json"})
+    public String getInstall(@FormParam("device_id") String device_id, @FormParam("device_type") int device_type, @FormParam("device_brand") String device_brand, @FormParam("has_bluetooth") boolean has_bluetooth, @FormParam("has_nfc") boolean has_nfc, @FormParam("has_sin") boolean has_sin, @FormParam("os") String os, @FormParam("os_version") String os_version, @FormParam("screen_dpi") int screen_dpi, @FormParam("screen_height") int screen_height, @FormParam("screen_width") int screen_width, @FormParam("is_wifi") boolean is_wifi, @FormParam("is_referrable") boolean is_referrable, @FormParam("is_debug") boolean is_debug, @FormParam("lat_val") int lat_val, @FormParam("carrier") String carrier, @FormParam("app_version") String app_version, @FormParam("sdk_update") int sdk_update, @FormParam("sdk_version") String sdk_version, @FormParam("ios_team_id") String ios_team_id, @FormParam("ios_bundle_id") String ios_bundle_id, @FormParam("retry_times") int retry_times, @FormParam("linkedme_key") String linkedme_key, @FormParam("sign") String sign) {
+        return "{\"session_id\":\"234847414514735930\",\"identity_id\":\"234847414580711796\",\"device_fingerprint_id\":\"234847414538808942\",\"browser_fingerprint_id\":null, \"link\":\"https://lkme.cc/a/key_test_hdcBLUy1xZ1JD0tKg7qrLcgirFmPPVJc?%24identity_id=234847414580711796\",\"params\":{},\"is_first_session\":true,\"clicked_linkedme_link\":true}";
+    }
+
+    @Path("open")
+    @POST
+    @Produces({"application/json"})
+    public String getOpen(@FormParam("device_fingerprint_id") String device_fingerprint_id, @FormParam("identity_id") String identity_id, @FormParam("is_referrable") boolean is_referrable, @FormParam("app_version") String app_version, @FormParam("os_version") String os_version, @FormParam("sdk_update") int sdk_update, @FormParam("os") String os, @FormParam("is_debug") boolean is_debug, @FormParam("lat_val") int lat_val, @FormParam("sdk_version") String sdk_version, @FormParam("retry_times") int retry_times, @FormParam("linkedme_key") String linkedme_key, @FormParam("sign") String sign) {
+        return "{\"session_id\":\"234847414514735930\",\"identity_id\":\"234847414580711796\",\"device_fingerprint_id\":\"234847414538808942\",\"browser_fingerprint_id\":null,\"link\":\"https://lkme.cc/a/key_test_hdcBLUy1xZ1JD0tKg7qrLcgirFmPPVJc?%24identity_id=234847414580711796\",\"params\":{},\"is_first_session\":true,\"clicked_linkedme_link\":true}";
+    }
+
+    @Path("url")
+    @POST
+    @Produces({"application/json"})
+    public String getUrl(@FormParam("identity_id") String identity_id) {
+        return "{\"url\":\"https://lkme.cc/Ojqd/C2nn7w)Mvr\"}";
+    }
+
+    @Path("close")
+    @POST
+    @Produces({"application/json"})
+    public String getClose(@FormParam("device_fingerprint_id") String device_fingerprint_id, @FormParam("identity_id") String identity_id, @FormParam("session_id") String session_id, @FormParam("sdk_version") String sdk_version, @FormParam("retry_times") int retry_times, @FormParam("linkedme_key") String linkedme_key, @FormParam("sign") String sign) {
+        return "{\"statusCode\":200}";
+    }
+
+    @Path("profile")
+    @POST
+    @Produces({"application/json"})
+    public String getProfile( @FormParam("identity_id") String identity_id,
+                              @FormParam("device_fingerprint_id") String device_fingerprint_id,
+                              @FormParam("session_id") String session_id,
+                              @FormParam("identity") String identity,
+                              @FormParam("sdk_version") String sdk_version,
+                              @FormParam("retry_times") int retry_times,
+                              @FormParam("linkedme_key") String linkedme_key )
+    {
+        return "{\"session_id\":\"236130579389750418\",\"link_click_id\":\"189949600243664477\",\"identity_id\":\"189922892383798607\",\"link\":\"https://lkme.cc/a/key_test_hdcBLUy1xZ1JD0tKg7qrLcgirFmPPVJc?%24identity_id=189922892383798607\"}";
+    }
+
+    @Path("logout")
+    @POST
+    @Produces({"application/json"})
+    public String getLogout( @FormParam("identity_id") String identity_id,
+                             @FormParam("device_fingerprint_id") String device_fingerprint_id,
+                             @FormParam("session_id") String session_id,
+                             @FormParam("sdk_version") String sdk_version,
+                             @FormParam("retry_times") int retry_times,
+                             @FormParam("linkedme_key") String linkedme_key )
+    {
+        return "{\"session_id\":\"236136491359116418\",\"identity_id\":\"236136491259036703\",\"link\":\"https://lkme.cc/a/key_test_hdcBLUy1xZ1JD0tKg7qrLcgirFmPPVJc?%24identity_id=236136491259036703\"}";
     }
 
     public static void main(String[] args) {

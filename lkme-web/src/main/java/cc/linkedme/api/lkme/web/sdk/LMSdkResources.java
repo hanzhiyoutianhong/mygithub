@@ -24,7 +24,7 @@ import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 
-@Path("v1")
+@Path("sdk")
 @Component
 public class LMSdkResources {
 

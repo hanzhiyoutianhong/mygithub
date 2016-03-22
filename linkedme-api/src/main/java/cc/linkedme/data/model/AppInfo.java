@@ -1,100 +1,65 @@
 package cc.linkedme.data.model;
 
 import cc.linkedme.commons.json.JsonBuilder;
+import net.sf.json.JSON;
+import net.sf.json.JSONObject;
+
+import java.util.ArrayList;
 
 /**
  * Created by LinkedME01 on 16/3/18.
  */
 public class AppInfo {
-    private long appid;
-    private String appName;
+    private long appId;
     private long userId;
-    private String uriScheme;
-    private String pathPrefix;
+    private String appName;
     private String appLiveKey;
+    private String appLiveSecret;
     private String appTestKey;
-    private String androidNotUrl;
-    private String packageName;
-    private String androidCustomUrl;
+    private String appTestSecret;
+
+    private String iosUriScheme;
+    private String iosNotUrl;
     private String iosStoreUrl;
     private String iosCustomUrl;
-    private String iosNotUrl;
     private String iosBundleId;
+    private String iosPrefix;
     private String iosTeamId;
+
+    private String androidUriScheme;
+    private String androidNotUrl;
+    private String googlePlayUrl;
+    private String androidCustomUrl;
+    private String androidPackageName;
+    private String androidPrefix;
+    private int iosAndroidFlag;
+
     private String desktopUrl;
 
-    public String toJson() {
-        JsonBuilder jb = new JsonBuilder();
-        jb.append("appid", appid);
-        jb.append("app_name", appName);
-        jb.append("user_id", userId);
-
-        if (uriScheme != null) {
-            jb.append("uri_scheme", uriScheme);
-        }
-        if (pathPrefix != null) {
-
-            jb.append("path_prefix", pathPrefix);
-        }
-        if (appLiveKey != null) {
-
-            jb.append("app_live_key", appLiveKey);
-        }
-        if (appTestKey != null) {
-            jb.append("app_test_key", appTestKey);
-        }
-        if (androidNotUrl != null) {
-
-            jb.append("android_not_url", androidNotUrl);
-        }
-        if (packageName != null) {
-
-            jb.append("package_name", packageName);
-        }
-        if (androidCustomUrl != null) {
-
-            jb.append("android_custom_url", androidCustomUrl);
-        }
-        if (iosStoreUrl != null) {
-
-            jb.append("ios_store_url", iosStoreUrl);
-        }
-        if (iosCustomUrl != null) {
-
-            jb.append("ios_custom_url", iosCustomUrl);
-        }
-        if (iosNotUrl != null) {
-            jb.append("ios_not_url", iosNotUrl);
-        }
-        if (iosBundleId != null) {
-
-            jb.append("ios_bundle_id", iosBundleId);
-        }
-        if (iosTeamId != null) {
-
-            jb.append("ios_team_id", iosTeamId);
-        }
-        if (desktopUrl != null) {
-
-            jb.append("desktop_url", desktopUrl);
-        }
-        return jb.flip().toString();
+    public void setAppId( long appId )
+    {
+        this.appId = appId;
     }
 
-    public String getUriScheme() {
-        return uriScheme;
+    public long getAppId()
+    {
+        return appId;
     }
 
-    public void setUriScheme(String uriScheme) {
-        this.uriScheme = uriScheme;
+    public long getUserId() {
+        return userId;
     }
 
-    public String getPathPrefix() {
-        return pathPrefix;
+    public void setUserId(long userId) {
+        this.userId = userId;
     }
 
-    public void setPathPrefix(String pathPrefix) {
-        this.pathPrefix = pathPrefix;
+    public String getAppName() {
+        return appName;
+    }
+
+    public void setAppName(String appName) {
+        this.appName = appName;
     }
 
     public String getAppLiveKey() {
@@ -105,6 +70,16 @@ public class AppInfo {
         this.appLiveKey = appLiveKey;
     }
 
+    public void setAppLiveSecret( String appLiveSecret )
+    {
+        this.appLiveSecret = appLiveSecret;
+    }
+
+    public String getAppLiveSecret()
+    {
+        return appLiveSecret;
+    }
+
     public String getAppTestKey() {
         return appTestKey;
     }
@@ -113,28 +88,32 @@ public class AppInfo {
         this.appTestKey = appTestKey;
     }
 
-    public String getAndroidNotUrl() {
-        return androidNotUrl;
+    public void setAppTestSecret( String appTestSecret )
+    {
+        this.appTestSecret = appTestSecret;
     }
 
-    public void setAndroidNotUrl(String androidNotUrl) {
-        this.androidNotUrl = androidNotUrl;
+    public String getAppTestSecret()
+    {
+        return appTestSecret;
     }
 
-    public String getPackageName() {
-        return packageName;
+    public void setIosUriScheme( String iosUriScheme )
+    {
+        this.iosUriScheme = iosUriScheme;
     }
 
-    public void setPackageName(String packageName) {
-        this.packageName = packageName;
+    public String getIosUriScheme()
+    {
+        return iosUriScheme;
     }
 
-    public String getAndroidCustomUrl() {
-        return androidCustomUrl;
+    public String getIosNotUrl() {
+        return iosNotUrl;
     }
 
-    public void setAndroidCustomUrl(String androidCustomUrl) {
-        this.androidCustomUrl = androidCustomUrl;
+    public void setIosNotUrl(String iosNotUrl) {
+        this.iosNotUrl = iosNotUrl;
     }
 
     public String getIosStoreUrl() {
@@ -153,20 +132,22 @@ public class AppInfo {
         this.iosCustomUrl = iosCustomUrl;
     }
 
-    public String getIosNotUrl() {
-        return iosNotUrl;
-    }
-
-    public void setIosNotUrl(String iosNotUrl) {
-        this.iosNotUrl = iosNotUrl;
-    }
-
     public String getIosBundleId() {
         return iosBundleId;
     }
 
     public void setIosBundleId(String iosBundleId) {
         this.iosBundleId = iosBundleId;
+    }
+
+    public void setIosPrefix( String iosPrefix )
+    {
+        this.iosPrefix = iosPrefix;
+    }
+
+    public String getIosPrefix()
+    {
+        return iosPrefix;
     }
 
     public String getIosTeamId() {
@@ -177,6 +158,72 @@ public class AppInfo {
         this.iosTeamId = iosTeamId;
     }
 
+    public void setAndroidUriScheme( String androidUriScheme )
+    {
+        this.androidUriScheme = androidUriScheme;
+    }
+
+    public String getAndroidUriScheme()
+    {
+        return androidUriScheme;
+    }
+
+    public String getAndroidNotUrl() {
+        return androidNotUrl;
+    }
+
+    public void setAndroidNotUrl(String androidNotUrl) {
+        this.androidNotUrl = androidNotUrl;
+    }
+
+    public void setGooglePlayUrl( String googlePlayUrl )
+    {
+        this.googlePlayUrl = googlePlayUrl;
+    }
+
+    public String getGooglePlayUrl()
+    {
+        return googlePlayUrl;
+    }
+
+    public String getAndroidCustomUrl() {
+        return androidCustomUrl;
+    }
+
+    public void setAndroidCustomUrl(String androidCustomUrl) {
+        this.androidCustomUrl = androidCustomUrl;
+    }
+
+    public void setAndroidPackageName( String androidPackageName )
+    {
+        this.androidPackageName = androidPackageName;
+    }
+
+    public String getAndroidPackageName()
+    {
+        return androidPackageName;
+    }
+
+    public void setAndroidPrefix( String androidPrefix )
+    {
+        this.androidPrefix = androidPrefix;
+    }
+
+    public String getAndroidPrefix()
+    {
+        return androidPrefix;
+    }
+
+    public void setIosAndroidFlag( int iosAndroidFlag )
+    {
+        this.iosAndroidFlag = iosAndroidFlag;
+    }
+
+    public int getIosAndroidFlag()
+    {
+        return iosAndroidFlag;
+    }
+
     public String getDesktopUrl() {
         return desktopUrl;
     }
@@ -185,28 +232,54 @@ public class AppInfo {
         this.desktopUrl = desktopUrl;
     }
 
-    public long getAppid() {
-        return appid;
-    }
+    public String toJson()
+    {
+        int has_ios = ( iosAndroidFlag & 8 ) >> 3;
+        int enable_ulink = ( iosAndroidFlag & 4 ) >> 2;
+        int has_android = ( iosAndroidFlag & 2 ) >> 1;
+        int enable_applinks = iosAndroidFlag & 1;
 
-    public void setAppid(long appid) {
-        this.appid = appid;
-    }
+        JSONObject ios = new JSONObject();
+        ios.put( "has_ios", has_ios );
+        ios.put( "uri_scheme", iosUriScheme );
+        ios.put( "search_option", iosNotUrl );
+        ios.put( "apple_store_url", iosStoreUrl );
+        ios.put( "custom_url", iosCustomUrl );
+        ios.put( "enable_ulink", enable_ulink );
+        ios.put( "bundle_id", iosBundleId );
+        ios.put( "app_prefix", iosPrefix );
 
-    public String getAppName() {
-        return appName;
-    }
+        JSONObject android = new JSONObject();
+        android.put( "has_android", has_android );
+        android.put( "uri_scheme", androidUriScheme );
+        android.put( "search_option", androidNotUrl );
+        android.put( "google_play_url", googlePlayUrl );
+        android.put( "custom_apk_url", androidCustomUrl );
+        android.put( "package_name", androidPackageName );
+        android.put( "enable_applinks", enable_applinks );
+        android.put( "sha256_fingerprints", androidPrefix );
 
-    public void setAppName(String appName) {
-        this.appName = appName;
-    }
+        JSONObject desktop = new JSONObject();
+        desktop.put( "qc_code", desktopUrl );
 
-    public long getUserId() {
-        return userId;
-    }
 
-    public void setUserId(long userId) {
-        this.userId = userId;
+        JSONObject link_setting = new JSONObject();
+        link_setting.put( "ios", ios );
+        link_setting.put( "android", android );
+        link_setting.put( "desktop", desktop );
+
+
+
+        JSONObject jsonObject = new JSONObject();
+        jsonObject.put( "app_name",appName );
+        jsonObject.put( "lkme_test_key", appTestKey );
+        jsonObject.put( "lkme_test_secret", appTestSecret );
+        jsonObject.put( "lkme_live_key", appLiveKey );
+        jsonObject.put( "lkme_live_secret", appLiveSecret );
+        jsonObject.put( "link_setting", link_setting );
+
+        return jsonObject.toString();
     }
 
 }
+
