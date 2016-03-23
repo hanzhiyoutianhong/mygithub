@@ -33,15 +33,14 @@ public class App {
     @Path("/get_apps")
     @GET
     @Produces({MediaType.APPLICATION_JSON})
-    public String getApps(@QueryParam("user_id") long user_id,
-                          @QueryParam("token") String token) {
+    public String getApps(@QueryParam("user_id") long user_id, @QueryParam("token") String token) {
 
-        if(user_id <= 0) {
+        if (user_id <= 0) {
             throw new LMException(LMExceptionFactor.LM_ILLEGAL_PARAM_VALUE);
         }
         List<AppInfo> apps = appService.getAppsByUserId(user_id);
         JSONArray jsonArray = new JSONArray();
-        for(AppInfo app: apps) {
+        for (AppInfo app : apps) {
             jsonArray.add(app.toJson());
         }
         JSONObject resultJson = new JSONObject();
@@ -53,14 +52,12 @@ public class App {
     @Path("/create_app")
     @POST
     @Produces({MediaType.APPLICATION_JSON})
-    public String createApp(@FormParam("app_name") String app_name,
-                      @FormParam("user_id") long user_id,
-                      @FormParam("token") String token) {
+    public String createApp(@FormParam("app_name") String app_name, @FormParam("user_id") long user_id, @FormParam("token") String token) {
 
-        if(user_id <= 0) {
+        if (user_id <= 0) {
             throw new LMException(LMExceptionFactor.LM_ILLEGAL_PARAM_VALUE);
         }
-        if(app_name == null) {
+        if (app_name == null) {
             throw new LMException(LMExceptionFactor.LM_MISSING_PARAM);
         }
         AppParams appParam = new AppParams(app_name, user_id);
@@ -73,35 +70,27 @@ public class App {
     @Path("/delete_app")
     @POST
     @Produces({MediaType.APPLICATION_JSON})
-    public String deleteApp(@FormParam("user_id") long user_id,
-                            @FormParam("app_name") String app_name,
-                            @FormParam("token") String token)
-    {
-        AppParams appParams = new AppParams( app_name, user_id );
-        appService.deleteApp( appParams );
+    public String deleteApp(@FormParam("user_id") long user_id, @FormParam("app_name") String app_name, @FormParam("token") String token) {
+        AppParams appParams = new AppParams(app_name, user_id);
+        appService.deleteApp(appParams);
 
-        if(user_id <= 0)
-        {
+        if (user_id <= 0) {
             throw new LMException(LMExceptionFactor.LM_ILLEGAL_PARAM_VALUE);
         }
-        if(app_name == null)
-        {
+        if (app_name == null) {
             throw new LMException(LMExceptionFactor.LM_MISSING_PARAM);
         }
 
         JsonBuilder resultJson = new JsonBuilder();
-        resultJson.append( "ret", "true" );
+        resultJson.append("ret", "true");
         return resultJson.flip().toString();
     }
 
     @Path("/query_app")
     @GET
     @Produces({MediaType.APPLICATION_JSON})
-    public String queryApp(@QueryParam("app_id") long app_id,
-                           @QueryParam("token") String token)
-    {
-        if( app_id <= 0 )
-        {
+    public String queryApp(@QueryParam("app_id") long app_id, @QueryParam("token") String token) {
+        if (app_id <= 0) {
             throw new LMException(LMExceptionFactor.LM_ILLEGAL_PARAM_VALUE);
         }
 
@@ -116,31 +105,18 @@ public class App {
     @Path("/update_app")
     @POST
     @Produces({MediaType.APPLICATION_JSON})
-    public String updateApp( @FormParam("app_id") long app_id,
-                             @FormParam("app_name") String app_name,
-                             @FormParam("lkme_live_key") String app_live_key,
-                             @FormParam("lkme_live_secret") String app_live_secret,
-                             @FormParam("lkme_test_key") String app_test_key,
-                             @FormParam("lkme_test_secret") String app_test_secret,
-                             @FormParam("ios_uri_scheme") String ios_uri_scheme,
-                             @FormParam("ios_search_option") String ios_not_url,
-                             @FormParam("apple_store_search") String ios_store_url,
-                             @FormParam("ios_custom_url") String ios_custom_url,
-                             @FormParam("bundle_id") String ios_bundle_id,
-                             @FormParam("app_prefix") String ios_prefix,
-                             @FormParam("ios_team_id") String ios_team_id,///
-                             @FormParam("android_uri_scheme") String android_uri_scheme,
-                             @FormParam("android_search_option") String android_not_url,
-                             @FormParam("google_play_search") String google_play_url,
-                             @FormParam("android_custom_url") String android_custom_url,
-                             @FormParam("android_package_name") String android_package_name,
-                             @FormParam("sha256_fingerprints") String android_prefix,
-                             @FormParam("has_ios") int has_ios,
-                             @FormParam("enable_ulink") int enable_ulink,
-                             @FormParam("has_android") int has_android,
-                             @FormParam("enable_applinks") int enable_applinks,
-                             @FormParam("qc_code") String desktop_url)
-    {
+    public String updateApp(@FormParam("app_id") long app_id, @FormParam("app_name") String app_name,
+            @FormParam("lkme_live_key") String app_live_key, @FormParam("lkme_live_secret") String app_live_secret,
+            @FormParam("lkme_test_key") String app_test_key, @FormParam("lkme_test_secret") String app_test_secret,
+            @FormParam("ios_uri_scheme") String ios_uri_scheme, @FormParam("ios_search_option") String ios_not_url,
+            @FormParam("apple_store_search") String ios_store_url, @FormParam("ios_custom_url") String ios_custom_url,
+            @FormParam("bundle_id") String ios_bundle_id, @FormParam("app_prefix") String ios_prefix,
+            @FormParam("ios_team_id") String ios_team_id, ///
+            @FormParam("android_uri_scheme") String android_uri_scheme, @FormParam("android_search_option") String android_not_url,
+            @FormParam("google_play_search") String google_play_url, @FormParam("android_custom_url") String android_custom_url,
+            @FormParam("android_package_name") String android_package_name, @FormParam("sha256_fingerprints") String android_prefix,
+            @FormParam("has_ios") int has_ios, @FormParam("enable_ulink") int enable_ulink, @FormParam("has_android") int has_android,
+            @FormParam("enable_applinks") int enable_applinks, @FormParam("qc_code") String desktop_url) {
         AppParams appParams = new AppParams();
         appParams.appId = app_id;
         appParams.appName = app_name;
@@ -161,14 +137,14 @@ public class App {
         appParams.androidCustomUrl = android_custom_url;
         appParams.androidPackageName = android_package_name;
         appParams.androidPrefix = android_prefix;
-        int ios_android_flag = ( has_ios << 3 ) + ( enable_ulink << 2 ) + ( has_android << 1 ) + enable_applinks;
+        int ios_android_flag = (has_ios << 3) + (enable_ulink << 2) + (has_android << 1) + enable_applinks;
         appParams.iosAndroidFlag = ios_android_flag;
         appParams.desktopUrl = desktop_url;
 
-        appService.updateApp( appParams );
+        appService.updateApp(appParams);
 
         JsonBuilder resultJson = new JsonBuilder();
-        resultJson.append( "ret", "true" );
+        resultJson.append("ret", "true");
         return resultJson.flip().toString();
     }
 

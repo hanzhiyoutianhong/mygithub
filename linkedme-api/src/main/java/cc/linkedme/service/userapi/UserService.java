@@ -10,7 +10,7 @@ import java.util.Date;
  */
 public interface UserService {
 
-    boolean userLogin(UserParams userParams);
+    String userLogin(UserParams userParams);
 
     boolean userRegister(UserParams userParams);
 
@@ -20,11 +20,8 @@ public interface UserService {
 
     boolean resetUserPwd(UserParams userParams);
 
-    boolean forgotPwd( UserParams userParams );
+    boolean forgotPwd(UserParams userParams);
 
-    boolean resetForgottenPwd( UserParams userParams );
-
-    String getLastLoginTime( UserParams userParams );
-
+    boolean resetForgottenPwd(UserParams userParams);
 
 }
