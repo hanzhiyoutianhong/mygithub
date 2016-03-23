@@ -43,12 +43,14 @@ public class Server {
     public static final String USER_SESSION_ID = "userSessionId";
 
     // Set your server's port and callback URL.
-    private static final int PORT = 8181;
-    private static final String CALLBACK_URL = "/Callback";
+    private static final int PORT = 8080;
+    private static final String CALLBACK_URL = "/uber/callback";
 
     // IMPORTANT: Before starting the server, make sure to add this redirect URI to your
     // application at developers.uber.com.
-    private static final String REDIRECT_URI = "http://localhost:" + PORT + CALLBACK_URL;
+    private static final String REDIRECT_LOCAL_URI = "http://localhost:" + PORT + CALLBACK_URL;   //Local test
+    private static final String REDIRECT_REMOTE_URI = "http://117.114.130.213" + PORT + CALLBACK_URL;   //Remote test
+
 
     public static void main(String[] args) throws Exception {
 //        org.eclipse.jetty.server.Server server = new org.eclipse.jetty.server.Server(PORT);
@@ -65,6 +67,7 @@ public class Server {
 //        server.join();
     }
 
+
     /**
      * Creates an {@link OAuth2Credentials} object that can be used by any of the servlets.
      *
@@ -73,18 +76,17 @@ public class Server {
      static OAuth2Credentials createOAuth2Credentials() throws IOException {
         // Load the client ID and secret from a secrets properties file.
         Properties secrets = loadSecretProperties();
-
         String clientId = secrets.getProperty("clientId");
         String clientSecret = secrets.getProperty("clientSecret");
 
         if (clientId.equals("INSERT_CLIENT_ID_HERE") || clientSecret.equals("INSERT_CLIENT_SECRET_HERE")) {
             throw new IllegalArgumentException(
-                    "Please enter your client ID and secret in the resources/secrets.properties file.");
+                    "Please enter your client ID and secret in the resources/uber/secrets.properties file.");
         }
 
         return new OAuth2Credentials.Builder()
                 .setCredentialDataStoreFactory(MemoryDataStoreFactory.getDefaultInstance())
-                .setRedirectUri(REDIRECT_URI)
+                .setRedirectUri(REDIRECT_LOCAL_URI)
                 .setClientSecrets(clientId, clientSecret)
                 .build();
     }
@@ -94,18 +96,18 @@ public class Server {
      */
     private static Properties loadSecretProperties() throws IOException {
         Properties properties = new Properties();
-        InputStream propertiesStream = Server.class.getClassLoader().getResourceAsStream("secrets.properties");
+        InputStream propertiesStream = Server.class.getClassLoader().getResourceAsStream("uber/secrets.properties");
         if (propertiesStream == null) {
             // Fallback to file access in the case of running from certain IDEs.
             File buildPropertiesFile = new File("src/main/resources/uber/secrets.properties");
             if (buildPropertiesFile.exists()) {
                 properties.load(new FileReader(buildPropertiesFile));
             } else {
-                buildPropertiesFile = new File("samples/servlet-sample/src/main/resources/secrets.properties");
+                buildPropertiesFile = new File("/src/main/resources/uber/secrets.properties");
                 if (buildPropertiesFile.exists()) {
                     properties.load(new FileReader(buildPropertiesFile));
                 } else {
-                    throw new IllegalStateException("Could not find secrets.properties");
+                    throw new IllegalStateException("Could not find uber/secrets.properties");
                 }
             }
         } else {
