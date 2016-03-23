@@ -99,11 +99,11 @@ public class LMSdkServiceImpl implements LMSdkService {
             }
             // 记录<device_id, identity_id>和<identity_id, device_id>
             clientRedisClient.set(deviceId, identityId);
-            clientRedisClient.set(String.valueOf(identityId), deviceId);
+            clientRedisClient.set(identityId + ".di", deviceId);
         } else { // 之前存在identityId
             identityId = Long.parseLong(identityIdStr);
             JedisPort identityRedisClient = clientShardingSupport.getClient(identityIdStr);
-            String deepLinkIdStr = identityRedisClient.get(identityIdStr);
+            String deepLinkIdStr = identityRedisClient.get(identityIdStr + ".dpi");
             if (Strings.isNullOrEmpty(deepLinkIdStr)) { // 之前存在identityId,
                                                         // 但是没有identityId与deepLink的键值对
                 // device_fingerprint_id 与 browse_fingerprint_id匹配逻辑

@@ -48,12 +48,12 @@
           init-method="init">
         <property name="masterConfig">
             <bean parent="jedisPoolConfig">
-                <property name="serverPortDb" value="192.168.21.242:22222"></property>
+                <property name="serverPortDb" value="117.114.130.212:22222"></property>
             </bean>
         </property>
         <property name="slaveConfig">
             <bean parent="jedisPoolConfig">
-                <property name="serverPortDb" value="192.168.21.242:33333"></property>
+                <property name="serverPortDb" value="117.114.130.212:33333"></property>
             </bean>
         </property>
     </bean>
@@ -61,12 +61,12 @@
           init-method="init">
         <property name="masterConfig">
             <bean parent="jedisPoolConfig">
-                <property name="serverPortDb" value="192.168.21.242:22222"></property>
+                <property name="serverPortDb" value="117.114.130.212:22222"></property>
             </bean>
         </property>
         <property name="slaveConfig">
             <bean parent="jedisPoolConfig">
-                <property name="serverPortDb" value="192.168.21.242:33333"></property>
+                <property name="serverPortDb" value="117.114.130.212:33333"></property>
             </bean>
         </property>
     </bean>
@@ -74,12 +74,12 @@
           init-method="init">
         <property name="masterConfig">
             <bean parent="jedisPoolConfig">
-                <property name="serverPortDb" value="192.168.21.242:22222"></property>
+                <property name="serverPortDb" value="117.114.130.212:22222"></property>
             </bean>
         </property>
         <property name="slaveConfig">
             <bean parent="jedisPoolConfig">
-                <property name="serverPortDb" value="192.168.21.242:33333"></property>
+                <property name="serverPortDb" value="117.114.130.212:33333"></property>
             </bean>
         </property>
     </bean>
@@ -87,12 +87,12 @@
           init-method="init">
         <property name="masterConfig">
             <bean parent="jedisPoolConfig">
-                <property name="serverPortDb" value="192.168.21.242:22222"></property>
+                <property name="serverPortDb" value="117.114.130.212:22222"></property>
             </bean>
         </property>
         <property name="slaveConfig">
             <bean parent="jedisPoolConfig">
-                <property name="serverPortDb" value="192.168.21.242:33333"></property>
+                <property name="serverPortDb" value="117.114.130.212:33333"></property>
             </bean>
         </property>
     </bean>
@@ -121,12 +121,12 @@
           init-method="init">
         <property name="masterConfig">
             <bean parent="jedisPoolConfig">
-                <property name="serverPortDb" value="192.168.21.242:22222"></property>
+                <property name="serverPortDb" value="117.114.130.212:22222"></property>
             </bean>
         </property>
         <property name="slaveConfig">
             <bean parent="jedisPoolConfig">
-                <property name="serverPortDb" value="192.168.21.242:33333"></property>
+                <property name="serverPortDb" value="117.114.130.212:33333"></property>
             </bean>
         </property>
     </bean>
@@ -134,12 +134,12 @@
           init-method="init">
         <property name="masterConfig">
             <bean parent="jedisPoolConfig">
-                <property name="serverPortDb" value="192.168.21.242:22222"></property>
+                <property name="serverPortDb" value="117.114.130.212:22222"></property>
             </bean>
         </property>
         <property name="slaveConfig">
             <bean parent="jedisPoolConfig">
-                <property name="serverPortDb" value="192.168.21.242:33333"></property>
+                <property name="serverPortDb" value="117.114.130.212:33333"></property>
             </bean>
         </property>
     </bean>
@@ -147,12 +147,12 @@
           init-method="init">
         <property name="masterConfig">
             <bean parent="jedisPoolConfig">
-                <property name="serverPortDb" value="192.168.21.242:22222"></property>
+                <property name="serverPortDb" value="117.114.130.212:22222"></property>
             </bean>
         </property>
         <property name="slaveConfig">
             <bean parent="jedisPoolConfig">
-                <property name="serverPortDb" value="192.168.21.242:33333"></property>
+                <property name="serverPortDb" value="117.114.130.212:33333"></property>
             </bean>
         </property>
     </bean>
@@ -160,12 +160,12 @@
           init-method="init">
         <property name="masterConfig">
             <bean parent="jedisPoolConfig">
-                <property name="serverPortDb" value="192.168.21.242:22222"></property>
+                <property name="serverPortDb" value="117.114.130.212:22222"></property>
             </bean>
         </property>
         <property name="slaveConfig">
             <bean parent="jedisPoolConfig">
-                <property name="serverPortDb" value="192.168.21.242:33333"></property>
+                <property name="serverPortDb" value="117.114.130.212:33333"></property>
             </bean>
         </property>
     </bean>

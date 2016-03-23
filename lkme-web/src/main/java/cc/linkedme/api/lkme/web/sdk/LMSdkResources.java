@@ -3,6 +3,7 @@ package cc.linkedme.api.lkme.web.sdk;
 import cc.linkedme.commons.exception.LMException;
 import cc.linkedme.commons.exception.LMExceptionFactor;
 import cc.linkedme.commons.json.JsonBuilder;
+import cc.linkedme.commons.log.ApiLogger;
 import cc.linkedme.commons.util.Constants;
 import cc.linkedme.data.model.params.LMCloseParams;
 import cc.linkedme.data.model.params.LMInstallParams;
@@ -11,9 +12,11 @@ import cc.linkedme.data.model.params.LMUrlParams;
 
 import cc.linkedme.service.sdkapi.LMSdkService;
 import com.google.common.base.Strings;
+import net.sf.json.JSONObject;
 import org.springframework.stereotype.Component;
 
 import javax.annotation.Resource;
+import javax.servlet.ServletInputStream;
 import javax.servlet.http.HttpServletRequest;
 import javax.ws.rs.FormParam;
 import javax.ws.rs.GET;
@@ -23,6 +26,9 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
 
 @Path("sdk")
 @Component
@@ -31,39 +37,91 @@ public class LMSdkResources {
     @Resource
     private LMSdkService lmSdkService;
 
+    @Path("/install_bak")
+    @POST
+    @Produces(MediaType.APPLICATION_JSON)
+    public String install_bak(@QueryParam("linkedme_key") String linkedMEKey,
+                          @QueryParam("device_id") String deviceId,
+                          @QueryParam("device_type") Byte deviceType,
+                          @QueryParam("device_brand") String deviceBrand,
+                          @QueryParam("device_model") String deviceModel,
+                          @QueryParam("has_bluetooth") boolean hasBluetooth,
+                          @QueryParam("has_nfc") boolean hasNfc,
+                          @QueryParam("has_sim") boolean hasSim,
+                          @QueryParam("os") String os,
+                          @QueryParam("os_version") String osVersion,
+                          @QueryParam("screen_dpi") int screenDpi,
+                          @QueryParam("screen_height") int screenHeight,
+                          @QueryParam("screen_width") int screenWidth,
+                          @QueryParam("is_wifi") boolean isWifi,
+                          @QueryParam("is_referable") boolean isReferable,
+                          @QueryParam("lat_val") String latVal,
+                          @QueryParam("carrier") String carrier,
+                          @QueryParam("app_version") String appVersion,
+                          @QueryParam("sdk_update") String sdkUpdate,
+                          @QueryParam("sdk_version") String sdkVersion,
+                          @QueryParam("iOS_team_id") String iOSTeamId,
+                          @QueryParam("iOS_bundle_id") String iOSBundleId,
+                          @QueryParam("is_debug") boolean isDebug ,
+                          @QueryParam("retry_times") int retryTimes,
+                          @Context HttpServletRequest request) {
+        return null;
+    }
+
     @Path("/install")
     @POST
-    @Produces({MediaType.APPLICATION_JSON})
-    public String install(@FormParam("linkedme_key") String linkedMEKey,
-                          @FormParam("device_id") String deviceId,
-                          @FormParam("device_type") Byte deviceType,
-                          @FormParam("device_brand") String deviceBrand,
-                          @FormParam("device_model") String deviceModel,
-                          @FormParam("has_bluetooth") boolean hasBluetooth,
-                          @FormParam("has_nfc") boolean hasNfc,
-                          @FormParam("has_sim") boolean hasSim,
-                          @FormParam("os") String os,
-                          @FormParam("os_version") String osVersion,
-                          @FormParam("screen_dpi") int screenDpi,
-                          @FormParam("screen_height") int screenHeight,
-                          @FormParam("screen_width") int screenWidth,
-                          @FormParam("is_wifi") boolean isWifi,
-                          @FormParam("is_referable") boolean isReferable,
-                          @FormParam("lat_val") String latVal,
-                          @FormParam("carrier") String carrier,
-                          @FormParam("app_version") String appVersion,
-                          @FormParam("sdk_update") String sdkUpdate,
-                          @FormParam("sdk_version") String sdkVersion,
-                          @FormParam("iOS_team_id") String iOSTeamId,
-                          @FormParam("iOS_bundle_id") String iOSBundleId,
-                          @FormParam("is_debug") boolean isDebug ,
-                          @FormParam("retry_times") int retryTimes,
-                          @Context HttpServletRequest request) {
+    @Produces(MediaType.APPLICATION_JSON)
+    public String install(@Context HttpServletRequest request) {
+
+            StringBuffer httpBody = new StringBuffer();
+        try {
+            ServletInputStream inputStream = request.getInputStream();
+            BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(inputStream));
+            String line = bufferedReader.readLine();
+            while (line != null) {
+                httpBody.append(line);
+                line = bufferedReader.readLine();
+            }
+            bufferedReader.close();
+            inputStream.close();
+            System.out.println(httpBody.toString());
+
+        } catch (IOException e) {
+            ApiLogger.error(e);
+        }
+        JSONObject json = JSONObject.fromObject(httpBody.toString());
+        String linkedMEKey = json.getString("linkedme_key");
+        String deviceId = json.getString("device_id");
+        int deviceType = json.getInt("device_type");
+        String deviceBrand = json.getString("device_brand");
+        String deviceModel = json.getString("device_model");
+        boolean hasBluetooth = json.getBoolean("has_bluetooth");
+        boolean hasNfc = json.getBoolean("has_nfc");
+        boolean hasSim = json.getBoolean("has_sim");
+        String os = json.getString("os");
+        String osVersion = json.getString("os_version");
+        int screenDpi = json.getInt("screen_dpi");
+        int screenHeight = json.getInt("screen_height");
+        int screenWidth = json.getInt("screen_width");
+        boolean isWifi = json.getBoolean("is_wifi");
+        boolean isReferable = json.getBoolean("is_referable");
+        String latVal = json.getString("lat_val");
+        String carrier = json.getString("carrier");
+        String appVersion = json.getString("app_version");
+        String sdkUpdate = json.getString("sdk_update");
+        String iOSTeamId = json.getString("iOS_team_id");
+        String iOSBundleId = json.getString("iOS_bundle_id");
+        String sdkVersion = json.getString("sdk_version");
+        int retryTimes = json.getInt("retry_times");
+        boolean isDebug = json.getBoolean("is_debug");
+
         if (Strings.isNullOrEmpty(linkedMEKey)) {
             throw new LMException(LMExceptionFactor.LM_MISSING_PARAM);
         }
 
-        LMInstallParams lmInstallParams = new LMInstallParams(linkedMEKey, 0L, null, sdkVersion, retryTimes, isDebug, deviceId, deviceType, deviceBrand, deviceModel, hasBluetooth, hasNfc, hasSim, os, osVersion, screenDpi, screenHeight, screenWidth, isWifi, isReferable, latVal, carrier, appVersion, sdkUpdate, iOSTeamId, iOSBundleId);
+        LMInstallParams lmInstallParams = new LMInstallParams(linkedMEKey, 0L, null, sdkVersion, retryTimes, isDebug, deviceId, deviceType,
+                deviceBrand, deviceModel, hasBluetooth, hasNfc, hasSim, os, osVersion, screenDpi, screenHeight, screenWidth, isWifi,
+                isReferable, latVal, carrier, appVersion, sdkUpdate, iOSTeamId, iOSBundleId);
         String result = lmSdkService.install(lmInstallParams);
         return result;
     }

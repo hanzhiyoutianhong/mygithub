@@ -4,6 +4,7 @@ import cc.linkedme.commons.exception.LMException;
 import cc.linkedme.commons.exception.LMExceptionFactor;
 import cc.linkedme.commons.json.JsonBuilder;
 import cc.linkedme.commons.mail.MailAuthenticator;
+import cc.linkedme.data.model.UserInfo;
 import cc.linkedme.data.model.params.UserParams;
 import cc.linkedme.service.userapi.UserService;
 import org.springframework.stereotype.Component;
@@ -51,22 +52,13 @@ public class User {
     @Produces({MediaType.APPLICATION_JSON})
     public String login(@FormParam("email") String email,
                         @FormParam("pwd") String pwd,
-                        @FormParam("token") String token)
-    {
+                        @FormParam("token") String token) {
         UserParams userParams = new UserParams();
         userParams.email = email;
         userParams.pwd = pwd;
 
-        if ( userService.userLogin( userParams ) )
-        {
-            JsonBuilder resultJson = new JsonBuilder();
-            resultJson.append( "last_login_time", userService.getLastLoginTime(userParams) );
-            return resultJson.flip().toString();
-        }
-        else
-        {
-            throw new LMException(LMExceptionFactor.LM_ILLEGAL_PARAM_VALUE);
-        }
+        UserInfo userInfo = userService.userLogin(userParams);
+        return userInfo.toJson();
     }
 
     @Path("/logout")
@@ -77,15 +69,12 @@ public class User {
                          @FormParam("token") String token) {
         UserParams userParams = new UserParams(email, last_logout_time, token);
 
-        if (userService.userLogout(userParams))
-        {
+        if (userService.userLogout(userParams)) {
             JsonBuilder resultJson = new JsonBuilder();
-            resultJson.append( "ret", "true" );
+            resultJson.append("ret", "true");
             return resultJson.flip().toString();
-        }
-        else
-        {
-            throw new LMException( LMExceptionFactor.LM_ILLEGAL_PARAM_VALUE );
+        } else {
+            throw new LMException(LMExceptionFactor.LM_ILLEGAL_PARAM_VALUE);
         }
     }
 
@@ -93,18 +82,14 @@ public class User {
     @GET
     @Produces({MediaType.APPLICATION_JSON})
     public String validate_email(@QueryParam("email") String email,
-                                 @QueryParam("token") String token)
-    {
+                                 @QueryParam("token") String token) {
         UserParams userParams = new UserParams(email, token);
-        if (userService.validateEmail(userParams))
-        {
+        if (userService.validateEmail(userParams)) {
             JsonBuilder resultJson = new JsonBuilder();
-            resultJson.append( "ret", "true" );
+            resultJson.append("ret", "true");
             return resultJson.flip().toString();
-        }
-        else
-        {
-            throw new LMException( LMExceptionFactor.LM_ILLEGAL_PARAM_VALUE );
+        } else {
+            throw new LMException(LMExceptionFactor.LM_ILLEGAL_PARAM_VALUE);
         }
     }
 
@@ -117,15 +102,12 @@ public class User {
                                   @FormParam("token") String token) {
         UserParams userParams = new UserParams(email, old_pwd, new_pwd, token);
 
-        if (userService.resetUserPwd(userParams))
-        {
+        if (userService.resetUserPwd(userParams)) {
             JsonBuilder resultJson = new JsonBuilder();
-            resultJson.append( "ret", "true" );
+            resultJson.append("ret", "true");
             return resultJson.flip().toString();
-        }
-        else
-        {
-            throw new LMException( LMExceptionFactor.LM_ILLEGAL_PARAM_VALUE );
+        } else {
+            throw new LMException(LMExceptionFactor.LM_ILLEGAL_PARAM_VALUE);
         }
     }
 
@@ -135,15 +117,12 @@ public class User {
     public String forgot_password(@FormParam("email") String email,
                                  @FormParam("token") String token) {
         UserParams userParams = new UserParams(email, token);
-        if (userService.forgotPwd(userParams))
-        {
+        if (userService.forgotPwd(userParams)) {
             JsonBuilder resultJson = new JsonBuilder();
-            resultJson.append( "ret", "true" );
+            resultJson.append("ret", "true");
             return resultJson.flip().toString();
-        }
-        else
-        {
-            throw new LMException( LMExceptionFactor.LM_ILLEGAL_PARAM_VALUE );
+        } else {
+            throw new LMException(LMExceptionFactor.LM_ILLEGAL_PARAM_VALUE);
         }
     }
 
@@ -154,15 +133,12 @@ public class User {
                                @FormParam("new_pwd") String new_pwd,
                                @FormParam("token") String token) {
         UserParams userParams = new UserParams(email, null, new_pwd, token);
-        if (userService.resetForgottenPwd(userParams))
-        {
+        if (userService.resetForgottenPwd(userParams)) {
             JsonBuilder resultJson = new JsonBuilder();
-            resultJson.append( "ret", "true" );
+            resultJson.append("ret", "true");
             return resultJson.flip().toString();
-        }
-        else
-        {
-            throw new LMException( LMExceptionFactor.LM_FAILURE_DB_OP );
+        } else {
+            throw new LMException(LMExceptionFactor.LM_FAILURE_DB_OP);
         }
     }
 }

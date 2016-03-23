@@ -14,7 +14,7 @@
     <bean id="lmSdkService" class="cc.linkedme.service.sdkapi.impl.LMSdkServiceImpl" />
 
     <!-- ${mcq.openapiYfV45.3001.read}|${mcq.openapiYfV45.3002.read} -->
-    <wfc:mclist id="mcq_readers" serverPorts="117.114.130.212:3001" strategy="mcq" lazy-init="true" targetListClass="java.util.LinkedList"></wfc:mclist>
+    <wfc:mclist id="mcq_readers" serverPorts="192.168.21.242:3001" strategy="mcq" lazy-init="true" targetListClass="java.util.LinkedList"></wfc:mclist>
 
     <bean id="msgMcqProcessor" class="cc.linkedme.mcq.processor.MsgMcqProcessor" autowire="byName" lazy-init="true">
         <property name="readThreadCountEachMcq" value="20"></property>
