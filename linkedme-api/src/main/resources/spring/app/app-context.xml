@@ -30,9 +30,9 @@
 
                 <entry key="UPDATE_APP" value="update $db$.$tb$ set vflag = ?, mflag=? where status_id = ? and vflag in (0,6,7) and cmt_id = ?"/>
 
-                <entry key="GET_APPS_BY_USERID" value="select id, app_name, app_live_key, app_test_key, ios_uri_scheme, ios_not_url, ios_store_url, ios_custom_url, ios_bundle_id, ios_prefix, ios_team_id, android_uri_scheme, android_not_url, google_play_url, android_custom_url, android_package_name, android_prefix, ios_android_flag, desktop_url from $db$.$tb$ where user_id = ?"/>
+                <entry key="GET_APPS_BY_USERID" value="select id, app_name, app_live_key, app_test_key, app_live_secret, app_test_secret, ios_uri_scheme, ios_not_url, ios_store_url, ios_custom_url, ios_bundle_id, ios_prefix, ios_team_id, android_uri_scheme, android_not_url, google_play_url, android_custom_url, android_package_name, android_prefix, ios_android_flag, desktop_url from $db$.$tb$ where user_id = ?"/>
 
-                <entry key="DEL_APP_BY_USERID_AND_APPNAME" value="delete from $db$.$tb$ where user_id = ? and app_name = ?"/>
+                <entry key="DEL_APP_BY_USERID_AND_APPNAME" value="delete from $db$.$tb$ where user_id = ? and id = ?" />
 
                 <entry key="GET_APP_BY_APPID" value="select user_id, app_name, app_live_key, app_live_secret, app_test_key, app_test_secret, ios_uri_scheme, ios_not_url, ios_store_url, ios_custom_url, ios_bundle_id, ios_prefix, ios_team_id, android_uri_scheme, android_not_url, google_play_url, android_custom_url, android_package_name, android_prefix, ios_android_flag, desktop_url from $db$.$tb$ where id = ?"/>
 

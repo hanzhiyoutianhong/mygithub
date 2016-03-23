@@ -2,7 +2,6 @@ package cc.linkedme.service.userapi.impl;
 
 import cc.linkedme.commons.mail.MailSender;
 import cc.linkedme.dao.userapi.UserDao;
-import cc.linkedme.dao.userapi.impl.UserDaoImpl;
 import cc.linkedme.data.model.UserInfo;
 import cc.linkedme.data.model.params.UserParams;
 import cc.linkedme.service.userapi.UserService;
@@ -30,7 +29,8 @@ public class UserServiceImpl implements UserService {
     public String userLogin(UserParams userParams) {
         UserInfo userInfo = userDao.getUserInfo(userParams.email);
 
-        if (userInfo.getPwd().equals(userParams.pwd)) {
+        if (userInfo == null) return null;
+        if (userParams.pwd.equals(userInfo.getPwd())) {
             String register_time = DateFormat.getDateTimeInstance().format(new Date());
             String current_login_time = register_time;
             userParams.current_login_time = current_login_time;
@@ -40,7 +40,6 @@ public class UserServiceImpl implements UserService {
             return userInfo.getLast_login_time();
         } else
             return null;
-
     }
 
     public boolean validateEmail(UserParams userParams) {

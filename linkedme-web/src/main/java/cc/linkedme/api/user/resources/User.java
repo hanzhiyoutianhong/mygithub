@@ -4,12 +4,15 @@ import cc.linkedme.commons.exception.LMException;
 import cc.linkedme.commons.exception.LMExceptionFactor;
 import cc.linkedme.commons.json.JsonBuilder;
 import cc.linkedme.commons.mail.MailAuthenticator;
+import cc.linkedme.data.model.UserInfo;
 import cc.linkedme.data.model.params.UserParams;
 import cc.linkedme.service.userapi.UserService;
 import org.springframework.stereotype.Component;
 
 import javax.annotation.Resource;
+import javax.servlet.http.HttpServletRequest;
 import javax.ws.rs.*;
+import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 
 /**
@@ -25,9 +28,7 @@ public class User {
     @Path("/register")
     @POST
     @Produces({MediaType.APPLICATION_JSON})
-    public String register(@FormParam("email") String email, @FormParam("pwd") String pwd, @FormParam("name") String name,
-            @FormParam("company") String company, @FormParam("token") String token) {
-        UserParams userParams = new UserParams(email, pwd, name, company, token);
+    public String register(UserParams userParams, @Context HttpServletRequest request) {
 
         if (userService.userRegister(userParams)) {
             JsonBuilder resultJson = new JsonBuilder();
@@ -42,10 +43,8 @@ public class User {
     @Path("/login")
     @POST
     @Produces({MediaType.APPLICATION_JSON})
-    public String login(@FormParam("email") String email, @FormParam("pwd") String pwd, @FormParam("token") String token) {
-        UserParams userParams = new UserParams();
-        userParams.email = email;
-        userParams.pwd = pwd;
+
+    public String login(UserParams userParams, @Context HttpServletRequest request) {
 
         String last_login_time = userService.userLogin(userParams);
 
@@ -61,9 +60,7 @@ public class User {
     @Path("/logout")
     @POST
     @Produces({MediaType.APPLICATION_JSON})
-    public String logout(@FormParam("email") String email, @FormParam("last_logout_time") String last_logout_time,
-            @FormParam("token") String token) {
-        UserParams userParams = new UserParams(email, last_logout_time, token);
+    public String logout(UserParams userParams, @Context HttpServletRequest request) {
 
         if (userService.userLogout(userParams)) {
             JsonBuilder resultJson = new JsonBuilder();
@@ -77,8 +74,11 @@ public class User {
     @Path("/validate_email")
     @GET
     @Produces({MediaType.APPLICATION_JSON})
-    public String validate_email(@QueryParam("email") String email, @QueryParam("token") String token) {
-        UserParams userParams = new UserParams(email, token);
+
+    public String validate_email(@QueryParam("email") String email,
+                                 @QueryParam("token") String token) {
+        UserParams userParams = new UserParams();
+        userParams.email = email;
         if (userService.validateEmail(userParams)) {
             JsonBuilder resultJson = new JsonBuilder();
             resultJson.append("ret", "true");
@@ -91,9 +91,7 @@ public class User {
     @Path("/change_password")
     @POST
     @Produces({MediaType.APPLICATION_JSON})
-    public String change_password(@FormParam("email") String email, @FormParam("old_pwd") String old_pwd,
-            @FormParam("new_pwd") String new_pwd, @FormParam("token") String token) {
-        UserParams userParams = new UserParams(email, old_pwd, new_pwd, token);
+    public String change_password(UserParams userParams, @Context HttpServletRequest request) {
 
         if (userService.resetUserPwd(userParams)) {
             JsonBuilder resultJson = new JsonBuilder();
@@ -107,8 +105,8 @@ public class User {
     @Path("/forgot_password")
     @POST
     @Produces({MediaType.APPLICATION_JSON})
-    public String forgot_password(@FormParam("email") String email, @FormParam("token") String token) {
-        UserParams userParams = new UserParams(email, token);
+    public String forgot_password(UserParams userParams, @Context HttpServletRequest request) {
+
         if (userService.forgotPwd(userParams)) {
             JsonBuilder resultJson = new JsonBuilder();
             resultJson.append("ret", "true");
@@ -121,8 +119,7 @@ public class User {
     @Path("/set_password")
     @POST
     @Produces({MediaType.APPLICATION_JSON})
-    public String set_password(@FormParam("email") String email, @FormParam("new_pwd") String new_pwd, @FormParam("token") String token) {
-        UserParams userParams = new UserParams(email, null, new_pwd, token);
+    public String set_password(UserParams userParams, @Context HttpServletRequest request) {
         if (userService.resetForgottenPwd(userParams)) {
             JsonBuilder resultJson = new JsonBuilder();
             resultJson.append("ret", "true");

@@ -1,5 +1,7 @@
 package cc.linkedme.data.model;
 
+import cc.linkedme.commons.json.JsonBuilder;
+
 import java.util.Date;
 
 /**
@@ -14,6 +16,18 @@ public class UserInfo {
     private short role_id;
     private String register_time;
     private String last_login_time;
+
+    public String toJson() {
+        JsonBuilder json = new JsonBuilder();
+        json.append("user_id", id);
+        json.append("email", email);
+        json.append("name", name);
+        json.append("company", company);
+        json.append("role_id", role_id);
+        json.append("register_time", register_time);
+        json.append("last_login_time", last_login_time);
+        return json.flip().toString();
+    }
 
     public int getId() {
         return id;

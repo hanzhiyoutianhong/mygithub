@@ -72,7 +72,7 @@ public class Test {
     @POST
     @Produces({"application/json"})
     public String getUrl(@FormParam("identity_id") String identity_id) {
-        return "{\"url\":\"https://lkme.cc/Ojqd/C2nn7w)Mvr\"}";
+        return "{\"url\":\"https://lkme.cc/Ojqd/C2nn7wMvr\"}";
     }
 
     @Path("close")

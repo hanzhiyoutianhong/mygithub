@@ -268,9 +268,8 @@ public class AppInfo {
         link_setting.put( "android", android );
         link_setting.put( "desktop", desktop );
 
-
-
         JSONObject jsonObject = new JSONObject();
+        jsonObject.put("app_id", appId);
         jsonObject.put( "app_name",appName );
         jsonObject.put( "lkme_test_key", appTestKey );
         jsonObject.put( "lkme_test_secret", appTestSecret );

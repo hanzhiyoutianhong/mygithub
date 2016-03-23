@@ -1,14 +1,12 @@
 package cc.linkedme.service.userapi;
 
 import cc.linkedme.data.model.params.UserParams;
-import com.sun.tools.internal.xjc.reader.xmlschema.bindinfo.BIConversion;
-
-import java.util.Date;
 
 /**
  * Created by Vontroy on 16/3/19.
  */
 public interface UserService {
+
 
     String userLogin(UserParams userParams);
 
