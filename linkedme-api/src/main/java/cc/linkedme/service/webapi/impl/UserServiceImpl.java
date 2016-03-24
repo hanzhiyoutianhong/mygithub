@@ -1,10 +1,12 @@
-package cc.linkedme.service.userapi.impl;
+package cc.linkedme.service.webapi.impl;
 
+import cc.linkedme.commons.exception.LMException;
+import cc.linkedme.commons.exception.LMExceptionFactor;
 import cc.linkedme.commons.mail.MailSender;
 import cc.linkedme.dao.userapi.UserDao;
 import cc.linkedme.data.model.UserInfo;
 import cc.linkedme.data.model.params.UserParams;
-import cc.linkedme.service.userapi.UserService;
+import cc.linkedme.service.webapi.UserService;
 
 import javax.annotation.Resource;
 import java.text.DateFormat;
@@ -19,27 +21,27 @@ public class UserServiceImpl implements UserService {
     private UserDao userDao;
 
     public boolean userRegister(UserParams userParams) {
-        if (userDao.queryEmail(userParams.email) == false) {
-            userDao.updateUserInfo(userParams);
+        if(userDao.queryEmail(userParams.email) == true)
+            throw new LMException(LMExceptionFactor.LM_USER_EMAIL_ALREADY_REGISTERED);
+        else
             return true;
-        }
-        return false;
     }
 
-    public String userLogin(UserParams userParams) {
+    public UserInfo userLogin(UserParams userParams) {
         UserInfo userInfo = userDao.getUserInfo(userParams.email);
 
-        if (userInfo == null) return null;
+        if (userInfo == null)
+            throw new LMException(LMExceptionFactor.LM_USER_EMAIL_DOESNOT_EXIST);
         if (userParams.pwd.equals(userInfo.getPwd())) {
-            String register_time = DateFormat.getDateTimeInstance().format(new Date());
-            String current_login_time = register_time;
+            String current_login_time = DateFormat.getDateTimeInstance().format(new Date());
             userParams.current_login_time = current_login_time;
 
             userDao.resetLastLoginTime(userParams);
 
-            return userInfo.getLast_login_time();
-        } else
-            return null;
+            return userInfo;
+        } else {
+            throw new LMException(LMExceptionFactor.LM_USER_WRONG_PWD);
+        }
     }
 
     public boolean validateEmail(UserParams userParams) {
@@ -50,7 +52,12 @@ public class UserServiceImpl implements UserService {
     }
 
     public boolean userLogout(UserParams userParams) {
-        return userDao.queryEmail(userParams.email);
+        if(!userDao.queryEmail(userParams.email))
+        {
+            throw new LMException(LMExceptionFactor.LM_USER_EMAIL_DOESNOT_EXIST);
+        }
+        else
+            return true;
     }
 
     public boolean resetUserPwd(UserParams userParams) {
@@ -59,7 +66,7 @@ public class UserServiceImpl implements UserService {
             userDao.resetUserPwd(userParams);
             return true;
         } else {
-            return false;
+            throw new LMException(LMExceptionFactor.LM_USER_WRONG_PWD);
         }
     }
 
@@ -68,7 +75,10 @@ public class UserServiceImpl implements UserService {
             MailSender.sendTextMail(userParams.email, "Change you PWD", "this is a test mail from java program");
             return true;
         }
-        return false;
+        else
+        {
+            throw new LMException(LMExceptionFactor.LM_USER_EMAIL_DOESNOT_EXIST);
+        }
     }
 
     public boolean resetForgottenPwd(UserParams userParams) {

@@ -1,5 +1,6 @@
-package cc.linkedme.service.userapi;
+package cc.linkedme.service.webapi;
 
+import cc.linkedme.data.model.UserInfo;
 import cc.linkedme.data.model.params.UserParams;
 
 /**
@@ -8,7 +9,7 @@ import cc.linkedme.data.model.params.UserParams;
 public interface UserService {
 
 
-    String userLogin(UserParams userParams);
+    UserInfo userLogin(UserParams userParams);
 
     boolean userRegister(UserParams userParams);
 

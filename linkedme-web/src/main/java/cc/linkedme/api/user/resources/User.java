@@ -3,10 +3,9 @@ package cc.linkedme.api.user.resources;
 import cc.linkedme.commons.exception.LMException;
 import cc.linkedme.commons.exception.LMExceptionFactor;
 import cc.linkedme.commons.json.JsonBuilder;
-import cc.linkedme.commons.mail.MailAuthenticator;
 import cc.linkedme.data.model.UserInfo;
 import cc.linkedme.data.model.params.UserParams;
-import cc.linkedme.service.userapi.UserService;
+import cc.linkedme.service.webapi.UserService;
 import org.springframework.stereotype.Component;
 
 import javax.annotation.Resource;
@@ -30,6 +29,7 @@ public class User {
     @Produces({MediaType.APPLICATION_JSON})
     public String register(UserParams userParams, @Context HttpServletRequest request) {
 
+
         if (userService.userRegister(userParams)) {
             JsonBuilder resultJson = new JsonBuilder();
             resultJson.append("ret", "true");
@@ -46,11 +46,17 @@ public class User {
 
     public String login(UserParams userParams, @Context HttpServletRequest request) {
 
-        String last_login_time = userService.userLogin(userParams);
+        UserInfo userInfo = userService.userLogin(userParams);
 
-        if (last_login_time != null) {
+        if (userInfo != null) {
             JsonBuilder resultJson = new JsonBuilder();
-            resultJson.append("last_login_time", last_login_time);
+            resultJson.append("user_id", userInfo.getId());
+            resultJson.append("email", userInfo.getEmail());
+            resultJson.append("name", userInfo.getName());
+            resultJson.append("company", userInfo.getCompany());
+            resultJson.append("role_id", userInfo.getRole_id());
+            resultJson.append("register_time", userInfo.getRegister_time());
+            resultJson.append("last_login_time", userInfo.getLast_login_time());
             return resultJson.flip().toString();
         } else {
             throw new LMException(LMExceptionFactor.LM_ILLEGAL_PARAM_VALUE);
@@ -79,12 +85,12 @@ public class User {
                                  @QueryParam("token") String token) {
         UserParams userParams = new UserParams();
         userParams.email = email;
-        if (userService.validateEmail(userParams)) {
+        if (!userService.validateEmail(userParams)) {
             JsonBuilder resultJson = new JsonBuilder();
             resultJson.append("ret", "true");
             return resultJson.flip().toString();
         } else {
-            throw new LMException(LMExceptionFactor.LM_ILLEGAL_PARAM_VALUE);
+            throw new LMException(LMExceptionFactor.LM_USER_EMAIL_ALREADY_REGISTERED);
         }
     }
 

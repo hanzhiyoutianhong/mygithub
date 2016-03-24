@@ -91,10 +91,11 @@ public class UserDaoImpl extends BaseDao implements UserDao {
 
                 user.setId(resultSet.getInt("id"));
                 user.setEmail(email);
+                user.setName(resultSet.getString("name"));
                 user.setPwd(resultSet.getString("pwd"));
                 user.setCompany(resultSet.getString("company"));
                 user.setRole_id(resultSet.getShort("role_id"));
-
+                user.setRegister_time(resultSet.getString("register_time"));
                 user.setLast_login_time(resultSet.getTimestamp("last_login_time").toString());
 
                 userInfos.add(user);

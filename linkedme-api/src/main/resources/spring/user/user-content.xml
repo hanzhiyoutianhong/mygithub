@@ -40,5 +40,5 @@
         </property>
     </bean>
 
-    <bean id="userService" class="cc.linkedme.service.userapi.impl.UserServiceImpl"/>
+    <bean id="userService" class="cc.linkedme.service.webapi.impl.UserServiceImpl"/>
 </beans>

@@ -10,7 +10,7 @@ import java.util.List;
  */
 public interface AppService {
     long createApp(AppParams appParams);
-    List<AppInfo> getAppsByUserId(long userId);
+    List<AppInfo> getAppsByUserId(AppParams appParams);
     int deleteApp(AppParams appParams);
     AppInfo queryApp( AppParams appParams );
     int updateApp( AppParams appParams );
