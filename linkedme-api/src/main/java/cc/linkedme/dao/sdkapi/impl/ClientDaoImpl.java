@@ -51,6 +51,7 @@ public class ClientDaoImpl extends BaseDao implements ClientDao {
                             iOSTeamId, iOSBundle});
         } catch (DataAccessException e) {
             if (DaoUtil.isDuplicateInsert(e)) {
+                //如果identityId存在,则更新
                 ApiLogger.info(new StringBuilder(128).append("Duplicate insert client, id=").append(identityId));
             } else {
                 throw e;

@@ -38,7 +38,7 @@
         <servlet-class>com.sun.jersey.spi.spring.container.servlet.SpringServlet</servlet-class>
         <init-param>
             <param-name>com.sun.jersey.config.property.packages</param-name>
-            <param-value>cc.linkedme.api.app.*,cc.linkedme.commons.exception,cc.linkedme.api.user</param-value>
+            <param-value>cc.linkedme.api.app.resources,cc.linkedme.api.user, cc.linkedme.api.dashboard.resources,cc.linkedme.commons.exception</param-value>
         </init-param>
 
         <init-param>

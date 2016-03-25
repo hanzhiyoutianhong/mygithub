@@ -5,13 +5,20 @@ import java.lang.reflect.Array;
 import java.net.URLDecoder;
 import java.net.URLEncoder;
 import java.security.MessageDigest;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.text.StringCharacterIterator;
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import cc.linkedme.commons.exception.LMException;
 import org.apache.commons.lang.ArrayUtils;
 import org.apache.commons.lang.StringUtils;
 
@@ -751,6 +758,44 @@ public class Util {
         }
 
         return text.toString();
+    }
+
+    public static Date timeStrToDate(String timeStr) {
+        SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
+        try {
+            return format.parse(timeStr);
+        } catch (ParseException e) {
+            ApiLogger.error("Util.timeStrToDate parse date failed", e);
+            throw new LMException("Util.timeStrToDate parse date failed");
+        }
+    }
+
+    public static List<String> getBetweenMonths(String minDate, String maxDate) {
+        ArrayList<String> result = new ArrayList<String>();
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+
+        Calendar min = Calendar.getInstance();
+        Calendar max = Calendar.getInstance();
+
+        try {
+
+            min.setTime(sdf.parse(minDate));
+            min.set(min.get(Calendar.YEAR), min.get(Calendar.MONTH) + 1, 1);
+
+            max.setTime(sdf.parse(maxDate));
+            max.set(max.get(Calendar.YEAR), max.get(Calendar.MONTH), 1);
+        } catch (ParseException e) {
+            ApiLogger.error("Util.getBetweenMonths parse time failed", e);
+            throw new LMException("Util.getBetweenMonths parse date failed");
+        }
+
+        Calendar curr = min;
+        while (curr.before(max)) {
+            result.add(sdf.format(curr.getTime()));
+            curr.add(Calendar.MONTH, 1);
+        }
+
+        return result;
     }
 
     public static void main(String args[]) {

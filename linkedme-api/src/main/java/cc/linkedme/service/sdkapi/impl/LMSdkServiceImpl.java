@@ -14,10 +14,13 @@ import cc.linkedme.commons.uuid.UuidCreator;
 import cc.linkedme.dao.sdkapi.ClientDao;
 import cc.linkedme.data.model.ClientInfo;
 import cc.linkedme.data.model.DeepLink;
+import cc.linkedme.data.model.params.CloseParams;
+import cc.linkedme.data.model.params.InstallParams;
 import cc.linkedme.data.model.params.LMCloseParams;
 import cc.linkedme.data.model.params.LMInstallParams;
 import cc.linkedme.data.model.params.LMOpenParams;
 import cc.linkedme.data.model.params.LMUrlParams;
+import cc.linkedme.data.model.params.UrlParams;
 import cc.linkedme.exception.LMException;
 import cc.linkedme.exception.LMExceptionFactor;
 import cc.linkedme.mcq.ClientMsgPusher;
@@ -56,39 +59,39 @@ public class LMSdkServiceImpl implements LMSdkService {
     @Resource
     public ClientDao clientDao;
 
-    public String install(LMInstallParams lmInstallParams) {
+    public String install(InstallParams installParams) {
         ClientInfo clientInfo = new ClientInfo();
-        clientInfo.setDeviceId(lmInstallParams.deviceId);
-        clientInfo.setLinkedmeKey(lmInstallParams.linkedMEKey);
-        clientInfo.setDeviceType(lmInstallParams.deviceType);
-        clientInfo.setDeviceModel(lmInstallParams.deviceModel);
-        clientInfo.setDeviceBrand(lmInstallParams.deviceBrand);
-        clientInfo.setHasBlutooth(lmInstallParams.hasBluetooth);
-        clientInfo.setHasNfc(lmInstallParams.hasNfc);
-        clientInfo.setHasSim(lmInstallParams.hasSim);
-        clientInfo.setOs(lmInstallParams.os);
-        clientInfo.setOsVersion(lmInstallParams.osVersion);
-        clientInfo.setScreenDpi(lmInstallParams.screenDpi);
-        clientInfo.setScreenHeight(lmInstallParams.screenHeight);
-        clientInfo.setScreenWidth(lmInstallParams.screenWidth);
-        clientInfo.setIsWifi(lmInstallParams.isWifi);
-        clientInfo.setIsReferable(lmInstallParams.isReferable);
-        clientInfo.setLatVal(lmInstallParams.vatVal);
-        clientInfo.setCarrier(lmInstallParams.carrier);
-        clientInfo.setAppVersion(lmInstallParams.appVersion);
-        clientInfo.setSdkUpdate(lmInstallParams.sdkUpdate);
-        clientInfo.setIosTeamId(lmInstallParams.iOSTeamId);
-        clientInfo.setIosBundleId(lmInstallParams.iOSBundleId);
+        clientInfo.setDeviceId(installParams.device_id);
+        clientInfo.setLinkedmeKey(installParams.linkedme_key);
+        clientInfo.setDeviceType(installParams.device_type);
+        clientInfo.setDeviceModel(installParams.device_model);
+        clientInfo.setDeviceBrand(installParams.device_brand);
+        clientInfo.setHasBlutooth(installParams.has_bluetooth);
+        clientInfo.setHasNfc(installParams.has_nfc);
+        clientInfo.setHasSim(installParams.has_sim);
+        clientInfo.setOs(installParams.os);
+        clientInfo.setOsVersion(installParams.os_version);
+        clientInfo.setScreenDpi(installParams.screen_dpi);
+        clientInfo.setScreenHeight(installParams.screen_height);
+        clientInfo.setScreenWidth(installParams.screen_width);
+        clientInfo.setIsWifi(installParams.is_wifi);
+        clientInfo.setIsReferable(installParams.is_referable);
+        clientInfo.setLatVal(installParams.lat_val);
+        clientInfo.setCarrier(installParams.carrier);
+        clientInfo.setAppVersion(installParams.app_version);
+        clientInfo.setSdkUpdate(installParams.sdk_update);
+        clientInfo.setIosTeamId(installParams.ios_team_id);
+        clientInfo.setIosBundleId(installParams.ios_bundle_id);
 
         String params = null;
-        String deviceId = lmInstallParams.deviceId;
+        String deviceId = installParams.device_id;
         JedisPort clientRedisClient = clientShardingSupport.getClient(deviceId);
         String identityIdStr = clientRedisClient.get(deviceId);
         long identityId;
         long deepLinkId = 0;
         if (Strings.isNullOrEmpty(identityIdStr)) { // 之前不存在identityId
             // device_fingerprint_id 与 browse_fingerprint_id匹配逻辑
-            String[] identityIdAndDeepLinkId = matchDfpIdAndBfpId(lmInstallParams);
+            String[] identityIdAndDeepLinkId = matchDfpIdAndBfpId(installParams);
             if (identityIdAndDeepLinkId.length == 2) { // 匹配成功
                 identityId = Long.parseLong(identityIdAndDeepLinkId[0]);
                 deepLinkId = Long.parseLong(identityIdAndDeepLinkId[1]);
@@ -108,7 +111,7 @@ public class LMSdkServiceImpl implements LMSdkService {
                                                         // 但是没有identityId与deepLink的键值对
                 // device_fingerprint_id 与 browse_fingerprint_id匹配逻辑
                 // 如果匹配上了,更新<device_id, identity_id>记录，并把<device_id, identity_id>放在历史库;
-                String[] identityIdAndDeepLinkId = matchDfpIdAndBfpId(lmInstallParams);
+                String[] identityIdAndDeepLinkId = matchDfpIdAndBfpId(installParams);
                 if (identityIdAndDeepLinkId.length == 2) { // device_fingerprint_id 与
                                                            // browse_fingerprint_id匹配成功
                     long rightIdentityId = Long.parseLong(identityIdAndDeepLinkId[0]);
@@ -134,7 +137,7 @@ public class LMSdkServiceImpl implements LMSdkService {
         JsonBuilder resultJson = new JsonBuilder();
         resultJson.append("session_id", System.currentTimeMillis());
         resultJson.append("identity_id", identityId);
-        resultJson.append("device_fingerprint_id", lmInstallParams.deviceFingerprintId);
+        resultJson.append("device_fingerprint_id", installParams.device_fingerprint_id);
         resultJson.append("browser_fingerprint_id", "");
         resultJson.append("link", "");
         resultJson.append("params", params);
@@ -143,10 +146,10 @@ public class LMSdkServiceImpl implements LMSdkService {
         return resultJson.flip().toString();
     }
 
-    private String[] matchDfpIdAndBfpId(LMInstallParams lmInstallParams) {
+    private String[] matchDfpIdAndBfpId(InstallParams installParams) {
         Joiner joiner = Joiner.on("&").skipNulls();
-        String deviceParamsStr = joiner.join(lmInstallParams.deviceBrand, lmInstallParams.deviceModel, lmInstallParams.os,
-                lmInstallParams.osVersion, lmInstallParams.screenDpi, lmInstallParams.screenHeight, lmInstallParams.screenWidth);
+        String deviceParamsStr = joiner.join(installParams.device_brand, installParams.device_model, installParams.os,
+                installParams.os_version, installParams.screen_dpi, installParams.screen_height, installParams.screen_width);
         String deviceFingerprintId = MD5Utils.md5(deviceParamsStr);
         JedisPort clientRedisClient = clientShardingSupport.getClient(deviceFingerprintId);
         String identityIdAndDeepLinkId = clientRedisClient.get(deviceFingerprintId);
@@ -168,10 +171,10 @@ public class LMSdkServiceImpl implements LMSdkService {
         return param;
     }
 
-    public String url(LMUrlParams lmUrlParams) {
+    public String url(UrlParams urlParams) {
         Joiner joiner = Joiner.on("&").skipNulls();
-        String urlParamsStr = joiner.join(lmUrlParams.linkedMEKey, lmUrlParams.tags, lmUrlParams.alias, lmUrlParams.channel,
-                lmUrlParams.feature, lmUrlParams.stage, lmUrlParams.params);
+        String urlParamsStr = joiner.join(urlParams.linkedme_key, urlParams.tags, urlParams.alias, urlParams.channel,
+                urlParams.feature, urlParams.stage, urlParams.params);
         String deepLinkMd5 = MD5Utils.md5(urlParamsStr);
         // 从redis里查找md5是否存在
         // 如果存在,找出对应的deeplink_id,base62进行编码,
@@ -184,13 +187,13 @@ public class LMSdkServiceImpl implements LMSdkService {
         long appId = 0; // 根据linkedme_key去库里查询
         if (id != null) {
             String linkId = Base62.encode(Long.parseLong(id));
-            return Constants.DEEPLINK_HTTP_PREFIX + appId + "/" + linkId;
+            return Constants.DEEPLINK_HTTPS_PREFIX + appId + "/" + linkId;
         }
 
         long deepLinkId = uuidCreator.nextId(0);    //0表示发号器的deepLink业务
-        DeepLink link = new DeepLink(deepLinkId, deepLinkMd5, lmUrlParams.appid, lmUrlParams.linkedMEKey, lmUrlParams.identityId,
-                lmUrlParams.tags, lmUrlParams.alias, lmUrlParams.channel, lmUrlParams.feature, lmUrlParams.stage, lmUrlParams.campaign,
-                lmUrlParams.params, lmUrlParams.source, lmUrlParams.sdkVersion);
+        DeepLink link = new DeepLink(deepLinkId, deepLinkMd5, urlParams.appid, urlParams.linkedme_key, urlParams.identity_id,
+                urlParams.tags, urlParams.alias, urlParams.channel, urlParams.feature, urlParams.stage, urlParams.campaign,
+                urlParams.params, urlParams.source, urlParams.sdk_version);
         SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
         link.setCreateTime(df.format(new Date())); // 设置deeplink的创建时间
         // 写redis
@@ -204,9 +207,9 @@ public class LMSdkServiceImpl implements LMSdkService {
         return result; // linkedme_key & tags & alias & channel & feature & stage & params
     }
 
-    public void close(LMCloseParams lmCloseParams) {
+    public void close(CloseParams closeParams) {
         // 清空session
-        ApiLogger.info("");// 记录日志
+        ApiLogger.info(closeParams.device_fingerprint_id + ", " + closeParams.linkedme_key + " close");// 记录日志
     }
 
     public String preInstall(String linkClickId) {

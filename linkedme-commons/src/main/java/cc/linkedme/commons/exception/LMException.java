@@ -26,7 +26,7 @@ public class LMException extends RuntimeException {
         if (message == null) {
             description = factor.getErrorMessageEn();
         } else {
-            description = message.toString();
+            description = factor.getErrorMessageEn() + ", " + message.toString();
         }
     }
 

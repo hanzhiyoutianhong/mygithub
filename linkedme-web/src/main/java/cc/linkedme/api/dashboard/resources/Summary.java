@@ -20,14 +20,14 @@ import javax.ws.rs.core.MediaType;
  * Created by LinkedME01 on 16/3/20.
  */
 
-@Path("v1")
+@Path("summary")
 @Component
 public class Summary {
 
     @Resource
     private SummaryService summaryService;
 
-    @Path("/get_deeplink_summary")
+    @Path("/deeplinks_count")
     @GET
     @Produces({MediaType.APPLICATION_JSON})
     public String getDeepLinkSummary(@QueryParam("appid") long appid,
@@ -38,12 +38,13 @@ public class Summary {
                           @QueryParam("stage") String stage,
                           @QueryParam("channel") String channel,
                           @QueryParam("tag") String tag,
+                          @QueryParam("source") String source,
                           @QueryParam("unique") boolean unique,
                           @QueryParam("return_number") int return_number,
                           @QueryParam("skip_number") int skip_number,
                           @QueryParam("orderby") String orderby) {
 
-        SummaryDeepLinkParams summaryDeepLinkParams = new SummaryDeepLinkParams(appid, start_date, end_date, feature, campaign, stage, channel, tag, unique, return_number, skip_number, orderby);
+        SummaryDeepLinkParams summaryDeepLinkParams = new SummaryDeepLinkParams(appid, start_date, end_date, feature, campaign, stage, channel, tag, source, unique, return_number, skip_number, orderby);
 
         String result = summaryService.getDeepLinkSummary( summaryDeepLinkParams );
         return result;

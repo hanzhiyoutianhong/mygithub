@@ -62,12 +62,10 @@
             <param-value>cc.linkedme.api.lkme.*,cc.linkedme.commons.exception</param-value>
         </init-param>
 
-        <!-- application/json
         <init-param>
             <param-name>com.sun.jersey.api.json.POJOMappingFeature</param-name>
             <param-value>true</param-value>
         </init-param>
-        -->
 
         <load-on-startup>1</load-on-startup>
     </servlet>
