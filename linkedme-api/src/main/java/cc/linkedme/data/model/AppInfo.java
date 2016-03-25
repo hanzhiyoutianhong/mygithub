@@ -1,10 +1,7 @@
 package cc.linkedme.data.model;
 
-import cc.linkedme.commons.json.JsonBuilder;
-import net.sf.json.JSON;
 import net.sf.json.JSONObject;
 
-import java.util.ArrayList;
 
 /**
  * Created by LinkedME01 on 16/3/18.
