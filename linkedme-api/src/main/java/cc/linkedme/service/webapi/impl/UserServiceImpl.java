@@ -24,7 +24,10 @@ public class UserServiceImpl implements UserService {
         if(userDao.queryEmail(userParams.email) == true)
             throw new LMException(LMExceptionFactor.LM_USER_EMAIL_ALREADY_REGISTERED);
         else
+        {
+            userDao.updateUserInfo( userParams );
             return true;
+        }
     }
 
     public UserInfo userLogin(UserParams userParams) {
