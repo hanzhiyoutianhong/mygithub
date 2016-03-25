@@ -10,11 +10,11 @@ public interface UserDao {
 
     int updateUserInfo(UserParams userParams);
 
-    int resetUserPwd( UserParams userParams );
+    int resetUserPwd(UserParams userParams);
 
-    int resetLastLoginTime( UserParams userParams );
+    int resetLastLoginTime(UserParams userParams);
 
-    UserInfo getUserInfo( String email );
+    UserInfo getUserInfo(String email);
 
-    boolean queryEmail( String email ); //验证邮箱是否存在
+    boolean queryEmail(String email); // 验证邮箱是否存在
 }

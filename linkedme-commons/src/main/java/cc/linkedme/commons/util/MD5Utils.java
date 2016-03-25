@@ -57,7 +57,7 @@ public class MD5Utils {
     }
 
     public static void main(String[] args) {
-        System.out.println(MD5Utils.md5("12312312312312"));
+        System.out.println(MD5Utils.md5("123312312312312"));
     }
 
 }

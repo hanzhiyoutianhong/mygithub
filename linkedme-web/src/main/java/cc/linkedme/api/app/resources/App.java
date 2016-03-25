@@ -20,7 +20,9 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * Created by LinkedME01 on 16/3/17.
@@ -36,7 +38,7 @@ public class App {
     @POST
     @Produces(MediaType.APPLICATION_JSON)
     public String createApp(AppParams appParam, @Context HttpServletRequest request) {
-
+//重名
         if (appParam.user_id <= 0) {
             throw new LMException(LMExceptionFactor.LM_ILLEGAL_PARAM_VALUE);
         }
@@ -45,6 +47,7 @@ public class App {
         }
 
         long app_id = appService.createApp(appParam);
+
         JsonBuilder resultJson = new JsonBuilder();
         resultJson.append("app_id", app_id);
         return resultJson.flip().toString();
@@ -52,7 +55,9 @@ public class App {
 
     @Path("/get_apps")
     @GET
+
     @Produces(MediaType.APPLICATION_JSON)
+
     public String getApps(@QueryParam("user_id") long user_id,
                           @QueryParam("token") String token,
                           @Context HttpServletRequest request) {
@@ -60,13 +65,45 @@ public class App {
         if (user_id <= 0) {
             throw new LMException(LMExceptionFactor.LM_ILLEGAL_PARAM_VALUE);
         }
-        List<AppInfo> apps = appService.getAppsByUserId(user_id);
+
+        AppParams appParams = new AppParams();
+        appParams.user_id = user_id;
+        List<AppInfo> apps = appService.getAppsByUserId( appParams );
+
+        Map<Long, JSONObject> json_map = new HashMap<Long, JSONObject>();
+
         JSONArray jsonArray = new JSONArray();
+        int count = 0;
         for (AppInfo app : apps) {
-            jsonArray.add(app.toJson());
+
+            long app_id = app.getApp_id();
+            String current_type = app.getType();
+            if( json_map.get( app_id ) == null )
+                json_map.put( app_id, app.toJson() );
+            else
+            {
+                JSONObject json_tmp = new JSONObject();
+
+                json_tmp.put( "app_id", app_id );
+                if( "live".equals(current_type) )
+                {
+                    json_tmp.put( "live", app.toJson() );
+                    json_tmp.put( "test", json_map.get( app_id ) );
+                }
+                else if( "test".equals(current_type) )
+                {
+                    json_tmp.put( "live", json_map.get( app_id ) );
+
+                    json_tmp.put( "test", app.toJson() );
+                }
+
+                jsonArray.add( json_tmp );
+                count++;
+            }
+
         }
         JSONObject resultJson = new JSONObject();
-        resultJson.put("counts", apps.size());
+        resultJson.put("counts", count);
         resultJson.put("data", jsonArray);
         return resultJson.toString();
     }
@@ -94,18 +131,21 @@ public class App {
     @GET
     @Produces(MediaType.APPLICATION_JSON)
     public String queryApp(@QueryParam("app_id") long app_id,
+                           @QueryParam("type") String type,
                            @QueryParam("token") String token,
                            @Context HttpServletRequest request) {
+
         if (app_id <= 0) {
             throw new LMException(LMExceptionFactor.LM_ILLEGAL_PARAM_VALUE);
         }
 
         AppParams appParams = new AppParams();
         appParams.app_id = app_id;
+        appParams.type = type;
 
         AppInfo appInfo = appService.queryApp(appParams);
 
-        return appInfo.toJson();
+        return appInfo.toJson().toString();
     }
 
     @Path("/update_app")
@@ -114,9 +154,10 @@ public class App {
     public String updateApp(AppParams appParams, @Context HttpServletRequest request) {
 
         int ios_android_flag =
-                ((appParams.has_ios ? 1 : 0) << 3) + (appParams.enable_ulink ? 1 : 0) << 2 + (appParams.has_android ? 1 : 0) << 1
-                        + (appParams.enable_applinks ? 1 : 0);
-        appParams.iosAndroidFlag = ios_android_flag;
+                ((appParams.has_ios ? 1 : 0) << 3) + (appParams.ios_enable_ulink ? 1 : 0) << 2 + (appParams.has_android ? 1 : 0) << 1
+                        + (appParams.android_enable_applinks ? 1 : 0);
+
+        appParams.ios_android_flag = ios_android_flag;
 
         appService.updateApp(appParams);
 
