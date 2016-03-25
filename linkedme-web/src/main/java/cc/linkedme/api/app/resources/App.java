@@ -75,6 +75,7 @@ public class App {
         JSONArray jsonArray = new JSONArray();
         int count = 0;
         for (AppInfo app : apps) {
+
             long app_id = app.getApp_id();
             String current_type = app.getType();
             if( json_map.get( app_id ) == null )
@@ -92,6 +93,7 @@ public class App {
                 else if( "test".equals(current_type) )
                 {
                     json_tmp.put( "live", json_map.get( app_id ) );
+
                     json_tmp.put( "test", app.toJson() );
                 }
 
