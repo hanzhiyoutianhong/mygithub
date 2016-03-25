@@ -20,7 +20,9 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * Created by LinkedME01 on 16/3/17.
@@ -60,19 +62,36 @@ public class App {
                           @QueryParam("token") String token,
                           @Context HttpServletRequest request) {
 
-
         if (user_id <= 0) {
             throw new LMException(LMExceptionFactor.LM_ILLEGAL_PARAM_VALUE);
         }
+        List<AppInfo> apps = appService.getAppsByUserId(user_id);
 
-        AppParams appParams = new AppParams();
-        appParams.user_id = user_id;
-        appParams.type = "live";
+        Map<String, JSONObject> json_map = new HashMap<String, JSONObject>();
 
-        List<AppInfo> apps = appService.getAppsByUserId(appParams);
         JSONArray jsonArray = new JSONArray();
         for (AppInfo app : apps) {
-            jsonArray.add(app.toJson());
+            String app_key = app.();
+            String current_type = app.getType();
+            if( json_map.get( app_key ) == null )
+                json_map.put( app_key, app.toJson() );
+            else
+            {
+                JSONObject json_tmp = new JSONObject();
+                if( "live".equals(current_type) )
+                {
+                    json_tmp.put( "live", app.toJson() );
+                    json_tmp.put( "test", json_map.get( app_key ) );
+                }
+                else if( "test".equals(current_type) )
+                {
+                    json_tmp.put( "live", json_map.get( app_key ) );
+                    json_tmp.put( "test", app.toJson() );
+                }
+
+                jsonArray.add( json_tmp );
+            }
+
         }
         JSONObject resultJson = new JSONObject();
         resultJson.put("counts", apps.size());
