@@ -227,20 +227,13 @@ public class AppInfo {
         link_setting.put( "android", android );
         link_setting.put( "desktop", desktop );
 
-        JSONObject type = new JSONObject();
-        type.put( "app_name", app_name );
-        type.put( "lkme_key", app_key );
-        type.put( "lkme_secret", app_secret );
-        type.put( "link_setting", link_setting );
+        JSONObject resultJson = new JSONObject();
+        resultJson.put( "app_name", app_name );
+        resultJson.put( "lkme_key", app_key );
+        resultJson.put( "lkme_secret", app_secret );
+        resultJson.put( "link_setting", link_setting );
 
-        JSONObject jsonObject = new JSONObject();
-        jsonObject.put( "app_id", app_id );
-        if( "live".equals(type) )
-            jsonObject.put( "live", type );
-        else if( "test".equals(type) )
-            jsonObject.put( "test", type );
-
-        return jsonObject;
+        return resultJson;
     }
 
 }

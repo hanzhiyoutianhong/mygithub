@@ -70,34 +70,38 @@ public class App {
         appParams.user_id = user_id;
         List<AppInfo> apps = appService.getAppsByUserId( appParams );
 
-        Map<String, JSONObject> json_map = new HashMap<String, JSONObject>();
+        Map<Long, JSONObject> json_map = new HashMap<Long, JSONObject>();
 
         JSONArray jsonArray = new JSONArray();
+        int count = 0;
         for (AppInfo app : apps) {
-            String app_key = app.getApp_key();
+            long app_id = app.getApp_id();
             String current_type = app.getType();
-            if( json_map.get( app_key ) == null )
-                json_map.put( app_key, app.toJson() );
+            if( json_map.get( app_id ) == null )
+                json_map.put( app_id, app.toJson() );
             else
             {
                 JSONObject json_tmp = new JSONObject();
+
+                json_tmp.put( "app_id", app_id );
                 if( "live".equals(current_type) )
                 {
                     json_tmp.put( "live", app.toJson() );
-                    json_tmp.put( "test", json_map.get( app_key ) );
+                    json_tmp.put( "test", json_map.get( app_id ) );
                 }
                 else if( "test".equals(current_type) )
                 {
-                    json_tmp.put( "live", json_map.get( app_key ) );
+                    json_tmp.put( "live", json_map.get( app_id ) );
                     json_tmp.put( "test", app.toJson() );
                 }
 
                 jsonArray.add( json_tmp );
+                count++;
             }
 
         }
         JSONObject resultJson = new JSONObject();
-        resultJson.put("counts", apps.size());
+        resultJson.put("counts", count);
         resultJson.put("data", jsonArray);
         return resultJson.toString();
     }
