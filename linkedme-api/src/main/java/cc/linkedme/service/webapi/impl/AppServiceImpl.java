@@ -24,9 +24,9 @@ public class AppServiceImpl implements AppService {
     public long createApp(AppParams appParams) {
         long appId = uuidCreator.nextId(2); //2表示发号器的app业务
         AppInfo appInfo = new AppInfo();
-        appInfo.setAppId(appId);
-        appInfo.setAppName(appParams.app_name);
-        appInfo.setUserId(appParams.user_id);
+        appInfo.setApp_id(appId);
+        appInfo.setApp_name(appParams.app_name);
+        appInfo.setUser_id(appParams.user_id);
         if (appDao.insertApp(appInfo) > 0) {
             return appId;
         }
