@@ -34,9 +34,9 @@ public class AppDaoImpl extends BaseDao implements AppDao {
             ApiLogger.error("AppDaoImpl.insertApp appInfo is null, add failed");
             return result;
         }
-        long appId = appInfo.getAppId();
-        String appName = appInfo.getAppName();
-        long userId = appInfo.getUserId();
+        long appId = appInfo.getApp_id();
+        String appName = appInfo.getApp_name();
+        long userId = appInfo.getUser_id();
         TableChannel tableChannel = tableContainer.getTableChannel("appInfo", ADD_APP, userId, userId); // 根据userId
                                                                                                         // hash
         try {
