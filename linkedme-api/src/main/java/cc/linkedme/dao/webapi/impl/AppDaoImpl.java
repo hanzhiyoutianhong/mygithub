@@ -62,31 +62,29 @@ public class AppDaoImpl extends BaseDao implements AppDao {
         TableChannel tableChannel = tableContainer.getTableChannel("appInfo", GET_APPS_BY_USERID, appParams.user_id, appParams.user_id);
         JdbcTemplate jdbcTemplate = tableChannel.getJdbcTemplate();
         final List<AppInfo> appInfos = new ArrayList<AppInfo>();
-        jdbcTemplate.query(tableChannel.getSql(), new Object[] {appParams.user_id, appParams.type}, new RowMapper() {
+        jdbcTemplate.query(tableChannel.getSql(), new Object[] {appParams.user_id}, new RowMapper() {
             public Object mapRow(ResultSet resultSet, int i) throws SQLException {
                 AppInfo app = new AppInfo();
-
-                app.setApp_id( resultSet.getLong( "id" ) );
-                app.setApp_name( resultSet.getString( "app_name" ) );
-                /*app.setApp_id(resultSet.getLong("id"));
+                app.setApp_id(resultSet.getLong("id"));
+                app.setType(resultSet.getString("type"));
+                app.setUser_id(appParams.user_id);
                 app.setApp_name(resultSet.getString("app_name"));
-                app.setLkme_key(resultSet.getString("app_live_key"));
-                app.setLkme_secret(resultSet.getString("app_live_secret"));
-
+                app.setLkme_key(resultSet.getString("app_key"));
+                app.setLkme_secret(resultSet.getString("app_secret"));
                 app.setIos_uri_scheme(resultSet.getString("ios_uri_scheme"));
-                app.setIos_search_option(resultSet.getString("ios_not_url"));
+                app.setIos_search_option(resultSet.getString("ios_search_option"));
                 app.setIos_store_url(resultSet.getString("ios_store_url"));
                 app.setIos_custom_url(resultSet.getString("ios_custom_url"));
-                app.setIos_buddle_id(resultSet.getString("ios_bundle_id"));//
-                app.setIos_app_prefix(resultSet.getString("ios_prefix"));
+                app.setIos_bundle_id(resultSet.getString("ios_bundle_id"));
+                app.setIos_app_prefix(resultSet.getString("ios_app_prefix"));
                 app.setAndroid_uri_scheme(resultSet.getString("android_uri_scheme"));
-                app.setAndroid_search_option(resultSet.getString("android_not_url"));
+                app.setAndroid_search_option(resultSet.getString("android_search_option"));
                 app.setGoogle_play_search(resultSet.getString("google_play_url"));
                 app.setAndroid_custom_url(resultSet.getString("android_custom_url"));
                 app.setAndroid_package_name(resultSet.getString("android_package_name"));
-                app.setAndroid_sha256_fingerprints(resultSet.getString("android_prefix"));
+                app.setAndroid_sha256_fingerprints(resultSet.getString("android_sha256_fingerprints"));
                 app.setIosAndroidFlag(resultSet.getInt("ios_android_flag"));
-                app.setQr_code(resultSet.getString("desktop_url"));*/
+                app.setQr_code(resultSet.getString("qr_code"));
                 appInfos.add(app);
                 return null;
             }
