@@ -1,10 +1,7 @@
 package cc.linkedme.data.model;
 
-import cc.linkedme.commons.json.JsonBuilder;
-import net.sf.json.JSON;
 import net.sf.json.JSONObject;
 
-import java.util.ArrayList;
 
 /**
  * Created by LinkedME01 on 16/3/18.
@@ -15,8 +12,8 @@ public class AppInfo {
     private String app_name;
     private String type;
 
-    private String lkme_key;
-    private String lkme_secret;
+    private String app_key;
+    private String app_secret;
 
     private String ios_uri_scheme;
     private String ios_search_option;
@@ -27,16 +24,13 @@ public class AppInfo {
 
     private String android_uri_scheme;
     private String android_search_option;
-    private String google_play_url;
+    private String google_paly_url;
     private String android_custom_url;
     private String android_package_name;
     private String android_sha256_fingerprints;
+    private int ios_android_flag;
+
     private String qr_code;
-
-    private String register_time;
-    private String last_update_time;
-
-    private int iosAndroidFlag;
 
     public long getApp_id() {
         return app_id;
@@ -70,20 +64,20 @@ public class AppInfo {
         this.type = type;
     }
 
-    public String getLkme_key() {
-        return lkme_key;
+    public String getApp_key() {
+        return app_key;
     }
 
-    public void setLkme_key(String lkme_key) {
-        this.lkme_key = lkme_key;
+    public void setApp_key(String app_key) {
+        this.app_key = app_key;
     }
 
-    public String getLkme_secret() {
-        return lkme_secret;
+    public String getApp_secret() {
+        return app_secret;
     }
 
-    public void setLkme_secret(String lkme_secret) {
-        this.lkme_secret = lkme_secret;
+    public void setApp_secret(String app_secret) {
+        this.app_secret = app_secret;
     }
 
     public String getIos_uri_scheme() {
@@ -150,12 +144,12 @@ public class AppInfo {
         this.android_search_option = android_search_option;
     }
 
-    public String getGoogle_play_url() {
-        return google_play_url;
+    public String getGoogle_paly_url() {
+        return google_paly_url;
     }
 
-    public void setGoogle_play_search(String google_play_url) {
-        this.google_play_url = google_play_url;
+    public void setGoogle_paly_url(String google_paly_url) {
+        this.google_paly_url = google_paly_url;
     }
 
     public String getAndroid_custom_url() {
@@ -182,6 +176,14 @@ public class AppInfo {
         this.android_sha256_fingerprints = android_sha256_fingerprints;
     }
 
+    public int getIos_android_flag() {
+        return ios_android_flag;
+    }
+
+    public void setIos_android_flag(int ios_android_flag) {
+        this.ios_android_flag = ios_android_flag;
+    }
+
     public String getQr_code() {
         return qr_code;
     }
@@ -190,36 +192,12 @@ public class AppInfo {
         this.qr_code = qr_code;
     }
 
-    public int getIosAndroidFlag() {
-        return iosAndroidFlag;
-    }
-
-    public void setIosAndroidFlag(int iosAndroidFlag) {
-        this.iosAndroidFlag = iosAndroidFlag;
-    }
-
-    public String getRegister_time() {
-        return register_time;
-    }
-
-    public void setRegister_time(String register_time) {
-        this.register_time = register_time;
-    }
-
-    public String getLast_update_time() {
-        return last_update_time;
-    }
-
-    public void setLast_update_time(String last_update_time) {
-        this.last_update_time = last_update_time;
-    }
-
-    public String toJson()
+    public JSONObject toJson()
     {
-        boolean has_ios = ( ( iosAndroidFlag & 8 ) >> 3 == 1 ) ? true : false;
-        boolean ios_enable_ulink = ( ( iosAndroidFlag & 4 ) >> 2 == 1 ) ? true : false;
-        boolean has_android = ( ( iosAndroidFlag & 2 ) >> 1 == 1 ) ? true : false;
-        boolean android_enable_applinks = ( iosAndroidFlag & 1 ) == 1 ? true : false;
+        boolean has_ios = ( ios_android_flag & 8 ) >> 3 == 1 ? true : false;
+        boolean ios_enable_ulink = ( ios_android_flag & 4 ) >> 2 == 1 ? true : false;
+        boolean has_android = ( ios_android_flag & 2 ) >> 1 == 1 ? true : false;
+        boolean android_enable_applinks = ( ios_android_flag & 1 ) == 1 ? true : false;
 
         JSONObject ios = new JSONObject();
         ios.put( "has_ios", has_ios );
@@ -235,7 +213,7 @@ public class AppInfo {
         android.put( "has_android", has_android );
         android.put( "android_uri_scheme", android_uri_scheme );
         android.put( "android_search_option", android_search_option );
-        android.put( "google_play_url", google_play_url );
+        android.put( "google_play_url", google_paly_url );
         android.put( "android_custom_url", android_custom_url );
         android.put( "android_package_name", android_package_name );
         android.put( "android_enable_applinks", android_enable_applinks );
@@ -244,20 +222,25 @@ public class AppInfo {
         JSONObject desktop = new JSONObject();
         desktop.put( "qr_code", qr_code );
 
-
         JSONObject link_setting = new JSONObject();
         link_setting.put( "ios", ios );
         link_setting.put( "android", android );
         link_setting.put( "desktop", desktop );
 
-        JSONObject jsonObject = new JSONObject();
-        jsonObject.put( "app_name",app_name );
-        jsonObject.put( "type", type );
-        jsonObject.put( "lkme_key", lkme_key );
-        jsonObject.put( "lkme_secret", lkme_secret );
-        jsonObject.put( "link_setting", link_setting );
+        JSONObject type = new JSONObject();
+        type.put( "app_name", app_name );
+        type.put( "lkme_key", app_key );
+        type.put( "lkme_secret", app_secret );
+        type.put( "link_setting", link_setting );
 
-        return jsonObject.toString();
+        JSONObject jsonObject = new JSONObject();
+        jsonObject.put( "app_id", app_id );
+        if( "live".equals(type) )
+            jsonObject.put( "live", type );
+        else if( "test".equals(type) )
+            jsonObject.put( "test", type );
+
+        return jsonObject;
     }
 
 }
