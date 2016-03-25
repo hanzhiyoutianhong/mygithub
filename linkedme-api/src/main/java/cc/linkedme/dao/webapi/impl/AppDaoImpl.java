@@ -44,7 +44,7 @@ public class AppDaoImpl extends BaseDao implements AppDao {
 
         TableChannel tableChannel = tableContainer.getTableChannel("appInfo", ADD_APP, userId, userId);
 
-        Object[] values = {appInfo.getApp_id(), appInfo.getApp_name(), appInfo.getUser_id(), appInfo.getLkme_key(), appInfo.getType()};
+        Object[] values = {appInfo.getApp_id(), appInfo.getApp_name(), appInfo.getUser_id(), appInfo.getApp_key(), appInfo.getType()};
 
         try {
             result += tableChannel.getJdbcTemplate().update(tableChannel.getSql(), values);
@@ -69,8 +69,8 @@ public class AppDaoImpl extends BaseDao implements AppDao {
                 app.setType(resultSet.getString("type"));
                 app.setUser_id(appParams.user_id);
                 app.setApp_name(resultSet.getString("app_name"));
-                app.setLkme_key(resultSet.getString("app_key"));
-                app.setLkme_secret(resultSet.getString("app_secret"));
+                app.setApp_key(resultSet.getString("app_key"));
+                app.setApp_secret(resultSet.getString("app_secret"));
                 app.setIos_uri_scheme(resultSet.getString("ios_uri_scheme"));
                 app.setIos_search_option(resultSet.getString("ios_search_option"));
                 app.setIos_store_url(resultSet.getString("ios_store_url"));
@@ -79,11 +79,11 @@ public class AppDaoImpl extends BaseDao implements AppDao {
                 app.setIos_app_prefix(resultSet.getString("ios_app_prefix"));
                 app.setAndroid_uri_scheme(resultSet.getString("android_uri_scheme"));
                 app.setAndroid_search_option(resultSet.getString("android_search_option"));
-                app.setGoogle_play_search(resultSet.getString("google_play_url"));
+                app.setGoogle_paly_url(resultSet.getString("google_play_url"));
                 app.setAndroid_custom_url(resultSet.getString("android_custom_url"));
                 app.setAndroid_package_name(resultSet.getString("android_package_name"));
                 app.setAndroid_sha256_fingerprints(resultSet.getString("android_sha256_fingerprints"));
-                app.setIosAndroidFlag(resultSet.getInt("ios_android_flag"));
+                app.setIos_android_flag(resultSet.getInt("ios_android_flag"));
                 app.setQr_code(resultSet.getString("qr_code"));
                 appInfos.add(app);
                 return null;
@@ -118,8 +118,8 @@ public class AppDaoImpl extends BaseDao implements AppDao {
                 app.setType( appParams.type );
                 app.setUser_id(resultSet.getLong("user_id"));
                 app.setApp_name(resultSet.getString("app_name"));
-                app.setLkme_key(resultSet.getString("app_key"));
-                app.setLkme_secret(resultSet.getString("app_secret"));
+                app.setApp_key(resultSet.getString("app_key"));
+                app.setApp_secret(resultSet.getString("app_secret"));
                 app.setIos_uri_scheme(resultSet.getString("ios_uri_scheme"));
                 app.setIos_search_option(resultSet.getString("ios_search_option"));
                 app.setIos_store_url(resultSet.getString("ios_store_url"));
@@ -128,11 +128,11 @@ public class AppDaoImpl extends BaseDao implements AppDao {
                 app.setIos_app_prefix(resultSet.getString("ios_app_prefix"));
                 app.setAndroid_uri_scheme(resultSet.getString("android_uri_scheme"));
                 app.setAndroid_search_option(resultSet.getString("android_search_option"));
-                app.setGoogle_play_search(resultSet.getString("google_play_url"));
+                app.setGoogle_paly_url(resultSet.getString("google_play_url"));
                 app.setAndroid_custom_url(resultSet.getString("android_custom_url"));
                 app.setAndroid_package_name(resultSet.getString("android_package_name"));
                 app.setAndroid_sha256_fingerprints(resultSet.getString("android_sha256_fingerprints"));
-                app.setIosAndroidFlag(resultSet.getInt("ios_android_flag"));
+                app.setIos_android_flag(resultSet.getInt("ios_android_flag"));
                 app.setQr_code(resultSet.getString("qr_code"));
 
                 appInfos.add(app);

@@ -32,13 +32,13 @@ public class AppServiceImpl implements AppService {
         String live_md5_key = appParams.app_name + "live" + appParams.user_id + new Random(appId);
         String test_md5_key = appParams.app_name + "test" + appParams.user_id + new Random(appId);
 
-        app_live_Info.setLkme_key( new MD5Utils().md5( live_md5_key ) );
+        app_live_Info.setApp_key( new MD5Utils().md5( live_md5_key ) );
         app_live_Info.setApp_id(appId);
         app_live_Info.setType( "live" );
         app_live_Info.setUser_id(appParams.user_id);
         app_live_Info.setApp_name(appParams.app_name);
 
-        app_test_Info.setLkme_key( new MD5Utils().md5( test_md5_key ) );
+        app_test_Info.setApp_key( new MD5Utils().md5( test_md5_key ) );
         app_test_Info.setApp_id(appId);
         app_test_Info.setType( "test" );
         app_test_Info.setUser_id(appParams.user_id);
