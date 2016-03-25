@@ -65,13 +65,16 @@ public class App {
         if (user_id <= 0) {
             throw new LMException(LMExceptionFactor.LM_ILLEGAL_PARAM_VALUE);
         }
-        List<AppInfo> apps = appService.getAppsByUserId(user_id);
+
+        AppParams appParams = new AppParams();
+        appParams.user_id = user_id;
+        List<AppInfo> apps = appService.getAppsByUserId( appParams );
 
         Map<String, JSONObject> json_map = new HashMap<String, JSONObject>();
 
         JSONArray jsonArray = new JSONArray();
         for (AppInfo app : apps) {
-            String app_key = app.();
+            String app_key = app.getApp_key();
             String current_type = app.getType();
             if( json_map.get( app_key ) == null )
                 json_map.put( app_key, app.toJson() );
@@ -136,7 +139,7 @@ public class App {
 
         AppInfo appInfo = appService.queryApp(appParams);
 
-        return appInfo.toJson();
+        return appInfo.toJson().toString();
     }
 
     @Path("/update_app")
