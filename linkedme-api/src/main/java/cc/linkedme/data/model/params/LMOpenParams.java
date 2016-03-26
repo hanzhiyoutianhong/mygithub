@@ -12,13 +12,14 @@ public class LMOpenParams extends LMBaseParams {
     public int sdkUpdate;
     public String os;
     public String latVal;
+    public String lastSource;
 
     /**
      * construction function
      */
 
     public LMOpenParams(String deviceFingerprintId, long identityId, boolean isReferable, String appVersion, String extra_uri_data, String osVersion, int sdkUpdate,
-            String os, boolean isDebug, String latVal, String sdkVersion, int retryTimes, String linkedmeKey) {
+            String os, boolean isDebug, String latVal, String sdkVersion, String lastSource, int retryTimes, String linkedmeKey) {
 
         super(linkedmeKey, identityId, deviceFingerprintId, sdkVersion, retryTimes, isDebug);
         this.isReferable = isReferable;
@@ -27,5 +28,6 @@ public class LMOpenParams extends LMBaseParams {
         this.osVersion = osVersion;
         this.sdkUpdate = sdkUpdate;
         this.latVal = latVal;
+        this.lastSource = lastSource;
     }
 }

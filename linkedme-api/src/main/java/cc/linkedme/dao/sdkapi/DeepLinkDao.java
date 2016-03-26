@@ -10,6 +10,8 @@ import java.util.List;
 public interface DeepLinkDao {
     int addDeepLink(DeepLink deepLink);
 
+    DeepLink getDeepLinkInfo(long deepLinkId, long appId);
+
     List<DeepLink> getDeepLinks(long appid, String start_date, String end_date, String feature, String campaign, String stage,
             String channel, String tag, boolean unique);
 }

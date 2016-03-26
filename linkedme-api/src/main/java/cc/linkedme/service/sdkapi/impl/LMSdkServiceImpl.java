@@ -2,10 +2,15 @@ package cc.linkedme.service.sdkapi.impl;
 
 import javax.annotation.Resource;
 
+import cc.linkedme.commons.counter.CountConst;
+import cc.linkedme.commons.counter.component.CountComponent;
+import cc.linkedme.commons.counter.task.CountTaskExecutor;
 import cc.linkedme.commons.json.JsonBuilder;
 import cc.linkedme.commons.log.ApiLogger;
+import cc.linkedme.commons.redis.JedisClient;
 import cc.linkedme.commons.redis.JedisPort;
 import cc.linkedme.commons.shard.ShardingSupportHash;
+import cc.linkedme.commons.thread.ExecutorServiceUtil;
 import cc.linkedme.commons.util.Base62;
 import cc.linkedme.commons.util.Constants;
 import cc.linkedme.commons.util.DeepLinkUtil;
@@ -14,6 +19,7 @@ import cc.linkedme.commons.uuid.UuidCreator;
 import cc.linkedme.dao.sdkapi.ClientDao;
 import cc.linkedme.data.model.ClientInfo;
 import cc.linkedme.data.model.DeepLink;
+import cc.linkedme.data.model.DeepLinkCount;
 import cc.linkedme.data.model.params.CloseParams;
 import cc.linkedme.data.model.params.InstallParams;
 import cc.linkedme.data.model.params.LMCloseParams;
@@ -33,6 +39,12 @@ import com.google.common.base.Strings;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.concurrent.Callable;
+import java.util.concurrent.Future;
+import java.util.concurrent.LinkedBlockingQueue;
+import java.util.concurrent.ThreadPoolExecutor;
+import java.util.concurrent.TimeUnit;
+import java.util.concurrent.TimeoutException;
 
 /**
  * Created by LinkedME00 on 16/1/15.
@@ -58,6 +70,11 @@ public class LMSdkServiceImpl implements LMSdkService {
 
     @Resource
     public ClientDao clientDao;
+
+    @Resource
+    private CountComponent deepLinkCountComponent;
+
+    public static ThreadPoolExecutor deepLinkCountThreadPool = new ThreadPoolExecutor(20, 20, 60L, TimeUnit.SECONDS, new LinkedBlockingQueue<Runnable>(300), new ThreadPoolExecutor.DiscardOldestPolicy());
 
     public String install(InstallParams installParams) {
         ClientInfo clientInfo = new ClientInfo();
@@ -168,6 +185,31 @@ public class LMSdkServiceImpl implements LMSdkService {
         String deepLink = DeepLinkUtil.getDeepLinkFromUrl(deepLinkUrl);
         long deepLinkId = Base62.decode(deepLink);
         String param = deepLinkService.getDeepLinkParam(deepLinkId);
+        if (!Strings.isNullOrEmpty(param)) {
+            // count
+            String deviceType = lmOpenParams.os.trim().toLowerCase();
+            if("android".equals(deviceType)) {
+                deviceType = "adr";
+            }
+            String countType = lmOpenParams.lastSource + "_" + deviceType + "_open";
+            if(!DeepLinkCount.isValidCountType(countType)) {
+                //TODO 对deviceType做判断
+                countType = "other_" + deviceType + "_open";
+            }
+            final String type = countType;
+            deepLinkCountThreadPool.submit(new Callable<Void>() {
+                @Override
+                public Void call() throws Exception {
+                    try {
+                        //TODO 对deeplink_id的有效性做判断
+                        deepLinkCountComponent.incr(deepLinkId, type, 1);
+                    } catch (Exception e) {
+                        ApiLogger.warn("LMSdkServiceImpl.open deepLinkCountThreadPool count failed", e);
+                    }
+                    return null;
+                }
+            });
+        }
         return param;
     }
 
@@ -184,7 +226,10 @@ public class LMSdkServiceImpl implements LMSdkService {
         JedisPort redisClient = deepLinkShardingSupport.getClient(deepLinkMd5);
         String id = redisClient.get(deepLinkMd5);
 
-        long appId = 0; // 根据linkedme_key去库里查询
+        long appId = urlParams.appid;   //web创建url传appid, sdk创建url不传appid
+        if(appId <= 0) {
+            appId = 100;    //根据linkedme_key去库里查询
+        }
         if (id != null) {
             String linkId = Base62.encode(Long.parseLong(id));
             return Constants.DEEPLINK_HTTPS_PREFIX + appId + "/" + linkId;
@@ -196,6 +241,7 @@ public class LMSdkServiceImpl implements LMSdkService {
                 urlParams.params, urlParams.source, urlParams.sdk_version);
         SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
         link.setCreateTime(df.format(new Date())); // 设置deeplink的创建时间
+        link.setAppId(appId);
         // 写redis
         redisClient.set(deepLinkMd5, deepLinkId);
         // set mc

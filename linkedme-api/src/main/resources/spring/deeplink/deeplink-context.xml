@@ -35,8 +35,9 @@
         <property name="tableCount" value="1" />           <!-- 这个参数和tableNamePostFix有关系，如果是日期就不用了。 -->
         <property name="sqls">
             <map>
-                <entry key="ADD_DEEPLINK" value="insert into $db$.$tb$ (deeplink_id, deeplink_md5, linkedme_key, identity_id, create_time, tags, alias, channel, feature, stage, campaign, source, sdk_version, update_time) values(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, now())"/>
-                <entry key="GET_DEEPLINKS" value="select deeplink_id, create_time, tags, alias, channel, feature, stage, campaign, source from $db$.$tb$ " />
+                <entry key="ADD_DEEPLINK" value="insert into $db$.$tb$ (deeplink_id, deeplink_md5, linkedme_key, identity_id, appid, create_time, tags, alias, channel, feature, stage, campaign, source, sdk_version, update_time) values(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, now())"/>
+                <entry key="GET_DEEPLINK_INFO" value="select deeplink_id, create_time, tags, alias, channel, feature, stage, campaign, source from $db$.$tb$ where appid = ?" />
+                <entry key="GET_DEEPLINKS" value="select deeplink_id, create_time, tags, alias, channel, feature, stage, campaign, source from $db$.$tb$ where deeplink_id = ? and appid = ?" />
                 <entry key="UPDATE_DEEPLINKS" value="update $db$.$tb$ set vflag = ?, mflag=? where status_id = ? and vflag in (0,6,7) and cmt_id = ?"/>
             </map>
         </property>
@@ -82,5 +83,89 @@
             </list>
         </property>
     </bean>
+
+    <bean id="deepLinkCountComponent"
+          class="cc.linkedme.commons.counter.component.impl.CountComponentSimple">
+        <property name="daoEnable" value="true" />
+        <property name="countDao" ref="deepLinkCountDao" />
+    </bean>
+
+    <!-- ************** count dao start ******************* -->
+    <bean id="deepLinkCountDao" class="cc.linkedme.commons.counter.dao.impl.CountDaoImpl">
+        <property name="shardingSupport">
+            <bean class="cc.linkedme.commons.shard.ShardingSupportHash">
+                <property name="clients" ref="countClientsMap" />
+                <property name="hashAlg" value="crc32" />
+                <property name="hashGene" value="256" />
+                <property name="tablePerDb" value="64" />
+            </bean>
+        </property>
+    </bean>
+
+    <bean id="countClientsMap" class="java.util.HashMap">
+        <constructor-arg>
+            <map>
+                <entry key="0" value-ref="countJedisClient_0"/>
+                <entry key="1" value-ref="countJedisClient_1"/>
+                <entry key="2" value-ref="countJedisClient_2"/>
+                <entry key="3" value-ref="countJedisClient_3"/>
+            </map>
+        </constructor-arg>
+    </bean>
+
+    <bean id="countJedisClient_0" class="cc.linkedme.commons.redis.JedisMSServer"
+          init-method="init">
+        <property name="masterConfig">
+            <bean parent="jedisPoolConfig">
+                <property name="serverPortDb" value="117.114.130.212:22222"></property>
+            </bean>
+        </property>
+        <property name="slaveConfig">
+            <bean parent="jedisPoolConfig">
+                <property name="serverPortDb" value="117.114.130.212:33333"></property>
+            </bean>
+        </property>
+    </bean>
+    <bean id="countJedisClient_1" class="cc.linkedme.commons.redis.JedisMSServer"
+          init-method="init">
+        <property name="masterConfig">
+            <bean parent="jedisPoolConfig">
+                <property name="serverPortDb" value="117.114.130.212:22222"></property>
+            </bean>
+        </property>
+        <property name="slaveConfig">
+            <bean parent="jedisPoolConfig">
+                <property name="serverPortDb" value="117.114.130.212:33333"></property>
+            </bean>
+        </property>
+    </bean>
+    <bean id="countJedisClient_2" class="cc.linkedme.commons.redis.JedisMSServer"
+          init-method="init">
+        <property name="masterConfig">
+            <bean parent="jedisPoolConfig">
+                <property name="serverPortDb" value="117.114.130.212:22222"></property>
+            </bean>
+        </property>
+        <property name="slaveConfig">
+            <bean parent="jedisPoolConfig">
+                <property name="serverPortDb" value="117.114.130.212:33333"></property>
+            </bean>
+        </property>
+    </bean>
+    <bean id="countJedisClient_3" class="cc.linkedme.commons.redis.JedisMSServer"
+          init-method="init">
+        <property name="masterConfig">
+            <bean parent="jedisPoolConfig">
+                <property name="serverPortDb" value="117.114.130.212:22222"></property>
+            </bean>
+        </property>
+        <property name="slaveConfig">
+            <bean parent="jedisPoolConfig">
+                <property name="serverPortDb" value="117.114.130.212:33333"></property>
+            </bean>
+        </property>
+    </bean>
+
+    <!-- ************** count dao end **********************-->
 
 </beans>

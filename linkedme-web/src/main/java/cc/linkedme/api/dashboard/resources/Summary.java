@@ -3,6 +3,7 @@ package cc.linkedme.api.dashboard.resources;
 import cc.linkedme.commons.exception.LMException;
 import cc.linkedme.commons.exception.LMExceptionFactor;
 import cc.linkedme.data.model.AppInfo;
+import cc.linkedme.data.model.DeepLinkCount;
 import cc.linkedme.data.model.params.SummaryDeepLinkParams;
 import cc.linkedme.service.webapi.SummaryService;
 import net.sf.json.JSONArray;
@@ -15,6 +16,7 @@ import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
 import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.MediaType;
+import java.util.Map;
 
 /**
  * Created by LinkedME01 on 16/3/20.
@@ -46,7 +48,8 @@ public class Summary {
 
         SummaryDeepLinkParams summaryDeepLinkParams = new SummaryDeepLinkParams(appid, start_date, end_date, feature, campaign, stage, channel, tag, source, unique, return_number, skip_number, orderby);
 
-        String result = summaryService.getDeepLinkSummary( summaryDeepLinkParams );
-        return result;
+        Map<Long, DeepLinkCount> result = summaryService.getDeepLinkSummary( summaryDeepLinkParams );
+
+        return null;
     }
 }

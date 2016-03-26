@@ -1,5 +1,6 @@
 package cc.linkedme.service;
 
+import cc.linkedme.commons.counter.component.CountComponent;
 import cc.linkedme.commons.memcache.MemCacheTemplate;
 import cc.linkedme.dao.sdkapi.DeepLinkDao;
 import cc.linkedme.dao.sdkapi.DeepLinkParamDao;
@@ -24,6 +25,9 @@ public class DeepLinkService {
     @Resource
     private DeepLinkParamDao deepLinkParamDao;
 
+    @Resource
+    private CountComponent deepLinkCountComponent;
+
     public int addDeepLink(DeepLink deepLink) {
         int result = 0;
         // insert deepLink table;
@@ -38,6 +42,13 @@ public class DeepLinkService {
     public boolean addDeepLinkToCache(DeepLink deepLink) {
         boolean res = deepLinkParamMemCache.set(String.valueOf(deepLink.getDeeplinkId()), deepLink.getParams());
         return res;
+    }
+
+    /**
+     * 根据deepLinkId和appId获取deepLink的信息
+     */
+    public DeepLink getDeepLinkInfo(long deepLinkId, long appId) {
+        return deepLinkDao.getDeepLinkInfo(deepLinkId, appId);
     }
 
     public String getDeepLinkParam(long deepLinkId) {

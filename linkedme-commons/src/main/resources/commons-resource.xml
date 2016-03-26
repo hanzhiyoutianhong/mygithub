@@ -19,6 +19,23 @@
         </property>
     </bean>
 
+    <bean id="jedisPoolConfig" class="cc.linkedme.commons.redis.RedisConfig"
+          abstract="true">
+        <property name="minPoolSize" value="6"/>
+        <property name="maxPoolSize" value="30"/>
+        <property name="whenExhaustedAction" value="1"/>
+        <property name="maxWait" value="500"/>
+        <property name="lifo" value="false"/>
+
+        <property name="testOnBorrow" value="false"/>
+        <property name="testOnReturn" value="false"/>
+        <property name="testWhileIdle" value="true"/>
+        <property name="numTestsPerEvictionRun" value="-2"/>
+        <property name="timeBetweenEvictionRunsMillis" value="30000"/>
+        <property name="softMinEvictableIdleTimeMillis" value="3600000"/>
+        <property name="minEvictableIdleTimeMillis" value="-1"/>
+    </bean>
+
     <bean id="authFilter" class="cc.linkedme.commons.auth.AuthFilter" />
 
     <bean id="console" class="cc.linkedme.commons.switcher.console.ConsoleServer" init-method="startup" destroy-method="shutdown">

@@ -66,12 +66,13 @@ public class LMSdkResources {
                        @QueryParam("is_debug") boolean is_debug,
                        @QueryParam("lat_val") String lat_val,
                        @QueryParam("sdk_version") String sdk_version,
+                       @QueryParam("last_source") String last_source,
                        @QueryParam("retry_times") int retry_times,
                        @QueryParam("linkedme_key") String linkedme_key,
                        @QueryParam("sign") String sign) {
 
         LMOpenParams lmOpenParams = new LMOpenParams(device_fingerprint_id, identity_id, is_referable, app_version, extra_uri_data,
-                os_version, sdk_update, os, is_debug, lat_val, sdk_version, retry_times, linkedme_key);
+                os_version, sdk_update, os, is_debug, lat_val, sdk_version, last_source, retry_times, linkedme_key);
 
         String deepLinkParam = "";
         boolean clicked_linkedme_link = false;

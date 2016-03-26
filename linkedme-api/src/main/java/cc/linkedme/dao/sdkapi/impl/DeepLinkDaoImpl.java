@@ -28,6 +28,7 @@ import java.util.List;
 public class DeepLinkDaoImpl extends BaseDao implements DeepLinkDao {
     private static final String ADD_DEEPLINK = "ADD_DEEPLINK";
     private static final String GET_DEEPLINKS = "GET_DEEPLINKS";
+    private static final String GET_DEEPLINK_INFO = "GET_DEEPLINKS_INFO";
 
     public int addDeepLink(DeepLink deepLink) {
         int result = 0;
@@ -37,8 +38,8 @@ public class DeepLinkDaoImpl extends BaseDao implements DeepLinkDao {
 
         long deeplink_id = deepLink.getDeeplinkId();
         String deeplink_md5 = deepLink.getDeeplinkMd5();
-        long appid = deepLink.getAppId();
         String linkedme_key = deepLink.getLinkedmeKey();
+        long appid = deepLink.getAppId();
         long identity_id = deepLink.getIdentityId();
         String create_time = deepLink.getCreateTime();
         String tags = deepLink.getTags();
@@ -53,7 +54,7 @@ public class DeepLinkDaoImpl extends BaseDao implements DeepLinkDao {
 
         try {
             result += tableChannel.getJdbcTemplate().update(tableChannel.getSql(), new Object[] {deeplink_id, deeplink_md5, linkedme_key,
-                    identity_id, create_time, tags, alias, channel, feature, stage, campaign, source, sdk_version});
+                    identity_id, appid, create_time, tags, alias, channel, feature, stage, campaign, source, sdk_version});
         } catch (DataAccessException e) {
             if (DaoUtil.isDuplicateInsert(e)) {
                 ApiLogger.info(new StringBuilder(128).append("Duplicate insert deepLink, id=").append(deeplink_id));
@@ -64,6 +65,32 @@ public class DeepLinkDaoImpl extends BaseDao implements DeepLinkDao {
         return result;
     }
 
+    public DeepLink getDeepLinkInfo(long deepLinkId, long appid) {
+        Date date = null;   //根据deepLinkId获取日期
+        final List<DeepLink> deepLinks = new ArrayList<DeepLink>();
+        TableChannel tableChannel = tableContainer.getTableChannel("deeplink", GET_DEEPLINKS, appid, date);
+        tableChannel.getJdbcTemplate().query(tableChannel.getSql(), new Object[] {deepLinkId, appid}, new RowMapper() {
+            public Object mapRow(ResultSet resultSet, int i) throws SQLException {
+                DeepLink dp = new DeepLink();
+                dp.setDeeplinkId(resultSet.getBigDecimal("deeplink_id").longValue());
+                dp.setCreateTime(resultSet.getString("create_time"));
+                dp.setTags(resultSet.getString("tags"));
+                dp.setAlias(resultSet.getString("alias"));
+                dp.setChannel(resultSet.getString("channel"));
+                dp.setFeature(resultSet.getString("feature"));
+                dp.setStage(resultSet.getString("stage"));
+                dp.setCampaign(resultSet.getString("campaign"));
+                dp.setSource(resultSet.getString("source"));
+                deepLinks.add(dp);
+                return null;
+            }
+        });
+        if(deepLinks.size() > 0) {
+            return deepLinks.get(0);
+        }
+        return null;
+    }
+
     public List<DeepLink> getDeepLinks(long appid, String start_date, String end_date, String feature, String campaign, String stage,
             String channel, String tag, boolean unique) {
         Date date = Util.timeStrToDate(start_date);
@@ -71,37 +98,37 @@ public class DeepLinkDaoImpl extends BaseDao implements DeepLinkDao {
         String sql = tableChannel.getSql();
         String condition = "";
         List<String> paramList = new ArrayList<String>();
+        paramList.add(String.valueOf(appid));
         if (start_date != null) {
-            condition += "create_time >= ? and ";
+            condition += "and create_time >= ? ";
             paramList.add(start_date);
         }
         if (end_date != null) {
-            condition += "create_time <= ? and ";
+            condition += "and create_time <= ? ";
             paramList.add(end_date);
         }
         if (feature != null) {
-            condition += "feature like '%' ? '%' and ";
+            condition += "and feature like '%' ? '%' ";
             paramList.add(feature);
         }
         if (campaign != null) {
-            condition += "campaign like '%' ? '%' and ";
+            condition += "and campaign like '%' ? '%' ";
             paramList.add(campaign);
         }
         if (stage != null) {
-            condition += "stage like '%' ? '%' and ";
+            condition += "and stage like '%' ? '%' ";
             paramList.add(stage);
         }
         if (channel != null) {
-            condition += "channel like '%' ? '%' and ";
+            condition += "and channel like '%' ? '%' ";
             paramList.add(channel);
         }
         if (tag != null) {
-            condition += "tags like '%' ? '%' and ";
+            condition += "and tags like '%' ? '%' ";
             paramList.add(tag);
         }
         if (condition.length() > 0) {
-            condition = condition.substring(0, condition.length() - 4);
-            sql = sql + "where " + condition;
+            sql = sql + condition;
         }
 
         JdbcTemplate jdbcTemplate = tableChannel.getJdbcTemplate();
