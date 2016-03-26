@@ -10,10 +10,10 @@
 
     <bean id="deepLinkParamMemCache" class="cc.linkedme.commons.memcache.MemCacheTemplate">
         <property name="master">
-            <wfc:mc serverPort="117.114.130.212:15003" strategy="normal_mc"></wfc:mc>
+            <wfc:mc serverPort="${deeplink.param.master}" strategy="normal_mc"></wfc:mc>
         </property>
         <property name="slave">
-            <wfc:mc serverPort="117.114.130.212:15003" strategy="normal_mc"></wfc:mc>
+            <wfc:mc serverPort="${deeplink.param.slave}" strategy="normal_mc"></wfc:mc>
         </property>
         <property name="masterL1List">
             <wfc:mclist serverPorts="" strategy="normal_mc"></wfc:mclist>
