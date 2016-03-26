@@ -19,6 +19,6 @@
     </bean>
 
     <wfc:mclist id="mcq_writers" serverPorts="" strategy="mcq" lazy-init="true" targetListClass="java.util.LinkedList"></wfc:mclist>
-    <wfc:mclist id="mcq_512B_writers" serverPorts="${linkedme.msg.mcq}" strategy="mcq" lazy-init="true" targetListClass="java.util.LinkedList"></wfc:mclist><!-- 大于512B的消息 ${mcq.3002.write} -->
+    <wfc:mclist id="mcq_512B_writers" serverPorts="${linkedme.msg.mcq.write}" strategy="mcq" lazy-init="true" targetListClass="java.util.LinkedList"></wfc:mclist><!-- 大于512B的消息 ${mcq.3002.write} -->
 
 </beans>
