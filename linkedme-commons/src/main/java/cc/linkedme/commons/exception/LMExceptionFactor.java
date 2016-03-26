@@ -87,6 +87,23 @@ public class LMExceptionFactor implements Serializable {
             new LMExceptionFactor(HttpStatus.BAD_REQUEST, 40003, "don't have the short url", "无短连接");
 
     /**
+     * Email已存在
+     */
+    public static final LMExceptionFactor LM_USER_EMAIL_ALREADY_REGISTERED =
+            new LMExceptionFactor(HttpStatus.BAD_REQUEST, 40004, "email already exist", "邮箱已被注册");
+
+    /**
+     * Email不存在
+     */
+    public static final LMExceptionFactor LM_USER_EMAIL_DOESNOT_EXIST =
+            new LMExceptionFactor(HttpStatus.BAD_REQUEST, 40005, "email does not exist", "邮箱不存在");
+
+    /**
+     * 密码错误
+     */
+    public static final LMExceptionFactor LM_USER_WRONG_PWD =
+            new LMExceptionFactor(HttpStatus.BAD_REQUEST, 40006, "wrong password", "密码错误");
+    /**
      * 接口不存在
      */
     public static final LMExceptionFactor LM_API_NOT_EXIST = new LMExceptionFactor(HttpStatus.NOT_FOUND, 40400, "Api not found!", "接口不存在!");

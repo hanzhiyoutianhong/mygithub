@@ -1,4 +1,4 @@
-package cc.linkedme.service.userapi;
+package cc.linkedme.service.webapi;
 
 import cc.linkedme.data.model.UserInfo;
 import cc.linkedme.data.model.params.UserParams;
@@ -7,6 +7,7 @@ import cc.linkedme.data.model.params.UserParams;
  * Created by Vontroy on 16/3/19.
  */
 public interface UserService {
+
 
     UserInfo userLogin(UserParams userParams);
 
@@ -18,8 +19,8 @@ public interface UserService {
 
     boolean resetUserPwd(UserParams userParams);
 
-    boolean forgotPwd( UserParams userParams );
+    boolean forgotPwd(UserParams userParams);
 
-    boolean resetForgottenPwd( UserParams userParams );
+    boolean resetForgottenPwd(UserParams userParams);
 
 }

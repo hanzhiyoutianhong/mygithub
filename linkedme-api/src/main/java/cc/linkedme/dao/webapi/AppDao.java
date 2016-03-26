@@ -10,8 +10,12 @@ import java.util.List;
  */
 public interface AppDao {
     int insertApp(AppInfo appInfo);
-    List<AppInfo> getAppsByUserId(long userId);
+
+    List<AppInfo> getAppsByUserId(AppParams appParams);
+
     int delApp(AppParams appParams);
-    AppInfo getAppsByAppId( AppParams appParams );
-    int updateApp( final AppParams appParams );
+
+    AppInfo getAppsByAppId(AppParams appParams);
+
+    int updateApp(final AppParams appParams);
 }

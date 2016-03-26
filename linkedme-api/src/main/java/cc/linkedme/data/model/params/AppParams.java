@@ -1,5 +1,7 @@
 package cc.linkedme.data.model.params;
 
+import org.codehaus.jackson.annotate.JsonIgnoreProperties;
+
 import javax.xml.bind.annotation.XmlRootElement;
 
 /**
@@ -7,39 +9,37 @@ import javax.xml.bind.annotation.XmlRootElement;
  */
 
 @XmlRootElement
+@JsonIgnoreProperties(ignoreUnknown = true)
 public class AppParams{
 
     public long app_id;
     public long user_id;
     public String app_name;
+    public String type;
 
-    public String lkme_live_key;
-    public String lkme_live_secret;
-    public String lkme_test_key;
-    public String lkme_test_secret;
+    public String lkme_key;
+    public String lkme_secret;
 
-    public String ios_app_prefix;
+    public boolean has_ios;
     public String ios_uri_scheme;
     public String ios_search_option;
     public String ios_store_url;
     public String ios_custom_url;
-    public String ios_buddle_id;
-    public String ios_team_id;
-    public boolean has_ios;
-    public boolean enable_ulink;
+    public boolean ios_enable_ulink;
+    public String ios_bundle_id;
+    public String ios_app_prefix;
 
+    public boolean has_android;
     public String android_uri_scheme;
     public String android_search_option;
-    public String google_play_search;
+    public String google_play_url;
     public String android_custom_url;
     public String android_package_name;
-    public String android_prefix;
-    public boolean has_android;
-    public boolean enable_applinks;
+    public boolean android_enable_applinks;
+    public String android_sha256_fingerprints;
+    public String qr_code;
 
-    public String sha256_fingerprints;
-
-    public int iosAndroidFlag;
+    public int ios_android_flag;
 
     public long getApp_id() {
         return app_id;
@@ -65,44 +65,36 @@ public class AppParams{
         this.app_name = app_name;
     }
 
-    public String getLkme_live_key() {
-        return lkme_live_key;
+    public String getType() {
+        return type;
     }
 
-    public void setLkme_live_key(String lkme_live_key) {
-        this.lkme_live_key = lkme_live_key;
+    public void setType(String type) {
+        this.type = type;
     }
 
-    public String getLkme_live_secret() {
-        return lkme_live_secret;
+    public String getLkme_key() {
+        return lkme_key;
     }
 
-    public void setLkme_live_secret(String lkme_live_secret) {
-        this.lkme_live_secret = lkme_live_secret;
+    public void setLkme_key(String lkme_key) {
+        this.lkme_key = lkme_key;
     }
 
-    public String getLkme_test_key() {
-        return lkme_test_key;
+    public String getLkme_secret() {
+        return lkme_secret;
     }
 
-    public void setLkme_test_key(String lkme_test_key) {
-        this.lkme_test_key = lkme_test_key;
+    public void setLkme_secret(String lkme_secret) {
+        this.lkme_secret = lkme_secret;
     }
 
-    public String getLkme_test_secret() {
-        return lkme_test_secret;
+    public boolean isHas_ios() {
+        return has_ios;
     }
 
-    public void setLkme_test_secret(String lkme_test_secret) {
-        this.lkme_test_secret = lkme_test_secret;
-    }
-
-    public String getIos_app_prefix() {
-        return ios_app_prefix;
-    }
-
-    public void setIos_app_prefix(String ios_app_prefix) {
-        this.ios_app_prefix = ios_app_prefix;
+    public void setHas_ios(boolean has_ios) {
+        this.has_ios = has_ios;
     }
 
     public String getIos_uri_scheme() {
@@ -137,20 +129,36 @@ public class AppParams{
         this.ios_custom_url = ios_custom_url;
     }
 
-    public String getIos_buddle_id() {
-        return ios_buddle_id;
+    public boolean isIos_enable_ulink() {
+        return ios_enable_ulink;
     }
 
-    public void setIos_buddle_id(String ios_buddle_id) {
-        this.ios_buddle_id = ios_buddle_id;
+    public void setIos_enable_ulink(boolean ios_enable_ulink) {
+        this.ios_enable_ulink = ios_enable_ulink;
     }
 
-    public String getIos_team_id() {
-        return ios_team_id;
+    public String getIos_bubdle_id() {
+        return ios_bundle_id;
     }
 
-    public void setIos_team_id(String ios_team_id) {
-        this.ios_team_id = ios_team_id;
+    public void setIos_buddle_id(String ios_bundle_id) {
+        this.ios_bundle_id = ios_bundle_id;
+    }
+
+    public String getIos_app_prefix() {
+        return ios_app_prefix;
+    }
+
+    public void setIos_app_prefix(String ios_app_prefix) {
+        this.ios_app_prefix = ios_app_prefix;
+    }
+
+    public boolean isHas_android() {
+        return has_android;
+    }
+
+    public void setHas_android(boolean has_android) {
+        this.has_android = has_android;
     }
 
     public String getAndroid_uri_scheme() {
@@ -170,11 +178,11 @@ public class AppParams{
     }
 
     public String getGoogle_play_search() {
-        return google_play_search;
+        return google_play_url;
     }
 
-    public void setGoogle_play_search(String google_play_search) {
-        this.google_play_search = google_play_search;
+    public void setGoogle_play_search(String google_play_url) {
+        this.google_play_url = google_play_url;
     }
 
     public String getAndroid_custom_url() {
@@ -193,28 +201,35 @@ public class AppParams{
         this.android_package_name = android_package_name;
     }
 
-    public String getAndroid_prefix() {
-        return android_prefix;
+    public boolean isAndroid_enable_applinks() {
+        return android_enable_applinks;
     }
 
-    public void setAndroid_prefix(String android_prefix) {
-        this.android_prefix = android_prefix;
+    public void setAndroid_enable_applinks(boolean android_enable_applinks) {
+        this.android_enable_applinks = android_enable_applinks;
     }
 
-    public String getSha256_fingerprints() {
-        return sha256_fingerprints;
+    public String getAndroid_sha256_fingerprints() {
+        return android_sha256_fingerprints;
     }
 
-    public void setSha256_fingerprints(String sha256_fingerprints) {
-        this.sha256_fingerprints = sha256_fingerprints;
+    public void setAndroid_sha256_fingerprints(String android_sha256_fingerprints) {
+        this.android_sha256_fingerprints = android_sha256_fingerprints;
     }
 
-    public int getIosAndroidFlag() {
-        return iosAndroidFlag;
+    public String getQr_code() {
+        return qr_code;
     }
 
-    public void setIosAndroidFlag(int iosAndroidFlag) {
-        this.iosAndroidFlag = iosAndroidFlag;
+    public void setQr_code(String qr_code) {
+        this.qr_code = qr_code;
     }
 
+    public int getIos_android_flag() {
+        return ios_android_flag;
+    }
+
+    public void setIos_android_flag(int ios_android_flag) {
+        this.ios_android_flag = ios_android_flag;
+    }
 }
