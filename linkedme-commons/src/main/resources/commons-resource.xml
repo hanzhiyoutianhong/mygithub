@@ -14,7 +14,7 @@
                 <property name="maxSpareConnections" value= "15" />
                 <property name="failover" value= "true" />
                 <property name="primitiveAsString" value= "true" />
-                <property name="serverPort" value= "117.114.130.212:6000" />
+                <property name="serverPort" value= "${linkedme.common.uuid}" />
             </bean>
         </property>
     </bean>
