@@ -68,19 +68,12 @@ public class SummaryService {
     }
 
     private void setDeepLinkCount(DeepLinkCount dplc, Map<String, Integer> dplCountMap) {
-        dplc.setWx_ios_install(dplCountMap.get(DeepLinkCount.CountType.wx_ios_install));
-        dplc.setWx_ios_open(dplCountMap.get(DeepLinkCount.CountType.wx_ios_open.toString()));
-        dplc.setWx_ios_click(dplCountMap.get(DeepLinkCount.CountType.wx_ios_click.toString()));
-        dplc.setWx_adr_click(dplCountMap.get(DeepLinkCount.CountType.wx_adr_click.toString()));
-        dplc.setWx_adr_install(dplCountMap.get(DeepLinkCount.CountType.wx_adr_install.toString()));
-        dplc.setWx_adr_open(dplCountMap.get(DeepLinkCount.CountType.wx_adr_open.toString()));
-
-        dplc.setWb_ios_install(dplCountMap.get(DeepLinkCount.CountType.wb_ios_install));
-        dplc.setWb_ios_open(dplCountMap.get(DeepLinkCount.CountType.wb_ios_open.toString()));
-        dplc.setWb_ios_click(dplCountMap.get(DeepLinkCount.CountType.wb_ios_click.toString()));
-        dplc.setWb_adr_click(dplCountMap.get(DeepLinkCount.CountType.wb_adr_click.toString()));
-        dplc.setWb_adr_install(dplCountMap.get(DeepLinkCount.CountType.wb_adr_install.toString()));
-        dplc.setWb_adr_open(dplCountMap.get(DeepLinkCount.CountType.wb_adr_open.toString()));
+        dplc.setIos_click(dplCountMap.get(DeepLinkCount.CountType.ios_click));
+        dplc.setIos_install(dplCountMap.get(DeepLinkCount.CountType.ios_click.toString()));
+        dplc.setIos_open(dplCountMap.get(DeepLinkCount.CountType.ios_open.toString()));
+        dplc.setAdr_click(dplCountMap.get(DeepLinkCount.CountType.adr_click.toString()));
+        dplc.setAdr_install(dplCountMap.get(DeepLinkCount.CountType.adr_install.toString()));
+        dplc.setAdr_open(dplCountMap.get(DeepLinkCount.CountType.adr_open.toString()));
 
         dplc.setPc_click(dplCountMap.get(DeepLinkCount.CountType.pc_click));
         dplc.setPc_ios_scan(dplCountMap.get(DeepLinkCount.CountType.pc_ios_scan));

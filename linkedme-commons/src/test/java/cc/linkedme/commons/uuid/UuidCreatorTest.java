@@ -10,7 +10,7 @@ public class UuidCreatorTest {
     private static UuidCreator uuidCreator;
 
     static {
-        ClassPathXmlApplicationContext ctx = new ClassPathXmlApplicationContext(new String[] {"classpath:spring/commons-resource.xml"});
+        ClassPathXmlApplicationContext ctx = new ClassPathXmlApplicationContext(new String[] {"classpath:commons-resource.xml"});
         ctx.start();
         System.out.println("context init sucess!");
 

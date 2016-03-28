@@ -2,15 +2,11 @@ package cc.linkedme.service.sdkapi.impl;
 
 import javax.annotation.Resource;
 
-import cc.linkedme.commons.counter.CountConst;
 import cc.linkedme.commons.counter.component.CountComponent;
-import cc.linkedme.commons.counter.task.CountTaskExecutor;
 import cc.linkedme.commons.json.JsonBuilder;
 import cc.linkedme.commons.log.ApiLogger;
-import cc.linkedme.commons.redis.JedisClient;
 import cc.linkedme.commons.redis.JedisPort;
 import cc.linkedme.commons.shard.ShardingSupportHash;
-import cc.linkedme.commons.thread.ExecutorServiceUtil;
 import cc.linkedme.commons.util.Base62;
 import cc.linkedme.commons.util.Constants;
 import cc.linkedme.commons.util.DeepLinkUtil;
@@ -22,10 +18,7 @@ import cc.linkedme.data.model.DeepLink;
 import cc.linkedme.data.model.DeepLinkCount;
 import cc.linkedme.data.model.params.CloseParams;
 import cc.linkedme.data.model.params.InstallParams;
-import cc.linkedme.data.model.params.LMCloseParams;
-import cc.linkedme.data.model.params.LMInstallParams;
-import cc.linkedme.data.model.params.LMOpenParams;
-import cc.linkedme.data.model.params.LMUrlParams;
+import cc.linkedme.data.model.params.OpenParams;
 import cc.linkedme.data.model.params.UrlParams;
 import cc.linkedme.exception.LMException;
 import cc.linkedme.exception.LMExceptionFactor;
@@ -40,11 +33,9 @@ import com.google.common.base.Strings;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.concurrent.Callable;
-import java.util.concurrent.Future;
 import java.util.concurrent.LinkedBlockingQueue;
 import java.util.concurrent.ThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
-import java.util.concurrent.TimeoutException;
 
 /**
  * Created by LinkedME00 on 16/1/15.
@@ -180,21 +171,24 @@ public class LMSdkServiceImpl implements LMSdkService {
         return result;
     }
 
-    public String open(LMOpenParams lmOpenParams) {
-        String deepLinkUrl = lmOpenParams.extra_uri_data;
+    public String open(OpenParams openParams) {
+        String deepLinkUrl = openParams.extra_uri_data;
         String deepLink = DeepLinkUtil.getDeepLinkFromUrl(deepLinkUrl);
         long deepLinkId = Base62.decode(deepLink);
         String param = deepLinkService.getDeepLinkParam(deepLinkId);
         if (!Strings.isNullOrEmpty(param)) {
             // count
-            String deviceType = lmOpenParams.os.trim().toLowerCase();
+            String deviceType = null;
+            if(!Strings.isNullOrEmpty(openParams.os)) {
+                deviceType = openParams.os.trim().toLowerCase();
+            }
             if("android".equals(deviceType)) {
                 deviceType = "adr";
             }
-            String countType = lmOpenParams.lastSource + "_" + deviceType + "_open";
+            String countType = deviceType + "_open";
             if(!DeepLinkCount.isValidCountType(countType)) {
                 //TODO 对deviceType做判断
-                countType = "other_" + deviceType + "_open";
+                countType = "other_" + "_open";
             }
             final String type = countType;
             deepLinkCountThreadPool.submit(new Callable<Void>() {
@@ -228,11 +222,14 @@ public class LMSdkServiceImpl implements LMSdkService {
 
         long appId = urlParams.appid;   //web创建url传appid, sdk创建url不传appid
         if(appId <= 0) {
-            appId = 100;    //根据linkedme_key去库里查询
+            String value = clientShardingSupport.getClient(urlParams.linkedme_key).get(urlParams.linkedme_key);
+            if(!Strings.isNullOrEmpty(value)) {
+                appId = Long.parseLong(value.split(",")[0]);    //根据linkedme_key去库里查询
+            }
         }
         if (id != null) {
             String linkId = Base62.encode(Long.parseLong(id));
-            return Constants.DEEPLINK_HTTPS_PREFIX + appId + "/" + linkId;
+            return Constants.DEEPLINK_HTTPS_PREFIX + Base62.encode(appId) + "/" + linkId;
         }
 
         long deepLinkId = uuidCreator.nextId(0);    //0表示发号器的deepLink业务
@@ -248,7 +245,7 @@ public class LMSdkServiceImpl implements LMSdkService {
         deepLinkService.addDeepLinkToCache(link);
         // 写消息队列
         deepLinkMsgPusher.addDeepLink(link);
-        String result = Constants.DEEPLINK_HTTP_PREFIX + Base62.encode(appId) + "/" + Base62.encode(deepLinkId);
+        String result = Constants.DEEPLINK_HTTPS_PREFIX + Base62.encode(appId) + "/" + Base62.encode(deepLinkId);
 
         return result; // linkedme_key & tags & alias & channel & feature & stage & params
     }

@@ -1,6 +1,8 @@
 package cc.linkedme.service.webapi.impl;
 
 import cc.linkedme.commons.exception.LMException;
+import cc.linkedme.commons.redis.JedisPort;
+import cc.linkedme.commons.shard.ShardingSupportHash;
 import cc.linkedme.commons.util.MD5Utils;
 import cc.linkedme.commons.utils.RandomUtils;
 import cc.linkedme.commons.uuid.UuidCreator;
@@ -25,56 +27,66 @@ public class AppServiceImpl implements AppService {
     @Resource
     private AppDao appDao;
 
+    @Resource
+    private ShardingSupportHash<JedisPort> clientShardingSupport;
+
     public long createApp(AppParams appParams) {
-        long appId = uuidCreator.nextId(2); //2表示发号器的app业务
+        long appId = uuidCreator.nextId(2); // 2表示发号器的app业务
         AppInfo app_live_Info = new AppInfo();
         AppInfo app_test_Info = new AppInfo();
         String live_md5_key = appParams.app_name + "live" + appParams.user_id + new Random(appId);
-        String test_md5_key = appParams.app_name + "test" + appParams.user_id + new Random(appId);
+        String live_md5_secret = appParams.user_id + "live" + appParams.app_name + new Random(appId);
 
-        app_live_Info.setApp_key( new MD5Utils().md5( live_md5_key ) );
+        String test_md5_key = appParams.app_name + "test" + appParams.user_id + new Random(appId);
+        String test_md5_secret = appParams.user_id + "test" + appParams.app_name + new Random(appId);
+
+        app_live_Info.setApp_key(new MD5Utils().md5(live_md5_key));
+        app_live_Info.setApp_secret(new MD5Utils().md5(live_md5_key));
         app_live_Info.setApp_id(appId);
-        app_live_Info.setType( "live" );
+        app_live_Info.setType("live");
         app_live_Info.setUser_id(appParams.user_id);
         app_live_Info.setApp_name(appParams.app_name);
 
-        app_test_Info.setApp_key( new MD5Utils().md5( test_md5_key ) );
+        app_test_Info.setApp_key(new MD5Utils().md5(test_md5_key));
+        app_test_Info.setApp_secret(new MD5Utils().md5(test_md5_secret));
         app_test_Info.setApp_id(appId);
-        app_test_Info.setType( "test" );
+        app_test_Info.setType("test");
         app_test_Info.setUser_id(appParams.user_id);
         app_test_Info.setApp_name(appParams.app_name);
 
 
-        if (appDao.insertApp(app_live_Info) > 0 && appDao.insertApp(app_test_Info) > 0 ) {
+        if (appDao.insertApp(app_live_Info) > 0 && appDao.insertApp(app_test_Info) > 0) {
+            JedisPort liveClient = clientShardingSupport.getClient(live_md5_key);
+            liveClient.set(live_md5_key, appId + "," + live_md5_secret);
+            JedisPort testClient = clientShardingSupport.getClient(test_md5_key);
+            testClient.set(test_md5_key, appId + "," + test_md5_secret);
+
             return appId;
         }
         throw new LMException("Create appInfo failed");
     }
 
-    public List<AppInfo> getAppsByUserId( AppParams appParams ) {
+    public List<AppInfo> getAppsByUserId(AppParams appParams) {
         List<AppInfo> appList = appDao.getAppsByUserId(appParams);
-        if(CollectionUtils.isEmpty(appList)) {
+        if (CollectionUtils.isEmpty(appList)) {
             return new ArrayList<AppInfo>(0);
         }
         return appList;
     }
 
-    public int deleteApp(AppParams appParams)
-    {
-        return appDao.delApp( appParams );
+    public int deleteApp(AppParams appParams) {
+        return appDao.delApp(appParams);
     }
 
-    public AppInfo queryApp( AppParams appParams )
-    {
-        AppInfo appInfo = appDao.getAppsByAppId( appParams );
+    public AppInfo queryApp(AppParams appParams) {
+        AppInfo appInfo = appDao.getAppsByAppId(appParams);
 
 
         return appInfo;
     }
 
-    public int updateApp( AppParams appParams )
-    {
-        return appDao.updateApp( appParams );
+    public int updateApp(AppParams appParams) {
+        return appDao.updateApp(appParams);
     }
 
 }

@@ -44,7 +44,7 @@ public class AppDaoImpl extends BaseDao implements AppDao {
 
         TableChannel tableChannel = tableContainer.getTableChannel("appInfo", ADD_APP, userId, userId);
 
-        Object[] values = {appInfo.getApp_id(), appInfo.getApp_name(), appInfo.getUser_id(), appInfo.getApp_key(), appInfo.getType()};
+        Object[] values = {appInfo.getApp_id(), appInfo.getApp_name(), appInfo.getUser_id(), appInfo.getApp_key(), appInfo.getApp_secret(), appInfo.getType()};
 
         try {
             result += tableChannel.getJdbcTemplate().update(tableChannel.getSql(), values);

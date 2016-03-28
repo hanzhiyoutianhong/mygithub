@@ -2,7 +2,7 @@ package cc.linkedme.service.sdkapi;
 
 import cc.linkedme.data.model.params.CloseParams;
 import cc.linkedme.data.model.params.InstallParams;
-import cc.linkedme.data.model.params.LMOpenParams;
+import cc.linkedme.data.model.params.OpenParams;
 import cc.linkedme.data.model.params.UrlParams;
 
 /**
@@ -14,7 +14,7 @@ public interface LMSdkService {
 
     String url(UrlParams urlParams);
 
-    String open(LMOpenParams lmOpenParams);
+    String open(OpenParams openParams);
 
     void close(CloseParams CloseParams);
 

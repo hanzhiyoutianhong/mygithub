@@ -11,6 +11,7 @@ import cc.linkedme.data.model.params.LMInstallParams;
 import cc.linkedme.data.model.params.LMOpenParams;
 import cc.linkedme.data.model.params.LMUrlParams;
 
+import cc.linkedme.data.model.params.OpenParams;
 import cc.linkedme.data.model.params.UrlParams;
 import cc.linkedme.service.sdkapi.LMSdkService;
 import com.google.common.base.Strings;
@@ -42,8 +43,7 @@ public class LMSdkResources {
     @Path("/install")
     @POST
     @Produces(MediaType.APPLICATION_JSON)
-    public String install(InstallParams installParams,
-                          @Context HttpServletRequest request) {
+    public String install(InstallParams installParams, @Context HttpServletRequest request) {
         if (Strings.isNullOrEmpty(installParams.linkedme_key)) {
             throw new LMException(LMExceptionFactor.LM_MISSING_PARAM, installParams.linkedme_key);
         }
@@ -53,33 +53,17 @@ public class LMSdkResources {
     }
 
     @Path("/open")
-    @GET
+    @POST
     @Produces({MediaType.APPLICATION_JSON})
-    public String open(@QueryParam("device_fingerprint_id") String device_fingerprint_id,
-                       @QueryParam("identity_id") long identity_id,
-                       @QueryParam("is_referable") boolean is_referable,
-                       @QueryParam("app_version") String app_version,
-                       @QueryParam("extra_uri_data") String extra_uri_data,
-                       @QueryParam("os_version") String os_version,
-                       @QueryParam("sdk_update") int sdk_update,
-                       @QueryParam("os") String os,
-                       @QueryParam("is_debug") boolean is_debug,
-                       @QueryParam("lat_val") String lat_val,
-                       @QueryParam("sdk_version") String sdk_version,
-                       @QueryParam("last_source") String last_source,
-                       @QueryParam("retry_times") int retry_times,
-                       @QueryParam("linkedme_key") String linkedme_key,
-                       @QueryParam("sign") String sign) {
-
-        LMOpenParams lmOpenParams = new LMOpenParams(device_fingerprint_id, identity_id, is_referable, app_version, extra_uri_data,
-                os_version, sdk_update, os, is_debug, lat_val, sdk_version, last_source, retry_times, linkedme_key);
+    public String open(OpenParams openParams, @Context HttpServletRequest request) {
 
         String deepLinkParam = "";
         boolean clicked_linkedme_link = false;
-        if(!Strings.isNullOrEmpty(extra_uri_data)) {
-            if(extra_uri_data.startsWith(Constants.DEEPLINK_HTTPS_PREFIX) || extra_uri_data.startsWith(Constants.DEEPLINK_HTTP_PREFIX)) {
+        if (!Strings.isNullOrEmpty(openParams.extra_uri_data)) {
+            if (openParams.extra_uri_data.startsWith(Constants.DEEPLINK_HTTPS_PREFIX)
+                    || openParams.extra_uri_data.startsWith(Constants.DEEPLINK_HTTP_PREFIX)) {
                 clicked_linkedme_link = true;
-                deepLinkParam = lmSdkService.open(lmOpenParams);
+                deepLinkParam = lmSdkService.open(openParams);
             }
         }
         if (Strings.isNullOrEmpty(deepLinkParam)) {
@@ -87,10 +71,10 @@ public class LMSdkResources {
         }
         JsonBuilder resultJson = new JsonBuilder();
         resultJson.append("session_id", System.currentTimeMillis());
-        resultJson.append("identity_id", identity_id);
-        resultJson.append("device_fingerprint_id", device_fingerprint_id);
+        resultJson.append("identity_id", openParams.identity_id);
+        resultJson.append("device_fingerprint_id", openParams.device_fingerprint_id);
         resultJson.append("browser_fingerprint_id", "");
-        resultJson.append("link", extra_uri_data);
+        resultJson.append("link", openParams.extra_uri_data);
         resultJson.append("params", deepLinkParam);
         resultJson.append("is_first_session", true);
         resultJson.append("clicked_linkedme_link", clicked_linkedme_link);
@@ -100,8 +84,7 @@ public class LMSdkResources {
     @Path("/url")
     @POST
     @Produces({MediaType.APPLICATION_JSON})
-    public String url(UrlParams urlParams,
-                      @Context HttpServletRequest request) {
+    public String url(UrlParams urlParams, @Context HttpServletRequest request) {
 
         String url = lmSdkService.url(urlParams);
         JsonBuilder resultJson = new JsonBuilder();
@@ -112,8 +95,7 @@ public class LMSdkResources {
     @Path("/close")
     @POST
     @Produces({MediaType.APPLICATION_JSON})
-    public String close(CloseParams closeParams,
-                        @Context HttpServletRequest request) {
+    public String close(CloseParams closeParams, @Context HttpServletRequest request) {
 
         if (Strings.isNullOrEmpty(closeParams.linkedme_key)) {
             throw new LMException(LMExceptionFactor.LM_MISSING_PARAM, closeParams.linkedme_key);
@@ -253,4 +235,48 @@ public class LMSdkResources {
 
     }
 
+    @Path("/open_form")
+    @GET
+    @Produces({MediaType.APPLICATION_JSON})
+    public String openForm(@QueryParam("device_fingerprint_id") String device_fingerprint_id,
+                       @QueryParam("identity_id") long identity_id,
+                       @QueryParam("is_referable") boolean is_referable,
+                       @QueryParam("app_version") String app_version,
+                       @QueryParam("extra_uri_data") String extra_uri_data,
+                       @QueryParam("os_version") String os_version,
+                       @QueryParam("sdk_update") int sdk_update,
+                       @QueryParam("os") String os,
+                       @QueryParam("is_debug") boolean is_debug,
+                       @QueryParam("lat_val") String lat_val,
+                       @QueryParam("sdk_version") String sdk_version,
+                       @QueryParam("last_source") String last_source,
+                       @QueryParam("retry_times") int retry_times,
+                       @QueryParam("linkedme_key") String linkedme_key,
+                       @QueryParam("sign") String sign) {
+
+        LMOpenParams lmOpenParams = new LMOpenParams(device_fingerprint_id, identity_id, is_referable, app_version, extra_uri_data,
+                os_version, sdk_update, os, is_debug, lat_val, sdk_version, last_source, retry_times, linkedme_key);
+
+        String deepLinkParam = "";
+        boolean clicked_linkedme_link = false;
+        if(!Strings.isNullOrEmpty(extra_uri_data)) {
+            if(extra_uri_data.startsWith(Constants.DEEPLINK_HTTPS_PREFIX) || extra_uri_data.startsWith(Constants.DEEPLINK_HTTP_PREFIX)) {
+                clicked_linkedme_link = true;
+                deepLinkParam = ""; //lmSdkService.open(lmOpenParams);
+            }
+        }
+        if (Strings.isNullOrEmpty(deepLinkParam)) {
+            deepLinkParam = "";
+        }
+        JsonBuilder resultJson = new JsonBuilder();
+        resultJson.append("session_id", System.currentTimeMillis());
+        resultJson.append("identity_id", identity_id);
+        resultJson.append("device_fingerprint_id", device_fingerprint_id);
+        resultJson.append("browser_fingerprint_id", "");
+        resultJson.append("link", extra_uri_data);
+        resultJson.append("params", deepLinkParam);
+        resultJson.append("is_first_session", true);
+        resultJson.append("clicked_linkedme_link", clicked_linkedme_link);
+        return resultJson.flip().toString();
+    }
 }

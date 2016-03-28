@@ -48,8 +48,41 @@ public class Summary {
 
         SummaryDeepLinkParams summaryDeepLinkParams = new SummaryDeepLinkParams(appid, start_date, end_date, feature, campaign, stage, channel, tag, source, unique, return_number, skip_number, orderby);
 
-        Map<Long, DeepLinkCount> result = summaryService.getDeepLinkSummary( summaryDeepLinkParams );
+        Map<Long, DeepLinkCount> countMap = summaryService.getDeepLinkSummary( summaryDeepLinkParams );
+        int deepLinkCounts = countMap.size();
+        int ios_click = 0;
+        int ios_install = 0;
+        int ios_open = 0;
+        int adr_click = 0;
+        int adr_install = 0;
+        int adr_open = 0;
+        for (Map.Entry<Long, DeepLinkCount> entry : countMap.entrySet()) {
+            DeepLinkCount value = entry.getValue();
+            if (value != null) {
+                ios_click += value.getIos_click();
+                ios_install += value.getIos_install();
+                ios_open += value.getIos_open();
 
-        return null;
+                adr_click += value.getAdr_click();
+                adr_install += value.getAdr_install();
+                adr_open += value.getAdr_open();
+            }
+        }
+
+        JSONObject iosJson = new JSONObject();
+        iosJson.put("click", ios_click);
+        iosJson.put("install", ios_install);
+        iosJson.put("open", ios_open);
+
+        JSONObject adrJson = new JSONObject();
+        adrJson.put("click", adr_click);
+        adrJson.put("install", adr_install);
+        adrJson.put("open", adr_open);
+
+        JSONObject retJson = new JSONObject();
+        retJson.put("link_count", deepLinkCounts);
+        retJson.put("ios", iosJson);
+        retJson.put("android", adrJson);
+        return retJson.toString();
     }
 }
