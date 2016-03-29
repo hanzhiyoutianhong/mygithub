@@ -33,6 +33,15 @@
         <property name="startProcessorNames"><value>msgMcqProcessor</value></property>
     </bean>
 
+    <bean id="console" class="cc.linkedme.commons.switcher.console.ConsoleServer" init-method="startup" destroy-method="shutdown">
+        <constructor-arg>
+            <value>${lkme.sonsole.port}</value> <!-- server port -->
+        </constructor-arg>
+        <constructor-arg>
+            <value>1024</value> <!-- server read buffer size -->
+        </constructor-arg>
+    </bean>
+
 </beans>
 
 

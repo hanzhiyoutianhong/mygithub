@@ -42,6 +42,8 @@ public class AppDaoImpl extends BaseDao implements AppDao {
 
         long userId = appInfo.getUser_id();
 
+        //需要添加重名判断
+
         TableChannel tableChannel = tableContainer.getTableChannel("appInfo", ADD_APP, userId, userId);
 
         Object[] values = {appInfo.getApp_id(), appInfo.getApp_name(), appInfo.getUser_id(), appInfo.getApp_key(), appInfo.getApp_secret(), appInfo.getType()};

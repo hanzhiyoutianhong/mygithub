@@ -26,7 +26,7 @@
         <property name="tableCount" value="1"/>
         <property name="sqls">
             <map>
-                <entry key="ADD_APP" value="insert into $db$.$tb$ (id, app_name, user_id, app_key, app_secret, type, register_time, last_update_time) values(?, ?, ?, ?, ?, now(), now())"/>
+                <entry key="ADD_APP" value="insert into $db$.$tb$ (id, app_name, user_id, app_key, app_secret, type, register_time, last_update_time) values(?, ?, ?, ?, ?, ?, now(), now())"/>
 
                 <entry key="UPDATE_APP" value="update $db$.$tb$ set vflag = ?, mflag=? where status_id = ? and vflag in (0,6,7) and cmt_id = ?"/>
 

@@ -49,7 +49,7 @@ public class LinkedmeExceptionMapper implements ExceptionMapper<RuntimeException
 
     private Response buildResponse(LMException e) {
         int status = e.getFactor().getHttpStatus().value();
-        ResponseBuilder builder = Response.status(status).entity(e.formatExceptionInfo());
+        ResponseBuilder builder = Response.status(200).entity(e.formatExceptionInfo());
         return builder.build();
     }
 }

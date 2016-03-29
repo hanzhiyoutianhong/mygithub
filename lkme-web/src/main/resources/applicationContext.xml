@@ -16,6 +16,7 @@
                 <value>classpath:live/mc.properties</value>
                 <value>classpath:live/redis.properties</value>
                 <value>classpath:live/mcq.properties</value>
+                <value>classpath:live/console.properties</value>
             </list>
         </property>
     </bean>
