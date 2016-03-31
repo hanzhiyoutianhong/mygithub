@@ -1,5 +1,11 @@
 package cc.linkedme.data.model;
 
+import cc.linkedme.commons.util.Base62;
+import cc.linkedme.commons.util.Constants;
+import com.alibaba.fastjson.JSONObject;
+import com.google.api.client.repackaged.com.google.common.base.Strings;
+import net.sf.json.JSONArray;
+
 import javax.persistence.Basic;
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -39,6 +45,8 @@ public class DeepLink {
     private String  android_custom_url;
     private boolean  desktop_use_default;
     private String  desktop_custom_url;
+
+    private DeepLinkCount deepLinkCount;
 
     public DeepLink() {}
 
@@ -326,5 +334,70 @@ public class DeepLink {
 
     public void setDesktop_custom_url(String desktop_custom_url) {
         this.desktop_custom_url = desktop_custom_url;
+    }
+
+    public DeepLinkCount getDeepLinkCount() {
+        return deepLinkCount;
+    }
+
+    public void setDeepLinkCount(DeepLinkCount deepLinkCount) {
+        this.deepLinkCount = deepLinkCount;
+    }
+
+    public JSONObject toJsonObject() {
+        JSONObject jsonObject = new JSONObject();
+        jsonObject.put("deeplink_url", Constants.DEEPLINK_HTTPS_PREFIX + Base62.encode(appId) + "/" + Base62.encode(deeplinkId));
+        if (!Strings.isNullOrEmpty(feature)) {
+            JSONArray featureJson = JSONArray.fromObject(getFeature().split(","));
+            jsonObject.put("feature", featureJson);
+        }
+        if (!Strings.isNullOrEmpty(campaign)) {
+            JSONArray campaignJson = JSONArray.fromObject(campaign.split(","));
+            jsonObject.put("campaign", campaignJson);
+        }
+        if (!Strings.isNullOrEmpty(stage)) {
+            JSONArray stageJson = JSONArray.fromObject(stage.split(","));
+            jsonObject.put("campaign", stageJson);
+        }
+        if (!Strings.isNullOrEmpty(channel)) {
+            JSONArray channelJson = JSONArray.fromObject(channel.split(","));
+            jsonObject.put("channel", channelJson);
+        }
+        if (!Strings.isNullOrEmpty(tags)) {
+            JSONArray tagsJson = JSONArray.fromObject(tags.split(","));
+            jsonObject.put("tags", tagsJson);
+        }
+        jsonObject.put("unique", false);
+        jsonObject.put("creation_time", createTime);
+        jsonObject.put("source", source);
+
+        JSONObject iosCount = new JSONObject();
+        iosCount.put("ios_click", deepLinkCount.getIos_click());
+        iosCount.put("ios_install", deepLinkCount.getIos_install());
+        iosCount.put("ios_open", deepLinkCount.getIos_open());
+
+        JSONObject adrCount = new JSONObject();
+        adrCount.put("adr_click", deepLinkCount.getAdr_click());
+        adrCount.put("adr_install", deepLinkCount.getIos_install());
+        adrCount.put("adr_open", deepLinkCount.getIos_open());
+
+        JSONObject pcCount = new JSONObject();
+        pcCount.put("pc_click", deepLinkCount.getPc_click());
+        pcCount.put("pc_scan", deepLinkCount.getPc_scan());
+
+        jsonObject.put("ios", iosCount);
+        jsonObject.put("android", adrCount);
+        jsonObject.put("desktop", pcCount);
+        return jsonObject;
+    }
+
+    public String toJson() {
+        return toJsonObject().toString();
+    }
+
+    public static void main(String[] args) {
+        String[] channel = new String[]{"aa", "bb"};
+        JSONArray jarr = JSONArray.fromObject(channel);
+        System.out.println(jarr.toString());
     }
 }

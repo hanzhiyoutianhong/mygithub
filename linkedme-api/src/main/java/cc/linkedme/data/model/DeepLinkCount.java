@@ -6,6 +6,7 @@ package cc.linkedme.data.model;
 public class DeepLinkCount {
 
     private long deepLinkId;
+
     private int ios_click;
     private int ios_install;
     private int ios_open;
@@ -14,6 +15,9 @@ public class DeepLinkCount {
     private int adr_open;
 
     private int pc_click;
+    private int pc_scan;
+
+
     private int pc_ios_scan;
     private int pc_ios_install;
     private int pc_ios_open;
@@ -28,8 +32,9 @@ public class DeepLinkCount {
         adr_click("ac"),
         adr_install("ai"),
         adr_open("ao"),
-
         pc_click("pcc"),
+        pc_scan("pcs"),
+
         pc_ios_scan("pcis"),
         pc_ios_install("pcii"),
         pc_ios_open("pcio"),
@@ -62,19 +67,16 @@ public class DeepLinkCount {
                 || CountType.ios_open.toString().equals(type)) {
             return true;
         }
+
         if (CountType.adr_click.toString().equals(type) || CountType.adr_install.toString().equals(type)
                 || CountType.adr_open.toString().equals(type)) {
             return true;
         }
 
-        if (CountType.pc_click.toString().equals(type) || CountType.pc_ios_scan.toString().equals(type)
-                || CountType.pc_ios_install.toString().equals(type) || CountType.pc_ios_open.toString().equals(type)) {
+        if (CountType.pc_click.toString().equals(type) || CountType.pc_scan.toString().equals(type)) {
             return true;
         }
-        if (CountType.pc_adr_scan.toString().equals(type) || CountType.pc_adr_install.toString().equals(type)
-                || CountType.pc_adr_open.toString().equals(type)) {
-            return true;
-        }
+
         return false;
     }
 
@@ -193,6 +195,14 @@ public class DeepLinkCount {
 
     public void setPc_adr_open(int pc_adr_open) {
         this.pc_adr_open = pc_adr_open;
+    }
+
+    public int getPc_scan() {
+        return pc_scan;
+    }
+
+    public void setPc_scan(int pc_scan) {
+        this.pc_scan = pc_scan;
     }
 
 }

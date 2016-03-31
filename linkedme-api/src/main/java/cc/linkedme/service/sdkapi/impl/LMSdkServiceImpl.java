@@ -253,8 +253,8 @@ public class LMSdkServiceImpl implements LMSdkService {
             }
         }
         if (id != null) {
-            String linkId = Base62.encode(Long.parseLong(id));
-            return Constants.DEEPLINK_HTTPS_PREFIX + Base62.encode(appId) + "/" + linkId;
+            String link = Base62.encode(Long.parseLong(id));
+            return Constants.DEEPLINK_HTTPS_PREFIX + Base62.encode(appId) + "/" + link;
         }
 
         long deepLinkId = uuidCreator.nextId(0);    //0表示发号器的deepLink业务
