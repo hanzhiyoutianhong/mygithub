@@ -40,7 +40,7 @@ public class JsonBuilder implements Serializable {
         if (value != null)
             sb.append("\"").append(JsonUtil.toJsonStr(value)).append("\"");
         else
-            sb.append("null");
+            sb.append("\"\"");
 
         return this;
     }

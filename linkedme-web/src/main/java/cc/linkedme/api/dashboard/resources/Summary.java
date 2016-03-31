@@ -32,7 +32,7 @@ public class Summary {
     @Path("/deeplinks_count")
     @GET
     @Produces({MediaType.APPLICATION_JSON})
-    public String getDeepLinkSummary(@QueryParam("appid") long appid,
+    public String getDeepLinkSummary(@QueryParam("app_id") long appid,
                           @QueryParam("start_date") String start_date,
                           @QueryParam("end_date") String end_date,
                           @QueryParam("feature") String feature,

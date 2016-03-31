@@ -9,6 +9,7 @@ import cc.linkedme.data.model.params.AppParams;
 import cc.linkedme.service.webapi.AppService;
 import net.sf.json.JSONArray;
 import net.sf.json.JSONObject;
+import org.apache.commons.lang.StringUtils;
 import org.springframework.stereotype.Component;
 
 import javax.annotation.Resource;
@@ -20,6 +21,7 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -55,57 +57,24 @@ public class App {
 
     @Path("/get_apps")
     @GET
-
     @Produces(MediaType.APPLICATION_JSON)
-
     public String getApps(@QueryParam("user_id") long user_id,
                           @QueryParam("token") String token,
                           @Context HttpServletRequest request) {
-
         if (user_id <= 0) {
             throw new LMException(LMExceptionFactor.LM_ILLEGAL_PARAM_VALUE);
         }
 
         AppParams appParams = new AppParams();
         appParams.user_id = user_id;
-        List<AppInfo> apps = appService.getAppsByUserId( appParams );
-
-        Map<Long, JSONObject> json_map = new HashMap<Long, JSONObject>();
-
-        JSONArray jsonArray = new JSONArray();
-        int count = 0;
+        List<AppInfo> apps = appService.getAppsByUserId(appParams);
+        List<String> appJsons = new ArrayList<String>(apps.size());
         for (AppInfo app : apps) {
-
-            long app_id = app.getApp_id();
-            String current_type = app.getType();
-            if( json_map.get( app_id ) == null )
-                json_map.put( app_id, app.toJson() );
-            else
-            {
-                JSONObject json_tmp = new JSONObject();
-
-                json_tmp.put( "app_id", app_id );
-                if( "live".equals(current_type) )
-                {
-                    json_tmp.put( "live", app.toJson() );
-                    json_tmp.put( "test", json_map.get( app_id ) );
-                }
-                else if( "test".equals(current_type) )
-                {
-                    json_tmp.put( "live", json_map.get( app_id ) );
-
-                    json_tmp.put( "test", app.toJson() );
-                }
-
-                jsonArray.add( json_tmp );
-                count++;
+            if (app != null) {
+                appJsons.add(app.toJson());
             }
-
         }
-        JSONObject resultJson = new JSONObject();
-        resultJson.put("counts", count);
-        resultJson.put("data", jsonArray);
-        return resultJson.toString();
+        return new StringBuilder().append("[").append(StringUtils.join(appJsons, ",")).append("]").toString();
     }
 
     @Path("/delete_app")
@@ -144,6 +113,9 @@ public class App {
         appParams.type = type;
 
         AppInfo appInfo = appService.queryApp(appParams);
+        if(appInfo == null) {
+            return "{}";
+        }
 
         return appInfo.toJson().toString();
     }
@@ -153,16 +125,43 @@ public class App {
     @Produces(MediaType.APPLICATION_JSON)
     public String updateApp(AppParams appParams, @Context HttpServletRequest request) {
 
+        JSONObject linkSettingJson = appParams.link_setting;
+        JSONObject iosJson = linkSettingJson.getJSONObject("ios");
+        JSONObject adrJson = linkSettingJson.getJSONObject("android");
+        JSONObject desktopJson = linkSettingJson.getJSONObject("desktop");
+
+        appParams.has_ios = iosJson.getBoolean("has_ios");
+        appParams.ios_not_url = iosJson.getString("ios_not_url");
+        appParams.ios_search_option = iosJson.getString("ios_search_option");
+        appParams.ios_store_url = iosJson.getString("ios_store_url");
+        appParams.ios_custom_url = iosJson.getString("ios_custom_url");
+        appParams.ios_enable_ulink = iosJson.getBoolean("ios_enable_ulink");
+        appParams.ios_bundle_id = iosJson.getString("ios_bundle_id");
+        appParams.ios_app_prefix = iosJson.getString("ios_app_prefix");
+
+        appParams.has_android = adrJson.getBoolean("has_android");
+        appParams.android_not_url = adrJson.getString("android_not_url");
+        appParams.android_uri_scheme = adrJson.getString("android_uri_scheme");
+        appParams.android_search_option = adrJson.getString("android_search_option");
+        appParams.google_play_url = adrJson.getString("google_play_url");
+        appParams.android_custom_url = adrJson.getString("android_custom_url");
+        appParams.android_package_name = adrJson.getString("android_package_name");
+        appParams.android_enable_applinks = adrJson.getBoolean("android_enable_applinks");
+        appParams.android_sha256_fingerprints = adrJson.getString("android_sha256_fingerprints");
+
+        appParams.use_default_landing_page = desktopJson.getBoolean("use_default_landing_page");
+        appParams.custom_landing_page = desktopJson.getString("custom_landing_page");
+
         int ios_android_flag =
                 ((appParams.has_ios ? 1 : 0) << 3) + (appParams.ios_enable_ulink ? 1 : 0) << 2 + (appParams.has_android ? 1 : 0) << 1
                         + (appParams.android_enable_applinks ? 1 : 0);
 
         appParams.ios_android_flag = ios_android_flag;
 
-        appService.updateApp(appParams);
+        int result = appService.updateApp(appParams);
 
         JsonBuilder resultJson = new JsonBuilder();
-        resultJson.append("ret", "true");
+        resultJson.append("ret", result > 0);
         return resultJson.flip().toString();
     }
 

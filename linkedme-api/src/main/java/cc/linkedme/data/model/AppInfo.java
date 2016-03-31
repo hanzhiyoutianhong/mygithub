@@ -1,6 +1,8 @@
 package cc.linkedme.data.model;
 
+import cc.linkedme.commons.json.JsonBuilder;
 import net.sf.json.JSONObject;
+import net.sf.json.util.JSONBuilder;
 
 
 /**
@@ -11,26 +13,31 @@ public class AppInfo {
     private long user_id;
     private String app_name;
     private String type;
+    private String creation_time;
 
     private String app_key;
     private String app_secret;
 
     private String ios_uri_scheme;
-    private String ios_search_option;
+    private String ios_not_url;
     private String ios_store_url;
     private String ios_custom_url;
-    private String ios_bundle_id;
     private String ios_app_prefix;
+    private String ios_search_option;
+    private String ios_bundle_id;
+    private String ios_team_id;
 
     private String android_uri_scheme;
-    private String android_search_option;
+    private String android_not_url;
     private String google_paly_url;
     private String android_custom_url;
+    private String android_search_option;
     private String android_package_name;
     private String android_sha256_fingerprints;
     private int ios_android_flag;
 
-    private String qr_code;
+    private boolean use_default_landing_page;
+    private String custom_landing_page;
 
     public long getApp_id() {
         return app_id;
@@ -62,6 +69,14 @@ public class AppInfo {
 
     public void setType(String type) {
         this.type = type;
+    }
+
+    public String getCreation_time() {
+        return creation_time;
+    }
+
+    public void setCreation_time(String creation_time) {
+        this.creation_time = creation_time;
     }
 
     public String getApp_key() {
@@ -184,57 +199,92 @@ public class AppInfo {
         this.ios_android_flag = ios_android_flag;
     }
 
-    public String getQr_code() {
-        return qr_code;
+    public String getIos_not_url() {
+        return ios_not_url;
     }
 
-    public void setQr_code(String qr_code) {
-        this.qr_code = qr_code;
+    public void setIos_not_url(String ios_not_url) {
+        this.ios_not_url = ios_not_url;
     }
 
-    public JSONObject toJson()
-    {
-        boolean has_ios = ( ios_android_flag & 8 ) >> 3 == 1 ? true : false;
-        boolean ios_enable_ulink = ( ios_android_flag & 4 ) >> 2 == 1 ? true : false;
-        boolean has_android = ( ios_android_flag & 2 ) >> 1 == 1 ? true : false;
-        boolean android_enable_applinks = ( ios_android_flag & 1 ) == 1 ? true : false;
+    public String getAndroid_not_url() {
+        return android_not_url;
+    }
 
-        JSONObject ios = new JSONObject();
-        ios.put( "has_ios", has_ios );
-        ios.put( "ios_uri_scheme", ios_uri_scheme );
-        ios.put( "ios_search_option", ios_search_option );
-        ios.put( "ios_store_url", ios_store_url );
-        ios.put( "ios_custom_url", ios_custom_url );
-        ios.put( "ios_enable_ulink", ios_enable_ulink );
-        ios.put( "ios_bundle_id", ios_bundle_id );
-        ios.put( "ios_app_prefix", ios_app_prefix );
+    public void setAndroid_not_url(String android_not_url) {
+        this.android_not_url = android_not_url;
+    }
 
-        JSONObject android = new JSONObject();
-        android.put( "has_android", has_android );
-        android.put( "android_uri_scheme", android_uri_scheme );
-        android.put( "android_search_option", android_search_option );
-        android.put( "google_play_url", google_paly_url );
-        android.put( "android_custom_url", android_custom_url );
-        android.put( "android_package_name", android_package_name );
-        android.put( "android_enable_applinks", android_enable_applinks );
-        android.put( "android_sha256_fingerprints", android_sha256_fingerprints );
+    public String getIos_team_id() {
+        return ios_team_id;
+    }
 
-        JSONObject desktop = new JSONObject();
-        desktop.put( "qr_code", qr_code );
+    public void setIos_team_id(String ios_team_id) {
+        this.ios_team_id = ios_team_id;
+    }
 
-        JSONObject link_setting = new JSONObject();
-        link_setting.put( "ios", ios );
-        link_setting.put( "android", android );
-        link_setting.put( "desktop", desktop );
+    public boolean isUse_default_landing_page() {
+        return use_default_landing_page;
+    }
 
-        JSONObject resultJson = new JSONObject();
-        resultJson.put( "app_name", app_name );
-        resultJson.put( "lkme_key", app_key );
-        resultJson.put( "lkme_secret", app_secret );
-        resultJson.put( "link_setting", link_setting );
+    public void setUse_default_landing_page(boolean use_default_landing_page) {
+        this.use_default_landing_page = use_default_landing_page;
+    }
 
-        return resultJson;
+    public String getCustom_landing_page() {
+        return custom_landing_page;
+    }
+
+    public void setCustom_landing_page(String custom_landing_page) {
+        this.custom_landing_page = custom_landing_page;
+    }
+
+    public String toJson() {
+        boolean has_ios = (ios_android_flag & 8) >> 3 == 1 ? true : false;
+        boolean ios_enable_ulink = (ios_android_flag & 4) >> 2 == 1 ? true : false;
+        boolean has_android = (ios_android_flag & 2) >> 1 == 1 ? true : false;
+        boolean android_enable_applinks = (ios_android_flag & 1) == 1 ? true : false;
+
+        JsonBuilder ios = new JsonBuilder();
+        ios.append("has_ios", has_ios);
+        ios.append("ios_not_url", ios_not_url);
+        ios.append("ios_uri_scheme", ios_uri_scheme);
+        ios.append("ios_search_option", ios_search_option);
+        ios.append("ios_store_url", ios_store_url);
+        ios.append("ios_custom_url", ios_custom_url);
+        ios.append("ios_enable_ulink", ios_enable_ulink);
+        ios.append("ios_bundle_id", ios_bundle_id);
+        ios.append("ios_app_prefix", ios_app_prefix);
+
+        JsonBuilder android = new JsonBuilder();
+        android.append("has_android", has_android);
+        android.append("android_not_url", android_not_url);
+        android.append("android_uri_scheme", android_uri_scheme);
+        android.append("android_search_option", android_search_option);
+        android.append("google_play_url", google_paly_url);
+        android.append("android_custom_url", android_custom_url);
+        android.append("android_package_name", android_package_name);
+        android.append("android_enable_applinks", android_enable_applinks);
+        android.append("android_sha256_fingerprints", android_sha256_fingerprints);
+
+        JsonBuilder desktop = new JsonBuilder();
+        desktop.append("use_default_landing_page", use_default_landing_page);
+        desktop.append("custom_landing_page", custom_landing_page);
+
+        JsonBuilder link_setting = new JsonBuilder();
+        link_setting.append("ios", ios.flip());
+        link_setting.append("android", android.flip());
+        link_setting.append("desktop", desktop.flip());
+
+        JsonBuilder resultJson = new JsonBuilder();
+        resultJson.append("app_id", app_id);
+        resultJson.append("app_name", app_name);
+        resultJson.append("lkme_key", app_key);
+        resultJson.append("lkme_secret", app_secret);
+        resultJson.append("link_setting", link_setting.flip());
+        resultJson.append("creation_time", creation_time);
+
+        return resultJson.flip().toString();
     }
 
 }
-

@@ -1,5 +1,6 @@
 package cc.linkedme.data.model.params;
 
+import net.sf.json.JSONObject;
 import org.codehaus.jackson.annotate.JsonIgnoreProperties;
 
 import javax.xml.bind.annotation.XmlRootElement;
@@ -10,18 +11,18 @@ import javax.xml.bind.annotation.XmlRootElement;
 
 @XmlRootElement
 @JsonIgnoreProperties(ignoreUnknown = true)
-public class AppParams{
-
+public class AppParams {
     public long app_id;
     public long user_id;
     public String app_name;
     public String type;
-
     public String lkme_key;
     public String lkme_secret;
+    public JSONObject link_setting;
 
     public boolean has_ios;
     public String ios_uri_scheme;
+    public String ios_not_url;
     public String ios_search_option;
     public String ios_store_url;
     public String ios_custom_url;
@@ -31,13 +32,16 @@ public class AppParams{
 
     public boolean has_android;
     public String android_uri_scheme;
+    public String android_not_url;
     public String android_search_option;
     public String google_play_url;
     public String android_custom_url;
     public String android_package_name;
     public boolean android_enable_applinks;
     public String android_sha256_fingerprints;
-    public String qr_code;
+
+    public boolean use_default_landing_page;
+    public String custom_landing_page;
 
     public int ios_android_flag;
 
@@ -89,6 +93,14 @@ public class AppParams{
         this.lkme_secret = lkme_secret;
     }
 
+    public JSONObject getLink_setting() {
+        return link_setting;
+    }
+
+    public void setLink_setting(JSONObject link_setting) {
+        this.link_setting = link_setting;
+    }
+
     public boolean isHas_ios() {
         return has_ios;
     }
@@ -103,6 +115,14 @@ public class AppParams{
 
     public void setIos_uri_scheme(String ios_uri_scheme) {
         this.ios_uri_scheme = ios_uri_scheme;
+    }
+
+    public String getIos_not_url() {
+        return ios_not_url;
+    }
+
+    public void setIos_not_url(String ios_not_url) {
+        this.ios_not_url = ios_not_url;
     }
 
     public String getIos_search_option() {
@@ -137,11 +157,11 @@ public class AppParams{
         this.ios_enable_ulink = ios_enable_ulink;
     }
 
-    public String getIos_bubdle_id() {
+    public String getIos_bundle_id() {
         return ios_bundle_id;
     }
 
-    public void setIos_buddle_id(String ios_bundle_id) {
+    public void setIos_bundle_id(String ios_bundle_id) {
         this.ios_bundle_id = ios_bundle_id;
     }
 
@@ -169,6 +189,14 @@ public class AppParams{
         this.android_uri_scheme = android_uri_scheme;
     }
 
+    public String getAndroid_not_url() {
+        return android_not_url;
+    }
+
+    public void setAndroid_not_url(String android_not_url) {
+        this.android_not_url = android_not_url;
+    }
+
     public String getAndroid_search_option() {
         return android_search_option;
     }
@@ -177,11 +205,11 @@ public class AppParams{
         this.android_search_option = android_search_option;
     }
 
-    public String getGoogle_play_search() {
+    public String getGoogle_play_url() {
         return google_play_url;
     }
 
-    public void setGoogle_play_search(String google_play_url) {
+    public void setGoogle_play_url(String google_play_url) {
         this.google_play_url = google_play_url;
     }
 
@@ -217,14 +245,6 @@ public class AppParams{
         this.android_sha256_fingerprints = android_sha256_fingerprints;
     }
 
-    public String getQr_code() {
-        return qr_code;
-    }
-
-    public void setQr_code(String qr_code) {
-        this.qr_code = qr_code;
-    }
-
     public int getIos_android_flag() {
         return ios_android_flag;
     }
@@ -232,4 +252,21 @@ public class AppParams{
     public void setIos_android_flag(int ios_android_flag) {
         this.ios_android_flag = ios_android_flag;
     }
+
+    public boolean isUse_default_landing_page() {
+        return use_default_landing_page;
+    }
+
+    public void setUse_default_landing_page(boolean use_default_landing_page) {
+        this.use_default_landing_page = use_default_landing_page;
+    }
+
+    public String getCustom_landing_page() {
+        return custom_landing_page;
+    }
+
+    public void setCustom_landing_page(String custom_landing_page) {
+        this.custom_landing_page = custom_landing_page;
+    }
+
 }

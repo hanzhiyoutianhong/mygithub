@@ -107,15 +107,6 @@ public class ArrayUtil {
         return value.toString();
     }
 
-    @Deprecated
-    public static String arrayToString(long[] ids) {
-        StringBuilder sbuf = new StringBuilder(ids.length * 8);
-        for (long id : ids) {
-            sbuf.append(id).append(",");
-        }
-        return sbuf.toString();
-    }
-
     public static String arrayToString(Object[] arrs) {
         return arrayToString(arrs, ",");
     }
@@ -450,6 +441,20 @@ public class ArrayUtil {
     public static int binarySearchForInsert(long[] array, long target) {
         int position = Arrays.binarySearch(array, target);
         return position >= 0 ? position : Math.abs(position + 1);
+    }
+
+    public static String strArrToString(String[] strArr) {
+        String result = "";
+        if(strArr == null || strArr.length == 0) {
+            return result;
+        }
+        for(String str: strArr) {
+            result = result + str + ",";
+        }
+        if(result.length() > 0) {
+            return result.substring(0, result.length() - 1);
+        }
+        return result;
     }
 }
 

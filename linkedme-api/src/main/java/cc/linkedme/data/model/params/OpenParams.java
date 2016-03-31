@@ -19,6 +19,9 @@ public class OpenParams {
     public boolean is_referable;
     public String app_version;
     public String extra_uri_data;
+    public String external_intent_uri;
+    public String spotlight_identifier;
+    public String universal_link_url;
     public String os_version;
     public String sdk_version;
     public int sdk_update;
@@ -148,6 +151,30 @@ public class OpenParams {
 
     public void setSign(String sign) {
         this.sign = sign;
+    }
+
+    public String getUniversal_link_url() {
+        return universal_link_url;
+    }
+
+    public void setUniversal_link_url(String universal_link_url) {
+        this.universal_link_url = universal_link_url;
+    }
+
+    public String getExternal_intent_uri() {
+        return external_intent_uri;
+    }
+
+    public void setExternal_intent_uri(String external_intent_uri) {
+        this.external_intent_uri = external_intent_uri;
+    }
+
+    public String getSpotlight_identifier() {
+        return spotlight_identifier;
+    }
+
+    public void setSpotlight_identifier(String spotlight_identifier) {
+        this.spotlight_identifier = spotlight_identifier;
     }
 
 }

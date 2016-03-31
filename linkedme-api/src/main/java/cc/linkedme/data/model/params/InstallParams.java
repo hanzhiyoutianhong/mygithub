@@ -32,6 +32,10 @@ public class InstallParams {
     public String lat_val;
     public String carrier;
     public String app_version;
+    public String extra_uri_data;
+    public String external_intent_uri;
+    public String spotlight_identifier;
+    public String universal_link_url;
     public String sdk_update;
     public String sdk_version;
     public String ios_team_id;
@@ -245,6 +249,39 @@ public class InstallParams {
 
     public void setIos_team_id(String ios_team_id) {
         this.ios_team_id = ios_team_id;
+    }
+
+    public String getSpotlight_identifier() {
+        return spotlight_identifier;
+    }
+
+    public void setSpotlight_identifier(String spotlight_identifier) {
+        this.spotlight_identifier = spotlight_identifier;
+    }
+
+    public String getExtra_uri_data() {
+        return extra_uri_data;
+    }
+
+    public void setExtra_uri_data(String extra_uri_data) {
+        this.extra_uri_data = extra_uri_data;
+    }
+
+    public String getExternal_intent_uri() {
+        return external_intent_uri;
+    }
+
+    public void setExternal_intent_uri(String external_intent_uri) {
+        this.external_intent_uri = external_intent_uri;
+    }
+
+
+    public String getUniversal_link_url() {
+        return universal_link_url;
+    }
+
+    public void setUniversal_link_url(String universal_link_url) {
+        this.universal_link_url = universal_link_url;
     }
 
 }

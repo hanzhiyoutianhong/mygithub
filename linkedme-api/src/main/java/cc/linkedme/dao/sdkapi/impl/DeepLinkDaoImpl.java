@@ -50,11 +50,22 @@ public class DeepLinkDaoImpl extends BaseDao implements DeepLinkDao {
         String campaign = deepLink.getCampaign();
         String source = deepLink.getSource();
         String sdk_version = deepLink.getSdkVersion();
+
+        String link_label = deepLink.getLink_label();
+        boolean ios_use_default = deepLink.isIos_use_default();
+        String ios_custom_url = deepLink.getIos_custom_url();
+        boolean android_use_default = deepLink.isAndroid_use_default();
+        String android_custom_url = deepLink.getAndroid_custom_url();
+        boolean desktop_use_default = deepLink.isDesktop_use_default();
+        String desktop_custom_url = deepLink.getDesktop_custom_url();
+
         TableChannel tableChannel = tableContainer.getTableChannel("deeplink", ADD_DEEPLINK, appid, new Date());
 
         try {
-            result += tableChannel.getJdbcTemplate().update(tableChannel.getSql(), new Object[] {deeplink_id, deeplink_md5, linkedme_key,
-                    identity_id, appid, create_time, tags, alias, channel, feature, stage, campaign, source, sdk_version});
+            result += tableChannel.getJdbcTemplate().update(tableChannel.getSql(),
+                    new Object[] {deeplink_id, deeplink_md5, linkedme_key, identity_id, appid, create_time, tags, alias, channel, feature,
+                            stage, campaign, source, sdk_version, link_label, ios_use_default, ios_custom_url, android_use_default,
+                            android_custom_url, desktop_use_default, desktop_custom_url});
         } catch (DataAccessException e) {
             if (DaoUtil.isDuplicateInsert(e)) {
                 ApiLogger.info(new StringBuilder(128).append("Duplicate insert deepLink, id=").append(deeplink_id));

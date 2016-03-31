@@ -17,7 +17,9 @@ import org.springframework.jdbc.core.RowMapper;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Timestamp;
 import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -86,7 +88,12 @@ public class AppDaoImpl extends BaseDao implements AppDao {
                 app.setAndroid_package_name(resultSet.getString("android_package_name"));
                 app.setAndroid_sha256_fingerprints(resultSet.getString("android_sha256_fingerprints"));
                 app.setIos_android_flag(resultSet.getInt("ios_android_flag"));
-                app.setQr_code(resultSet.getString("qr_code"));
+                app.setUse_default_landing_page(resultSet.getBoolean("use_default_landing_page"));
+                app.setCustom_landing_page(resultSet.getString("custom_landing_page"));
+
+                DateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+                Timestamp register_time = resultSet.getTimestamp("register_time");
+                app.setCreation_time(sdf.format(register_time));
                 appInfos.add(app);
                 return null;
             }
@@ -113,7 +120,7 @@ public class AppDaoImpl extends BaseDao implements AppDao {
         JdbcTemplate jdbcTemplate = tableChannel.getJdbcTemplate();
 
         final List<AppInfo> appInfos = new ArrayList<AppInfo>();
-        jdbcTemplate.query(tableChannel.getSql(), new Object[] {appParams.app_id, appParams.type}, new RowMapper() {
+        jdbcTemplate.query(tableChannel.getSql(), new Object[] {appParams.app_id}, new RowMapper() {
             public Object mapRow(ResultSet resultSet, int i) throws SQLException {
                 AppInfo app = new AppInfo();
                 app.setApp_id(appParams.app_id);
@@ -122,20 +129,25 @@ public class AppDaoImpl extends BaseDao implements AppDao {
                 app.setApp_name(resultSet.getString("app_name"));
                 app.setApp_key(resultSet.getString("app_key"));
                 app.setApp_secret(resultSet.getString("app_secret"));
+
                 app.setIos_uri_scheme(resultSet.getString("ios_uri_scheme"));
-                app.setIos_search_option(resultSet.getString("ios_search_option"));
+                app.setIos_not_url(resultSet.getString("ios_not_url"));
                 app.setIos_store_url(resultSet.getString("ios_store_url"));
                 app.setIos_custom_url(resultSet.getString("ios_custom_url"));
-                app.setIos_bundle_id(resultSet.getString("ios_bundle_id"));
                 app.setIos_app_prefix(resultSet.getString("ios_app_prefix"));
+                app.setIos_search_option(resultSet.getString("ios_search_option"));
+                app.setIos_bundle_id(resultSet.getString("ios_bundle_id"));
+
                 app.setAndroid_uri_scheme(resultSet.getString("android_uri_scheme"));
-                app.setAndroid_search_option(resultSet.getString("android_search_option"));
+                app.setAndroid_not_url(resultSet.getString("android_not_url"));
                 app.setGoogle_paly_url(resultSet.getString("google_play_url"));
                 app.setAndroid_custom_url(resultSet.getString("android_custom_url"));
+                app.setAndroid_search_option(resultSet.getString("android_search_option"));
                 app.setAndroid_package_name(resultSet.getString("android_package_name"));
                 app.setAndroid_sha256_fingerprints(resultSet.getString("android_sha256_fingerprints"));
                 app.setIos_android_flag(resultSet.getInt("ios_android_flag"));
-                app.setQr_code(resultSet.getString("qr_code"));
+                app.setUse_default_landing_page(resultSet.getBoolean("use_default_landing_page"));
+                app.setCustom_landing_page(resultSet.getString("custom_landing_page"));
 
                 appInfos.add(app);
                 return null;
@@ -153,12 +165,10 @@ public class AppDaoImpl extends BaseDao implements AppDao {
         TableChannel tableChannel = tableContainer.getTableChannel("appInfo", UPDATE_APP_BY_APPID, appParams.user_id, appParams.user_id);
         JdbcTemplate jdbcTemplate = tableChannel.getJdbcTemplate();
 
-        String last_update_time = DateFormat.getDateTimeInstance().format(new Date());
-
-        Object[] values = {appParams.app_name, appParams.ios_uri_scheme, appParams.ios_search_option, appParams.ios_store_url,
-                appParams.ios_custom_url, appParams.ios_bundle_id, appParams.ios_app_prefix, appParams.android_uri_scheme,
+        Object[] values = new Object[]{appParams.app_name, appParams.type, appParams.ios_uri_scheme, appParams.ios_not_url, appParams.ios_search_option, appParams.ios_store_url,
+                appParams.ios_custom_url, appParams.ios_bundle_id, appParams.ios_app_prefix, appParams.android_uri_scheme, appParams.android_not_url,
                 appParams.android_search_option, appParams.google_play_url, appParams.android_custom_url, appParams.android_package_name,
-                appParams.ios_android_flag, appParams.android_sha256_fingerprints, appParams.qr_code, last_update_time, appParams.app_id, appParams.type};
+               appParams.android_sha256_fingerprints,  appParams.ios_android_flag, appParams.use_default_landing_page, appParams.custom_landing_page, appParams.app_id};
 
         try {
             res += jdbcTemplate.update(tableChannel.getSql(), values);

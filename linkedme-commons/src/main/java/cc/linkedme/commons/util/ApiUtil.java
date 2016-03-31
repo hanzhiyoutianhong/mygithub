@@ -276,14 +276,6 @@ public class ApiUtil {
     }
 
     /**
-     * see ArrayUtil
-     */
-    @Deprecated
-    public static String arrayToString(long[] ids) {
-        return ArrayUtil.arrayToString(ids);
-    }
-
-    /**
      * 根据lang存储值获取对应的码值
      *
      * @param lang

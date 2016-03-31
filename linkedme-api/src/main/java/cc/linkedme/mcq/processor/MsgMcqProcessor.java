@@ -137,7 +137,7 @@ public class MsgMcqProcessor extends McqProcessor {
     }
 
     public void saveErrorMsg(String msg) {
-        ApiLogger.info("Retyr failed msg:" + msg);
+        ApiLogger.info("Retry failed msg:" + msg);
     }
 
     public void saveDegradationMsg(String msg) {

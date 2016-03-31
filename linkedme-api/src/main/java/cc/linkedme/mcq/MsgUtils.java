@@ -27,6 +27,15 @@ public class MsgUtils {
         info.append("campaign", deepLink.getCampaign());
         info.append("params", deepLink.getParams());
         info.append("source", deepLink.getSource());
+
+        info.append("link_label", deepLink.getLink_label());
+        info.append("ios_use_default", deepLink.isIos_use_default());
+        info.append("ios_custom_url", deepLink.getIos_custom_url());
+        info.append("android_use_default", deepLink.isAndroid_use_default());
+        info.append("android_custom_url", deepLink.getAndroid_custom_url());
+        info.append("desktop_use_default", deepLink.isDesktop_use_default());
+        info.append("desktop_custom_url", deepLink.getDesktop_custom_url());
+
         deepLinkMsg.append("info", info.flip());
         return deepLinkMsg.flip().toString();
     }
@@ -47,6 +56,14 @@ public class MsgUtils {
         deepLink.setCampaign((deepLinkMsg.getString("campaign")));
         deepLink.setParams((deepLinkMsg.getString("params")));
         deepLink.setSource((deepLinkMsg.getString("source")));
+
+        deepLink.setLink_label(deepLinkMsg.getString("link_label"));
+        deepLink.setIos_use_default(deepLinkMsg.getBoolean("ios_use_default"));
+        deepLink.setIos_custom_url(deepLinkMsg.getString("ios_custom_url"));
+        deepLink.setAndroid_use_default(deepLinkMsg.getBoolean("android_use_default"));
+        deepLink.setAndroid_custom_url(deepLinkMsg.getString("android_custom_url"));
+        deepLink.setDesktop_use_default(deepLinkMsg.getBoolean("desktop_use_default"));
+        deepLink.setDesktop_custom_url(deepLinkMsg.getString("desktop_custom_url"));
         return deepLink;
     }
 

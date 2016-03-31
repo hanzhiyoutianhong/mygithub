@@ -32,6 +32,14 @@ public class DeepLink {
     private Timestamp updateTime;
     private int state;
 
+    private String link_label;// 自定义短链名称，和域名 https://lkme.cc/链在一起构成短链主体,目前不支持，该值先忽略
+    private boolean ios_use_default;
+    private String ios_custom_url;
+    private boolean android_use_default;
+    private String  android_custom_url;
+    private boolean  desktop_use_default;
+    private String  desktop_custom_url;
+
     public DeepLink() {}
 
     public DeepLink(long deeplinkId, String deeplinkMd5, long appId, String linkedmeKey, long identityId, String tags, String alias,
@@ -262,5 +270,61 @@ public class DeepLink {
         result = 31 * result + (updateTime != null ? updateTime.hashCode() : 0);
         result = 31 * result + state;
         return result;
+    }
+
+    public String getLink_label() {
+        return link_label;
+    }
+
+    public void setLink_label(String link_label) {
+        this.link_label = link_label;
+    }
+
+    public boolean isIos_use_default() {
+        return ios_use_default;
+    }
+
+    public void setIos_use_default(boolean ios_use_default) {
+        this.ios_use_default = ios_use_default;
+    }
+
+    public String getIos_custom_url() {
+        return ios_custom_url;
+    }
+
+    public void setIos_custom_url(String ios_custom_url) {
+        this.ios_custom_url = ios_custom_url;
+    }
+
+    public boolean isAndroid_use_default() {
+        return android_use_default;
+    }
+
+    public void setAndroid_use_default(boolean android_use_default) {
+        this.android_use_default = android_use_default;
+    }
+
+    public String getAndroid_custom_url() {
+        return android_custom_url;
+    }
+
+    public void setAndroid_custom_url(String android_custom_url) {
+        this.android_custom_url = android_custom_url;
+    }
+
+    public boolean isDesktop_use_default() {
+        return desktop_use_default;
+    }
+
+    public void setDesktop_use_default(boolean desktop_use_default) {
+        this.desktop_use_default = desktop_use_default;
+    }
+
+    public String getDesktop_custom_url() {
+        return desktop_custom_url;
+    }
+
+    public void setDesktop_custom_url(String desktop_custom_url) {
+        this.desktop_custom_url = desktop_custom_url;
     }
 }

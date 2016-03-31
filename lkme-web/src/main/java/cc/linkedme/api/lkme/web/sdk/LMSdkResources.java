@@ -16,6 +16,11 @@ import cc.linkedme.data.model.params.UrlParams;
 import cc.linkedme.service.sdkapi.LMSdkService;
 import com.google.common.base.Strings;
 import net.sf.json.JSONObject;
+import org.apache.commons.httpclient.HttpClient;
+import org.apache.commons.httpclient.HttpException;
+import org.apache.commons.httpclient.methods.PostMethod;
+import org.apache.commons.httpclient.methods.RequestEntity;
+import org.apache.commons.httpclient.methods.StringRequestEntity;
 import org.springframework.stereotype.Component;
 
 import javax.annotation.Resource;
@@ -59,26 +64,31 @@ public class LMSdkResources {
 
         String deepLinkParam = "";
         boolean clicked_linkedme_link = false;
-        if (!Strings.isNullOrEmpty(openParams.extra_uri_data)) {
-            if (openParams.extra_uri_data.startsWith(Constants.DEEPLINK_HTTPS_PREFIX)
-                    || openParams.extra_uri_data.startsWith(Constants.DEEPLINK_HTTP_PREFIX)) {
-                clicked_linkedme_link = true;
-                deepLinkParam = lmSdkService.open(openParams);
-            }
+        String extra_uri_data = openParams.extra_uri_data;
+        String external_intent_uri = openParams.external_intent_uri;
+        String universal_link_url = openParams.universal_link_url;
+        if(Strings.isNullOrEmpty(extra_uri_data) && Strings.isNullOrEmpty(external_intent_uri) && Strings.isNullOrEmpty(universal_link_url)) {
+            clicked_linkedme_link = false;
+        } else {
+            clicked_linkedme_link = true;
+            deepLinkParam = lmSdkService.open(openParams);
         }
+
         if (Strings.isNullOrEmpty(deepLinkParam)) {
-            deepLinkParam = "";
+            deepLinkParam = "{}";
         }
-        JsonBuilder resultJson = new JsonBuilder();
-        resultJson.append("session_id", System.currentTimeMillis());
-        resultJson.append("identity_id", openParams.identity_id);
-        resultJson.append("device_fingerprint_id", openParams.device_fingerprint_id);
-        resultJson.append("browser_fingerprint_id", "");
-        resultJson.append("link", openParams.extra_uri_data);
-        resultJson.append("params", deepLinkParam);
-        resultJson.append("is_first_session", true);
-        resultJson.append("clicked_linkedme_link", clicked_linkedme_link);
-        return resultJson.flip().toString();
+
+        JSONObject paramJson = JSONObject.fromObject(deepLinkParam);
+        JSONObject resultJson = new JSONObject();
+        resultJson.put("session_id", System.currentTimeMillis());
+        resultJson.put("identity_id", openParams.identity_id);
+        resultJson.put("device_fingerprint_id", openParams.device_fingerprint_id);
+        resultJson.put("browser_fingerprint_id", "");
+        resultJson.put("link", openParams.extra_uri_data);
+        resultJson.put("params", paramJson);
+        resultJson.put("is_first_session", true);
+        resultJson.put("clicked_linkedme_link", clicked_linkedme_link);
+        return resultJson.toString();
     }
 
     @Path("/url")
@@ -279,4 +289,5 @@ public class LMSdkResources {
         resultJson.append("clicked_linkedme_link", clicked_linkedme_link);
         return resultJson.flip().toString();
     }
+
 }

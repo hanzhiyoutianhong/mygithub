@@ -31,7 +31,7 @@ public class AppServiceImpl implements AppService {
     private ShardingSupportHash<JedisPort> clientShardingSupport;
 
     public long createApp(AppParams appParams) {
-        long appId = uuidCreator.nextId(2); // 2表示发号器的app业务
+        long appId = uuidCreator.nextId(2) - 3958857750000000L; // 2表示发号器的app业务,后续再调整appid的生成规则
         AppInfo app_live_Info = new AppInfo();
         AppInfo app_test_Info = new AppInfo();
         String live_md5_key = appParams.app_name + "live" + appParams.user_id + new Random(appId);
@@ -41,7 +41,7 @@ public class AppServiceImpl implements AppService {
         String test_md5_secret = appParams.user_id + "test" + appParams.app_name + new Random(appId);
 
         app_live_Info.setApp_key(new MD5Utils().md5(live_md5_key));
-        app_live_Info.setApp_secret(new MD5Utils().md5(live_md5_key));
+        app_live_Info.setApp_secret(new MD5Utils().md5(live_md5_secret));
         app_live_Info.setApp_id(appId);
         app_live_Info.setType("live");
         app_live_Info.setUser_id(appParams.user_id);
@@ -55,12 +55,12 @@ public class AppServiceImpl implements AppService {
         app_test_Info.setApp_name(appParams.app_name);
 
 
-        if (appDao.insertApp(app_live_Info) > 0 && appDao.insertApp(app_test_Info) > 0) {
+        if (appDao.insertApp(app_live_Info) > 0 ) {
+            //&& appDao.insertApp(app_test_Info) > 0
             JedisPort liveClient = clientShardingSupport.getClient(live_md5_key);
             liveClient.set(live_md5_key, appId + "," + live_md5_secret);
             JedisPort testClient = clientShardingSupport.getClient(test_md5_key);
             testClient.set(test_md5_key, appId + "," + test_md5_secret);
-
             return appId;
         }
         throw new LMException("Create appInfo failed");

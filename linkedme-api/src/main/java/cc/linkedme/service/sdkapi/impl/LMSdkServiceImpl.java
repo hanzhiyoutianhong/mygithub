@@ -7,6 +7,7 @@ import cc.linkedme.commons.json.JsonBuilder;
 import cc.linkedme.commons.log.ApiLogger;
 import cc.linkedme.commons.redis.JedisPort;
 import cc.linkedme.commons.shard.ShardingSupportHash;
+import cc.linkedme.commons.util.ArrayUtil;
 import cc.linkedme.commons.util.Base62;
 import cc.linkedme.commons.util.Constants;
 import cc.linkedme.commons.util.DeepLinkUtil;
@@ -29,6 +30,7 @@ import cc.linkedme.service.sdkapi.LMSdkService;
 
 import com.google.common.base.Joiner;
 import com.google.common.base.Strings;
+import com.google.common.primitives.Floats;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -64,6 +66,8 @@ public class LMSdkServiceImpl implements LMSdkService {
 
     @Resource
     private CountComponent deepLinkCountComponent;
+
+    public final static float UNIVERSE_LINK_IOS_VERSION = 8;
 
     public static ThreadPoolExecutor deepLinkCountThreadPool = new ThreadPoolExecutor(20, 20, 60L, TimeUnit.SECONDS, new LinkedBlockingQueue<Runnable>(300), new ThreadPoolExecutor.DiscardOldestPolicy());
 
@@ -172,22 +176,43 @@ public class LMSdkServiceImpl implements LMSdkService {
     }
 
     public String open(OpenParams openParams) {
-        String deepLinkUrl = openParams.extra_uri_data;
+        String deepLinkUrl = null;
+
+        float osVersion = 0f;
+        try {
+            osVersion = Float.parseFloat(openParams.os_version);
+        } catch (NumberFormatException e) {
+            throw new LMException(LMExceptionFactor.LM_ILLEGAL_PARAMETER_VALUE, openParams.os_version + " must be float!");
+        }
+        if ("Android".equals(openParams.os)) {
+            deepLinkUrl = openParams.extra_uri_data;
+        } else if ("iOS".equals(openParams.os)) {
+            if (osVersion >= UNIVERSE_LINK_IOS_VERSION) {
+                deepLinkUrl = openParams.universal_link_url;
+            }
+
+            if (Strings.isNullOrEmpty(deepLinkUrl)) {
+                deepLinkUrl = openParams.external_intent_uri;
+            }
+
+        } else {
+            return "";
+        }
         String deepLink = DeepLinkUtil.getDeepLinkFromUrl(deepLinkUrl);
         long deepLinkId = Base62.decode(deepLink);
         String param = deepLinkService.getDeepLinkParam(deepLinkId);
         if (!Strings.isNullOrEmpty(param)) {
             // count
             String deviceType = null;
-            if(!Strings.isNullOrEmpty(openParams.os)) {
+            if (!Strings.isNullOrEmpty(openParams.os)) {
                 deviceType = openParams.os.trim().toLowerCase();
             }
-            if("android".equals(deviceType)) {
+            if ("android".equals(deviceType)) {
                 deviceType = "adr";
             }
             String countType = deviceType + "_open";
-            if(!DeepLinkCount.isValidCountType(countType)) {
-                //TODO 对deviceType做判断
+            if (!DeepLinkCount.isValidCountType(countType)) {
+                // TODO 对deviceType做判断
                 countType = "other_" + "_open";
             }
             final String type = countType;
@@ -195,7 +220,7 @@ public class LMSdkServiceImpl implements LMSdkService {
                 @Override
                 public Void call() throws Exception {
                     try {
-                        //TODO 对deeplink_id的有效性做判断
+                        // TODO 对deeplink_id的有效性做判断
                         deepLinkCountComponent.incr(deepLinkId, type, 1);
                     } catch (Exception e) {
                         ApiLogger.warn("LMSdkServiceImpl.open deepLinkCountThreadPool count failed", e);
@@ -220,7 +245,7 @@ public class LMSdkServiceImpl implements LMSdkService {
         JedisPort redisClient = deepLinkShardingSupport.getClient(deepLinkMd5);
         String id = redisClient.get(deepLinkMd5);
 
-        long appId = urlParams.appid;   //web创建url传appid, sdk创建url不传appid
+        long appId = urlParams.app_id;   //web创建url传appid, sdk创建url不传appid
         if(appId <= 0) {
             String value = clientShardingSupport.getClient(urlParams.linkedme_key).get(urlParams.linkedme_key);
             if(!Strings.isNullOrEmpty(value)) {
@@ -233,9 +258,18 @@ public class LMSdkServiceImpl implements LMSdkService {
         }
 
         long deepLinkId = uuidCreator.nextId(0);    //0表示发号器的deepLink业务
-        DeepLink link = new DeepLink(deepLinkId, deepLinkMd5, urlParams.appid, urlParams.linkedme_key, urlParams.identity_id,
-                urlParams.tags, urlParams.alias, urlParams.channel, urlParams.feature, urlParams.stage, urlParams.campaign,
-                urlParams.params, urlParams.source, urlParams.sdk_version);
+        DeepLink link = new DeepLink(deepLinkId, deepLinkMd5, urlParams.app_id, urlParams.linkedme_key, urlParams.identity_id,
+                ArrayUtil.strArrToString(urlParams.tags), urlParams.alias, ArrayUtil.strArrToString(urlParams.channel), ArrayUtil.strArrToString(urlParams.feature), ArrayUtil.strArrToString(urlParams.stage), ArrayUtil.strArrToString(urlParams.campaign),
+                urlParams.params.toString(), urlParams.source, urlParams.sdk_version);
+        link.setLink_label(urlParams.link_label);
+        link.setIos_use_default(urlParams.ios_use_default);
+        link.setIos_custom_url(urlParams.ios_custom_url);
+        link.setAndroid_use_default(urlParams.android_use_default);
+        link.setAndroid_custom_url(urlParams.android_custom_url);
+        link.setDesktop_use_default(urlParams.desktop_use_default);
+        link.setDesktop_custom_url(urlParams.desktop_custom_url);
+
+
         SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
         link.setCreateTime(df.format(new Date())); // 设置deeplink的创建时间
         link.setAppId(appId);
