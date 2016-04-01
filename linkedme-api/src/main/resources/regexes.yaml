@@ -48,12 +48,14 @@ user_agent_parsers:
     family_replacement: 'TencentWeibo'
 
   # QQ Browsers
-  #- regex: '(MQQBrowser/Mini)(?:(\d+)(?:\.(\d+)(?:\.(\d+))?)?)?'
-  #family_replacement: 'QQ Browser Mini'
-  #- regex: '(MQQBrowser)(?:/(\d+)(?:\.(\d+)(?:\.(\d+))?)?)?'
-  #  family_replacement: 'QQ Browser Mobile'
-  #- regex: '(QQBrowser)(?:/(\d+)(?:\.(\d+)\.(\d+)(?:\.(\d+))?)?)?'
-  #  family_replacement: 'QQ Browser'
+  - regex: '(MQQBrowser/Mini)(?:(\d+)(?:\.(\d+)(?:\.(\d+))?)?)?'
+    #family_replacement: 'QQ Browser Mini'
+    family_replacement: 'QQ Browser'
+  - regex: '(MQQBrowser)(?:/(\d+)(?:\.(\d+)(?:\.(\d+))?)?)?'
+    #family_replacement: 'QQ Browser Mobile'
+    family_replacement: 'QQ Browser'
+  - regex: '(QQBrowser)(?:/(\d+)(?:\.(\d+)\.(\d+)(?:\.(\d+))?)?)?'
+    family_replacement: 'QQ Browser'
 
   # QQ inner
   - regex: '(QQ)/(\d+)\.(\d+)\.(\d+)'

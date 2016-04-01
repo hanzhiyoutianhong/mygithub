@@ -5,6 +5,7 @@ import cc.linkedme.commons.useragent.Parser;
 import cc.linkedme.data.model.AppInfo;
 import cc.linkedme.data.model.DeepLink;
 import cc.linkedme.service.DeepLinkService;
+import cc.linkedme.service.webapi.AppService;
 
 import javax.annotation.Resource;
 import javax.servlet.ServletException;
@@ -25,6 +26,9 @@ public class UrlServlet extends HttpServlet{
     @Resource
     private DeepLinkService deepLinkService;
 
+    @Resource
+    private AppService appService;
+
     /**
      * @see HttpServlet#HttpServlet()
      */
@@ -38,6 +42,7 @@ public class UrlServlet extends HttpServlet{
      */
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         // TODO Auto-generated method stub
+        //eg, https://lkme.cc/hafzh/fhza80af; appId, deeplinkId;
         String uri = request.getRequestURI();
         String[] uriArr = uri.split("/");
         if(uriArr.length < 5) {
@@ -45,10 +50,11 @@ public class UrlServlet extends HttpServlet{
         }
         long appId = Long.parseLong(uriArr[3]);
         long deepLinkId = Long.parseLong(uriArr[4]);
-        DeepLink deepLink = deepLinkService.getDeepLinkInfo(deepLinkId, appId);   //根据deepLinkId获取短链对象(mc mysql)
-        AppInfo appInfo = null;
+        DeepLink deepLink = deepLinkService.getDeepLinkInfo(deepLinkId, appId);   //根据deepLinkId获取deepLink信息
+        AppInfo appInfo = appService.getAppById(appId); //根据appId获取app信息
 
         //useAgent
+        //使用yaml解析user agent,测试匹配优先级,速度,打日志统计时间,优化正则表达式(单个正则表达式,优先级);
         String userAgent = request.getHeader("user-agent");
         Client client = userAgentParser.parse(userAgent);
         String userAgentFamily =  client.userAgent.family;
@@ -57,8 +63,123 @@ public class UrlServlet extends HttpServlet{
         String osMajor = client.os.major;
         String deviceFamily  = client.device.family;
 
-        request.setAttribute("url", deepLink.getAndroid_custom_url());
-        request.getRequestDispatcher("/openApp.jsp").forward(request,response);
+        boolean isUniversallink = false;
+        boolean isDownloadDirectly = false;
+        boolean isCannotDeeplink  = false;
+        boolean isCannotGetWinEvent = false;    //TODO
+        boolean isCannotGoMarket = false;
+        boolean isForceUseScheme = false;
+
+        String url = "";
+        String scheme = "";
+        boolean isIOS = false;
+        boolean isAndroid = false;
+        //计数
+        if(osFamily.equals("iOS")) {
+            if(appInfo.getIos_search_option().equals("apple_store")) {
+                url = appInfo.getIos_store_url();
+                isDownloadDirectly = true;
+            } else if(appInfo.getIos_search_option().equals("custom_url")) {
+                url = appInfo.getIos_custom_url();
+                isCannotGoMarket = true;
+                isDownloadDirectly = true;
+            } else if (appInfo.getIos_search_option().equals("not_url")) {
+                isCannotGoMarket = true;
+            }
+
+            scheme = appInfo.getIos_uri_scheme();
+            isIOS = true;
+            if (appInfo.getIos_bundle_id() != null && appInfo.getIos_team_id() != null && Integer.parseInt(osMajor) >= 9) {
+                isUniversallink = true;
+            }
+
+        } else if(osFamily.equals("Android")) {
+            if(appInfo.getAndroid_search_option().equals("google_play")) {
+                url = appInfo.getGoogle_paly_url();
+            } else if(appInfo.getAndroid_search_option().equals("custom_url")) {
+                url = appInfo.getAndroid_custom_url();
+            }
+            scheme = appInfo.getAndroid_uri_scheme();
+            isAndroid = true;
+        }
+        //PC
+
+        //iPac
+
+
+
+
+
+        boolean isWechat = false;
+        boolean isWeibo = false;
+        boolean isQQ = false;
+        boolean isQQBrowser = false;
+        boolean isFirefox = false;
+        boolean isChrome = false;
+        boolean isUC = false;   //TODO
+        boolean DEBUG = false;
+
+
+        String browseMajor = "0";
+
+        //计数
+        if (userAgentFamily.equals("Chrome")) {
+            isChrome = true;
+            browseMajor  = userAgentMajor;
+        } else if(userAgentFamily.equals("Firefox")) {
+            isFirefox = true;
+        } else if(userAgentFamily.equals("WeChat")) {
+            isWechat = true;
+        } else if(userAgentFamily.equals("Weibo")) {
+            isWeibo = true;
+        } else if(userAgentFamily.equals("QQ Browser")) {
+            isQQBrowser = true;
+        } else if(userAgentFamily.equals("QQInner")) {
+            isQQ = true;
+        }
+
+        request.setAttribute("AppName", appInfo.getApp_name());
+        request.setAttribute("Pkg", appInfo.getAndroid_package_name());
+        request.setAttribute("BundleID", appInfo.getIos_bundle_id());
+        request.setAttribute("AppID", appId);
+        request.setAttribute("IconUrl", "");   //TODO
+        request.setAttribute("Url", url);
+        request.setAttribute("Match_id", uriArr[3]);
+
+        request.setAttribute("Download_msg", "");   //TODO
+        request.setAttribute("Download_btn_text", "");   //TODO
+        request.setAttribute("Download_title", "");   //TODO
+
+        request.setAttribute("Chrome_major", uriArr[3]);
+        request.setAttribute("Ios_major", browseMajor);
+        request.setAttribute("Redirect_url", "");   //TODO
+
+        request.setAttribute("YYB_url", "http://a.app.qq.com/o/simple.jsp?pkgname=" + appInfo.getAndroid_package_name());
+        request.setAttribute("Scheme", scheme);
+        request.setAttribute("Host", "");           //TODO
+        request.setAttribute("AppInsStatus", 0);    //TODO
+        request.setAttribute("TimeStamp", System.currentTimeMillis());  //deepLink 创建时间?
+        request.setAttribute("DsTag", "");  //TODO
+
+        request.setAttribute("isIOS", isIOS);
+        request.setAttribute("isAndroid", isAndroid);
+
+        request.setAttribute("isWechat", isWechat);
+        request.setAttribute("isWeibo", isWeibo);
+        request.setAttribute("isQQ", isQQ);
+        request.setAttribute("isQQBrowser", isQQBrowser);
+        request.setAttribute("isFirefox", isFirefox);
+        request.setAttribute("isChrome", isChrome);
+
+
+        request.setAttribute("isUniversallink", isUniversallink);
+        request.setAttribute("isDownloadDirectly", isDownloadDirectly);
+        request.setAttribute("isCannotDeeplink", isCannotDeeplink);
+        request.setAttribute("isCannotGetWinEvent", isCannotGetWinEvent);
+        request.setAttribute("isCannotGoMarket", isCannotGoMarket);
+        request.setAttribute("isForceUseScheme", isForceUseScheme);
+
+        request.getRequestDispatcher("/redirect.jsp").forward(request,response);
     }
 
     /**

@@ -123,9 +123,17 @@ public class LMSdkResources {
     @Produces({MediaType.APPLICATION_JSON})
     public String preInstall(PreInstallParams preInstallParams, @Context HttpServletRequest request) {
 
-        String result = lmSdkService.preInstall(preInstallParams);
-
+        String identityId = lmSdkService.preInstall(preInstallParams);
+        String result = "{\"identity_id\":" + identityId + "}";
         return result;
+    }
+
+    @Path("/preOpen")
+    @POST
+    @Produces({MediaType.APPLICATION_JSON})
+    public String preOpen(PreInstallParams preInstallParams, @Context HttpServletRequest request) {
+        ApiLogger.info("");
+        return "{}";
     }
 
     @Path("/install_bak")
