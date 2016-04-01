@@ -1,12 +1,8 @@
 package cc.linkedme.api.dashboard.resources;
 
-import cc.linkedme.commons.exception.LMException;
-import cc.linkedme.commons.exception.LMExceptionFactor;
-import cc.linkedme.data.model.AppInfo;
 import cc.linkedme.data.model.DeepLinkCount;
 import cc.linkedme.data.model.params.SummaryDeepLinkParams;
 import cc.linkedme.service.webapi.SummaryService;
-import net.sf.json.JSONArray;
 import net.sf.json.JSONObject;
 import org.springframework.stereotype.Component;
 

@@ -12,6 +12,7 @@ import cc.linkedme.data.model.params.LMOpenParams;
 import cc.linkedme.data.model.params.LMUrlParams;
 
 import cc.linkedme.data.model.params.OpenParams;
+import cc.linkedme.data.model.params.PreInstallParams;
 import cc.linkedme.data.model.params.UrlParams;
 import cc.linkedme.service.sdkapi.LMSdkService;
 import com.google.common.base.Strings;
@@ -120,9 +121,9 @@ public class LMSdkResources {
     @Path("/preInstall")
     @POST
     @Produces({MediaType.APPLICATION_JSON})
-    public String url(@FormParam("link_click_id") String linkClickId) {
+    public String preInstall(PreInstallParams preInstallParams, @Context HttpServletRequest request) {
 
-        String result = lmSdkService.preInstall(linkClickId);
+        String result = lmSdkService.preInstall(preInstallParams);
 
         return result;
     }

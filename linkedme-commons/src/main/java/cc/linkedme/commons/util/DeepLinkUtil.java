@@ -8,7 +8,7 @@ public class DeepLinkUtil {
         if(url == null) {
             return null;
         }
-        String[] strArr = url.split("\\/");
+        String[] strArr = url.split("/");
         if(strArr.length == 5) {
             return strArr[4];
         }

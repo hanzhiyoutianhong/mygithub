@@ -55,8 +55,8 @@ public class AppServiceImpl implements AppService {
         app_test_Info.setApp_name(appParams.app_name);
 
 
-        if (appDao.insertApp(app_live_Info) > 0 ) {
-            //&& appDao.insertApp(app_test_Info) > 0
+        if (appDao.insertApp(app_live_Info) > 0) {
+            // && appDao.insertApp(app_test_Info) > 0
             JedisPort liveClient = clientShardingSupport.getClient(live_md5_key);
             liveClient.set(live_md5_key, appId + "," + live_md5_secret);
             JedisPort testClient = clientShardingSupport.getClient(test_md5_key);
@@ -79,10 +79,14 @@ public class AppServiceImpl implements AppService {
     }
 
     public AppInfo queryApp(AppParams appParams) {
-        AppInfo appInfo = appDao.getAppsByAppId(appParams);
+        AppInfo appInfo = appDao.getAppsByAppId(appParams.app_id);
 
 
         return appInfo;
+    }
+
+    public AppInfo getAppById(String appId) {
+        return null;
     }
 
     public int updateApp(AppParams appParams) {

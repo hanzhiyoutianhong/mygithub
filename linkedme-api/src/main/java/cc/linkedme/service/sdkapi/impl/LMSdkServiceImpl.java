@@ -20,6 +20,7 @@ import cc.linkedme.data.model.DeepLinkCount;
 import cc.linkedme.data.model.params.CloseParams;
 import cc.linkedme.data.model.params.InstallParams;
 import cc.linkedme.data.model.params.OpenParams;
+import cc.linkedme.data.model.params.PreInstallParams;
 import cc.linkedme.data.model.params.UrlParams;
 import cc.linkedme.exception.LMException;
 import cc.linkedme.exception.LMExceptionFactor;
@@ -30,7 +31,6 @@ import cc.linkedme.service.sdkapi.LMSdkService;
 
 import com.google.common.base.Joiner;
 import com.google.common.base.Strings;
-import com.google.common.primitives.Floats;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -114,10 +114,12 @@ public class LMSdkServiceImpl implements LMSdkService {
             }
             // 记录<device_id, identity_id>和<identity_id, device_id>
             clientRedisClient.set(deviceId, identityId);
-            clientRedisClient.set(identityId + ".di", deviceId);
+
+            JedisPort identityRedisClient = clientShardingSupport.getClient(identityId);
+            identityRedisClient.set(identityId + ".di", deviceId);
         } else { // 之前存在identityId
             identityId = Long.parseLong(identityIdStr);
-            JedisPort identityRedisClient = clientShardingSupport.getClient(identityIdStr);
+            JedisPort identityRedisClient = clientShardingSupport.getClient(identityId);
             String deepLinkIdStr = identityRedisClient.get(identityIdStr + ".dpi");
             if (Strings.isNullOrEmpty(deepLinkIdStr)) { // 之前存在identityId,
                                                         // 但是没有identityId与deepLink的键值对
@@ -160,9 +162,8 @@ public class LMSdkServiceImpl implements LMSdkService {
 
     private String[] matchDfpIdAndBfpId(InstallParams installParams) {
         Joiner joiner = Joiner.on("&").skipNulls();
-        String deviceParamsStr = joiner.join(installParams.device_brand, installParams.device_model, installParams.os,
-                installParams.os_version, installParams.screen_dpi, installParams.screen_height, installParams.screen_width);
-        String deviceFingerprintId = MD5Utils.md5(deviceParamsStr);
+        String deviceFingerprintId = createFingerprintId(installParams.os, installParams.os_version, installParams.screen_dpi,
+                installParams.screen_height, installParams.screen_width);
         JedisPort clientRedisClient = clientShardingSupport.getClient(deviceFingerprintId);
         String identityIdAndDeepLinkId = clientRedisClient.get(deviceFingerprintId);
         if (Strings.isNullOrEmpty(identityIdAndDeepLinkId)) {
@@ -173,6 +174,12 @@ public class LMSdkServiceImpl implements LMSdkService {
             return new String[0];
         }
         return result;
+    }
+
+    private String createFingerprintId(String os, String os_version, int screen_dpi, int screen_height, int screen_width) {
+        Joiner joiner = Joiner.on("&").skipNulls();
+        String deviceParamsStr = joiner.join(os, os_version, screen_dpi, screen_height, screen_width);
+        return MD5Utils.md5(deviceParamsStr);
     }
 
     public String open(OpenParams openParams) {
@@ -289,22 +296,30 @@ public class LMSdkServiceImpl implements LMSdkService {
         ApiLogger.info(closeParams.device_fingerprint_id + ", " + closeParams.linkedme_key + " close");// 记录日志
     }
 
-    public String preInstall(String linkClickId) {
+    public String preInstall(PreInstallParams preInstallParams) {
         String result = null;
-
-        try {
-
-            // set identify_id for browser,
-
-        } catch (Exception e) {
-            // error log
-            ApiLogger.error("");
-            throw new LMException(LMExceptionFactor.LM_FAILURE_DB_OP, this.getClass().getName() + ".preInstall");
+        long identityId = 0;
+        if (preInstallParams.identity_id <= 0) {
+            identityId = uuidCreator.nextId(1); // 浏览器的cookie里没有identityId,新分配
+        } else {
+            // 浏览器里有identityId,不需要重新生成,从库里查找
+            JedisPort identityRedisClient = clientShardingSupport.getClient(identityId);
+            String deviceId = identityRedisClient.get(identityId + "di");
+            if (Strings.isNullOrEmpty(deviceId)) {
+                // 说明库里没有该identityId,走browse_fingerprint_id和device_fingerprint_id匹配逻辑
+            } else {
+                boolean res = identityRedisClient.set(String.valueOf(identityId), preInstallParams.deeplink_id);
+                if (res) {
+                    return null;
+                }
+            }
         }
+
+        String browseFingerprintId = createFingerprintId(preInstallParams.os, preInstallParams.os_version, preInstallParams.screen_dpi,
+                preInstallParams.screen_height, preInstallParams.screen_width);
 
         // info log
         ApiLogger.info("");
-
 
         return result;
     }

@@ -92,6 +92,12 @@ public class DeepLinkDaoImpl extends BaseDao implements DeepLinkDao {
                 dp.setStage(resultSet.getString("stage"));
                 dp.setCampaign(resultSet.getString("campaign"));
                 dp.setSource(resultSet.getString("source"));
+                dp.setIos_use_default(resultSet.getBoolean("ios_use_default"));
+                dp.setIos_custom_url(resultSet.getString("iso_custom_url"));
+                dp.setAndroid_use_default(resultSet.getBoolean("android_use_default"));
+                dp.setAndroid_custom_url(resultSet.getString("android_custom_url"));
+                dp.setDesktop_use_default(resultSet.getBoolean("desktop_use_default"));
+                dp.setDesktop_custom_url(resultSet.getString("desktop_custom_url"));
                 deepLinks.add(dp);
                 return null;
             }

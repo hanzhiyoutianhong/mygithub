@@ -38,4 +38,7 @@
 
     <bean id="authFilter" class="cc.linkedme.commons.auth.AuthFilter" />
 
+    <!-- regex yaml-->
+    <bean id="userAgentParser" class="cc.linkedme.commons.useragent.Parser" />
+
 </beans>

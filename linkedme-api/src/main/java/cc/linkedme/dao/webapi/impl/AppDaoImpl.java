@@ -46,7 +46,7 @@ public class AppDaoImpl extends BaseDao implements AppDao {
 
         //需要添加重名判断
 
-        TableChannel tableChannel = tableContainer.getTableChannel("appInfo", ADD_APP, userId, userId);
+        TableChannel tableChannel = tableContainer.getTableChannel("appInfo", ADD_APP, 0L, 0L);
 
         Object[] values = {appInfo.getApp_id(), appInfo.getApp_name(), appInfo.getUser_id(), appInfo.getApp_key(), appInfo.getApp_secret(), appInfo.getType()};
 
@@ -115,16 +115,15 @@ public class AppDaoImpl extends BaseDao implements AppDao {
         return result;
     }
 
-    public AppInfo getAppsByAppId(final AppParams appParams) {
-        TableChannel tableChannel = tableContainer.getTableChannel("appInfo", GET_APP_BY_APPID, appParams.user_id, appParams.user_id);
+    public AppInfo getAppsByAppId(final long app_id) {
+        TableChannel tableChannel = tableContainer.getTableChannel("appInfo", GET_APP_BY_APPID, 0L, 0L);
         JdbcTemplate jdbcTemplate = tableChannel.getJdbcTemplate();
 
         final List<AppInfo> appInfos = new ArrayList<AppInfo>();
-        jdbcTemplate.query(tableChannel.getSql(), new Object[] {appParams.app_id}, new RowMapper() {
+        jdbcTemplate.query(tableChannel.getSql(), new Object[] {app_id}, new RowMapper() {
             public Object mapRow(ResultSet resultSet, int i) throws SQLException {
                 AppInfo app = new AppInfo();
-                app.setApp_id(appParams.app_id);
-                app.setType( appParams.type );
+                app.setApp_id(app_id);
                 app.setUser_id(resultSet.getLong("user_id"));
                 app.setApp_name(resultSet.getString("app_name"));
                 app.setApp_key(resultSet.getString("app_key"));
