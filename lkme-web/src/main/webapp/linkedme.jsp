@@ -1,13 +1,9 @@
 <%@ page language="java" import="java.util.*" pageEncoding="UTF-8" %>
-<%
-    String url = request.getAttribute("url").toString();
-    boolean isAndroid = (boolean)request.getAttribute("isAndroid");
-%>
-
-
-<%@ page language="java" import="java.util.*" pageEncoding="UTF-8" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 <%
+//    String url = request.getAttribute("url").toString();
+//    boolean isAndroid = (boolean)request.getAttribute("isAndroid");
+
     String path = request.getContextPath();
     String basePath = request.getScheme() + "://" + request.getServerName() + ":" + request.getServerPort() + path + "/";
 %>
@@ -43,7 +39,6 @@
             TimeStamp: '${TimeStamp}',
             <!--—tracking-->
             DsTag: '${DsTag}',
-            <!-- return ${isAndroid}, return <%=isAndroid%>-->
             isAndroid: function () {
                 return 'true' == '${isAndroid}';
             },
