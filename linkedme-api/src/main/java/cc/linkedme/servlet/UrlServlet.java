@@ -1,18 +1,23 @@
 package cc.linkedme.servlet;
 
-import cc.linkedme.commons.useragent.Client;
-import cc.linkedme.commons.useragent.Parser;
-import cc.linkedme.data.model.AppInfo;
-import cc.linkedme.data.model.DeepLink;
-import cc.linkedme.service.DeepLinkService;
-import cc.linkedme.service.webapi.AppService;
+import java.io.IOException;
 
 import javax.annotation.Resource;
+import javax.servlet.ServletConfig;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import java.io.IOException;
+
+import cc.linkedme.commons.useragent.Client;
+import cc.linkedme.commons.useragent.Parser;
+import cc.linkedme.commons.util.Base62;
+import cc.linkedme.data.model.AppInfo;
+import cc.linkedme.data.model.DeepLink;
+import cc.linkedme.service.DeepLinkService;
+import cc.linkedme.service.webapi.AppService;
+import org.springframework.context.ApplicationContext;
+import org.springframework.web.context.support.WebApplicationContextUtils;
 
 /**
  * Created by LinkedME01 on 16/4/1.
@@ -20,13 +25,10 @@ import java.io.IOException;
 public class UrlServlet extends HttpServlet{
     private static final long serialVersionUID = 1L;
 
-    @Resource
     private Parser userAgentParser;
 
-    @Resource
     private DeepLinkService deepLinkService;
 
-    @Resource
     private AppService appService;
 
     /**
@@ -37,6 +39,16 @@ public class UrlServlet extends HttpServlet{
         // TODO Auto-generated constructor stub
     }
 
+    @Override
+    public void init(ServletConfig config) throws ServletException {
+        super.init(config);
+
+        ApplicationContext context = WebApplicationContextUtils.getRequiredWebApplicationContext(config.getServletContext());
+        userAgentParser = (Parser) context.getBean("userAgentParser");
+        deepLinkService = (DeepLinkService) context.getBean("deepLinkService");
+        appService = (AppService) context.getBean("appService");
+    }
+
     /**
      * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
      */
@@ -45,11 +57,11 @@ public class UrlServlet extends HttpServlet{
         //eg, https://lkme.cc/hafzh/fhza80af; appId, deeplinkId;
         String uri = request.getRequestURI();
         String[] uriArr = uri.split("/");
-        if(uriArr.length < 5) {
+        if(uriArr.length < 4) {
             return; //error page
         }
-        long appId = Long.parseLong(uriArr[3]);
-        long deepLinkId = Long.parseLong(uriArr[4]);
+        long appId = Base62.decode(uriArr[2]);
+        long deepLinkId = Base62.decode(uriArr[3]);
         DeepLink deepLink = deepLinkService.getDeepLinkInfo(deepLinkId, appId);   //根据deepLinkId获取deepLink信息
         AppInfo appInfo = appService.getAppById(appId); //根据appId获取app信息
 

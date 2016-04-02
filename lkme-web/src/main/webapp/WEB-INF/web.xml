@@ -54,12 +54,32 @@
     </servlet>
 
     <servlet>
+        <servlet-name>lkmeServlet</servlet-name>
+        <servlet-class>com.sun.jersey.spi.spring.container.servlet.SpringServlet</servlet-class>
+        <init-param>
+            <param-name>com.sun.jersey.config.property.packages</param-name>
+            <param-value>cc.linkedme.api.lkme.*,cc.linkedme.commons.exception</param-value>
+        </init-param>
+
+        <init-param>
+            <param-name>com.sun.jersey.api.json.POJOMappingFeature</param-name>
+            <param-value>true</param-value>
+        </init-param>
+
+        <load-on-startup>1</load-on-startup>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>lkmeServlet</servlet-name>
+        <url-pattern>/*</url-pattern>
+    </servlet-mapping>
+
+    <servlet>
         <servlet-name>urlServlet</servlet-name>
         <servlet-class>cc.linkedme.servlet.UrlServlet</servlet-class>
     </servlet>
     <servlet-mapping>
         <servlet-name>urlServlet</servlet-name>
-        <url-pattern>/v/abc</url-pattern>
+        <url-pattern>/l/*</url-pattern>
     </servlet-mapping>
 
     <welcome-file-list>
