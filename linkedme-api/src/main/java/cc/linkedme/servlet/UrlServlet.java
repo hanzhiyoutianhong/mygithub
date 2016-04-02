@@ -79,7 +79,7 @@ public class UrlServlet extends HttpServlet{
         String deviceFamily  = client.device.family;
         boolean isUniversallink = false;
         boolean isDownloadDirectly = false;
-        boolean isCannotDeeplink  = false;
+        boolean isCannotDeeplink  = false;      //What do you means for CannotDeepLink?
         boolean isCannotGetWinEvent = false;    //TODO
         boolean isCannotGoMarket = false;
         boolean isForceUseScheme = false;
@@ -129,7 +129,7 @@ public class UrlServlet extends HttpServlet{
         boolean isUC = false;   //TODO
 
         //DEBUG MODE
-        boolean DEBUG = true;
+        boolean DEBUG = false;
 
 
         String browseMajor = "0";
@@ -168,7 +168,7 @@ public class UrlServlet extends HttpServlet{
 
         request.setAttribute("YYB_url", "http://a.app.qq.com/o/simple.jsp?pkgname=" + appInfo.getAndroid_package_name());
         request.setAttribute("Scheme", scheme);
-        request.setAttribute("Host", "");           //TODO
+        request.setAttribute("Host", "linkedme");           //TODO
         request.setAttribute("AppInsStatus", 0);    //TODO
         request.setAttribute("TimeStamp", System.currentTimeMillis());  //deepLink 创建时间?
         request.setAttribute("DsTag", "");  //TODO

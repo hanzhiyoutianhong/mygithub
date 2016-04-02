@@ -2,6 +2,8 @@
  * Created by LinkedME01 on 16/4/1.
  */
 function start() {
+
+    alert(DEBUG);
     if ("" === Params.Download_msg && (Params.Download_msg = ResDefaultDownloadMsg),
         "" !== Params.Download_btn_text &&
         (ResDownloadAPK = Params.Download_btn_text, ResGotoAppStoreDownload = Params.Download_btn_text),
@@ -47,7 +49,7 @@ function start() {
                     })
     } else if (Params.isAndroid())
         if (DEBUG && alert("isAndroid"), a = Params.Scheme + "://" + Params.Host, Params.Match_id && Params.Match_id.length > 0 && (a += "?click_id=" + Params.Match_id),
-            DEBUG && alert(a), Params.isCannotDeeplink()) iframeDeeplinkLaunch(a, 2e3,
+            DEBUG && alert(a), Params.isCannotDeeplink()) iframeDeeplinkLaunch(a, 10e3,
         function() {
             gotoCannotDeeplink()
         });
@@ -58,11 +60,14 @@ function start() {
     else if (Params.isChrome() && Params.Chrome_major >= 25 && !Params.isForceUseScheme()) {
         DEBUG && alert("Chrome_major:" + Params.Chrome_major);
         var b = Params.Host;
+        alert("123");
         Params.Match_id && Params.Match_id.length > 0 && (b += "?click_id=" + Params.Match_id);
         var c = Params.Pkg,
             d = "intent://" + b + "#Intent;scheme=" + Params.Scheme + ";package=" + c + ";S.browser_fallback_url=" + Params.Url + ";end";
+            alert("d=" + d);
         deeplinkLaunch(d, 2e3,
             function() {
+                alert(234);
                 gotoAndroidNewInstall()
             })
     } else DEBUG && alert("default browser"),
@@ -285,7 +290,7 @@ var winWidth = $(window).width(),
             d = function() {
                 c--,
                     $("#textCountDown").html(c),
-                    0 === c ? ($("#textCountDown").html(""), iframeDeeplinkLaunch(a, 3e3,
+                    0 === c ? ($("#textCountDown").html(""), iframeDeeplinkLaunch(a, 10e3,
                         function() {
                             $("body").html(b),
                                 gotoAndroidNewInstall()
@@ -347,6 +352,7 @@ var winWidth = $(window).width(),
             deeplinkLocation = a,
             dsAction.reportDSJSEvent(dsAction.actionJSDeepLink, a);
         var e = setTimeout(function() {
+                alert("chenhao"),
                 c()
             },
             b);
