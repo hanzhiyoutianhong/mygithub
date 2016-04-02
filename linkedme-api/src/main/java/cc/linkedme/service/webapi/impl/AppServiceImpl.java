@@ -80,13 +80,12 @@ public class AppServiceImpl implements AppService {
 
     public AppInfo queryApp(AppParams appParams) {
         AppInfo appInfo = appDao.getAppsByAppId(appParams.app_id);
-
-
         return appInfo;
     }
 
-    public AppInfo getAppById(String appId) {
-        return null;
+    public AppInfo getAppById(long appId) {
+        AppInfo appInfo = appDao.getAppsByAppId(appId);
+        return appInfo;
     }
 
     public int updateApp(AppParams appParams) {

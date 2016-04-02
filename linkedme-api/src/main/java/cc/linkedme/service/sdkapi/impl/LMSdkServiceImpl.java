@@ -69,7 +69,8 @@ public class LMSdkServiceImpl implements LMSdkService {
 
     public final static float UNIVERSE_LINK_IOS_VERSION = 8;
 
-    public static ThreadPoolExecutor deepLinkCountThreadPool = new ThreadPoolExecutor(20, 20, 60L, TimeUnit.SECONDS, new LinkedBlockingQueue<Runnable>(300), new ThreadPoolExecutor.DiscardOldestPolicy());
+    public static ThreadPoolExecutor deepLinkCountThreadPool = new ThreadPoolExecutor(20, 20, 60L, TimeUnit.SECONDS,
+            new LinkedBlockingQueue<Runnable>(300), new ThreadPoolExecutor.DiscardOldestPolicy());
 
     public String install(InstallParams installParams) {
         ClientInfo clientInfo = new ClientInfo();
@@ -110,7 +111,7 @@ public class LMSdkServiceImpl implements LMSdkService {
                 params = deepLinkService.getDeepLinkParam(deepLinkId);
             } else {
                 // 匹配不成功, 生成identity_id
-                identityId = uuidCreator.nextId(1); //1表示发号器的identity_id业务
+                identityId = uuidCreator.nextId(1); // 1表示发号器的identity_id业务
             }
             // 记录<device_id, identity_id>和<identity_id, device_id>
             clientRedisClient.set(deviceId, identityId);
@@ -141,11 +142,11 @@ public class LMSdkServiceImpl implements LMSdkService {
         }
 
         clientInfo.setIdentityId(identityId);
-        long fromDeepLinkId = deepLinkId;   //用于统计一个deeplink带来的下载量
-        if(Strings.isNullOrEmpty(params)) {
+        long fromDeepLinkId = deepLinkId; // 用于统计一个deeplink带来的下载量
+        if (Strings.isNullOrEmpty(params)) {
             fromDeepLinkId = 0;
         }
-        //写mcq
+        // 写mcq
         clientMsgPusher.addClient(clientInfo, fromDeepLinkId);
 
         JsonBuilder resultJson = new JsonBuilder();
@@ -241,8 +242,8 @@ public class LMSdkServiceImpl implements LMSdkService {
 
     public String url(UrlParams urlParams) {
         Joiner joiner = Joiner.on("&").skipNulls();
-        String urlParamsStr = joiner.join(urlParams.linkedme_key, urlParams.tags, urlParams.alias, urlParams.channel,
-                urlParams.feature, urlParams.stage, urlParams.params);
+        String urlParamsStr = joiner.join(urlParams.linkedme_key, urlParams.tags, urlParams.alias, urlParams.channel, urlParams.feature,
+                urlParams.stage, urlParams.params);
         String deepLinkMd5 = MD5Utils.md5(urlParamsStr);
         // 从redis里查找md5是否存在
         // 如果存在,找出对应的deeplink_id,base62进行编码,
@@ -252,11 +253,11 @@ public class LMSdkServiceImpl implements LMSdkService {
         JedisPort redisClient = deepLinkShardingSupport.getClient(deepLinkMd5);
         String id = redisClient.get(deepLinkMd5);
 
-        long appId = urlParams.app_id;   //web创建url传appid, sdk创建url不传appid
-        if(appId <= 0) {
+        long appId = urlParams.app_id; // web创建url传appid, sdk创建url不传appid
+        if (appId <= 0) {
             String value = clientShardingSupport.getClient(urlParams.linkedme_key).get(urlParams.linkedme_key);
-            if(!Strings.isNullOrEmpty(value)) {
-                appId = Long.parseLong(value.split(",")[0]);    //根据linkedme_key去库里查询
+            if (!Strings.isNullOrEmpty(value)) {
+                appId = Long.parseLong(value.split(",")[0]); // 根据linkedme_key去库里查询
             }
         }
         if (id != null) {
@@ -264,10 +265,11 @@ public class LMSdkServiceImpl implements LMSdkService {
             return Constants.DEEPLINK_HTTPS_PREFIX + Base62.encode(appId) + "/" + link;
         }
 
-        long deepLinkId = uuidCreator.nextId(0);    //0表示发号器的deepLink业务
+        long deepLinkId = uuidCreator.nextId(0); // 0表示发号器的deepLink业务
         DeepLink link = new DeepLink(deepLinkId, deepLinkMd5, urlParams.app_id, urlParams.linkedme_key, urlParams.identity_id,
-                ArrayUtil.strArrToString(urlParams.tags), urlParams.alias, ArrayUtil.strArrToString(urlParams.channel), ArrayUtil.strArrToString(urlParams.feature), ArrayUtil.strArrToString(urlParams.stage), ArrayUtil.strArrToString(urlParams.campaign),
-                urlParams.params.toString(), urlParams.source, urlParams.sdk_version);
+                ArrayUtil.strArrToString(urlParams.tags), urlParams.alias, ArrayUtil.strArrToString(urlParams.channel),
+                ArrayUtil.strArrToString(urlParams.feature), ArrayUtil.strArrToString(urlParams.stage),
+                ArrayUtil.strArrToString(urlParams.campaign), urlParams.params.toString(), urlParams.source, urlParams.sdk_version);
         link.setLink_label(urlParams.link_label);
         link.setIos_use_default(urlParams.ios_use_default);
         link.setIos_custom_url(urlParams.ios_custom_url);
@@ -301,27 +303,32 @@ public class LMSdkServiceImpl implements LMSdkService {
         long identityId = 0;
         if (preInstallParams.identity_id <= 0) {
             identityId = uuidCreator.nextId(1); // 浏览器的cookie里没有identityId,新分配
+            String browseFingerprintId = createFingerprintId(preInstallParams.os, preInstallParams.os_version, preInstallParams.screen_dpi,
+                    preInstallParams.screen_height, preInstallParams.screen_width);
+
+            String identityIdAndDeepLinkId = identityId + "," + preInstallParams.deeplink_id;
+            JedisPort browseFingerprintIdRedisClient = clientShardingSupport.getClient(browseFingerprintId);
+            browseFingerprintIdRedisClient.set(browseFingerprintId, identityIdAndDeepLinkId);
+
+            return String.valueOf(identityId);
         } else {
             // 浏览器里有identityId,不需要重新生成,从库里查找
             JedisPort identityRedisClient = clientShardingSupport.getClient(identityId);
             String deviceId = identityRedisClient.get(identityId + "di");
             if (Strings.isNullOrEmpty(deviceId)) {
-                // 说明库里没有该identityId,走browse_fingerprint_id和device_fingerprint_id匹配逻辑
+                // 说明库里没有该identityId,存储browse_fingerprint_id和deeplinkid键值对
+                String browseFingerprintId = createFingerprintId(preInstallParams.os, preInstallParams.os_version,
+                        preInstallParams.screen_dpi, preInstallParams.screen_height, preInstallParams.screen_width);
+                String identityIdAndDeepLinkId = preInstallParams.identity_id + "," + preInstallParams.deeplink_id;
+                JedisPort browseFingerprintIdRedisClient = clientShardingSupport.getClient(browseFingerprintId);
+                browseFingerprintIdRedisClient.set(browseFingerprintId, identityIdAndDeepLinkId);
             } else {
                 boolean res = identityRedisClient.set(String.valueOf(identityId), preInstallParams.deeplink_id);
-                if (res) {
-                    return null;
-                }
+                identityRedisClient.expire(String.valueOf(identityId), 2 * 60 * 60); // 设置过期时间
             }
+            return "";
         }
 
-        String browseFingerprintId = createFingerprintId(preInstallParams.os, preInstallParams.os_version, preInstallParams.screen_dpi,
-                preInstallParams.screen_height, preInstallParams.screen_width);
-
-        // info log
-        ApiLogger.info("");
-
-        return result;
     }
 
 
