@@ -71,6 +71,12 @@ public class App {
                 appJsons.add(app.toJson());
             }
         }
+
+        //test user agent information
+        String userAgent = request.getHeader("user-agent");
+        System.out.println(userAgent);
+
+
         return new StringBuilder().append("[").append(StringUtils.join(appJsons, ",")).append("]").toString();
     }
 

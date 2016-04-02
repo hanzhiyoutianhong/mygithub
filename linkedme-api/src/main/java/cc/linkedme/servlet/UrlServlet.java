@@ -57,6 +57,12 @@ public class UrlServlet extends HttpServlet{
         String osMajor = client.os.major;
         String deviceFamily  = client.device.family;
 
+
+        if (osFamily.equals("iOS")) {
+
+        }
+
+
         request.setAttribute("url", deepLink.getAndroid_custom_url());
         request.getRequestDispatcher("/openApp.jsp").forward(request,response);
     }
