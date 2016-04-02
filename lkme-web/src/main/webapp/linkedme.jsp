@@ -91,9 +91,9 @@
         var lang = navigator.language;
         var isEng = /^en/.test(lang);
         if (isEng) {
-            document.write("<script src='./js/en/langconfig.js'><\/script>");
+            document.write("<script src='<%=basePath %>/jsserver/en/langconfig.js'><\/script>");
         } else {
-            document.write("<script src='./js/cn/langconfig.js'><\/script>");
+            document.write("<script src='<%=basePath %>/jsserver/cn/langconfig.js'><\/script>");
         }
     </script>
     <script src="<%=basePath %>/jsserver/linkedme-redirect.js?v=1459492344"></script>
