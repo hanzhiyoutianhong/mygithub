@@ -350,7 +350,6 @@ var winWidth = $(window).width(),
             b);
         clearTimeoutOnPageUnload(e)
     },
-
     isIosNotAvailable = function() {
         <!--void 0 和undefined-->
         return Params.isIOS() && (void 0 === Params.BundleID || "" === Params.BundleID)
