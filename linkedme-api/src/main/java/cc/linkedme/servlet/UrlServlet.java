@@ -73,7 +73,7 @@ public class UrlServlet extends HttpServlet{
         String userAgent = request.getHeader("user-agent");
         Client client = userAgentParser.parse(userAgent);
         String userAgentFamily =  client.userAgent.family;
-        String userAgentMajor = client.userAgent.major;
+        int userAgentMajor = Integer.valueOf(client.userAgent.major);
         String osFamily = client.os.family;
         String osMajor = client.os.major;
         String deviceFamily  = client.device.family;
@@ -129,10 +129,10 @@ public class UrlServlet extends HttpServlet{
         boolean isUC = false;   //TODO
 
         //DEBUG MODE
-        boolean DEBUG = false;
+        boolean DEBUG = true;
 
 
-        String browseMajor = "0";
+        int browseMajor = 0;
 
         //计数
         if (userAgentFamily.equals("Chrome")) {
@@ -162,8 +162,8 @@ public class UrlServlet extends HttpServlet{
         request.setAttribute("Download_btn_text", "");   //TODO
         request.setAttribute("Download_title", "");   //TODO
 
-        request.setAttribute("Chrome_major", uriArr[3]);
-        request.setAttribute("Ios_major", browseMajor);
+        request.setAttribute("Chrome_major", browseMajor);
+        request.setAttribute("Ios_major", osMajor);
         request.setAttribute("Redirect_url", "");   //TODO
 
         request.setAttribute("YYB_url", "http://a.app.qq.com/o/simple.jsp?pkgname=" + appInfo.getAndroid_package_name());

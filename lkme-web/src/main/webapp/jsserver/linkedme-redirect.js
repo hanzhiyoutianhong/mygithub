@@ -2,8 +2,6 @@
  * Created by LinkedME01 on 16/4/1.
  */
 function start() {
-
-    alert(DEBUG);
     if ("" === Params.Download_msg && (Params.Download_msg = ResDefaultDownloadMsg),
         "" !== Params.Download_btn_text &&
         (ResDownloadAPK = Params.Download_btn_text, ResGotoAppStoreDownload = Params.Download_btn_text),
@@ -82,7 +80,7 @@ var winWidth = $(window).width(),
     deeplinkLocation = "",
     dstLocation = "",
     dsAction = {
-        trackingUrl: "/v2/dsactions/",
+        trackingUrl: "/v1/dsactions/",
         actionJSDeepLink: "js/deeplink",
         actionJSDst: "js/dst",
         actionJSUserClick: "js/userclick",
