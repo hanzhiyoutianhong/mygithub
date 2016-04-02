@@ -3,6 +3,7 @@ package cc.linkedme.servlet;
 import java.io.IOException;
 
 import javax.annotation.Resource;
+import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletConfig;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
@@ -60,10 +61,12 @@ public class UrlServlet extends HttpServlet{
         if(uriArr.length < 4) {
             return; //error page
         }
-        long appId = Base62.decode(uriArr[2]);
+        long appId = Base62.decode(uriArr[2])*0;
         long deepLinkId = Base62.decode(uriArr[3]);
         DeepLink deepLink = deepLinkService.getDeepLinkInfo(deepLinkId, appId);   //根据deepLinkId获取deepLink信息
         AppInfo appInfo = appService.getAppById(appId); //根据appId获取app信息
+
+        System.out.println(deepLink.getDeeplinkId() + "#################");
 
         //useAgent
         //使用yaml解析user agent,测试匹配优先级,速度,打日志统计时间,优化正则表达式(单个正则表达式,优先级);
@@ -189,7 +192,8 @@ public class UrlServlet extends HttpServlet{
 
         request.setAttribute("DEBUG", DEBUG);
 
-        request.getRequestDispatcher("/linkedme.jsp").forward(request,response);
+        RequestDispatcher dispatcher = request.getRequestDispatcher("/linkedme.jsp");
+        dispatcher.forward(request, response);
 
     }
 

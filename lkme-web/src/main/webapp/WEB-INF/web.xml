@@ -54,6 +54,16 @@
     </servlet>
 
     <servlet>
+        <servlet-name>urlServlet</servlet-name>
+        <servlet-class>cc.linkedme.servlet.UrlServlet</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>urlServlet</servlet-name>
+        <url-pattern>/l/*</url-pattern>
+    </servlet-mapping>
+
+<!--
+    <servlet>
         <servlet-name>lkmeServlet</servlet-name>
         <servlet-class>com.sun.jersey.spi.spring.container.servlet.SpringServlet</servlet-class>
         <init-param>
@@ -72,16 +82,7 @@
         <servlet-name>lkmeServlet</servlet-name>
         <url-pattern>/*</url-pattern>
     </servlet-mapping>
-
-    <servlet>
-        <servlet-name>urlServlet</servlet-name>
-        <servlet-class>cc.linkedme.servlet.UrlServlet</servlet-class>
-    </servlet>
-    <servlet-mapping>
-        <servlet-name>urlServlet</servlet-name>
-        <url-pattern>/l/*</url-pattern>
-    </servlet-mapping>
-
+-->
     <welcome-file-list>
         <welcome-file>index.jsp</welcome-file>
     </welcome-file-list>
