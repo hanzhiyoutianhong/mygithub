@@ -4,6 +4,7 @@ import cc.linkedme.commons.exception.LMException;
 import cc.linkedme.commons.exception.LMExceptionFactor;
 import cc.linkedme.commons.json.JsonBuilder;
 import cc.linkedme.commons.log.ApiLogger;
+import cc.linkedme.commons.util.Base62;
 import cc.linkedme.commons.util.Constants;
 import cc.linkedme.data.model.params.CloseParams;
 import cc.linkedme.data.model.params.InstallParams;
@@ -13,6 +14,7 @@ import cc.linkedme.data.model.params.LMUrlParams;
 
 import cc.linkedme.data.model.params.OpenParams;
 import cc.linkedme.data.model.params.PreInstallParams;
+import cc.linkedme.data.model.params.PreOpenParams;
 import cc.linkedme.data.model.params.UrlParams;
 import cc.linkedme.service.sdkapi.LMSdkService;
 import com.google.common.base.Strings;
@@ -66,6 +68,7 @@ public class LMSdkResources {
         String deepLinkParam = "";
         boolean clicked_linkedme_link = false;
         String extra_uri_data = openParams.extra_uri_data;
+
         String external_intent_uri = openParams.external_intent_uri;
         String universal_link_url = openParams.universal_link_url;
         if(Strings.isNullOrEmpty(extra_uri_data) && Strings.isNullOrEmpty(external_intent_uri) && Strings.isNullOrEmpty(universal_link_url)) {
@@ -131,8 +134,9 @@ public class LMSdkResources {
     @Path("/preOpen")
     @POST
     @Produces({MediaType.APPLICATION_JSON})
-    public String preOpen(PreInstallParams preInstallParams, @Context HttpServletRequest request) {
-        ApiLogger.info("");
+    public String preOpen(PreOpenParams preOpenParams, @Context HttpServletRequest request) {
+        ApiLogger.info("sdk/preOpen,deepLinkId:" + Base62.decode(preOpenParams.click_id) + ",destination:" + preOpenParams.destination
+                + ",lkme_tag:" + preOpenParams.lkme_tag);
         return "{}";
     }
 

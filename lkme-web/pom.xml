@@ -15,7 +15,6 @@
     <url>http://maven.apache.org</url>
 
     <dependencies>
-
         <!--configure jstl-->
         <dependency>
             <groupId>javax.servlet.jsp.jstl</groupId>
@@ -24,7 +23,7 @@
             <exclusions>
                 <exclusion>
                     <groupId>javax.servlet</groupId>
-                    <artifactId>servlet-api</artifactId>
+                    <artif actId>servlet-api</artifactId>
                 </exclusion>
                 <exclusion>
                     <groupId>javax.servlet.jsp</groupId>

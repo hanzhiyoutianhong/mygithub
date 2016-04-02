@@ -106,10 +106,6 @@ public class UrlServlet extends HttpServlet{
 
         //iPac
 
-
-
-
-
         boolean isWechat = false;
         boolean isWeibo = false;
         boolean isQQ = false;

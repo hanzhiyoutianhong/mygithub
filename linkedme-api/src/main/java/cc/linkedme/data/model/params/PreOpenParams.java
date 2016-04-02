@@ -11,8 +11,33 @@ import org.codehaus.jackson.annotate.JsonIgnoreProperties;
 @XmlRootElement
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class PreOpenParams {
-    public long identity_id;
-    public long deeplink_id;
-    public String os;
+
+    public String click_id;
+    public String destination;
+    public String lkme_tag;
+
+    public String getClick_id() {
+        return click_id;
+    }
+
+    public void setClick_id(String click_id) {
+        this.click_id = click_id;
+    }
+
+    public String getDestination() {
+        return destination;
+    }
+
+    public void setDestination(String destination) {
+        this.destination = destination;
+    }
+
+    public String getLkme_tag() {
+        return lkme_tag;
+    }
+
+    public void setLkme_tag(String lkme_tag) {
+        this.lkme_tag = lkme_tag;
+    }
 
 }

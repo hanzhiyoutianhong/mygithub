@@ -45,7 +45,9 @@ function start() {
                     function() {
                         gotoUrl(Params.Url)
                     })
-    } else if (Params.isAndroid()) if (DEBUG && alert("isAndroid"), a = Params.Scheme + "://" + Params.Host, Params.Match_id && Params.Match_id.length > 0 && (a += "?click_id=" + Params.Match_id), DEBUG && alert(a), Params.isCannotDeeplink()) iframeDeeplinkLaunch(a, 2e3,
+    } else if (Params.isAndroid())
+        if (DEBUG && alert("isAndroid"), a = Params.Scheme + "://" + Params.Host, Params.Match_id && Params.Match_id.length > 0 && (a += "?click_id=" + Params.Match_id),
+            DEBUG && alert(a), Params.isCannotDeeplink()) iframeDeeplinkLaunch(a, 2e3,
         function() {
             gotoCannotDeeplink()
         });
