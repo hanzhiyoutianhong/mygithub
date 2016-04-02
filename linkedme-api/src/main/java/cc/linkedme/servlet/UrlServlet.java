@@ -58,15 +58,15 @@ public class UrlServlet extends HttpServlet{
         //eg, https://lkme.cc/hafzh/fhza80af; appId, deeplinkId;
         String uri = request.getRequestURI();
         String[] uriArr = uri.split("/");
-        if(uriArr.length < 4) {
-            return; //error page
+        if(uriArr.length < 3) {
+            response.sendRedirect("/index.jsp");    // TODO 重定向为默认配置页面
+            //request.getRequestDispatcher("/index.jsp").forward(request, response);
+            return;
         }
-        long appId = Base62.decode(uriArr[2])*0;
-        long deepLinkId = Base62.decode(uriArr[3]);
+        long appId = Base62.decode(uriArr[1])*0;
+        long deepLinkId = Base62.decode(uriArr[2]);
         DeepLink deepLink = deepLinkService.getDeepLinkInfo(deepLinkId, appId);   //根据deepLinkId获取deepLink信息
         AppInfo appInfo = appService.getAppById(appId); //根据appId获取app信息
-
-        System.out.println(deepLink.getDeeplinkId() + "#################");
 
         //useAgent
         //使用yaml解析user agent,测试匹配优先级,速度,打日志统计时间,优化正则表达式(单个正则表达式,优先级);

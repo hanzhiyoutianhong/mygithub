@@ -54,18 +54,9 @@
     </servlet>
 
     <servlet>
-        <servlet-name>urlServlet</servlet-name>
-        <servlet-class>cc.linkedme.servlet.UrlServlet</servlet-class>
-    </servlet>
-    <servlet-mapping>
-        <servlet-name>urlServlet</servlet-name>
-        <url-pattern>/l/*</url-pattern>
-    </servlet-mapping>
-
-<!--
-    <servlet>
         <servlet-name>lkmeServlet</servlet-name>
-        <servlet-class>com.sun.jersey.spi.spring.container.servlet.SpringServlet</servlet-class>
+        <!--<servlet-class>com.sun.jersey.spi.spring.container.servlet.CommonServlet</servlet-class>-->
+        <servlet-class>cc.linkedme.servlet.CommonServlet</servlet-class>
         <init-param>
             <param-name>com.sun.jersey.config.property.packages</param-name>
             <param-value>cc.linkedme.api.lkme.*,cc.linkedme.commons.exception</param-value>
@@ -80,13 +71,37 @@
     </servlet>
     <servlet-mapping>
         <servlet-name>lkmeServlet</servlet-name>
-        <url-pattern>/*</url-pattern>
+        <url-pattern>/sdk/*</url-pattern>
     </servlet-mapping>
--->
+
+    <servlet-mapping>
+        <servlet-name>default</servlet-name>
+        <url-pattern>/jsserver/*</url-pattern>
+    </servlet-mapping>
+
+    <servlet-mapping>
+        <servlet-name>default</servlet-name>
+        <url-pattern>/img/*</url-pattern>
+    </servlet-mapping>
+
+    <servlet-mapping>
+        <servlet-name>default</servlet-name>
+        <url-pattern>/favicon.ico</url-pattern>
+    </servlet-mapping>
+
+    <servlet>
+        <servlet-name>urlServlet</servlet-name>
+        <servlet-class>cc.linkedme.servlet.UrlServlet</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>urlServlet</servlet-name>
+        <url-pattern>/</url-pattern>
+    </servlet-mapping>
+
     <welcome-file-list>
         <welcome-file>index.jsp</welcome-file>
     </welcome-file-list>
-    <!--
+
     <error-page>
         <error-code>404</error-code>
         <location>/404.jsp</location>
@@ -95,5 +110,5 @@
         <error-code>500</error-code>
         <location>/500.jsp</location>
     </error-page>
-    -->
+
 </web-app>
