@@ -7,8 +7,8 @@ public class Constants {
     // profiling pull aggregator getFriendTimeLine:
     // 1. get following list time, 2. multi get vectorcache time
     // 3. sort time, 4. cat content cache time
-    public static final String DEEPLINK_HTTP_PREFIX = "http://lkme.cc/";
-    public static final String DEEPLINK_HTTPS_PREFIX = "https://lkme.cc/";
+    public static final String DEEPLINK_HTTP_PREFIX = "http://lkme.cc/l/";
+    public static final String DEEPLINK_HTTPS_PREFIX = "https://lkme.cc/l/";
     public static final boolean enableProfiling = true;
     public static boolean enablePageCache = false;
     public static final boolean enableDeletedData = false;
