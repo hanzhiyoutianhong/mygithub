@@ -29,7 +29,7 @@
             Download_msg: '${Download_msg}',
             Download_btn_text: '${Download_btn_text}',
             Download_title: '${Download_title}',
-            Chrome_major: '${Chrome_major}',
+            Chrome_major: ${Chrome_major},
             Ios_major: '${Ios_major}',
             Redirect_url: '${Redirect_url}',
             YYB_url: '${YYB_url}',
@@ -85,7 +85,7 @@
                 return 'true' == '${isUC}';
             }
         };
-        var DEBUG = '${DEBUG}';
+        var DEBUG = ${DEBUG};
         <!--测试数据,live and test-->
         var MOCK_DATA = false;
         var lang = navigator.language;
@@ -134,3 +134,4 @@
 </body>
 
 </html>
+

@@ -140,6 +140,7 @@ public class LMSdkResources {
         return "{}";
     }
 
+    @Deprecated
     @Path("/install_bak")
     @POST
     @Produces(MediaType.APPLICATION_JSON)
@@ -171,6 +172,7 @@ public class LMSdkResources {
         return null;
     }
 
+    @Deprecated
     @Path("/install_inputstream")
     @POST
     @Produces(MediaType.APPLICATION_JSON)
@@ -229,6 +231,7 @@ public class LMSdkResources {
         return result;
     }
 
+    @Deprecated
     @Path("/url_form")
     @POST
     @Produces({MediaType.APPLICATION_JSON})
@@ -258,6 +261,7 @@ public class LMSdkResources {
 
     }
 
+    @Deprecated
     @Path("/open_form")
     @GET
     @Produces({MediaType.APPLICATION_JSON})
