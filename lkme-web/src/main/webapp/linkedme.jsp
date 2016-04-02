@@ -1,11 +1,3 @@
-<%--
-  Created by IntelliJ IDEA.
-  User: LinkedME01
-  Date: 16/4/1
-  Time: 上午9:15
-  To change this template use File | Settings | File Templates.
---%>
-
 <%@ page language="java" import="java.util.*" pageEncoding="UTF-8" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 <%
@@ -19,7 +11,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
 
     <!--CDN,阿里云托管-->
-    <script src="./lib/jquery-2.1.4.min.js"></script>
+    <script src="<%=basePath %>/jsserver/lib/jquery-2.1.4.min.js"></script>
     <script type="text/javascript">
         var Params = {
             AppName: '${AppName}',
@@ -101,7 +93,7 @@
             document.write("<script src='./js/cn/langconfig.js'><\/script>");
         }
     </script>
-    <script src="./js/linkedme-redirect.js?v=1459492344"></script>
+    <script src="<%=basePath %>/jsserver/linkedme-redirect.js?v=1459492344"></script>
     <title></title>
     <style type="text/css">
         * {

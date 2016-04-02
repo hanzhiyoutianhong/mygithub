@@ -112,7 +112,9 @@ public class UrlServlet extends HttpServlet{
         boolean isFirefox = false;
         boolean isChrome = false;
         boolean isUC = false;   //TODO
-        boolean DEBUG = false;
+
+        //DEBUG MODE
+        boolean DEBUG = true;
 
 
         String browseMajor = "0";
@@ -173,7 +175,9 @@ public class UrlServlet extends HttpServlet{
         request.setAttribute("isCannotGoMarket", isCannotGoMarket);
         request.setAttribute("isForceUseScheme", isForceUseScheme);
 
-        request.getRequestDispatcher("/redirect.jsp").forward(request,response);
+        request.setAttribute("DEBUG", DEBUG);
+
+        request.getRequestDispatcher("/linkedme.jsp").forward(request,response);
 
     }
 
