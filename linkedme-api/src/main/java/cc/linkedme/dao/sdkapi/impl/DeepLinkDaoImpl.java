@@ -1,6 +1,7 @@
 package cc.linkedme.dao.sdkapi.impl;
 
 import cc.linkedme.commons.util.Util;
+import cc.linkedme.commons.util.UuidHelper;
 import cc.linkedme.dao.sdkapi.DeepLinkDao;
 import cc.linkedme.data.dao.util.JdbcTemplate;
 import cc.linkedme.data.model.AppInfo;
@@ -77,7 +78,7 @@ public class DeepLinkDaoImpl extends BaseDao implements DeepLinkDao {
     }
 
     public DeepLink getDeepLinkInfo(long deepLinkId, long appid) {
-        Date date = null;   //根据deepLinkId获取日期
+        Date date = UuidHelper.getDateFromId(deepLinkId);   //根据deepLinkId获取日期
         final List<DeepLink> deepLinks = new ArrayList<DeepLink>();
         TableChannel tableChannel = tableContainer.getTableChannel("deeplink", GET_DEEPLINKS, appid, date);
         tableChannel.getJdbcTemplate().query(tableChannel.getSql(), new Object[] {deepLinkId, appid}, new RowMapper() {
@@ -93,7 +94,7 @@ public class DeepLinkDaoImpl extends BaseDao implements DeepLinkDao {
                 dp.setCampaign(resultSet.getString("campaign"));
                 dp.setSource(resultSet.getString("source"));
                 dp.setIos_use_default(resultSet.getBoolean("ios_use_default"));
-                dp.setIos_custom_url(resultSet.getString("iso_custom_url"));
+                dp.setIos_custom_url(resultSet.getString("ios_custom_url"));
                 dp.setAndroid_use_default(resultSet.getBoolean("android_use_default"));
                 dp.setAndroid_custom_url(resultSet.getString("android_custom_url"));
                 dp.setDesktop_use_default(resultSet.getBoolean("desktop_use_default"));

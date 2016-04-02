@@ -163,6 +163,7 @@ public class LMSdkServiceImpl implements LMSdkService {
 
     private String[] matchDfpIdAndBfpId(InstallParams installParams) {
         Joiner joiner = Joiner.on("&").skipNulls();
+        //TODO 生成指纹的时候加上appkey信息,去掉屏幕的三个信息
         String deviceFingerprintId = createFingerprintId(installParams.os, installParams.os_version, installParams.screen_dpi,
                 installParams.screen_height, installParams.screen_width);
         JedisPort clientRedisClient = clientShardingSupport.getClient(deviceFingerprintId);
@@ -242,8 +243,9 @@ public class LMSdkServiceImpl implements LMSdkService {
 
     public String url(UrlParams urlParams) {
         Joiner joiner = Joiner.on("&").skipNulls();
-        String urlParamsStr = joiner.join(urlParams.linkedme_key, urlParams.tags, urlParams.alias, urlParams.channel, urlParams.feature,
-                urlParams.stage, urlParams.params);
+        Joiner joiner2 = Joiner.on(",").skipNulls();
+        String urlParamsStr = joiner.join(urlParams.linkedme_key, joiner2.join(urlParams.tags), urlParams.alias,  joiner2.join(urlParams.channel),  joiner2.join(urlParams.feature),
+                joiner2.join(urlParams.stage), urlParams.params);
         String deepLinkMd5 = MD5Utils.md5(urlParamsStr);
         // 从redis里查找md5是否存在
         // 如果存在,找出对应的deeplink_id,base62进行编码,
@@ -294,7 +296,6 @@ public class LMSdkServiceImpl implements LMSdkService {
     }
 
     public void close(CloseParams closeParams) {
-        // 清空session
         ApiLogger.info(closeParams.device_fingerprint_id + ", " + closeParams.linkedme_key + " close");// 记录日志
     }
 

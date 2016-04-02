@@ -8,7 +8,8 @@ public class Constants {
     // 1. get following list time, 2. multi get vectorcache time
     // 3. sort time, 4. cat content cache time
     public static final String DEEPLINK_HTTP_PREFIX = "http://lkme.cc/l/";
-    public static final String DEEPLINK_HTTPS_PREFIX = "https://lkme.cc/l/";
+    public static final String DEEPLINK_HTTPS_PREFIX = "http://192.168.1.54:8888/l/";
+//    public static final String DEEPLINK_HTTPS_PREFIX_LOCAL = "https://lkme.cc/l/";
     public static final boolean enableProfiling = true;
     public static boolean enablePageCache = false;
     public static final boolean enableDeletedData = false;
