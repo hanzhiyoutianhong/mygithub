@@ -62,7 +62,6 @@ public class UrlServlet extends HttpServlet{
         String osFamily = client.os.family;
         String osMajor = client.os.major;
         String deviceFamily  = client.device.family;
-
         boolean isUniversallink = false;
         boolean isDownloadDirectly = false;
         boolean isCannotDeeplink  = false;
@@ -113,7 +112,9 @@ public class UrlServlet extends HttpServlet{
         boolean isFirefox = false;
         boolean isChrome = false;
         boolean isUC = false;   //TODO
-        boolean DEBUG = false;
+
+        //DEBUG MODE
+        boolean DEBUG = true;
 
 
         String browseMajor = "0";
@@ -167,7 +168,6 @@ public class UrlServlet extends HttpServlet{
         request.setAttribute("isFirefox", isFirefox);
         request.setAttribute("isChrome", isChrome);
 
-
         request.setAttribute("isUniversallink", isUniversallink);
         request.setAttribute("isDownloadDirectly", isDownloadDirectly);
         request.setAttribute("isCannotDeeplink", isCannotDeeplink);
@@ -175,7 +175,10 @@ public class UrlServlet extends HttpServlet{
         request.setAttribute("isCannotGoMarket", isCannotGoMarket);
         request.setAttribute("isForceUseScheme", isForceUseScheme);
 
-        request.getRequestDispatcher("/redirect.jsp").forward(request,response);
+        request.setAttribute("DEBUG", DEBUG);
+
+        request.getRequestDispatcher("/linkedme.jsp").forward(request,response);
+
     }
 
     /**
