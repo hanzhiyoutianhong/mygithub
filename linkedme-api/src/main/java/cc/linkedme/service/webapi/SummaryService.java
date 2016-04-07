@@ -3,6 +3,7 @@ package cc.linkedme.service.webapi;
 import cc.linkedme.commons.counter.component.CountComponent;
 import cc.linkedme.commons.util.Util;
 import cc.linkedme.dao.sdkapi.DeepLinkDao;
+import cc.linkedme.data.dao.util.DateDuration;
 import cc.linkedme.data.model.DeepLink;
 import cc.linkedme.data.model.DeepLinkCount;
 import cc.linkedme.data.model.params.SummaryDeepLinkParams;
@@ -32,19 +33,14 @@ public class SummaryService {
     public List<DeepLink> getDeepLinks(SummaryDeepLinkParams summaryDeepLinkParams) {
         String start_date = summaryDeepLinkParams.startDate;
         String end_date = summaryDeepLinkParams.endDate;
-        List<String> months = Util.getBetweenMonths(start_date, end_date);
+        List<DateDuration> dateDurations = Util.getBetweenMonths(start_date, end_date);
         List<DeepLink> deepLinks = new ArrayList<DeepLink>();
-        deepLinks.addAll(deepLinkDao.getDeepLinks(summaryDeepLinkParams.appid, summaryDeepLinkParams.startDate,
-                summaryDeepLinkParams.endDate, summaryDeepLinkParams.feature, summaryDeepLinkParams.campaign, summaryDeepLinkParams.stage,
-                summaryDeepLinkParams.channel, summaryDeepLinkParams.tags, summaryDeepLinkParams.unique));
-        for (String month : months) {
-            deepLinks.addAll(deepLinkDao.getDeepLinks(summaryDeepLinkParams.appid, summaryDeepLinkParams.startDate, null,
+
+        for (DateDuration dd : dateDurations) {
+            deepLinks.addAll(deepLinkDao.getDeepLinks(summaryDeepLinkParams.appid, dd.getMin_date(), dd.getMax_date(),
                     summaryDeepLinkParams.feature, summaryDeepLinkParams.campaign, summaryDeepLinkParams.stage,
                     summaryDeepLinkParams.channel, summaryDeepLinkParams.tags, summaryDeepLinkParams.unique));
         }
-        deepLinks.addAll(deepLinkDao.getDeepLinks(summaryDeepLinkParams.appid, null, summaryDeepLinkParams.endDate,
-                summaryDeepLinkParams.feature, summaryDeepLinkParams.campaign, summaryDeepLinkParams.stage, summaryDeepLinkParams.channel,
-                summaryDeepLinkParams.tags, summaryDeepLinkParams.unique));
         return deepLinks;
     }
 
