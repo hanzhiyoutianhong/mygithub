@@ -88,6 +88,16 @@
 
     <servlet-mapping>
         <servlet-name>default</servlet-name>
+        <url-pattern>/.well-known/assetlinks.json</url-pattern>
+    </servlet-mapping>
+
+    <servlet-mapping>
+        <servlet-name>default</servlet-name>
+        <url-pattern>/apple-app-site-association</url-pattern>
+    </servlet-mapping>
+
+    <servlet-mapping>
+        <servlet-name>default</servlet-name>
         <url-pattern>/favicon.ico</url-pattern>
     </servlet-mapping>
 

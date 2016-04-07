@@ -1,0 +1,19 @@
+{
+    "applinks": {
+        "apps": [],
+        "details": [
+            {
+                "appID": "GVU64N9P9M.io.branch.sdk.Branch-TestBed",
+                "paths": [
+                    "*"
+                ]
+            },
+            {
+                "appID": "7P9QW87ALK.com.microquation.LinkedMe",
+                "paths": [
+                    "*"
+                ]
+            }
+        ]
+    }
+}
