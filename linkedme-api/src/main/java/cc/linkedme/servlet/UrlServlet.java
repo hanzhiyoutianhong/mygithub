@@ -1,8 +1,11 @@
 package cc.linkedme.servlet;
 
 import java.io.IOException;
+import java.util.concurrent.Callable;
+import java.util.concurrent.LinkedBlockingQueue;
+import java.util.concurrent.ThreadPoolExecutor;
+import java.util.concurrent.TimeUnit;
 
-import javax.annotation.Resource;
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletConfig;
 import javax.servlet.ServletException;
@@ -10,6 +13,8 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import cc.linkedme.commons.counter.component.CountComponent;
+import cc.linkedme.commons.log.ApiLogger;
 import cc.linkedme.commons.useragent.Client;
 import cc.linkedme.commons.useragent.Parser;
 import cc.linkedme.commons.util.Base62;
@@ -32,6 +37,11 @@ public class UrlServlet extends HttpServlet{
 
     private AppService appService;
 
+    private CountComponent deepLinkCountComponent;
+
+    private static ThreadPoolExecutor deepLinkCountThreadPool = new ThreadPoolExecutor(20, 20, 60L, TimeUnit.SECONDS,
+            new LinkedBlockingQueue<Runnable>(300), new ThreadPoolExecutor.DiscardOldestPolicy());
+
     /**
      * @see HttpServlet#HttpServlet()
      */
@@ -48,6 +58,7 @@ public class UrlServlet extends HttpServlet{
         userAgentParser = (Parser) context.getBean("userAgentParser");
         deepLinkService = (DeepLinkService) context.getBean("deepLinkService");
         appService = (AppService) context.getBean("appService");
+        deepLinkCountComponent = (CountComponent) context.getBean("deepLinkCountComponent");
     }
 
     /**
@@ -63,7 +74,7 @@ public class UrlServlet extends HttpServlet{
             //request.getRequestDispatcher("/index.jsp").forward(request, response);
             return;
         }
-        long appId = Base62.decode(uriArr[1])*0;
+        long appId = Base62.decode(uriArr[1]);
         long deepLinkId = Base62.decode(uriArr[2]);
         DeepLink deepLink = deepLinkService.getDeepLinkInfo(deepLinkId, appId);   //根据deepLinkId获取deepLink信息
         AppInfo appInfo = appService.getAppById(appId); //根据appId获取app信息
@@ -73,7 +84,12 @@ public class UrlServlet extends HttpServlet{
         String userAgent = request.getHeader("user-agent");
         Client client = userAgentParser.parse(userAgent);
         String userAgentFamily =  client.userAgent.family;
-        int userAgentMajor = Integer.valueOf(client.userAgent.major);
+        int userAgentMajor = 0;
+        try {
+            userAgentMajor = Integer.valueOf(client.userAgent.major);
+        } catch (NumberFormatException e) {
+            ApiLogger.warn("UrlServlet userAgentMajor is not a number, userAgentMajor=" + userAgentMajor);
+        }
         String osFamily = client.os.family;
         String osMajor = client.os.major;
         String deviceFamily  = client.device.family;
@@ -88,7 +104,7 @@ public class UrlServlet extends HttpServlet{
         String scheme = "";
         boolean isIOS = false;
         boolean isAndroid = false;
-        //计数
+        String platform;
         if(osFamily.equals("iOS")) {
             if(appInfo.getIos_search_option().equals("apple_store")) {
                 url = appInfo.getIos_store_url();
@@ -107,6 +123,8 @@ public class UrlServlet extends HttpServlet{
                 isUniversallink = true;
             }
 
+            platform = "ios";
+
         } else if(osFamily.equals("Android")) {
             if(appInfo.getAndroid_search_option().equals("google_play")) {
                 url = appInfo.getGoogle_paly_url();
@@ -115,10 +133,30 @@ public class UrlServlet extends HttpServlet{
             }
             scheme = appInfo.getAndroid_uri_scheme();
             isAndroid = true;
+
+            platform = "adr";
+        } else {
+            //点击计数else,暂时都计pc
+            platform = "pc";
         }
         //PC
 
-        //iPac
+        //iPad
+
+        final String type = platform + "_click";
+        //TODO 如果短链的访问量急剧增长,线程池扛不住,后续考虑推消息队列
+        deepLinkCountThreadPool.submit(new Callable<Void>() {
+            @Override
+            public Void call() throws Exception {
+                try {
+                    // TODO 对deeplink_id的有效性做判断
+                    deepLinkCountComponent.incr(deepLinkId, type, 1);
+                } catch (Exception e) {
+                    ApiLogger.warn("UrlServlet deepLinkCountThreadPool count failed", e);
+                }
+                return null;
+            }
+        });
 
         boolean isWechat = false;
         boolean isWeibo = false;
@@ -129,7 +167,7 @@ public class UrlServlet extends HttpServlet{
         boolean isUC = false;   //TODO
 
         //DEBUG MODE
-        boolean DEBUG = true;
+        boolean DEBUG = false;
 
 
         int browseMajor = 0;
@@ -156,7 +194,7 @@ public class UrlServlet extends HttpServlet{
         request.setAttribute("AppID", appId);
         request.setAttribute("IconUrl", "");   //TODO
         request.setAttribute("Url", url);
-        request.setAttribute("Match_id", uriArr[3]);
+        request.setAttribute("Match_id", uriArr[2]);
 
         request.setAttribute("Download_msg", "");   //TODO
         request.setAttribute("Download_btn_text", "");   //TODO

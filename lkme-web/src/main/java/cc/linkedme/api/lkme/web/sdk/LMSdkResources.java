@@ -90,7 +90,7 @@ public class LMSdkResources {
         resultJson.put("browser_fingerprint_id", "");
         resultJson.put("link", openParams.extra_uri_data);
         resultJson.put("params", paramJson);
-        resultJson.put("is_first_session", true);
+        resultJson.put("is_first_session", false);
         resultJson.put("clicked_linkedme_link", clicked_linkedme_link);
         return resultJson.toString();
     }
@@ -116,9 +116,7 @@ public class LMSdkResources {
         }
 
         lmSdkService.close(closeParams);
-        JsonBuilder resultJson = new JsonBuilder();
-        resultJson.append("res", "ok");
-        return resultJson.flip().toString();
+        return "{}";
     }
 
     @Path("/preInstall")

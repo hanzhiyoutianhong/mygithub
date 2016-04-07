@@ -31,7 +31,11 @@ import cc.linkedme.service.sdkapi.LMSdkService;
 
 import com.google.common.base.Joiner;
 import com.google.common.base.Strings;
+import org.apache.http.client.utils.URLEncodedUtils;
+import org.springframework.web.bind.ServletRequestUtils;
 
+import java.net.URI;
+import java.net.URISyntaxException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.concurrent.Callable;
@@ -67,10 +71,10 @@ public class LMSdkServiceImpl implements LMSdkService {
     @Resource
     private CountComponent deepLinkCountComponent;
 
-    public final static float UNIVERSE_LINK_IOS_VERSION = 8;
-
-    public static ThreadPoolExecutor deepLinkCountThreadPool = new ThreadPoolExecutor(20, 20, 60L, TimeUnit.SECONDS,
+    private static ThreadPoolExecutor deepLinkCountThreadPool = new ThreadPoolExecutor(20, 20, 60L, TimeUnit.SECONDS,
             new LinkedBlockingQueue<Runnable>(300), new ThreadPoolExecutor.DiscardOldestPolicy());
+
+    public final static float UNIVERSE_LINK_IOS_VERSION = 8;
 
     public String install(InstallParams installParams) {
         ClientInfo clientInfo = new ClientInfo();
@@ -184,6 +188,28 @@ public class LMSdkServiceImpl implements LMSdkService {
         return MD5Utils.md5(deviceParamsStr);
     }
 
+    private static String getClickIdFromUri(String deepLinkUrl) {
+        String clickId = "";
+        if(deepLinkUrl.startsWith("http") || deepLinkUrl.startsWith("https")) {
+            clickId = DeepLinkUtil.getDeepLinkFromUrl(deepLinkUrl);
+        } else {
+            try {
+                URI uri = new URI(deepLinkUrl);
+                String paramStr = uri.getQuery();
+                String[] params = paramStr.split("&");
+                for(String param: params) {
+                    if(param.split("=")[0].equals("click_id")) {
+                        clickId = param.split("=")[1];
+                        break;
+                    }
+                }
+            } catch (Exception e) {
+                throw new LMException(LMExceptionFactor.LM_ILLEGAL_PARAMETER_VALUE, deepLinkUrl);
+            }
+        }
+        return clickId;
+    }
+
     public String open(OpenParams openParams) {
         String deepLinkUrl = null;
 
@@ -193,22 +219,24 @@ public class LMSdkServiceImpl implements LMSdkService {
         } catch (NumberFormatException e) {
             throw new LMException(LMExceptionFactor.LM_ILLEGAL_PARAMETER_VALUE, openParams.os_version + " must be float!");
         }
+
+        String deepLink = "";
         if ("Android".equals(openParams.os)) {
-            deepLinkUrl = openParams.extra_uri_data;
+            deepLinkUrl = openParams.external_intent_uri;
         } else if ("iOS".equals(openParams.os)) {
             if (osVersion >= UNIVERSE_LINK_IOS_VERSION) {
                 deepLinkUrl = openParams.universal_link_url;
             }
 
             if (Strings.isNullOrEmpty(deepLinkUrl)) {
-                deepLinkUrl = openParams.external_intent_uri;
+                deepLinkUrl = openParams.extra_uri_data;
             }
 
         } else {
             return "";
         }
-        String deepLink = DeepLinkUtil.getDeepLinkFromUrl(deepLinkUrl);
-        long deepLinkId = Base62.decode(deepLink);
+        String clickId = getClickIdFromUri(deepLinkUrl);
+        long deepLinkId = Base62.decode(clickId);
         String param = deepLinkService.getDeepLinkParam(deepLinkId);
         if (!Strings.isNullOrEmpty(param)) {
             // count
