@@ -86,11 +86,8 @@ public class HttpManager {
     }
 
     public static void main(String[] args) {
-        System.out.println(HttpManager.addHttpResources("http://mobiletrends.mobile.sina.cn/interface/feed/wb_feeds.php"));
+        System.out.println(HttpManager.addHttpResources("http://linkedme.cc"));
         System.out.println(httpResources);
         System.out.println(null instanceof WarnMsgException);
-        // System.out.println(GenericValidator.isUrl("http://mobiletrends.mobile.sina.cn/interface/feed/wb_feeds.php"));
-        // System.out.println(GenericValidator.isUrl("http:http://mobiletrends.mobile.sina.cn/interface/feed/wb_feeds.php"));
-        // System.out.println(GenericValidator.isUrl("ftp://mobiletrends.mobile.sina.cn/interface/feed/wb_feeds.php"));
     }
 }

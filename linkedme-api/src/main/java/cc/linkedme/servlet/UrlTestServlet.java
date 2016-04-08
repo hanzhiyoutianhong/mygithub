@@ -43,7 +43,6 @@ public class UrlTestServlet extends HttpServlet {
         String osFamily = client.os.family;
         String osMajor = client.os.major;
         String deviceFamily  = client.device.family;
-        System.out.println(userAgentFamily);
         request.getRequestDispatcher("/index1.jsp").forward(request,response);
     }
 }

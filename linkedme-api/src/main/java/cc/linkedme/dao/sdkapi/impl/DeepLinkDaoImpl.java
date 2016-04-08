@@ -1,11 +1,14 @@
 package cc.linkedme.dao.sdkapi.impl;
 
+import cc.linkedme.commons.exception.LMException;
+import cc.linkedme.commons.exception.LMExceptionFactor;
 import cc.linkedme.commons.util.Util;
 import cc.linkedme.commons.util.UuidHelper;
 import cc.linkedme.dao.sdkapi.DeepLinkDao;
 import cc.linkedme.data.dao.util.JdbcTemplate;
 import cc.linkedme.data.model.AppInfo;
 import cc.linkedme.data.model.params.SummaryDeepLinkParams;
+import com.google.api.client.repackaged.com.google.common.base.Strings;
 import org.springframework.dao.DataAccessException;
 
 import cc.linkedme.commons.log.ApiLogger;
@@ -29,7 +32,8 @@ import java.util.List;
 public class DeepLinkDaoImpl extends BaseDao implements DeepLinkDao {
     private static final String ADD_DEEPLINK = "ADD_DEEPLINK";
     private static final String GET_DEEPLINKS = "GET_DEEPLINKS";
-    private static final String GET_DEEPLINK_INFO = "GET_DEEPLINKS_INFO";
+    private static final String GET_DEEPLINK_INFO = "GET_DEEPLINK_INFO";
+    private static final String DELETE_DEEPLINK = "DELETE_DEEPLINK";
 
     public int addDeepLink(DeepLink deepLink) {
         int result = 0;
@@ -70,8 +74,9 @@ public class DeepLinkDaoImpl extends BaseDao implements DeepLinkDao {
         } catch (DataAccessException e) {
             if (DaoUtil.isDuplicateInsert(e)) {
                 ApiLogger.info(new StringBuilder(128).append("Duplicate insert deepLink, id=").append(deeplink_id));
+                throw new LMException(LMExceptionFactor.LM_FAILURE_DB_OP, "duplicate insert deepLink table, id=" + deepLink.getDeeplinkId());
             } else {
-                throw e;
+                throw new LMException(LMExceptionFactor.LM_FAILURE_DB_OP);
             }
         }
         return result;
@@ -80,7 +85,7 @@ public class DeepLinkDaoImpl extends BaseDao implements DeepLinkDao {
     public DeepLink getDeepLinkInfo(long deepLinkId, long appid) {
         Date date = UuidHelper.getDateFromId(deepLinkId);   //根据deepLinkId获取日期
         final List<DeepLink> deepLinks = new ArrayList<DeepLink>();
-        TableChannel tableChannel = tableContainer.getTableChannel("deeplink", GET_DEEPLINKS, appid, date);
+        TableChannel tableChannel = tableContainer.getTableChannel("deeplink", GET_DEEPLINK_INFO, appid, date);
         tableChannel.getJdbcTemplate().query(tableChannel.getSql(), new Object[] {deepLinkId, appid}, new RowMapper() {
             public Object mapRow(ResultSet resultSet, int i) throws SQLException {
                 DeepLink dp = new DeepLink();
@@ -117,31 +122,31 @@ public class DeepLinkDaoImpl extends BaseDao implements DeepLinkDao {
         String condition = "";
         List<String> paramList = new ArrayList<String>();
         paramList.add(String.valueOf(appid));
-        if (start_date != null) {
+        if (!Strings.isNullOrEmpty(start_date)) {
             condition += "and create_time >= ? ";
             paramList.add(start_date);
         }
-        if (end_date != null) {
+        if (!Strings.isNullOrEmpty(end_date)) {
             condition += "and create_time <= ? ";
             paramList.add(end_date);
         }
-        if (feature != null) {
+        if (!Strings.isNullOrEmpty(feature)) {
             condition += "and feature like '%' ? '%' ";
             paramList.add(feature);
         }
-        if (campaign != null) {
+        if (!Strings.isNullOrEmpty(campaign)) {
             condition += "and campaign like '%' ? '%' ";
             paramList.add(campaign);
         }
-        if (stage != null) {
+        if (!Strings.isNullOrEmpty(stage)) {
             condition += "and stage like '%' ? '%' ";
             paramList.add(stage);
         }
-        if (channel != null) {
+        if (!Strings.isNullOrEmpty(channel)) {
             condition += "and channel like '%' ? '%' ";
             paramList.add(channel);
         }
-        if (tag != null) {
+        if (!Strings.isNullOrEmpty(tag)) {
             condition += "and tags like '%' ? '%' ";
             paramList.add(tag);
         }
@@ -169,5 +174,17 @@ public class DeepLinkDaoImpl extends BaseDao implements DeepLinkDao {
         });
         return deepLinks;
 
+    }
+
+    public boolean deleteDeepLink(long deepLinkId, long appId) {
+        int result = 0;
+        Date date = UuidHelper.getDateFromId(deepLinkId);
+        TableChannel tableChannel = tableContainer.getTableChannel("deeplink", DELETE_DEEPLINK, appId, date);
+        try {
+            result += tableChannel.getJdbcTemplate().update(tableChannel.getSql(), new Object[] {deepLinkId});
+        } catch (DataAccessException e) {
+            throw new LMException(LMExceptionFactor.LM_FAILURE_DB_OP);
+        }
+        return result > 0;
     }
 }

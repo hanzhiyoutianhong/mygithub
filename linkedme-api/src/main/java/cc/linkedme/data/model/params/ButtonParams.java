@@ -17,6 +17,7 @@ public class ButtonParams {
     public String btn_category;
     public long user_id;
     public long app_id;
+    public long consumer_app_id;
     public int check_status;
     public int online_status;
 
@@ -76,5 +77,12 @@ public class ButtonParams {
         this.online_status = online_status;
     }
 
+    public long getConsumer_app_id() {
+        return consumer_app_id;
+    }
+
+    public void setConsumer_app_id(long consumer_app_id) {
+        this.consumer_app_id = consumer_app_id;
+    }
 
 }

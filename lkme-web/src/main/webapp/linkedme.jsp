@@ -86,7 +86,7 @@
                 return 'true' == '${isUC}';
             }
         };
-        var DEBUG = '${DEBUG}';
+        var DEBUG = ${DEBUG};
         <!--测试数据,live and test-->
         var MOCK_DATA = false;
         var lang = navigator.language;

@@ -1,17 +1,4 @@
-package cc.linkedme.dao.userapi.impl;
-
-import cc.linkedme.commons.exception.LMException;
-import cc.linkedme.commons.exception.LMExceptionFactor;
-import cc.linkedme.commons.log.ApiLogger;
-import cc.linkedme.dao.BaseDao;
-import cc.linkedme.dao.userapi.UserDao;
-import cc.linkedme.data.dao.strategy.TableChannel;
-import cc.linkedme.data.dao.util.DaoUtil;
-import cc.linkedme.data.dao.util.JdbcTemplate;
-import cc.linkedme.data.model.UserInfo;
-import cc.linkedme.data.model.params.UserParams;
-import org.springframework.dao.DataAccessException;
-import org.springframework.jdbc.core.RowMapper;
+package cc.linkedme.dao.webapi.impl;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -19,6 +6,20 @@ import java.text.DateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+
+import cc.linkedme.dao.webapi.UserDao;
+import org.springframework.dao.DataAccessException;
+import org.springframework.jdbc.core.RowMapper;
+
+import cc.linkedme.commons.exception.LMException;
+import cc.linkedme.commons.exception.LMExceptionFactor;
+import cc.linkedme.commons.log.ApiLogger;
+import cc.linkedme.dao.BaseDao;
+import cc.linkedme.data.dao.strategy.TableChannel;
+import cc.linkedme.data.dao.util.DaoUtil;
+import cc.linkedme.data.dao.util.JdbcTemplate;
+import cc.linkedme.data.model.UserInfo;
+import cc.linkedme.data.model.params.UserParams;
 
 /**
  * Created by Vontroy on 16/3/19.

@@ -1,4 +1,4 @@
-package cc.linkedme.api.dashboard.resources;
+package cc.linkedme.api.resources;
 
 import cc.linkedme.data.model.DeepLinkCount;
 import cc.linkedme.data.model.params.SummaryDeepLinkParams;

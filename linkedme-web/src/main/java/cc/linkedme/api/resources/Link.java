@@ -1,9 +1,10 @@
-package cc.linkedme.api.dashboard.resources;
+package cc.linkedme.api.resources;
 
 import cc.linkedme.commons.exception.LMException;
 import cc.linkedme.commons.exception.LMExceptionFactor;
 import cc.linkedme.data.model.params.SummaryDeepLinkParams;
 import cc.linkedme.data.model.params.UrlParams;
+import cc.linkedme.service.DeepLinkService;
 import cc.linkedme.service.webapi.SummaryService;
 import com.google.api.client.repackaged.com.google.common.base.Strings;
 import net.sf.json.JSONObject;
@@ -34,6 +35,9 @@ import java.io.IOException;
 public class Link {
     @Resource
     private SummaryService summaryService;
+
+    @Resource
+    private DeepLinkService deepLinkService;
 
     @Path("/create")
     @POST
@@ -84,5 +88,19 @@ public class Link {
         }
 
         return deepLinks;
+    }
+
+    @Path("delete")
+    @POST
+    @Produces()
+    public String deleteUrl(UrlParams urlParams, @Context HttpServletRequest request) {
+        if (urlParams.deeplink_id <= 0) {
+            throw new LMException(LMExceptionFactor.LM_ILLEGAL_PARAM_VALUE, "deeplink_id <= 0");
+        }
+        // if (urlParams.app_id <= 0) {
+        // throw new LMException(LMExceptionFactor.LM_ILLEGAL_PARAM_VALUE, "app_id <= 0");
+        // }
+        boolean result = deepLinkService.deleteDeepLink(urlParams.deeplink_id, urlParams.app_id);
+        return "{ \"ret\" : " + result + "}";
     }
 }

@@ -346,6 +346,7 @@ public class DeepLink {
 
     public JSONObject toJsonObject() {
         JSONObject jsonObject = new JSONObject();
+        jsonObject.put("deeplink_id", deeplinkId);
         jsonObject.put("deeplink_url", Constants.DEEPLINK_HTTPS_PREFIX + Base62.encode(appId) + "/" + Base62.encode(deeplinkId));
         if (!Strings.isNullOrEmpty(feature)) {
             JSONArray featureJson = JSONArray.fromObject(getFeature().split(","));
@@ -371,23 +372,25 @@ public class DeepLink {
         jsonObject.put("creation_time", createTime);
         jsonObject.put("source", source);
 
-        JSONObject iosCount = new JSONObject();
-        iosCount.put("ios_click", deepLinkCount.getIos_click());
-        iosCount.put("ios_install", deepLinkCount.getIos_install());
-        iosCount.put("ios_open", deepLinkCount.getIos_open());
+        if(deepLinkCount != null) {
+            JSONObject iosCount = new JSONObject();
+            iosCount.put("ios_click", deepLinkCount.getIos_click());
+            iosCount.put("ios_install", deepLinkCount.getIos_install());
+            iosCount.put("ios_open", deepLinkCount.getIos_open());
 
-        JSONObject adrCount = new JSONObject();
-        adrCount.put("adr_click", deepLinkCount.getAdr_click());
-        adrCount.put("adr_install", deepLinkCount.getIos_install());
-        adrCount.put("adr_open", deepLinkCount.getIos_open());
+            JSONObject adrCount = new JSONObject();
+            adrCount.put("adr_click", deepLinkCount.getAdr_click());
+            adrCount.put("adr_install", deepLinkCount.getIos_install());
+            adrCount.put("adr_open", deepLinkCount.getIos_open());
 
-        JSONObject pcCount = new JSONObject();
-        pcCount.put("pc_click", deepLinkCount.getPc_click());
-        pcCount.put("pc_scan", deepLinkCount.getPc_scan());
+            JSONObject pcCount = new JSONObject();
+            pcCount.put("pc_click", deepLinkCount.getPc_click());
+            pcCount.put("pc_scan", deepLinkCount.getPc_scan());
 
-        jsonObject.put("ios", iosCount);
-        jsonObject.put("android", adrCount);
-        jsonObject.put("desktop", pcCount);
+            jsonObject.put("ios", iosCount);
+            jsonObject.put("android", adrCount);
+            jsonObject.put("desktop", pcCount);
+        }
         return jsonObject;
     }
 

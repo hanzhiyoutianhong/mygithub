@@ -3,7 +3,7 @@ package cc.linkedme.service.webapi.impl;
 import cc.linkedme.commons.exception.LMException;
 import cc.linkedme.commons.exception.LMExceptionFactor;
 import cc.linkedme.commons.mail.MailSender;
-import cc.linkedme.dao.userapi.UserDao;
+import cc.linkedme.dao.webapi.UserDao;
 import cc.linkedme.data.model.UserInfo;
 import cc.linkedme.data.model.params.UserParams;
 import cc.linkedme.service.webapi.UserService;

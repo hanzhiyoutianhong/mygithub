@@ -1,4 +1,4 @@
-package cc.linkedme.api.app.resources;
+package cc.linkedme.api.resources;
 
 
 import cc.linkedme.commons.exception.LMException;
@@ -37,7 +37,6 @@ public class App {
     @POST
     @Produces(MediaType.APPLICATION_JSON)
     public String createApp(AppParams appParam, @Context HttpServletRequest request) {
-//重名
         if (appParam.user_id <= 0) {
             throw new LMException(LMExceptionFactor.LM_ILLEGAL_PARAM_VALUE);
         }
@@ -71,11 +70,6 @@ public class App {
                 appJsons.add(app.toJson());
             }
         }
-
-        //test user agent information
-        String userAgent = request.getHeader("user-agent");
-        System.out.println(userAgent);
-
 
         return new StringBuilder().append("[").append(StringUtils.join(appJsons, ",")).append("]").toString();
     }
@@ -135,6 +129,7 @@ public class App {
 
         appParams.has_ios = iosJson.getBoolean("has_ios");
         appParams.ios_not_url = iosJson.getString("ios_not_url");
+        appParams.ios_uri_scheme = iosJson.getString("ios_uri_scheme");
         appParams.ios_search_option = iosJson.getString("ios_search_option");
         appParams.ios_store_url = iosJson.getString("ios_store_url");
         appParams.ios_custom_url = iosJson.getString("ios_custom_url");

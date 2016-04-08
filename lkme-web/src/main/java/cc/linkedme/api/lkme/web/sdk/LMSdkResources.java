@@ -19,11 +19,6 @@ import cc.linkedme.data.model.params.UrlParams;
 import cc.linkedme.service.sdkapi.LMSdkService;
 import com.google.common.base.Strings;
 import net.sf.json.JSONObject;
-import org.apache.commons.httpclient.HttpClient;
-import org.apache.commons.httpclient.HttpException;
-import org.apache.commons.httpclient.methods.PostMethod;
-import org.apache.commons.httpclient.methods.RequestEntity;
-import org.apache.commons.httpclient.methods.StringRequestEntity;
 import org.springframework.stereotype.Component;
 
 import javax.annotation.Resource;

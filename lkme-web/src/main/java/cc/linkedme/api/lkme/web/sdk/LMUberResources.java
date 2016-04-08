@@ -1,26 +1,51 @@
 package cc.linkedme.api.lkme.web.sdk;
 
+import javax.annotation.Resource;
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
 
 import cc.linkedme.commons.log.ApiLogger;
-import cc.linkedme.data.model.params.OpenUberParams;
+import cc.linkedme.data.model.ButtonInfo;
+import cc.linkedme.data.model.ConsumerAppInfo;
+import cc.linkedme.data.model.params.InitUberButtonParams;
+import cc.linkedme.service.webapi.BtnService;
+import cc.linkedme.service.webapi.ConsumerService;
+import cc.linkedme.uber.rides.client.Session;
+import cc.linkedme.uber.rides.client.UberRidesServices;
+import cc.linkedme.uber.rides.client.UberRidesSyncService;
+import cc.linkedme.uber.rides.client.error.NetworkException;
+import cc.linkedme.uber.rides.client.model.PriceEstimate;
+import cc.linkedme.uber.rides.client.model.PriceEstimatesResponse;
 import cc.linkedme.uber.rides.client.model.WebhooksParams;
+import cc.linkedme.uber.rides.service.UberService;
+import net.sf.json.JSONObject;
 import org.springframework.stereotype.Component;
 
 import com.google.common.base.Strings;
 
+import java.util.List;
+
 @Path("uber")
 @Component
 public class LMUberResources {
+    @Resource
+    UberService uberService;
 
     @Path("/init_button")
     @POST
     @Produces({MediaType.APPLICATION_JSON})
-    public String initButton(OpenUberParams openUberParams) {
+    public String initButton(InitUberButtonParams initUberButtonParams) {
+        String result = uberService.initButton(initUberButtonParams);
+        return result;
+    }
 
+    @Path(("/click_btn"))
+    @POST
+    @Produces(MediaType.APPLICATION_JSON)
+    public String clickBtn() {
         return null;
     }
+
 
     @Path("/webhooks")
     @POST

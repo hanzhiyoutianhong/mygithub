@@ -10,13 +10,13 @@ import org.codehaus.jackson.annotate.JsonIgnoreProperties;
 
 @XmlRootElement
 @JsonIgnoreProperties(ignoreUnknown = true)
-public class OpenUberParams {
+public class InitUberButtonParams {
 
     public String btn_id;
-    public double pickup_lat;
-    public double pickup_lng;
-    public double dropoff_lat;
-    public double dropoff_lng;
+    public float pickup_lat;
+    public float pickup_lng;
+    public float dropoff_lat;
+    public float dropoff_lng;
 
     public String getBtn_id() {
         return btn_id;
@@ -26,35 +26,35 @@ public class OpenUberParams {
         this.btn_id = btn_id;
     }
 
-    public double getPickup_lat() {
+    public float getPickup_lat() {
         return pickup_lat;
     }
 
-    public void setPickup_lat(double pickup_lat) {
+    public void setPickup_lat(float pickup_lat) {
         this.pickup_lat = pickup_lat;
     }
 
-    public double getPickup_lng() {
+    public float getPickup_lng() {
         return pickup_lng;
     }
 
-    public void setPickup_lng(double pickup_lng) {
+    public void setPickup_lng(float pickup_lng) {
         this.pickup_lng = pickup_lng;
     }
 
-    public double getDropoff_lat() {
+    public float getDropoff_lat() {
         return dropoff_lat;
     }
 
-    public void setDropoff_lat(double dropoff_lat) {
+    public void setDropoff_lat(float dropoff_lat) {
         this.dropoff_lat = dropoff_lat;
     }
 
-    public double getDropoff_lng() {
+    public float getDropoff_lng() {
         return dropoff_lng;
     }
 
-    public void setDropoff_lng(double dropoff_lng) {
+    public void setDropoff_lng(float dropoff_lng) {
         this.dropoff_lng = dropoff_lng;
     }
 

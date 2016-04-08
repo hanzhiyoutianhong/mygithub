@@ -43,8 +43,6 @@ public class AppDaoImpl extends BaseDao implements AppDao {
             return result;
         }
 
-        //TODO 需要添加app_name重名判断
-
         try {
         TableChannel tableChannel = tableContainer.getTableChannel("appInfo", ADD_APP, 0L, 0L);
         Object[] values = {appInfo.getApp_name(), appInfo.getUser_id(), appInfo.getApp_key(), appInfo.getApp_secret(), appInfo.getType()};

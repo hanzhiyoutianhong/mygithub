@@ -63,4 +63,9 @@ public class DeepLinkService {
         }
         return deepLinkParam;
     }
+
+    public boolean deleteDeepLink(long deepLinkId, long appId) {
+        boolean result = deepLinkDao.deleteDeepLink(deepLinkId, appId);
+        return result;
+    }
 }
