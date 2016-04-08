@@ -80,6 +80,10 @@ public class SummaryService {
         return resultJson.toString();
     }
 
+    public String getDeepLinkByUrl( SummaryDeepLinkParams summaryDeepLinkParams ) {
+        DeepLink deepLink = summaryDeepLinkParams.d
+    }
+
     public Map<Long, DeepLinkCount> getDeepLinkSummary(SummaryDeepLinkParams summaryDeepLinkParams) {
         List<DeepLink> deepLinks = getDeepLinks(summaryDeepLinkParams);
         Map<Long, DeepLinkCount> deepLinkCountMap = new HashMap<>();

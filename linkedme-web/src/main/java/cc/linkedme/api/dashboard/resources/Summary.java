@@ -81,4 +81,23 @@ public class Summary {
         retJson.put("android", adrJson);
         return retJson.toString();
     }
+
+    @Path("get_deeplink_info")
+    @GET
+
+    @Produces({MediaType.APPLICATION_JSON})
+    public String getDeepLinkInfo( @QueryParam("deeplink_url") String deeplink_url,
+                                   @QueryParam("token") String token ) {
+        SummaryDeepLinkParams summaryDeepLinkParams = new SummaryDeepLinkParams();
+        summaryDeepLinkParams.deepLinkUrl = deeplink_url;
+
+        Map<Long, DeepLinkCount> countMap = summaryService.getDeepLinkSummary( summaryDeepLinkParams );
+        int deepLinkCounts = countMap.size();
+        int ios_click = 0;
+        int ios_install = 0;
+        int ios_open = 0;
+        int adr_click = 0;
+        int adr_install = 0;
+        int adr_open = 0;
+    }
 }
