@@ -1,4 +1,4 @@
-package cc.linkedme.api.user.resources;
+package cc.linkedme.api.resources;
 
 import cc.linkedme.commons.exception.LMException;
 import cc.linkedme.commons.exception.LMExceptionFactor;

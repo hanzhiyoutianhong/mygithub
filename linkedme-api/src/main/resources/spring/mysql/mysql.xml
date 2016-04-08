@@ -2,12 +2,9 @@
 <beans xmlns="http://www.springframework.org/schema/beans"
        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
        xmlns:wfc="http://www.springframework.org/schema/wfc"
-       xmlns:context="http://www.springframework.org/schema/context"
        xsi:schemaLocation="
        http://www.springframework.org/schema/beans
        http://www.springframework.org/schema/beans/spring-beans.xsd
-       http://www.springframework.org/schema/context
-       http://www.springframework.org/schema/context/spring-context.xsd
        http://www.springframework.org/schema/wfc
        http://www.springframework.org/schema/wfc.xsd ">
 
@@ -136,6 +133,46 @@
         <property name="dataSourceSlaves">
             <list>
                 <ref bean="datasources_user_0_s"/>
+            </list>
+        </property>
+    </bean>
+
+    <wfc:mysql id="datasources_btn_0_m" parent="dataSource"
+               strategy="master">
+        <property name="jdbcUrl" value="${btn.datasource.master_0.jdbcUrl}"/>
+    </wfc:mysql>
+    <wfc:mysql id="datasources_btn_0_s" parent="dataSource"
+               strategy="slave">
+        <property name="jdbcUrl" value="${btn.datasource.slave_0.jdbcUrl}"/>
+    </wfc:mysql>
+
+    <bean id="btn_jdbctemplate_0" class="cc.linkedme.data.dao.util.JdbcTemplate">
+        <property name="dataSource">
+            <ref bean="datasources_btn_0_m"/>
+        </property>
+        <property name="dataSourceSlaves">
+            <list>
+                <ref bean="datasources_btn_0_s"/>
+            </list>
+        </property>
+    </bean>
+
+    <wfc:mysql id="datasources_consumer_0_m" parent="dataSource"
+               strategy="master">
+        <property name="jdbcUrl" value="${consumer.datasource.master_0.jdbcUrl}"/>
+    </wfc:mysql>
+    <wfc:mysql id="datasources_consumer_0_s" parent="dataSource"
+               strategy="slave">
+        <property name="jdbcUrl" value="${consumer.datasource.slave_0.jdbcUrl}"/>
+    </wfc:mysql>
+
+    <bean id="consumer_jdbctemplate_0" class="cc.linkedme.data.dao.util.JdbcTemplate">
+        <property name="dataSource">
+            <ref bean="datasources_consumer_0_m"/>
+        </property>
+        <property name="dataSourceSlaves">
+            <list>
+                <ref bean="datasources_consumer_0_s"/>
             </list>
         </property>
     </bean>

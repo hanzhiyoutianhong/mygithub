@@ -81,7 +81,7 @@ public class CommonServlet extends ServletContainer {
              * invoked for the case when the URI is equal to the deployment URL
              * minus the '/', for example http://locahost:8080/HelloWorldWebApp
              */
-            final String servletPath = "";
+            final String servletPath = request.getServletPath();
             String pathInfo = request.getPathInfo();
             StringBuffer requestURL = request.getRequestURL();
             String requestURI = request.getRequestURI();

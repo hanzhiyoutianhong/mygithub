@@ -25,9 +25,7 @@
 
     <import resource="spring/webapi-context.xml"/>
 
-    <context:component-scan base-package="cc.linkedme.api.test.resources"/>
-    <context:component-scan base-package="cc.linkedme.api.app.resources"/>
-    <context:component-scan base-package="cc.linkedme.api.user.resources"/>
-    <context:component-scan base-package="cc.linkedme.api.dashboard.resources"/>
+    <context:component-scan base-package="cc.linkedme.api.resources"/>
+    <context:component-scan base-package="cc.linkedme.service.webapi"/>
 
 </beans>

@@ -15,6 +15,7 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.UUID;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -729,6 +730,11 @@ public class Util {
         }
         Matcher m = VALID_URL_PATTERN.matcher(url.toLowerCase());
         return m.matches();
+    }
+
+    public static String getUUID() {
+        UUID uuid = UUID.randomUUID();
+        return MD5Utils.md5(uuid.toString());
     }
 
     /**

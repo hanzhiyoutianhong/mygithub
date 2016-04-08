@@ -69,7 +69,7 @@ public class Base62 {
     }
 
     public static void main(String[] args) {
-        long num = 458021691277314L;
+        long num = 10000;
         System.out.println("Number: " + num);
 
         String encoding = null;
@@ -80,7 +80,13 @@ public class Base62 {
         System.out.println("Base62 Encoding: " + encoding);
 
         decoding = Base62.decode(encoding);
+        long decoding1 = Base62.decode("sdk");
+        long decoding2 = Base62.decode("uber");
+        
+        
         System.out.println("Base62 Decoding: " + decoding);
+        System.out.println("Base62 Decoding: " + decoding1);
+        System.out.println("Base62 Decoding: " + decoding2);
     }
 
 }

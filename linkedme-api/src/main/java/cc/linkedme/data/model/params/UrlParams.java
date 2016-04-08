@@ -13,6 +13,7 @@ import javax.xml.bind.annotation.XmlRootElement;
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class UrlParams {
 
+    public long deeplink_id;
     public long app_id;
     public String alias;
     public String[] tags;
@@ -221,5 +222,13 @@ public class UrlParams {
 
     public void setParams(JSONObject params) {
         this.params = params;
+    }
+
+    public long getDeeplink_id() {
+        return deeplink_id;
+    }
+
+    public void setDeeplink_id(long deeplink_id) {
+        this.deeplink_id = deeplink_id;
     }
 }

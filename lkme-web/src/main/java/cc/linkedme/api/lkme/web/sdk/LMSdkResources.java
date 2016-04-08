@@ -19,11 +19,6 @@ import cc.linkedme.data.model.params.UrlParams;
 import cc.linkedme.service.sdkapi.LMSdkService;
 import com.google.common.base.Strings;
 import net.sf.json.JSONObject;
-import org.apache.commons.httpclient.HttpClient;
-import org.apache.commons.httpclient.HttpException;
-import org.apache.commons.httpclient.methods.PostMethod;
-import org.apache.commons.httpclient.methods.RequestEntity;
-import org.apache.commons.httpclient.methods.StringRequestEntity;
 import org.springframework.stereotype.Component;
 
 import javax.annotation.Resource;
@@ -90,7 +85,7 @@ public class LMSdkResources {
         resultJson.put("browser_fingerprint_id", "");
         resultJson.put("link", openParams.extra_uri_data);
         resultJson.put("params", paramJson);
-        resultJson.put("is_first_session", true);
+        resultJson.put("is_first_session", false);
         resultJson.put("clicked_linkedme_link", clicked_linkedme_link);
         return resultJson.toString();
     }
@@ -116,9 +111,7 @@ public class LMSdkResources {
         }
 
         lmSdkService.close(closeParams);
-        JsonBuilder resultJson = new JsonBuilder();
-        resultJson.append("res", "ok");
-        return resultJson.flip().toString();
+        return "{}";
     }
 
     @Path("/preInstall")

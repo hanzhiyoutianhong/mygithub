@@ -55,7 +55,7 @@ public class ClientServiceImpl implements ClientService {
                         // TODO 对deeplink_id的有效性做判断
                         deepLinkCountComponent.incr(deepLinkId, countType, 1);
                     } catch (Exception e) {
-                        ApiLogger.warn("LMSdkServiceImpl.open deepLinkCountThreadPool count failed", e);
+                        ApiLogger.warn("ClientServiceImpl.addClient deepLinkCountThreadPool count failed", e);
                     }
                     return null;
                 }

@@ -26,7 +26,9 @@
         <property name="tableCount" value="1"/>
         <property name="sqls">
             <map>
-                <entry key="ADD_APP" value="insert into $db$.$tb$ (id, app_name, user_id, app_key, app_secret, type, register_time, last_update_time) values(?, ?, ?, ?, ?, ?, now(), now())"/>
+                <entry key="ADD_APP" value="insert into $db$.$tb$ (app_name, user_id, app_key, app_secret, type, register_time, last_update_time) values(?, ?, ?, ?, ?, now(), now())"/>
+
+                <entry key="GET_APP_ID" value="select id from $db$.$tb$ where user_id = ? and app_name = ?"/>
 
                 <entry key="GET_APPS_BY_USERID" value="select id, app_name, type, app_key, app_secret, ios_uri_scheme, ios_not_url, ios_search_option, ios_store_url, ios_custom_url, ios_bundle_id, ios_app_prefix, ios_team_id, android_uri_scheme, android_not_url, android_search_option, google_play_url, android_custom_url, android_package_name, android_sha256_fingerprints, ios_android_flag, use_default_landing_page, custom_landing_page, register_time from $db$.$tb$ where user_id = ?"/>
 

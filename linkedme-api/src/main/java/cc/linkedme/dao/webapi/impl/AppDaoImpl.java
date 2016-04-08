@@ -30,6 +30,7 @@ import java.util.Objects;
  */
 public class AppDaoImpl extends BaseDao implements AppDao {
     private static final String ADD_APP = "ADD_APP";
+    private static final String GET_APP_ID = "GET_APP_ID";
     private static final String GET_APPS_BY_USERID = "GET_APPS_BY_USERID";
     private static final String DEL_APP_BY_USERID_AND_APPID = "DEL_APP_BY_USERID_AND_APPID";
     private static final String GET_APP_BY_APPID = "GET_APP_BY_APPID";
@@ -42,23 +43,34 @@ public class AppDaoImpl extends BaseDao implements AppDao {
             return result;
         }
 
-        long userId = appInfo.getUser_id();
-
-        //需要添加重名判断
-
-        TableChannel tableChannel = tableContainer.getTableChannel("appInfo", ADD_APP, 0L, 0L);
-
-        Object[] values = {appInfo.getApp_id(), appInfo.getApp_name(), appInfo.getUser_id(), appInfo.getApp_key(), appInfo.getApp_secret(), appInfo.getType()};
-
         try {
+        TableChannel tableChannel = tableContainer.getTableChannel("appInfo", ADD_APP, 0L, 0L);
+        Object[] values = {appInfo.getApp_name(), appInfo.getUser_id(), appInfo.getApp_key(), appInfo.getApp_secret(), appInfo.getType()};
             result += tableChannel.getJdbcTemplate().update(tableChannel.getSql(), values);
         } catch (DataAccessException e) {
             if (DaoUtil.isDuplicateInsert(e)) {
-                ApiLogger.warn(new StringBuilder(128).append("Duplicate insert deepLink, appName=").append(appInfo.getApp_name()), e);
+                ApiLogger.warn(new StringBuilder(128).append("Duplicate insert app table, app_name=").append(appInfo.getApp_name()), e);
+                throw new LMException(LMExceptionFactor.LM_FAILURE_DB_OP, "duplicate insert app table, app_name=" + appInfo.getApp_name());
             }
             throw new LMException(LMExceptionFactor.LM_FAILURE_DB_OP);
         }
-        return result;
+
+        AppInfo app = new AppInfo();
+        if(result > 0) {
+            try {
+                TableChannel tableChannel = tableContainer.getTableChannel("appInfo", GET_APP_ID, 0L, 0L);
+                Object[] values = {appInfo.getUser_id(), appInfo.getApp_name()};
+                tableChannel.getJdbcTemplate().query(tableChannel.getSql(), values, new RowMapper() {
+                    public Object mapRow(ResultSet resultSet, int i) throws SQLException {
+                        app.setApp_id(resultSet.getInt("id"));
+                        return null;
+                    }
+                });
+            } catch (DataAccessException e) {
+                throw new LMException(LMExceptionFactor.LM_FAILURE_DB_OP);
+            }
+        }
+        return (int)app.getApp_id();
     }
 
 
@@ -173,7 +185,8 @@ public class AppDaoImpl extends BaseDao implements AppDao {
             res += jdbcTemplate.update(tableChannel.getSql(), values);
         } catch (DataAccessException e) {
             if (DaoUtil.isDuplicateInsert(e)) {
-                ApiLogger.warn(new StringBuffer(128).append("Duplicate update app, appId=").append(appParams.app_id), e);
+                ApiLogger.warn(new StringBuilder(128).append("Duplicate insert app table, app_name=").append(appParams.getApp_name()), e);
+                throw new LMException(LMExceptionFactor.LM_FAILURE_DB_OP, "duplicate insert app table, app_name=" + appParams.getApp_name());
             }
             throw new LMException(LMExceptionFactor.LM_FAILURE_DB_OP);
         }
