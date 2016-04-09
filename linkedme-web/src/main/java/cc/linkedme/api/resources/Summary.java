@@ -1,5 +1,8 @@
 package cc.linkedme.api.resources;
 
+import cc.linkedme.commons.util.Base62;
+import cc.linkedme.commons.util.DeepLinkUtil;
+import cc.linkedme.data.model.DeepLink;
 import cc.linkedme.data.model.DeepLinkCount;
 import cc.linkedme.data.model.params.SummaryDeepLinkParams;
 import cc.linkedme.service.webapi.SummaryService;
@@ -7,6 +10,7 @@ import net.sf.json.JSONObject;
 import org.springframework.stereotype.Component;
 
 import javax.annotation.Resource;
+import javax.print.attribute.standard.Media;
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
@@ -86,18 +90,38 @@ public class Summary {
     @GET
 
     @Produces({MediaType.APPLICATION_JSON})
-    public String getDeepLinkInfo( @QueryParam("deeplink_url") String deeplink_url,
+    public String getDeepLinkInfo( @QueryParam("deeplink_id") long deeplink_id,
                                    @QueryParam("token") String token ) {
         SummaryDeepLinkParams summaryDeepLinkParams = new SummaryDeepLinkParams();
-        summaryDeepLinkParams.deepLinkUrl = deeplink_url;
+        summaryDeepLinkParams.deepLinkId = deeplink_id;
 
-        Map<Long, DeepLinkCount> countMap = summaryService.getDeepLinkSummary( summaryDeepLinkParams );
-        int deepLinkCounts = countMap.size();
-        int ios_click = 0;
-        int ios_install = 0;
-        int ios_open = 0;
-        int adr_click = 0;
-        int adr_install = 0;
-        int adr_open = 0;
+        return summaryService.getDeepLinkInfoByDeepLinkId( summaryDeepLinkParams );
+    }
+
+    @Path( "get_multi_deeplink_info" )
+    @GET
+
+    @Produces({MediaType.APPLICATION_JSON})
+    public String getMultiDeepLinkInfo( @QueryParam("deeplink_ids") String deeplink_ids,
+                                        @QueryParam("token") String token ) {
+        String[] deeplink_id = deeplink_ids.split(",");
+
+        int click = 0;
+        int open = 0;
+        int install = 0;
+
+        for( int i = 0; i < deeplink_id.length; i++ ) {
+            int[] tmp = summaryService.getDeepLikCounts( Long.parseLong(deeplink_id[i]) );
+            click += tmp[0];
+            open += tmp[1];
+            install += tmp[2];
+        }
+
+        JSONObject resultJson = new JSONObject();
+        resultJson.put( "click", click );
+        resultJson.put( "open", open );
+        resultJson.put( "install", install );
+
+        return resultJson.toString();
     }
 }

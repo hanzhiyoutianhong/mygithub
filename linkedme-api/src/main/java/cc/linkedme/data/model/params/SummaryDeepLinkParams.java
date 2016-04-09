@@ -19,6 +19,7 @@ public class SummaryDeepLinkParams {
     public int skipNumber;
     public String orderby;
     public String deepLinkUrl;
+    public long deepLinkId;
 
     public SummaryDeepLinkParams() {}
 
