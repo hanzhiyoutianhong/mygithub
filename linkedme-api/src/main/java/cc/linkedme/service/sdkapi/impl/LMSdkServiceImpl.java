@@ -215,7 +215,7 @@ public class LMSdkServiceImpl implements LMSdkService {
         if ("Android".equals(openParams.os)) {
             deepLinkUrl = openParams.external_intent_uri;
         } else if ("iOS".equals(openParams.os)) {
-            String[] osVersionArr = openParams.os_version.split(".");
+            String[] osVersionArr = openParams.os_version.split("\\.");
             String osMajorVersion = osVersionArr[0];
             if (Integer.parseInt(osMajorVersion) >= UNIVERSE_LINK_IOS_VERSION) {
                 deepLinkUrl = openParams.universal_link_url;
