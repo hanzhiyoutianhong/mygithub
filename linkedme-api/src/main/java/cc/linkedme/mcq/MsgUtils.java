@@ -91,6 +91,7 @@ public class MsgUtils {
         info.append("sdkVersion", clientInfo.getSdkUpdate());
         info.append("iOSTeamId", clientInfo.getIosTeamId());
         info.append("iOSBundleId", clientInfo.getIosBundleId());
+        info.append("linkedmeKey", clientInfo.getLinkedmeKey());
         return info;
     }
 
@@ -116,6 +117,7 @@ public class MsgUtils {
         clientInfo.setAppVersion(clientMsg.getString("appVersion"));
         clientInfo.setIosTeamId(clientMsg.getString("iOSTeamId"));
         clientInfo.setIosBundleId(clientMsg.getString("iOSBundleId"));
+        clientInfo.setLinkedmeKey(clientMsg.getString("linkedmeKey"));
         return clientInfo;
     }
 

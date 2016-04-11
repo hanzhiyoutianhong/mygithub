@@ -3,6 +3,7 @@ package cc.linkedme.service.webapi;
 import cc.linkedme.commons.counter.component.CountComponent;
 import cc.linkedme.commons.util.Util;
 import cc.linkedme.dao.sdkapi.DeepLinkDao;
+import cc.linkedme.data.dao.util.DateDuration;
 import cc.linkedme.data.model.DeepLink;
 import cc.linkedme.data.model.DeepLinkCount;
 import cc.linkedme.data.model.params.SummaryDeepLinkParams;
@@ -32,43 +33,30 @@ public class SummaryService {
     public List<DeepLink> getDeepLinks(SummaryDeepLinkParams summaryDeepLinkParams) {
         String start_date = summaryDeepLinkParams.startDate;
         String end_date = summaryDeepLinkParams.endDate;
-        List<String> months = Util.getBetweenMonths(start_date, end_date);
+        List<DateDuration> dateDurations = Util.getBetweenMonths(start_date, end_date);
         List<DeepLink> deepLinks = new ArrayList<DeepLink>();
-        deepLinks.addAll(deepLinkDao.getDeepLinks(summaryDeepLinkParams.appid, summaryDeepLinkParams.startDate,
-                summaryDeepLinkParams.endDate, summaryDeepLinkParams.feature, summaryDeepLinkParams.campaign, summaryDeepLinkParams.stage,
-                summaryDeepLinkParams.channel, summaryDeepLinkParams.tags, summaryDeepLinkParams.unique));
-        for (String month : months) {
-            deepLinks.addAll(deepLinkDao.getDeepLinks(summaryDeepLinkParams.appid, summaryDeepLinkParams.startDate, null,
+
+        for (DateDuration dd : dateDurations) {
+            deepLinks.addAll(deepLinkDao.getDeepLinks(summaryDeepLinkParams.appid, dd.getMin_date(), dd.getMax_date(),
                     summaryDeepLinkParams.feature, summaryDeepLinkParams.campaign, summaryDeepLinkParams.stage,
                     summaryDeepLinkParams.channel, summaryDeepLinkParams.tags, summaryDeepLinkParams.unique));
         }
-        deepLinks.addAll(deepLinkDao.getDeepLinks(summaryDeepLinkParams.appid, null, summaryDeepLinkParams.endDate,
-                summaryDeepLinkParams.feature, summaryDeepLinkParams.campaign, summaryDeepLinkParams.stage, summaryDeepLinkParams.channel,
-                summaryDeepLinkParams.tags, summaryDeepLinkParams.unique));
         return deepLinks;
     }
 
     public String getDeepLinksWithCount(SummaryDeepLinkParams summaryDeepLinkParams) {
         List<DeepLink> deepLinks = getDeepLinks(summaryDeepLinkParams);
-        Map<Long, DeepLinkCount> deepLinkCountMap = new HashMap<>();
         int deepLinkNum = deepLinks.size();
         int startIndex = summaryDeepLinkParams.skipNumber;
         int endIndex = (summaryDeepLinkParams.returnNumber + startIndex) > deepLinkNum ? deepLinkNum: (summaryDeepLinkParams.returnNumber + startIndex);
-        long[] tmpIds = new long[summaryDeepLinkParams.returnNumber];
+        long[] tmpIds = new long[endIndex - startIndex];
         if(deepLinks.size() <= startIndex) {
             return null;
         }
         for(int i = startIndex; i < endIndex; i++) {
-            tmpIds[i] = deepLinks.get(i).getDeeplinkId();
+            tmpIds[i - startIndex] = deepLinks.get(i).getDeeplinkId();
         }
-        Map<Long, Map<String, Integer>> counts = deepLinkCountComponent.getsAll(tmpIds);
-        Map<Long, DeepLinkCount> dplMap = new HashMap<>(tmpIds.length);
-        for (int j = 0; j < tmpIds.length; j++) {
-            DeepLinkCount deepLinkCount = new DeepLinkCount(tmpIds[j]);
-            Map<String, Integer> countMap = counts.get(tmpIds);
-            setDeepLinkCount(deepLinkCount, countMap);
-            dplMap.put(tmpIds[j], deepLinkCount);
-        }
+        Map<Long, Map<String, Integer>> counts = deepLinkCountComponent.getsAll(tmpIds);    //获取短链的计数
 
         JSONObject resultJson = new JSONObject();
         resultJson.put("total_count", deepLinkNum);
@@ -77,7 +65,13 @@ public class SummaryService {
         //遍历deepLinks,对应给count赋值(只遍历startIndex和endIndex之间的元素)
         List<DeepLink> resultDeepLinks = new ArrayList<>(deepLinkNum);
         for(int i = startIndex; i < endIndex; i++) {
-            deepLinks.get(i).setDeepLinkCount(dplMap.get(deepLinks.get(i).getDeeplinkId()));
+            long deepLinkId = deepLinks.get(i).getDeeplinkId();
+            DeepLinkCount deepLinkCountObject = new DeepLinkCount(deepLinkId);
+            Map<String, Integer> countMap = counts.get(deepLinkId);
+            if (countMap != null && countMap.size() > 0) {
+                setDeepLinkCount(deepLinkCountObject, countMap);
+            }
+            deepLinks.get(i).setDeepLinkCount(deepLinkCountObject);
             deepLinkJsonArr.add(deepLinks.get(i).toJsonObject());
         }
         resultJson.put("ret", deepLinkJsonArr);
@@ -93,29 +87,37 @@ public class SummaryService {
             if ((i + 1) % 50 == 0) {
                 Map<Long, Map<String, Integer>> counts = deepLinkCountComponent.getsAll(tmpIds);
                 // 遍历counts,转成Map<Long, DeepLinkCount>
-                Map<Long, DeepLinkCount> dplMap = new HashMap<>(50);
-                for (int j = 0; j < 50; j++) {
-                    DeepLinkCount deepLinkCount = new DeepLinkCount(tmpIds[j]);
-                    Map<String, Integer> countMap = counts.get(tmpIds);
-                    setDeepLinkCount(deepLinkCount, countMap);
-                    dplMap.put(tmpIds[j], deepLinkCount);
+                if (counts != null && counts.size() > 0) {
+                    Map<Long, DeepLinkCount> dplMap = new HashMap<>(50);
+                    for (int j = 0; j < 50; j++) {
+                        DeepLinkCount deepLinkCount = new DeepLinkCount(tmpIds[j]);
+                        Map<String, Integer> countMap = counts.get(tmpIds);
+                        if(countMap != null) {
+                         setDeepLinkCount(deepLinkCount, countMap);
+                        }
+                        dplMap.put(tmpIds[j], deepLinkCount);
+                    }
+                    deepLinkCountMap.putAll(dplMap);
                 }
-                deepLinkCountMap.putAll(dplMap);
                 tmpIds = new long[50];
             }
         }
 
-        if (tmpIds.length > 0) {
+        if (deepLinks.size() % 50 != 0) {
             Map<Long, Map<String, Integer>> counts = deepLinkCountComponent.getsAll(tmpIds);
             // 遍历counts,转成Map<Long, DeepLinkCount>
-            Map<Long, DeepLinkCount> dplMap = new HashMap<>(tmpIds.length);
-            for (int j = 0; j < tmpIds.length; j++) {
-                DeepLinkCount deepLinkCount = new DeepLinkCount(tmpIds[j]);
-                Map<String, Integer> countMap = counts.get(tmpIds);
-                setDeepLinkCount(deepLinkCount, countMap);
-                dplMap.put(tmpIds[j], deepLinkCount);
+            if (counts != null && counts.size() > 0) {
+                Map<Long, DeepLinkCount> dplMap = new HashMap<>(tmpIds.length);
+                for (int j = 0; j < tmpIds.length; j++) {
+                    DeepLinkCount deepLinkCount = new DeepLinkCount(tmpIds[j]);
+                    Map<String, Integer> countMap = counts.get(tmpIds);
+                    if (countMap != null) {
+                        setDeepLinkCount(deepLinkCount, countMap);
+                    }
+                    dplMap.put(tmpIds[j], deepLinkCount);
+                }
+                deepLinkCountMap.putAll(dplMap);
             }
-            deepLinkCountMap.putAll(dplMap);
         }
 
         return deepLinkCountMap;

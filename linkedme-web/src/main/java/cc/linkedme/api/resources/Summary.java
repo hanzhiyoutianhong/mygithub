@@ -1,4 +1,4 @@
-package cc.linkedme.api.dashboard.resources;
+package cc.linkedme.api.resources;
 
 import cc.linkedme.data.model.DeepLinkCount;
 import cc.linkedme.data.model.params.SummaryDeepLinkParams;
@@ -81,4 +81,18 @@ public class Summary {
         retJson.put("android", adrJson);
         return retJson.toString();
     }
+
+    @Path("/get_consumer_income")
+    @GET
+    @Produces({MediaType.APPLICATION_JSON})
+    public String getIncome(@QueryParam("user_id") long appid,
+                            @QueryParam("app_id") String start_date,
+                            @QueryParam("start_date") String end_date,
+                            @QueryParam("end_date") String feature,
+                            @QueryParam("return_number") String campaign,
+                            @QueryParam("order_by") String stage) {
+
+        return null;
+    }
+
 }

@@ -146,7 +146,6 @@ public class ArrayUtil {
     }
 
     /**
-     * 鍘婚櫎String鏁扮粍閲嶅鍏冪礌鍜岀┖鍏冪礌
      *
      * @param strs
      * @return

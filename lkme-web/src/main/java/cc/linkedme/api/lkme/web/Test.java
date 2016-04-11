@@ -33,7 +33,7 @@ import cc.linkedme.commons.shard.ShardingSupport;
 import cc.linkedme.commons.thread.ExecutorServiceUtil;
 import cc.linkedme.commons.thread.TraceableThreadExecutor;
 
-@Path("v1")
+@Path("test")
 @Component
 public class Test {
 

@@ -1,4 +1,4 @@
-package cc.linkedme.dao.userapi;
+package cc.linkedme.dao.webapi;
 
 import cc.linkedme.data.model.UserInfo;
 import cc.linkedme.data.model.params.UserParams;

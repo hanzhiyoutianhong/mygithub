@@ -1,4 +1,4 @@
-package cc.linkedme.api.test.resources;
+package cc.linkedme.api.resources;
 
 
 import org.apache.commons.httpclient.HttpClient;
