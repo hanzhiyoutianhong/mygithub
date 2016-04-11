@@ -5,6 +5,7 @@ import cc.linkedme.commons.redis.JedisPort;
 import cc.linkedme.commons.shard.ShardingSupportHash;
 import cc.linkedme.data.model.ButtonInfo;
 import cc.linkedme.data.model.ConsumerAppInfo;
+import cc.linkedme.data.model.params.ClickBtnParams;
 import cc.linkedme.data.model.params.InitUberButtonParams;
 import cc.linkedme.service.webapi.BtnService;
 import cc.linkedme.service.webapi.ConsumerService;
@@ -14,6 +15,7 @@ import cc.linkedme.uber.rides.client.UberRidesSyncService;
 import cc.linkedme.uber.rides.client.error.NetworkException;
 import cc.linkedme.uber.rides.client.model.PriceEstimate;
 import cc.linkedme.uber.rides.client.model.PriceEstimatesResponse;
+import com.google.api.client.repackaged.com.google.common.base.Strings;
 import net.sf.json.JSONObject;
 import org.springframework.stereotype.Service;
 
@@ -58,9 +60,9 @@ public class UberService {
 
         //计数
         String hashKey = buttonInfo.getAppId() + initUberButtonParams.btn_id;
-        String countKey = hashKey + ".view";   //TODO 后续suffix统一成枚举类型
+        String viewCountKey = hashKey + ".view";   //TODO 后续suffix统一成枚举类型
         JedisPort btnCountClient = btnCountShardingSupport.getClient(hashKey);
-        btnCountClient.incr(countKey);
+        btnCountClient.incr(viewCountKey);
 
         Session session = new Session.Builder()
                 .setServerToken(serverToken)
@@ -92,5 +94,42 @@ public class UberService {
 
         json.put("btn_msg", btnMsg);
         return json.toString();
+    }
+
+    public void clickBtn(ClickBtnParams clickBtnParams) {
+        //根据btn_id获取button信息
+        ButtonInfo buttonInfo = btnService.getBtnInfo(clickBtnParams.btn_id);
+
+        String clickSuffix;
+        if("app".equals(clickBtnParams.open_type)) {
+            clickSuffix = ".app";
+        } else if("web".equals(clickBtnParams.open_type)) {
+            clickSuffix = ".web";
+        } else {
+            clickSuffix = ".other";
+        }
+        String incomeSuffix = ".income";
+
+        //app <-> btn计数
+        String btnHashKey = buttonInfo.getAppId() + clickBtnParams.btn_id;
+        clickCount(btnHashKey, clickSuffix, incomeSuffix, clickBtnParams.price);
+
+        //app <-> consumer_app计数
+        String hashKey = String.valueOf(buttonInfo.getAppId()) + buttonInfo.getConsumerAppId();
+        clickCount(hashKey, clickSuffix, incomeSuffix, clickBtnParams.price);
+
+        ApiLogger.info("");
+    }
+
+    private void clickCount(String hashKey, String clickSuffix, String incomeSuffix, float price) {
+        JedisPort appCountClient = btnCountShardingSupport.getClient(hashKey);
+        appCountClient.incr(hashKey + clickSuffix);
+        String appIncome = appCountClient.get(hashKey + incomeSuffix);
+        if (Strings.isNullOrEmpty(appIncome)) {
+            appCountClient.set(hashKey + incomeSuffix, price);
+        } else {
+            float newIncome = Float.parseFloat(appIncome) + price;
+            appCountClient.set(hashKey + incomeSuffix, newIncome);
+        }
     }
 }

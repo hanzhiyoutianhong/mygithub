@@ -55,7 +55,7 @@ public class BtnService {
 
     public List<ButtonInfo> getButtons(long appId) {
         //根据appId获取app的所有buttons
-        List<ButtonInfo> buttons = buttonDao.getButtonList(appId);
+        List<ButtonInfo> buttons = buttonDao.getButtonListByAppId(appId);
         List<Long> consumerAppIds = new ArrayList<>(buttons.size());
         for(ButtonInfo btn : buttons) {
             if(btn != null) {
@@ -73,6 +73,12 @@ public class BtnService {
             return buttons;
         }
         return new ArrayList<ButtonInfo>();
+    }
+
+    public List<ButtonInfo> getButtonsByBtnId(String btnId) {
+        //根据btnId获取此id对应的所有的历史button
+        List<ButtonInfo> buttons = buttonDao.getButtonListByBtnId(btnId);
+        return buttons;
     }
 
 }

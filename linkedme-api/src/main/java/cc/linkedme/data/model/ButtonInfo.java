@@ -23,6 +23,7 @@ public class ButtonInfo {
     private String creationTime;
     private int checkStatus;
     private int onlineStatus;
+    private int consumerOnlineStatus;
 
     private ConsumerAppInfo consumerAppInfo;
 
@@ -100,6 +101,14 @@ public class ButtonInfo {
     @Column(name = "online_status")
     public int getOnlineStatus() {
         return onlineStatus;
+    }
+
+    public int getConsumerOnlineStatus() {
+        return consumerOnlineStatus;
+    }
+
+    public void setConsumerOnlineStatus(int consumerOnlineStatus) {
+        this.consumerOnlineStatus = consumerOnlineStatus;
     }
 
     public void setOnlineStatus(int onlineStatus) {
