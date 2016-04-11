@@ -129,7 +129,7 @@ public class UrlServlet extends HttpServlet{
         boolean isUC = false;   //TODO
 
         //DEBUG MODE
-        boolean DEBUG = true;
+        boolean DEBUG = false;
 
 
         int browseMajor = 0;
@@ -155,7 +155,7 @@ public class UrlServlet extends HttpServlet{
         request.setAttribute("BundleID", appInfo.getIos_bundle_id());
         request.setAttribute("AppID", appId);
         request.setAttribute("IconUrl", "");   //TODO
-        request.setAttribute("Url", url);
+        request.setAttribute("Url", "http://www.baidu.com");
         request.setAttribute("Match_id", uriArr[3]);
 
         request.setAttribute("Download_msg", "");   //TODO
@@ -168,7 +168,7 @@ public class UrlServlet extends HttpServlet{
 
         request.setAttribute("YYB_url", "http://a.app.qq.com/o/simple.jsp?pkgname=" + appInfo.getAndroid_package_name());
         request.setAttribute("Scheme", scheme);
-        request.setAttribute("Host", "linkedme");           //TODO
+        request.setAttribute("Host", "");           //TODO
         request.setAttribute("AppInsStatus", 0);    //TODO
         request.setAttribute("TimeStamp", System.currentTimeMillis());  //deepLink 创建时间?
         request.setAttribute("DsTag", "");  //TODO
