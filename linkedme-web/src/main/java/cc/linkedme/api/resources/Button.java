@@ -101,4 +101,48 @@ public class Button {
 
         return new StringBuilder().append("[").append(StringUtils.join(btnJsons, ",")).append("]").toString();
     }
+
+    @Path("/delete")
+    @POST
+    @Produces(MediaType.APPLICATION_JSON)
+    public String deleteBtn(ButtonParams buttonParams, @Context HttpServletRequest request) {
+
+        if (buttonParams.user_id <= 0) {
+            throw new LMException(LMExceptionFactor.LM_ILLEGAL_PARAM_VALUE, "user_id <= 0");
+        }
+
+        if (buttonParams.app_id <= 0) {
+            throw new LMException(LMExceptionFactor.LM_ILLEGAL_PARAM_VALUE, "app_id <= 0");
+        }
+        if(btnService.deleteButton(buttonParams.button_id)) {
+            return "{\"ret\" : \"true\"}";
+        } else {
+            return "{\"ret\" : \"false\"}";
+        }
+    }
+
+    @Path("/update")
+    @POST
+    @Produces(MediaType.APPLICATION_JSON)
+    public String updateBtn(ButtonParams buttonParams, @Context HttpServletRequest request) {
+        if (buttonParams.app_id <= 0) {
+            throw new LMException(LMExceptionFactor.LM_ILLEGAL_PARAM_VALUE, "app_id <= 0");
+        }
+        if (buttonParams.user_id <= 0) {
+            throw new LMException(LMExceptionFactor.LM_ILLEGAL_PARAM_VALUE, "user_id <= 0");
+        }
+        if (Strings.isNullOrEmpty(buttonParams.getButton_name())) {
+            throw new LMException(LMExceptionFactor.LM_ILLEGAL_PARAM_VALUE, "button_name is null");
+        }
+        if (Strings.isNullOrEmpty(buttonParams.getButton_id())) {
+            throw new LMException(LMExceptionFactor.LM_ILLEGAL_PARAM_VALUE, "button_id is null");
+        }
+
+        if(btnService.updateButtonByBtnId(buttonParams)) {
+            return "{\"ret\" : \"true\"}";
+        } else {
+            return "{\"ret\" : \"false\"}";
+        }
+    }
+
 }
