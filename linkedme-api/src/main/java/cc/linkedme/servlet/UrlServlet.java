@@ -200,6 +200,7 @@ public class UrlServlet extends HttpServlet {
         request.setAttribute("Download_btn_text", ""); // TODO
         request.setAttribute("Download_title", ""); // TODO
 
+
         request.setAttribute("Chrome_major", browseMajor);
         request.setAttribute("Ios_major", osMajor);
         request.setAttribute("Redirect_url", ""); // TODO

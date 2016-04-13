@@ -30,7 +30,8 @@
                 <entry key="GET_BUTTONS_BY_APPID" value="select btn_id, btn_name, consumer_app_id, btn_category, creation_time, check_status, online_status from $db$.$tb$ where app_id = ?"/>
                 <entry key="GET_BUTTONS_BY_BTNID" value="select app_id, btn_id, btn_name, consumer_app_id, btn_category, creation_time, check_status, online_status, consumer_online_status from $db$.$tb$ where btn_id = ?"/>
                 <entry key="GET_BUTTON_INFO" value="select app_id, btn_name, consumer_app_id, btn_category, creation_time, check_status, online_status from $db$.$tb$ where btn_id = ? and consumer_online_status = ?"/>
-                <entry key="DEL_BUTTON" value="delete from $db$.$tb$ where user_id = ? and btn_id = ?" />
+                <entry key="DELETE_BUTTON_BY_BTNID" value="delete from $db$.$tb$ where btn_id = ?" />
+                <entry key="UPDATE_BUTTON_BY_BTNID" value="update $db$.$tb$ set btn_name = ?, app_id = ? where btn_id = ?"/>
             </map>
         </property>
         <property name="jdbcTemplates">

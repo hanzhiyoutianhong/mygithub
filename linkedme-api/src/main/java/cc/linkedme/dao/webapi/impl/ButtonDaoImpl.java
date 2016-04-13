@@ -25,6 +25,8 @@ public class ButtonDaoImpl extends BaseDao implements ButtonDao {
     private static final String GET_BUTTON_INFO = "GET_BUTTON_INFO";
     private static final String GET_BUTTONS_BY_APPID = "GET_BUTTONS_BY_APPID";
     private static final String GET_BUTTONS_BY_BTNID = "GET_BUTTONS_BY_BTNID";
+    private static final String DELETE_BUTTON_BY_BTNID = "DELETE_BUTTON_BY_BTNID";
+    private static final String UPDATE_BUTTON_BY_BTNID = "UPDATE_BUTTON_BY_BTNID";
     private static final int CONSUMER_ONLINE_STATUS = 1;
 
     @Override
@@ -124,11 +126,29 @@ public class ButtonDaoImpl extends BaseDao implements ButtonDao {
 
     @Override
     public boolean updateButton(ButtonInfo buttonInfo) {
-        return false;
+        //TODO 若btn_id不存在，应抛出相应异常，在DaoUtil类中实现
+        TableChannel tableChannel = tableContainer.getTableChannel("btnInfo", UPDATE_BUTTON_BY_BTNID, 0L, 0L);
+        JdbcTemplate jdbcTemplate = tableChannel.getJdbcTemplate();
+        int result = 0;
+        try {
+            result += jdbcTemplate.update(tableChannel.getSql(),
+                    new Object[] {buttonInfo.getBtnName(), buttonInfo.getAppId(),buttonInfo.getBtnId()});
+        } catch (DataAccessException e) {
+            throw new LMException(LMExceptionFactor.LM_FAILURE_DB_OP);
+        }
+        return result > 0;
     }
 
     @Override
     public boolean deleteButton(String btnId) {
-        return false;
+        TableChannel tableChannel = tableContainer.getTableChannel("btnInfo", DELETE_BUTTON_BY_BTNID, 0L, 0L);
+        JdbcTemplate jdbcTemplate = tableChannel.getJdbcTemplate();
+        int result = 0;
+        try {
+            result += jdbcTemplate.update(tableChannel.getSql(), new Object[] {btnId});
+        } catch (DataAccessException e) {
+            throw new LMException(LMExceptionFactor.LM_FAILURE_DB_OP);
+        }
+        return result > 0;
     }
 }
