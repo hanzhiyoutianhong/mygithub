@@ -21,6 +21,7 @@ public class ConsumerService {
 
     public ConsumerAppInfo getConsumerAppInfo(long appId) {
         ConsumerAppInfo consumerAppInfo = consumerAppDao.getConsumerAppInfo(appId);
+        consumerAppInfo.setAppId((int)appId);
         return consumerAppInfo;
     }
 

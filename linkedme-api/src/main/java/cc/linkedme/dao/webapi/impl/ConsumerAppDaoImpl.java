@@ -8,6 +8,7 @@ import cc.linkedme.data.model.ConsumerAppInfo;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 
+import javax.annotation.Resource;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
@@ -24,7 +25,10 @@ public class ConsumerAppDaoImpl extends BaseDao implements ConsumerAppDao {
     private static final String ADD_CONSUMER_APP = "ADD_CONSUMER_APP";
     private static final String GET_CONSUMER_APP_INFO = "GET_CONSUMER_APP_INFO";
     private static final String GET_CONSUMER_APPS = "GET_CONSUMER_APPS";
-    private static final String GET_ALL_CONSUMER_APPS = "GET_CONSUMER_APPS";
+    private static final String GET_ALL_CONSUMER_APPS = "GET_ALL_CONSUMER_APPS";
+
+    @Resource
+    org.springframework.jdbc.core.JdbcTemplate consumerJdbcTemplate;
 
     @Override
     public int insertApp(ConsumerAppInfo consumerAppInfo) {
@@ -67,10 +71,9 @@ public class ConsumerAppDaoImpl extends BaseDao implements ConsumerAppDao {
         TableChannel tableChannel = tableContainer.getTableChannel("consumerAppInfo", GET_CONSUMER_APPS, 0L, 0L);
         String sql = tableChannel.getSql();
         Map namedParameters = Collections.singletonMap("listOfValues", appIds);
-        NamedParameterJdbcTemplate namedparameterJdbcTemplate =
-                new NamedParameterJdbcTemplate(tableChannel.getJdbcTemplate().getDataSource(false));
+        NamedParameterJdbcTemplate namedparameterJdbcTemplate = new NamedParameterJdbcTemplate(consumerJdbcTemplate);
         namedparameterJdbcTemplate.query(sql, namedParameters, new RowMapper() {
-            public Object mapRow(ResultSet rs, int i) throws SQLException {
+            public ConsumerAppInfo mapRow(ResultSet rs, int i) throws SQLException {
                 ConsumerAppInfo appInfo = new ConsumerAppInfo();
                 appInfo.setAppId(rs.getInt("app_id"));
                 appInfo.setAppName(rs.getString("app_name"));
@@ -88,7 +91,7 @@ public class ConsumerAppDaoImpl extends BaseDao implements ConsumerAppDao {
                 appInfo.setClientId(rs.getString("client_id"));
                 appInfo.setServerToken(rs.getString("server_token"));
                 appInfo.setStatus(rs.getInt("status"));
-                consumerApps.put((long)appInfo.getAppId(), appInfo);
+                consumerApps.put((long) appInfo.getAppId(), appInfo);
                 return null;
             }
         });

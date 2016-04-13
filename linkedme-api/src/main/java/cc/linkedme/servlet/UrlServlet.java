@@ -28,7 +28,7 @@ import org.springframework.web.context.support.WebApplicationContextUtils;
 /**
  * Created by LinkedME01 on 16/4/1.
  */
-public class UrlServlet extends HttpServlet{
+public class UrlServlet extends HttpServlet {
     private static final long serialVersionUID = 1L;
 
     private Parser userAgentParser;
@@ -66,24 +66,24 @@ public class UrlServlet extends HttpServlet{
      */
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         // TODO Auto-generated method stub
-        //eg, https://lkme.cc/hafzh/fhza80af; appId, deeplinkId;
+        // eg, https://lkme.cc/hafzh/fhza80af; appId, deeplinkId;
         String uri = request.getRequestURI();
         String[] uriArr = uri.split("/");
-        if(uriArr.length < 3) {
-            response.sendRedirect("/index.jsp");    // TODO 重定向为默认配置页面
-            //request.getRequestDispatcher("/index.jsp").forward(request, response);
+        if (uriArr.length < 3) {
+            response.sendRedirect("/index.jsp"); // TODO 重定向为默认配置页面
+            // request.getRequestDispatcher("/index.jsp").forward(request, response);
             return;
         }
         long appId = Base62.decode(uriArr[1]);
         long deepLinkId = Base62.decode(uriArr[2]);
-        DeepLink deepLink = deepLinkService.getDeepLinkInfo(deepLinkId, appId);   //根据deepLinkId获取deepLink信息
-        AppInfo appInfo = appService.getAppById(appId); //根据appId获取app信息
+        DeepLink deepLink = deepLinkService.getDeepLinkInfo(deepLinkId, appId); // 根据deepLinkId获取deepLink信息
+        AppInfo appInfo = appService.getAppById(appId); // 根据appId获取app信息
 
-        //useAgent
-        //使用yaml解析user agent,测试匹配优先级,速度,打日志统计时间,优化正则表达式(单个正则表达式,优先级);
+        // useAgent
+        // 使用yaml解析user agent,测试匹配优先级,速度,打日志统计时间,优化正则表达式(单个正则表达式,优先级);
         String userAgent = request.getHeader("user-agent");
         Client client = userAgentParser.parse(userAgent);
-        String userAgentFamily =  client.userAgent.family;
+        String userAgentFamily = client.userAgent.family;
         int userAgentMajor = 0;
         try {
             userAgentMajor = Integer.valueOf(client.userAgent.major);
@@ -92,11 +92,11 @@ public class UrlServlet extends HttpServlet{
         }
         String osFamily = client.os.family;
         String osMajor = client.os.major;
-        String deviceFamily  = client.device.family;
+        String deviceFamily = client.device.family;
         boolean isUniversallink = false;
         boolean isDownloadDirectly = false;
-        boolean isCannotDeeplink  = false;      //What do you means for CannotDeepLink?
-        boolean isCannotGetWinEvent = false;    //TODO
+        boolean isCannotDeeplink = false; // What do you means for CannotDeepLink?
+        boolean isCannotGetWinEvent = false; // TODO
         boolean isCannotGoMarket = false;
         boolean isForceUseScheme = false;
 
@@ -105,11 +105,11 @@ public class UrlServlet extends HttpServlet{
         boolean isIOS = false;
         boolean isAndroid = false;
         String platform;
-        if(osFamily.equals("iOS")) {
-            if(appInfo.getIos_search_option().equals("apple_store")) {
+        if (osFamily.equals("iOS")) {
+            if (appInfo.getIos_search_option().equals("apple_store")) {
                 url = appInfo.getIos_store_url();
                 isDownloadDirectly = true;
-            } else if(appInfo.getIos_search_option().equals("custom_url")) {
+            } else if (appInfo.getIos_search_option().equals("custom_url")) {
                 url = appInfo.getIos_custom_url();
                 isCannotGoMarket = true;
                 isDownloadDirectly = true;
@@ -125,10 +125,10 @@ public class UrlServlet extends HttpServlet{
 
             platform = "ios";
 
-        } else if(osFamily.equals("Android")) {
-            if(appInfo.getAndroid_search_option().equals("google_play")) {
+        } else if (osFamily.equals("Android")) {
+            if (appInfo.getAndroid_search_option().equals("google_play")) {
                 url = appInfo.getGoogle_paly_url();
-            } else if(appInfo.getAndroid_search_option().equals("custom_url")) {
+            } else if (appInfo.getAndroid_search_option().equals("custom_url")) {
                 url = appInfo.getAndroid_custom_url();
             }
             scheme = appInfo.getAndroid_uri_scheme();
@@ -136,15 +136,15 @@ public class UrlServlet extends HttpServlet{
 
             platform = "adr";
         } else {
-            //点击计数else,暂时都计pc
+            // 点击计数else,暂时都计pc
             platform = "pc";
         }
-        //PC
+        // PC
 
-        //iPad
+        // iPad
 
         final String type = platform + "_click";
-        //TODO 如果短链的访问量急剧增长,线程池扛不住,后续考虑推消息队列
+        // TODO 如果短链的访问量急剧增长,线程池扛不住,后续考虑推消息队列
         deepLinkCountThreadPool.submit(new Callable<Void>() {
             @Override
             public Void call() throws Exception {
@@ -164,27 +164,27 @@ public class UrlServlet extends HttpServlet{
         boolean isQQBrowser = false;
         boolean isFirefox = false;
         boolean isChrome = false;
-        boolean isUC = false;   //TODO
+        boolean isUC = false; // TODO
 
-        //DEBUG MODE
+        // DEBUG MODE
         boolean DEBUG = false;
 
 
         int browseMajor = 0;
 
-        //计数
+        // 计数
         if (userAgentFamily.equals("Chrome")) {
             isChrome = true;
-            browseMajor  = userAgentMajor;
-        } else if(userAgentFamily.equals("Firefox")) {
+            browseMajor = userAgentMajor;
+        } else if (userAgentFamily.equals("Firefox")) {
             isFirefox = true;
-        } else if(userAgentFamily.equals("WeChat")) {
+        } else if (userAgentFamily.equals("WeChat")) {
             isWechat = true;
-        } else if(userAgentFamily.equals("Weibo")) {
+        } else if (userAgentFamily.equals("Weibo")) {
             isWeibo = true;
-        } else if(userAgentFamily.equals("QQ Browser")) {
+        } else if (userAgentFamily.equals("QQ Browser")) {
             isQQBrowser = true;
-        } else if(userAgentFamily.equals("QQInner")) {
+        } else if (userAgentFamily.equals("QQInner")) {
             isQQ = true;
         }
 
@@ -192,24 +192,24 @@ public class UrlServlet extends HttpServlet{
         request.setAttribute("Pkg", appInfo.getAndroid_package_name());
         request.setAttribute("BundleID", appInfo.getIos_bundle_id());
         request.setAttribute("AppID", appId);
-        request.setAttribute("IconUrl", "");   //TODO
+        request.setAttribute("IconUrl", ""); // TODO
         request.setAttribute("Url", url);
         request.setAttribute("Match_id", uriArr[2]);
 
-        request.setAttribute("Download_msg", "");   //TODO
-        request.setAttribute("Download_btn_text", "");   //TODO
-        request.setAttribute("Download_title", "");   //TODO
+        request.setAttribute("Download_msg", ""); // TODO
+        request.setAttribute("Download_btn_text", ""); // TODO
+        request.setAttribute("Download_title", ""); // TODO
 
         request.setAttribute("Chrome_major", browseMajor);
         request.setAttribute("Ios_major", osMajor);
-        request.setAttribute("Redirect_url", "");   //TODO
+        request.setAttribute("Redirect_url", ""); // TODO
 
         request.setAttribute("YYB_url", "http://a.app.qq.com/o/simple.jsp?pkgname=" + appInfo.getAndroid_package_name());
         request.setAttribute("Scheme", scheme);
-        request.setAttribute("Host", "linkedme");           //TODO
-        request.setAttribute("AppInsStatus", 0);    //TODO
-        request.setAttribute("TimeStamp", System.currentTimeMillis());  //deepLink 创建时间?
-        request.setAttribute("DsTag", "");  //TODO
+        request.setAttribute("Host", "linkedme"); // TODO
+        request.setAttribute("AppInsStatus", 0); // TODO
+        request.setAttribute("TimeStamp", System.currentTimeMillis()); // deepLink 创建时间?
+        request.setAttribute("DsTag", ""); // TODO
 
         request.setAttribute("isIOS", isIOS);
         request.setAttribute("isAndroid", isAndroid);
@@ -229,6 +229,13 @@ public class UrlServlet extends HttpServlet{
         request.setAttribute("isForceUseScheme", isForceUseScheme);
 
         request.setAttribute("DEBUG", DEBUG);
+
+        if (isAndroid && isChrome && userAgentMajor >= 25) {
+            String location = "intent://linkedme?click_id=" + uriArr[2] + "#Intent;scheme=" + scheme + ";package="
+                    + appInfo.getAndroid_package_name() + ";S.browser_fallback_url=" + url + ";end";
+            response.sendRedirect(location);
+            return;
+        }
 
         RequestDispatcher dispatcher = request.getRequestDispatcher("/linkedme.jsp");
         dispatcher.forward(request, response);

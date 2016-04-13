@@ -8,15 +8,6 @@
        http://www.springframework.org/schema/wfc
        http://www.springframework.org/schema/wfc.xsd ">
 
-    <bean
-        class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">
-        <property name="locations">
-            <list>
-                <value>classpath:jdbc-test.properties</value>
-            </list>
-        </property>
-    </bean>
-
     <bean id="dataSource" abstract="true">
         <property name="driverClass">
             <value>com.mysql.jdbc.Driver</value>
@@ -157,6 +148,10 @@
         </property>
     </bean>
 
+    <bean id="consumerJdbcTemplate" class="org.springframework.jdbc.core.JdbcTemplate">
+        <property name = "dataSource" ref="datasources_consumer_0_s" />
+    </bean>
+
     <wfc:mysql id="datasources_consumer_0_m" parent="dataSource"
                strategy="master">
         <property name="jdbcUrl" value="${consumer.datasource.master_0.jdbcUrl}"/>
@@ -195,6 +190,28 @@
         <property name="dataSourceSlaves">
             <list>
                 <ref bean="datasources_client_0_s"/>
+            </list>
+        </property>
+    </bean>
+
+    <!-- ############## button count mysql ################# -->
+
+    <wfc:mysql id="datasources_btncount_0_m" parent="dataSource"
+               strategy="master">
+        <property name="jdbcUrl" value="${btncount.datasource.master_0.jdbcUrl}"/>
+    </wfc:mysql>
+    <wfc:mysql id="datasources_btncount_0_s" parent="dataSource"
+               strategy="slave">
+        <property name="jdbcUrl" value="${btncount.datasource.slave_0.jdbcUrl}"/>
+    </wfc:mysql>
+
+    <bean id="btncount_jdbctemplate_0" class="cc.linkedme.data.dao.util.JdbcTemplate">
+        <property name="dataSource">
+            <ref bean="datasources_btncount_0_m"/>
+        </property>
+        <property name="dataSourceSlaves">
+            <list>
+                <ref bean="datasources_btncount_0_s"/>
             </list>
         </property>
     </bean>

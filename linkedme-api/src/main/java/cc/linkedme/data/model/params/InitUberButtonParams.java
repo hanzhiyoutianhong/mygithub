@@ -15,8 +15,10 @@ public class InitUberButtonParams {
     public String btn_id;
     public float pickup_lat;
     public float pickup_lng;
+    public String pickup_label;
     public float dropoff_lat;
     public float dropoff_lng;
+    public String dropoff_label;
 
     public String getBtn_id() {
         return btn_id;
@@ -56,6 +58,23 @@ public class InitUberButtonParams {
 
     public void setDropoff_lng(float dropoff_lng) {
         this.dropoff_lng = dropoff_lng;
+    }
+
+
+    public String getPickup_label() {
+        return pickup_label;
+    }
+
+    public void setPickup_label(String pickup_label) {
+        this.pickup_label = pickup_label;
+    }
+
+    public String getDropoff_label() {
+        return dropoff_label;
+    }
+
+    public void setDropoff_label(String dropoff_label) {
+        this.dropoff_label = dropoff_label;
     }
 
 }

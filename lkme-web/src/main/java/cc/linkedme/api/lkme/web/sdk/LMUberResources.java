@@ -8,10 +8,8 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.MediaType;
 
-import cc.linkedme.commons.log.ApiLogger;
 import cc.linkedme.data.model.params.ClickBtnParams;
 import cc.linkedme.data.model.params.InitUberButtonParams;
-import cc.linkedme.uber.rides.client.model.WebhooksParams;
 import cc.linkedme.uber.rides.service.UberService;
 import org.springframework.stereotype.Component;
 
@@ -37,19 +35,6 @@ public class LMUberResources {
     public String clickBtn(ClickBtnParams clickBtnParams) {
         uberService.clickBtn(clickBtnParams);
         return "{}";
-    }
-
-
-    @Path("/webhooks")
-    @POST
-    @Produces({MediaType.APPLICATION_JSON})
-    public String webhooks(WebhooksParams webhooksParams) {
-
-        System.out.println(webhooksParams.event_id);
-        System.out.println(webhooksParams.toJson());
-        ApiLogger.info(webhooksParams.toJson());
-        String result = webhooksParams.toJson();
-        return result;
     }
 
     @Path("/test")

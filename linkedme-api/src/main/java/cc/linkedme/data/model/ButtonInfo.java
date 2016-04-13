@@ -126,6 +126,7 @@ public class ButtonInfo {
     public String toJson() {
         JSONObject json = new JSONObject();
         json.put("button_id", btnId);
+        json.put("button_name", btnName);
         json.put("consumer_app_id", consumerAppId);
         if (consumerAppInfo != null) {
             json.put("consumer_app_name", consumerAppInfo.getAppName());

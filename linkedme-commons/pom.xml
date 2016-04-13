@@ -115,13 +115,7 @@
             <artifactId>commons-pool</artifactId>
             <version>1.6</version>
         </dependency>
-        <dependency>
-            <groupId>com.google.collections</groupId>
-            <artifactId>google-collections</artifactId>
-            <version>1.0</version>
-            <type>jar</type>
-            <scope>compile</scope>
-        </dependency>
+
         <dependency>
             <groupId>org.jmock</groupId>
             <artifactId>jmock</artifactId>

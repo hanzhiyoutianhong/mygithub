@@ -11,11 +11,11 @@ import javax.xml.bind.annotation.XmlRootElement;
 @XmlRootElement
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class ClickBtnParams {
-    
+
     public String linkedme_key;
     public String btn_id;
     public String open_type;
-    public float price;
+    public String price;
     public String click_time;
 
     public String getLinkedme_key() {
@@ -42,11 +42,11 @@ public class ClickBtnParams {
         this.open_type = open_type;
     }
 
-    public float getPrice() {
+    public String getPrice() {
         return price;
     }
 
-    public void setPrice(float price) {
+    public void setPrice(String price) {
         this.price = price;
     }
 

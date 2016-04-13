@@ -21,7 +21,6 @@ import java.util.List;
  * Created by LinkedME01 on 16/4/7.
  */
 public class ButtonDaoImpl extends BaseDao implements ButtonDao {
-
     private static final String ADD_BUTTON = "ADD_BUTTON";
     private static final String GET_BUTTON_INFO = "GET_BUTTON_INFO";
     private static final String GET_BUTTONS_BY_APPID = "GET_BUTTONS_BY_APPID";
@@ -33,15 +32,15 @@ public class ButtonDaoImpl extends BaseDao implements ButtonDao {
         TableChannel tableChannel = tableContainer.getTableChannel("btnInfo", ADD_BUTTON, 0L, 0L);
         int result = 0;
         try {
-            result +=
-                    tableChannel.getJdbcTemplate().update(tableChannel.getSql(),
-                            new Object[] {buttonInfo.getBtnId(), buttonInfo.getBtnName(), buttonInfo.getAppId(),
-                                    buttonInfo.getConsumerAppId(), buttonInfo.getBtnCategory(), buttonInfo.getCheckStatus(),
-                                    buttonInfo.getOnlineStatus(), CONSUMER_ONLINE_STATUS});
+            result += tableChannel.getJdbcTemplate().update(tableChannel.getSql(),
+                    new Object[] {buttonInfo.getBtnId(), buttonInfo.getBtnName(), buttonInfo.getAppId(), buttonInfo.getConsumerAppId(),
+                            buttonInfo.getBtnCategory(), buttonInfo.getCheckStatus(), buttonInfo.getOnlineStatus(),
+                            CONSUMER_ONLINE_STATUS});
         } catch (DataAccessException e) {
             if (DaoUtil.isDuplicateInsert(e)) {
                 ApiLogger.info(new StringBuilder(128).append("Duplicate insert button, button_name=").append("button_name"));
-                throw new LMException(LMExceptionFactor.LM_FAILURE_DB_OP, "duplicate insert button table, button_name=" + buttonInfo.getBtnName());
+                throw new LMException(LMExceptionFactor.LM_FAILURE_DB_OP,
+                        "duplicate insert button table, button_name=" + buttonInfo.getBtnName());
             } else {
                 throw new LMException(LMExceptionFactor.LM_FAILURE_DB_OP);
             }
@@ -95,11 +94,17 @@ public class ButtonDaoImpl extends BaseDao implements ButtonDao {
     }
 
     @Override
-    public List<ButtonInfo> getButtonListByAppId(long appId) {
+    public List<ButtonInfo> getButtonListByAppId(long appId, boolean isAll) {
         TableChannel tableChannel = tableContainer.getTableChannel("btnInfo", GET_BUTTONS_BY_APPID, 0L, 0L);
         JdbcTemplate jdbcTemplate = tableChannel.getJdbcTemplate();
+        String sql = tableChannel.getSql();
+        Object[] params = new Object[] {appId};
+        if (!isAll) {
+            sql = sql + " and consumer_online_status = ? ";
+            params = new Object[] {appId, CONSUMER_ONLINE_STATUS};
+        }
         final List<ButtonInfo> buttons = new ArrayList<>();
-        jdbcTemplate.query(tableChannel.getSql(), new Object[] {appId, CONSUMER_ONLINE_STATUS}, new RowMapper() {
+        jdbcTemplate.query(sql, params, new RowMapper() {
             public Object mapRow(ResultSet rs, int i) throws SQLException {
                 ButtonInfo button = new ButtonInfo();
                 button.setAppId(appId);

@@ -54,19 +54,19 @@ public class BtnService {
     }
 
     public List<ButtonInfo> getButtons(long appId) {
-        //根据appId获取app的所有buttons
-        List<ButtonInfo> buttons = buttonDao.getButtonListByAppId(appId);
+        // 根据appId获取app的所有在线的button
+        List<ButtonInfo> buttons = buttonDao.getButtonListByAppId(appId, false);
         List<Long> consumerAppIds = new ArrayList<>(buttons.size());
-        for(ButtonInfo btn : buttons) {
-            if(btn != null) {
+        for (ButtonInfo btn : buttons) {
+            if (btn != null) {
                 consumerAppIds.add(btn.getConsumerAppId());
             }
         }
 
-        //根据buttons对应的consumerAppId获取button对应的ConsumerApp信息
+        // 根据buttons对应的consumerAppId获取button对应的ConsumerApp信息
         Map<Long, ConsumerAppInfo> consumerAppInfos = consumerAppDao.getConsumerAppList(consumerAppIds);
 
-        for(ButtonInfo btn : buttons) {
+        for (ButtonInfo btn : buttons) {
             btn.setConsumerAppInfo(consumerAppInfos.get(btn.getConsumerAppId()));
         }
         if (buttons.size() > 0) {
@@ -76,8 +76,27 @@ public class BtnService {
     }
 
     public List<ButtonInfo> getButtonsByBtnId(String btnId) {
-        //根据btnId获取此id对应的所有的历史button
+        // 根据btnId获取此id对应的所有的历史button
         List<ButtonInfo> buttons = buttonDao.getButtonListByBtnId(btnId);
+        return buttons;
+    }
+
+    public List<ButtonInfo> getAllButtonsByAppId(long appId) {
+        // 根据appId获取所有的button
+        List<ButtonInfo> buttons = buttonDao.getButtonListByAppId(appId, true);
+
+        List<Long> consumerAppIds = new ArrayList<>(buttons.size());
+        for (ButtonInfo btn : buttons) {
+            if (btn != null) {
+                consumerAppIds.add(btn.getConsumerAppId());
+            }
+        }
+
+        // 根据buttons对应的consumerAppId获取button对应的ConsumerApp信息
+        Map<Long, ConsumerAppInfo> consumerAppInfos = consumerAppDao.getConsumerAppList(consumerAppIds);
+        for (ButtonInfo btn : buttons) {
+            btn.setConsumerAppInfo(consumerAppInfos.get(btn.getConsumerAppId()));
+        }
         return buttons;
     }
 
