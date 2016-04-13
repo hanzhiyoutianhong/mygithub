@@ -81,4 +81,20 @@ public class BtnService {
         return buttons;
     }
 
+    public boolean deleteButton(String btnId) {
+        return buttonDao.deleteButton(btnId);
+    }
+
+    public boolean updateButtonByBtnId(ButtonParams buttonParams) {
+        //TODO
+        ButtonInfo buttonInfo = new ButtonInfo();
+        buttonInfo.setBtnId(buttonParams.button_id);
+        buttonInfo.setAppId(buttonParams.app_id);
+        buttonInfo.setBtnName(buttonParams.button_name);
+        if(buttonDao.updateButton(buttonInfo)) {
+            return true;
+        } else {
+            throw new LMException(LMExceptionFactor.LM_SYS_ERROR, "update button failed");
+        }
+    }
 }
