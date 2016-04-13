@@ -10,7 +10,8 @@ import java.util.List;
 public interface ButtonDao {
     int insertButton(ButtonInfo buttonInfo);
     ButtonInfo getButtonInfo(String btnId);
-    List<ButtonInfo> getButtonList(long appId);
+    List<ButtonInfo> getButtonListByBtnId(String btnId);
+    List<ButtonInfo> getButtonListByAppId(long appId, boolean isAll);
     boolean updateButton(ButtonInfo buttonInfo);
     boolean deleteButton(String btnId);
 }

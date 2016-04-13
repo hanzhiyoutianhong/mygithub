@@ -4,6 +4,7 @@ import cc.linkedme.commons.util.Base62;
 import cc.linkedme.commons.util.DeepLinkUtil;
 import cc.linkedme.data.model.DeepLink;
 import cc.linkedme.data.model.DeepLinkCount;
+import cc.linkedme.data.model.params.SummaryButtonParams;
 import cc.linkedme.data.model.params.SummaryDeepLinkParams;
 import cc.linkedme.service.webapi.SummaryService;
 import net.sf.json.JSONObject;
@@ -31,24 +32,24 @@ public class Summary {
 
     @Path("/deeplinks_count")
     @GET
-    @Produces({MediaType.APPLICATION_JSON})
+    @Produces(MediaType.APPLICATION_JSON)
     public String getDeepLinkSummary(@QueryParam("app_id") long appid,
-                          @QueryParam("start_date") String start_date,
-                          @QueryParam("end_date") String end_date,
-                          @QueryParam("feature") String feature,
-                          @QueryParam("campaign") String campaign,
-                          @QueryParam("stage") String stage,
-                          @QueryParam("channel") String channel,
-                          @QueryParam("tag") String tag,
-                          @QueryParam("source") String source,
-                          @QueryParam("unique") boolean unique,
-                          @QueryParam("return_number") int return_number,
-                          @QueryParam("skip_number") int skip_number,
-                          @QueryParam("orderby") String orderby) {
+                                     @QueryParam("start_date") String start_date,
+                                     @QueryParam("end_date") String end_date,
+                                     @QueryParam("feature") String feature,
+                                     @QueryParam("campaign") String campaign,
+                                     @QueryParam("stage") String stage,
+                                     @QueryParam("channel") String channel,
+                                     @QueryParam("tag") String tag,
+                                     @QueryParam("source") String source,
+                                     @QueryParam("unique") boolean unique,
+                                     @QueryParam("return_number") int return_number,
+                                     @QueryParam("skip_number") int skip_number,
+                                     @QueryParam("orderby") String orderby) {
 
-        SummaryDeepLinkParams summaryDeepLinkParams = new SummaryDeepLinkParams(appid, start_date, end_date, feature, campaign, stage, channel, tag, source, unique, return_number, skip_number, orderby);
-
-        Map<Long, DeepLinkCount> countMap = summaryService.getDeepLinkSummary( summaryDeepLinkParams );
+        SummaryDeepLinkParams summaryDeepLinkParams = new SummaryDeepLinkParams(appid, start_date, end_date, feature, campaign, stage,
+                channel, tag, source, unique, return_number, skip_number, orderby);
+        Map<Long, DeepLinkCount> countMap = summaryService.getDeepLinkSummary(summaryDeepLinkParams);
         int deepLinkCounts = countMap.size();
         int ios_click = 0;
         int ios_install = 0;
@@ -123,5 +124,64 @@ public class Summary {
         resultJson.put( "install", install );
 
         return resultJson.toString();
+    }
+
+    @Path("/get_income_rank")
+    @GET
+    @Produces(MediaType.APPLICATION_JSON)
+    public String getIncome(@QueryParam("user_id") long user_id,
+                            @QueryParam("app_id") long app_id,
+                            @QueryParam("start_date") String start_date,
+                            @QueryParam("end_date") String end_date,
+                            @QueryParam("return_number") int return_number,
+                            @QueryParam("order_by") String order_by) {
+
+        SummaryButtonParams summaryButtonParams = new SummaryButtonParams(user_id, app_id, start_date, end_date, return_number, order_by);
+        String result = summaryService.getButtonsIncome(summaryButtonParams);
+        return result;
+    }
+
+    @Path("/get_income_history")
+    @GET
+    @Produces(MediaType.APPLICATION_JSON)
+    public String getHistoryIncome(@QueryParam("user_id") long user_id,
+                                   @QueryParam("app_id") long app_id,
+                                   @QueryParam("start_date") String start_date,
+                                   @QueryParam("end_date") String end_date,
+                                   @QueryParam("interval") int interval) {
+
+        SummaryButtonParams summaryButtonParams = new SummaryButtonParams(user_id, app_id, start_date, end_date, interval);
+        String result = summaryService.getHistoryIncome(summaryButtonParams);
+        return result;
+    }
+
+    @Path("/btn_count_history")
+    @GET
+    @Produces(MediaType.APPLICATION_JSON)
+    public String getBtnCountHistory(@QueryParam("user_id") long user_id,
+                              @QueryParam("app_id") long app_id,
+                              @QueryParam("button_id") String button_id,
+                              @QueryParam("start_date") String start_date,
+                              @QueryParam("end_date") String end_date,
+                              @QueryParam("interval") int interval) {
+
+        SummaryButtonParams summaryButtonParams = new SummaryButtonParams(user_id, app_id, start_date, end_date, button_id, interval);
+        String result = summaryService.getBtnHistoryCounts(summaryButtonParams);
+        return result;
+    }
+
+    @Path("/btn_count")
+    @GET
+    @Produces(MediaType.APPLICATION_JSON)
+    public String getBtnCount(@QueryParam("user_id") long user_id,
+                              @QueryParam("app_id") long app_id,
+                              @QueryParam("button_id") String button_id,
+                              @QueryParam("start_date") String start_date,
+                              @QueryParam("end_date") String end_date,
+                              @QueryParam("interval") int interval) {
+
+        SummaryButtonParams summaryButtonParams = new SummaryButtonParams(user_id, app_id, start_date, end_date, button_id, interval);
+        String result = summaryService.getBtnClickAndOrderCounts(summaryButtonParams);
+        return result;
     }
 }

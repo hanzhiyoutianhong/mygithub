@@ -79,7 +79,7 @@ public class LMSdkResources {
 
         JSONObject paramJson = JSONObject.fromObject(deepLinkParam);
         JSONObject resultJson = new JSONObject();
-        resultJson.put("session_id", System.currentTimeMillis());
+        resultJson.put("session_id", String.valueOf(System.currentTimeMillis()));
         resultJson.put("identity_id", openParams.identity_id);
         resultJson.put("device_fingerprint_id", openParams.device_fingerprint_id);
         resultJson.put("browser_fingerprint_id", "");

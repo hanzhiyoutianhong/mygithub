@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:schemaLocation="
+       http://www.springframework.org/schema/beans
+       http://www.springframework.org/schema/beans/spring-beans.xsd ">
+
+    <bean id="btnCountDao" class="cc.linkedme.dao.webapi.impl.BtnCountDaoImpl">
+        <property name="tableContainer">
+            <bean class="cc.linkedme.data.dao.strategy.TableContainer">
+                <property name="tablesItems">
+                    <map>
+                        <entry key="btnCount" value-ref="btnCount"/>
+                    </map>
+                </property>
+            </bean>
+        </property>
+    </bean>
+
+    <bean id="btnCount" class="cc.linkedme.data.dao.strategy.TableItem">
+        <property name="itemName" value="btnCount"/>
+        <property name="dbNamePrefix" value="count"/>
+        <property name="dbCount" value="1"/>
+
+        <property name="tableNamePrefix" value="button_count"/>
+        <property name="tableCount" value="1"/>
+        <property name="sqls">
+            <map>
+                <entry key="ADD_CONSUMER_APP_COUNT" value="insert into $db$.$tb$ (btn_id, btn_name, app_id, consumer_app_id, btn_category, creation_time, check_status, online_status, consumer_online_status) values(?, ?, ?, ?, ?, now(), ?, ?, ?)"/>
+                <entry key="GET_CONSUMER_APP_COUNT" value="select btn_id, date, view_count, click_count, open_app_count, open_web_count, open_other_count, order_count, income from $db$.$tb$ where app_id = ? and consumer_id = ?"/>
+                <entry key="GET_CONSUMER_APP_INCOME" value="select btn_id, date, income from $db$.$tb$ where app_id = ? "/>
+            </map>
+        </property>
+        <property name="jdbcTemplates">
+            <list>
+                <ref bean="btncount_jdbctemplate_0"/>
+            </list>
+        </property>
+    </bean>
+
+</beans>

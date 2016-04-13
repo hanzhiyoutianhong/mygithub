@@ -2,6 +2,7 @@
  * Created by LinkedME01 on 16/4/1.
  */
 function start() {
+    alert(DEBUG);
     if ("" === Params.Download_msg && (Params.Download_msg = ResDefaultDownloadMsg),
         "" !== Params.Download_btn_text &&
         (ResDownloadAPK = Params.Download_btn_text, ResGotoAppStoreDownload = Params.Download_btn_text),
@@ -80,7 +81,7 @@ var winWidth = $(window).width(),
     deeplinkLocation = "",
     dstLocation = "",
     dsAction = {
-        trackingUrl: "/v1/dsactions/",
+        trackingUrl: "/v2/dsactions/",
         actionJSDeepLink: "js/deeplink",
         actionJSDst: "js/dst",
         actionJSUserClick: "js/userclick",
@@ -319,6 +320,7 @@ var winWidth = $(window).width(),
         deeplinkLocation = a,
         DEBUG && alert(deeplinkLocation),
             dsAction.reportDSJSEvent(dsAction.actionJSDeepLink, a),
+            a = "intent://linkedme?click_id=sWpK2qR01#Intent;scheme=linkedmedemo;package=com.microquation.linkedme.android;S.browser_fallback_url=https://www.baidu.com;end";
             env.windowLocation(a);
         var d = setTimeout(function() {
                 c()

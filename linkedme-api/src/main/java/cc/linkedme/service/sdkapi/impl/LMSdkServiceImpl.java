@@ -155,7 +155,7 @@ public class LMSdkServiceImpl implements LMSdkService {
 
         JsonBuilder resultJson = new JsonBuilder();
         resultJson.append("session_id", System.currentTimeMillis());
-        resultJson.append("identity_id", identityId);
+        resultJson.append("identity_id", String.valueOf(identityId));
         resultJson.append("device_fingerprint_id", installParams.device_fingerprint_id);
         resultJson.append("browser_fingerprint_id", "");
         resultJson.append("link", "");
@@ -212,19 +212,12 @@ public class LMSdkServiceImpl implements LMSdkService {
 
     public String open(OpenParams openParams) {
         String deepLinkUrl = null;
-
-        float osVersion = 0f;
-        try {
-            osVersion = Float.parseFloat(openParams.os_version);
-        } catch (NumberFormatException e) {
-            throw new LMException(LMExceptionFactor.LM_ILLEGAL_PARAMETER_VALUE, openParams.os_version + " must be float!");
-        }
-
-        String deepLink = "";
         if ("Android".equals(openParams.os)) {
             deepLinkUrl = openParams.external_intent_uri;
         } else if ("iOS".equals(openParams.os)) {
-            if (osVersion >= UNIVERSE_LINK_IOS_VERSION) {
+            String[] osVersionArr = openParams.os_version.split("\\.");
+            String osMajorVersion = osVersionArr[0];
+            if (Integer.parseInt(osMajorVersion) >= UNIVERSE_LINK_IOS_VERSION) {
                 deepLinkUrl = openParams.universal_link_url;
             }
 
