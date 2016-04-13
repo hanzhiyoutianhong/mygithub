@@ -36,7 +36,8 @@ public class SummaryService {
         String start_date = summaryDeepLinkParams.startDate;
         String end_date = summaryDeepLinkParams.endDate;
 
-        SimpleDateFormat sdf = new SimpleDateFormat( "2016-04-01 00:00:00" );
+        String onlineTime = "2016-04-01 00:00:00";
+        SimpleDateFormat sdf = new SimpleDateFormat( onlineTime );
 
         try {
             Date onlineDate = sdf.parse( "2016-04-01 00:00:00" );
@@ -44,19 +45,19 @@ public class SummaryService {
             Date edDate = sdf.parse( end_date );
             Date currentDate = sdf.parse( sdf.format( new Date() ) );
 
-            if(stDate.after( edDate )
-                    || stDate.before( onlineDate )
-                    || edDate.before( onlineDate )
-                    || stDate.after( currentDate )
-                    || edDate.after( currentDate ) ) {
-                throw new LMException(LMExceptionFactor.LM_WRONG_DATE_DURATION);
+            if( stDate.after( currentDate ) || edDate.before( onlineDate ) ) {
+                throw new LMException( LMExceptionFactor.LM_ILLEGAL_PARAM_VALUE )
+            }
+            else {
+                if( stDate.before( onlineDate ) )
+                    start_date = onlineTime;
+                if( edDate.after( currentDate ) )
+                    end_date = currentDate.toString();
             }
         } catch (ParseException e) {
             e.printStackTrace();
         }
 
-
-        //TODO check date Duration
         List<DateDuration> dateDurations = Util.getBetweenMonths(start_date, end_date);
         List<DeepLink> deepLinks = new ArrayList<DeepLink>();
 
