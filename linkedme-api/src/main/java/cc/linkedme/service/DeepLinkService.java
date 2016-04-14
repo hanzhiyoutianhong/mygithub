@@ -43,10 +43,6 @@ public class DeepLinkService {
      * 根据deepLinkId和appId获取deepLink的信息
      */
     public DeepLink getDeepLinkInfo(long deepLinkId, long appId) {
-        return deepLinkDao.getDeepLinkInfo(deepLinkId, appId);
-    }
-
-    public DeepLink getDeepLinkParam(long deepLinkId, long appId) {
         // 先从mc里取,如果没有取到,则从mysql里取
         // 从mysql里取到后,回中到mc
         DeepLink deepLink;

@@ -40,7 +40,7 @@ public class App {
     @Resource
     private AppService appService;
 
-    public static final String ImgPath = "D:/LinkedMe/";
+    public static final String ImgPath = "/Users/LinkedME01/Pictures";
 
     @Path("/create_app")
     @POST

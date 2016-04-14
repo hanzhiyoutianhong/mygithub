@@ -81,7 +81,7 @@ public class UrlServlet extends HttpServlet {
             urlParam = uriArr[3];
         }
         DeepLink deepLink = deepLinkService.getDeepLinkInfo(deepLinkId, appId); // 根据deepLinkId获取deepLink信息
-        AppInfo appInfo = appService.getAppById(appId); // 根据appId获取app信息
+        AppInfo appInfo = appService.getAppById(appId); // 根据appId获取app信息 TODO 添加appInfo添加mc
 
         // useAgent
         // 使用yaml解析user agent,测试匹配优先级,速度,打日志统计时间,优化正则表达式(单个正则表达式,优先级);

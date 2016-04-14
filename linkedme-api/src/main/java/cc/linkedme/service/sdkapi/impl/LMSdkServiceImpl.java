@@ -125,7 +125,7 @@ public class LMSdkServiceImpl implements LMSdkService {
             if (identityIdAndDeepLinkId.length == 2) { // 匹配成功
                 identityId = Long.parseLong(identityIdAndDeepLinkId[0]);
                 deepLinkId = Long.parseLong(identityIdAndDeepLinkId[1]);
-                deepLink = deepLinkService.getDeepLinkParam(deepLinkId, appId);
+                deepLink = deepLinkService.getDeepLinkInfo(deepLinkId, appId);
 
             } else {
                 // 匹配不成功, 生成identity_id
@@ -149,13 +149,13 @@ public class LMSdkServiceImpl implements LMSdkService {
                                                            // browse_fingerprint_id匹配成功
                     long rightIdentityId = Long.parseLong(identityIdAndDeepLinkId[0]);
                     long dlId = Long.parseLong(identityIdAndDeepLinkId[1]);
-                    deepLink = deepLinkService.getDeepLinkParam(deepLinkId, appId);
+                    deepLink = deepLinkService.getDeepLinkInfo(deepLinkId, appId);
                     clientRedisClient.set(deviceId + ".old", identityId);
                     clientRedisClient.set(deviceId, rightIdentityId);
                 }
             } else { // 之前存在identityId, 并有identityId与deepLink的键值对
                 deepLinkId = Long.parseLong(deepLinkIdStr);
-                deepLink = deepLinkService.getDeepLinkParam(deepLinkId, appId);
+                deepLink = deepLinkService.getDeepLinkInfo(deepLinkId, appId);
             }
         }
 
@@ -256,7 +256,7 @@ public class LMSdkServiceImpl implements LMSdkService {
         }
         String clickId = getClickIdFromUri(deepLinkUrl);
         long deepLinkId = Base62.decode(clickId);
-        DeepLink deepLink = deepLinkService.getDeepLinkParam(deepLinkId, appId);
+        DeepLink deepLink = deepLinkService.getDeepLinkInfo(deepLinkId, appId);
         if (deepLink == null) {
             return null;
         }
