@@ -1,5 +1,6 @@
 package cc.linkedme.commons.exception;
 
+import org.apache.commons.httpclient.HttpsURL;
 import org.springframework.http.HttpStatus;
 
 import java.io.Serializable;
@@ -103,6 +104,12 @@ public class LMExceptionFactor implements Serializable {
      */
     public static final LMExceptionFactor LM_USER_WRONG_PWD =
             new LMExceptionFactor(HttpStatus.BAD_REQUEST, 40006, "wrong password", "密码错误");
+
+    /**
+     * getDeepLinks 时间区间错误
+     */
+    public static final LMExceptionFactor LM_WRONG_DATE_DURATION = new LMExceptionFactor(HttpStatus.BAD_REQUEST, 40007, "Invalid date duration!", "时间区间不合法!");
+
     /**
      * 接口不存在
      */
@@ -136,7 +143,6 @@ public class LMExceptionFactor implements Serializable {
      */
     public static final LMExceptionFactor LM_METHOD_ERROR = new LMExceptionFactor(HttpStatus.METHOD_NOT_ALLOWED, 40500,
             "HTTP METHOD is not suported for this request!", "请求的HTTP METHOD不支持!");
-
 
     /**
      * get and set

@@ -1,6 +1,9 @@
 package cc.linkedme.service.webapi;
 
 import cc.linkedme.commons.counter.component.CountComponent;
+import cc.linkedme.commons.exception.LMException;
+import cc.linkedme.commons.exception.LMExceptionFactor;
+import cc.linkedme.commons.util.Base62;
 import cc.linkedme.commons.redis.JedisPort;
 import cc.linkedme.commons.shard.ShardingSupportHash;
 import cc.linkedme.commons.util.Util;
@@ -55,6 +58,29 @@ public class SummaryService {
     public List<DeepLink> getDeepLinks(SummaryDeepLinkParams summaryDeepLinkParams) {
         String start_date = summaryDeepLinkParams.startDate;
         String end_date = summaryDeepLinkParams.endDate;
+
+        String onlineTime = "2016-04-01 00:00:00";
+        SimpleDateFormat sdf = new SimpleDateFormat( onlineTime );
+
+        try {
+            Date onlineDate = sdf.parse( "2016-04-01 00:00:00" );
+            Date stDate = sdf.parse( start_date );
+            Date edDate = sdf.parse( end_date );
+            Date currentDate = sdf.parse( sdf.format( new Date() ) );
+
+            if( stDate.after( currentDate ) || edDate.before( onlineDate ) ) {
+                throw new LMException( LMExceptionFactor.LM_ILLEGAL_PARAM_VALUE );
+            }
+            else {
+                if( stDate.before( onlineDate ) )
+                    start_date = onlineTime;
+                if( edDate.after( currentDate ) )
+                    end_date = currentDate.toString();
+            }
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+
         List<DateDuration> dateDurations = Util.getBetweenMonths(start_date, end_date);
         List<DeepLink> deepLinks = new ArrayList<DeepLink>();
 
@@ -100,6 +126,62 @@ public class SummaryService {
         }
         resultJson.put("ret", deepLinkJsonArr);
         return resultJson.toString();
+    }
+
+    public String getDeepLinkInfoByDeepLinkId( SummaryDeepLinkParams summaryDeepLinkParams ) {
+        DeepLink deepLinkInfo = deepLinkDao.getDeepLinkInfo( summaryDeepLinkParams.deepLinkId, summaryDeepLinkParams.appid );
+
+        Map<String, Integer> count = deepLinkCountComponent.getAll( summaryDeepLinkParams.deepLinkId );
+
+        DeepLinkCount deepLinkCount = new DeepLinkCount( summaryDeepLinkParams.deepLinkId );
+
+        if( count != null ) {
+            setDeepLinkCount( deepLinkCount, count );
+        }
+
+        JSONObject resultJson = new JSONObject();
+        resultJson.put( "deeplink_id", summaryDeepLinkParams.deepLinkId );
+
+        String deeplink_url = "www.lkme.cc";
+        deeplink_url += Base62.encode( deepLinkInfo.getAppId() );
+        deeplink_url += Base62.encode( summaryDeepLinkParams.deepLinkId );
+        resultJson.put( "deeplink_url", deeplink_url );
+
+        int click = deepLinkCount.getAdr_click() + deepLinkCount.getIos_click() + deepLinkCount.getPc_click();
+        int open = deepLinkCount.getAdr_open() + deepLinkCount.getIos_open() + deepLinkCount.getPc_adr_open() + deepLinkCount.getPc_ios_open();
+        int install = deepLinkCount.getAdr_install() + deepLinkCount.getIos_install() + deepLinkCount.getPc_adr_install() + deepLinkCount.getPc_ios_install();
+        resultJson.put( "click", click );
+        resultJson.put( "open", open );
+        resultJson.put( "install", install );
+        resultJson.put( "feature", deepLinkInfo.getFeature() );
+        resultJson.put( "campaign", deepLinkInfo.getCampaign() );
+        resultJson.put( "stage", deepLinkInfo.getStage() );
+        resultJson.put( "channel", deepLinkInfo.getChannel() );
+        resultJson.put( "unique", "0" );
+        resultJson.put( "tag", deepLinkInfo.getTags() );
+        resultJson.put( "creation_time", deepLinkInfo.getCreateTime() );
+        //TODO Judge source type
+        resultJson.put( "creation_type", deepLinkInfo.getSource() );
+
+        return resultJson.toString();
+    }
+
+    public int[] getDeepLikCounts( long deepLinkId ) {
+        int[] res = new int[3];
+
+        Map<String, Integer> count = deepLinkCountComponent.getAll( deepLinkId );
+
+        DeepLinkCount deepLinkCount = new DeepLinkCount( deepLinkId );
+
+        if( count != null ) {
+            setDeepLinkCount( deepLinkCount, count );
+        }
+
+        res[0] = deepLinkCount.getPc_click() + deepLinkCount.getIos_click() + deepLinkCount.getAdr_click();
+        res[1] = deepLinkCount.getIos_open() + deepLinkCount.getAdr_open() + deepLinkCount.getPc_adr_open() + deepLinkCount.getPc_ios_open();
+        res[2] = deepLinkCount.getPc_ios_install() + deepLinkCount.getAdr_install() + deepLinkCount.getIos_install() + deepLinkCount.getPc_adr_install();
+
+        return res;
     }
 
     public Map<Long, DeepLinkCount> getDeepLinkSummary(SummaryDeepLinkParams summaryDeepLinkParams) {
