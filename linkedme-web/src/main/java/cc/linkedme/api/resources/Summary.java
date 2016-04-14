@@ -26,7 +26,6 @@ import java.util.Map;
 @Path("summary")
 @Component
 public class Summary {
-
     @Resource
     private SummaryService summaryService;
 

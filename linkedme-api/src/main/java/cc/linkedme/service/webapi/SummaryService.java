@@ -3,6 +3,7 @@ package cc.linkedme.service.webapi;
 import cc.linkedme.commons.counter.component.CountComponent;
 import cc.linkedme.commons.exception.LMException;
 import cc.linkedme.commons.exception.LMExceptionFactor;
+import cc.linkedme.commons.log.ApiLogger;
 import cc.linkedme.commons.util.Base62;
 import cc.linkedme.commons.redis.JedisPort;
 import cc.linkedme.commons.shard.ShardingSupportHash;
@@ -66,16 +67,21 @@ public class SummaryService {
             Date onlineDate = sdf.parse("2016-04-01");
             Date stDate = sdf.parse(start_date);
             Date edDate = sdf.parse(end_date);
-            Date currentDate = sdf.parse(sdf.format(new Date()));
+            Date currentDate = new Date();
 
             if (stDate.after(currentDate) || edDate.before(onlineDate)) {
                 throw new LMException(LMExceptionFactor.LM_ILLEGAL_PARAM_VALUE);
             } else {
-                if (stDate.before(onlineDate)) start_date = onlineTime;
-                if (edDate.after(currentDate)) end_date = currentDate.toString();
+                if (stDate.before(onlineDate)) {
+                    start_date = onlineTime;
+                }
+                if (edDate.after(currentDate)) {
+                    end_date = sdf.format(currentDate);
+                }
             }
         } catch (ParseException e) {
-            e.printStackTrace();
+            ApiLogger.warn("SummaryService.getDeepLinks parse date failed", e);
+            throw new LMException(LMExceptionFactor.LM_ILLEGAL_PARAM_VALUE, "date param is illegal");
         }
 
         List<DateDuration> dateDurations = Util.getBetweenMonths(start_date, end_date);
@@ -139,7 +145,8 @@ public class SummaryService {
         JSONObject resultJson = new JSONObject();
         resultJson.put("deeplink_id", summaryDeepLinkParams.deepLinkId);
 
-        String deeplink_url = Constants.DEEPLINK_HTTPS_PREFIX + Base62.encode(deepLinkInfo.getAppId()) + Base62.encode(summaryDeepLinkParams.deepLinkId);
+        String deeplink_url =
+                Constants.DEEPLINK_HTTPS_PREFIX + Base62.encode(deepLinkInfo.getAppId()) + Base62.encode(summaryDeepLinkParams.deepLinkId);
         resultJson.put("deeplink_url", deeplink_url);
 
         int click = deepLinkCount.getAdr_click() + deepLinkCount.getIos_click() + deepLinkCount.getPc_click();
