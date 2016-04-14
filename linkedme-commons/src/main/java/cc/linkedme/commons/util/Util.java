@@ -20,6 +20,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import cc.linkedme.commons.exception.LMException;
+import cc.linkedme.commons.exception.LMExceptionFactor;
 import cc.linkedme.data.dao.util.DateDuration;
 import org.apache.commons.lang.ArrayUtils;
 import org.apache.commons.lang.StringUtils;
@@ -773,7 +774,7 @@ public class Util {
             return format.parse(timeStr);
         } catch (ParseException e) {
             ApiLogger.error("Util.timeStrToDate parse date failed", e);
-            throw new LMException("Util.timeStrToDate parse date failed");
+            throw new LMException(LMExceptionFactor.LM_ILLEGAL_PARAM_VALUE, "Util.timeStrToDate parse date failed");
         }
     }
 
@@ -790,13 +791,13 @@ public class Util {
         Calendar end_date_max = Calendar.getInstance();
 
         try {
-            start_date_min.setTime( sdf.parse( minDate ) );
-            start_date_max.setTime( sdf.parse( minDate ) );
-            start_date_max.set( Calendar.DAY_OF_MONTH, start_date_max.getActualMaximum( Calendar.DAY_OF_MONTH ) );
+            start_date_min.setTime(sdf.parse(minDate));
+            start_date_max.setTime(sdf.parse(minDate));
+            start_date_max.set(Calendar.DAY_OF_MONTH, start_date_max.getActualMaximum(Calendar.DAY_OF_MONTH));
 
-            end_date_min.setTime( sdf.parse( maxDate ) );
-            end_date_min.set( Calendar.DAY_OF_MONTH, end_date_min.getActualMinimum( Calendar.DAY_OF_MONTH ) );
-            end_date_max.setTime( sdf.parse( maxDate ) );
+            end_date_min.setTime(sdf.parse(maxDate));
+            end_date_min.set(Calendar.DAY_OF_MONTH, end_date_min.getActualMinimum(Calendar.DAY_OF_MONTH));
+            end_date_max.setTime(sdf.parse(maxDate));
 
 
             min.setTime(sdf.parse(minDate));
@@ -807,7 +808,7 @@ public class Util {
 
         } catch (ParseException e) {
             ApiLogger.error("Util.getBetweenMonths parse time failed", e);
-            throw new LMException("Util.getBetweenMonths parse date failed");
+            throw new LMException(LMExceptionFactor.LM_ILLEGAL_PARAM_VALUE, "Util.getBetweenMonths parse date failed");
         }
 
         if( min.equals(max) ) {
@@ -860,8 +861,8 @@ public class Util {
         String end_month = "2016-07-20";
         List<DateDuration> months = getBetweenMonths( start_month, end_month );
 
-        for( int i = 0; i < months.size(); i++ ) {
-            System.out.println( months.get(i).getMin_date() + "-->" + months.get(i).getMax_date() );
+        for (int i = 0; i < months.size(); i++) {
+            System.out.println(months.get(i).getMin_date() + "-->" + months.get(i).getMax_date());
         }
     }
 

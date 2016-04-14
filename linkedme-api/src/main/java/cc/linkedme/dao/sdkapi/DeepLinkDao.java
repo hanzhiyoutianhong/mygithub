@@ -19,5 +19,4 @@ public interface DeepLinkDao {
 
     DeepLink getUrlInfo( long deepLinkId, long appid);
 
-    boolean
 }

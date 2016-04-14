@@ -25,7 +25,6 @@ import cc.linkedme.service.webapi.SummaryService;
 @Path("summary")
 @Component
 public class Summary {
-
     @Resource
     private SummaryService summaryService;
 
