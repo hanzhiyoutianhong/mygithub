@@ -147,6 +147,7 @@ public class DeepLinkService {
 //            "params":{ "key1":"value1", "key2":"value2"} // 自定义参数
 
     public boolean updateUrl( UrlParams urlParams ) {
+        int updateUrlCnt = deepLinkDao.updateUrlInfo( urlParams );
         return true;
     }
 

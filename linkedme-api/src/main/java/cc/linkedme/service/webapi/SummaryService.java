@@ -15,14 +15,10 @@ import org.springframework.stereotype.Service;
 import cc.linkedme.commons.counter.component.CountComponent;
 import cc.linkedme.commons.exception.LMException;
 import cc.linkedme.commons.exception.LMExceptionFactor;
-<<<<<<< HEAD
-=======
 import cc.linkedme.commons.log.ApiLogger;
 import cc.linkedme.commons.util.Base62;
->>>>>>> master
 import cc.linkedme.commons.redis.JedisPort;
 import cc.linkedme.commons.shard.ShardingSupportHash;
-import cc.linkedme.commons.util.Base62;
 import cc.linkedme.commons.util.Constants;
 import cc.linkedme.commons.util.Util;
 import cc.linkedme.dao.sdkapi.DeepLinkDao;
