@@ -30,6 +30,9 @@ import java.util.List;
 @Path("btn")
 @Component
 public class Button {
+    public static final String STR_TRUE = "{\"ret\" : \"true\"}";
+    public static final String STR_FALSE = "{\"ret\" : \"false\"}";
+
     @Resource
     BtnService btnService;
 
@@ -141,11 +144,13 @@ public class Button {
         if (Strings.isNullOrEmpty(buttonParams.getButton_id())) {
             throw new LMException(LMExceptionFactor.LM_ILLEGAL_PARAM_VALUE, "button_id is null");
         }
-
+        if (buttonParams.online_status < 0 || buttonParams.online_status > 1) {
+            throw new LMException(LMExceptionFactor.LM_MISSING_PARAM, "online_status != 0 or >1");
+        }
         if(btnService.updateButtonByBtnId(buttonParams)) {
-            return "{\"ret\" : \"true\"}";
+            return STR_TRUE;
         } else {
-            return "{\"ret\" : \"false\"}";
+            return STR_FALSE;
         }
     }
 

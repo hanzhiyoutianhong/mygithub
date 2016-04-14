@@ -105,11 +105,11 @@ public class BtnService {
     }
 
     public boolean updateButtonByBtnId(ButtonParams buttonParams) {
-        //TODO
         ButtonInfo buttonInfo = new ButtonInfo();
         buttonInfo.setBtnId(buttonParams.button_id);
         buttonInfo.setAppId(buttonParams.app_id);
         buttonInfo.setBtnName(buttonParams.button_name);
+        buttonInfo.setOnlineStatus(buttonParams.online_status);
         if(buttonDao.updateButton(buttonInfo)) {
             return true;
         } else {
