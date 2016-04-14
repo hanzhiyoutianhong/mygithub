@@ -76,7 +76,10 @@ public class UrlServlet extends HttpServlet {
         }
         long appId = Base62.decode(uriArr[1]);
         long deepLinkId = Base62.decode(uriArr[2]);
-        String urlParam = uriArr[3];
+        String urlParam = "";
+        if(uriArr.length > 3) {
+            urlParam = uriArr[3];
+        }
         DeepLink deepLink = deepLinkService.getDeepLinkInfo(deepLinkId, appId); // 根据deepLinkId获取deepLink信息
         AppInfo appInfo = appService.getAppById(appId); // 根据appId获取app信息
 
