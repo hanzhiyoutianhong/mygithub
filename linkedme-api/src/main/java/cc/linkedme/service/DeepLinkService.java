@@ -128,27 +128,8 @@ public class DeepLinkService {
         return resultJson.toString();
     }
 
-//            "userid" : "", // 用户id
-//            "app_id" : "", // app id
-//            "type" : "", // live 或 test
-//            "link_label" : "", // 自定义短链名称，和域名 https://lkme.cc/链在一起构成短链主体,目前不支持，该值先忽略
-//            "ios_use_default" : "true|false", // 是否使用ios默认设置
-//            "ios_custom_url" : "", // ios自定义短链跳转地址
-//            "android_use_default" : "true|false", // 是否使用android默认设置
-//            "android_custom_url" : "", // android自定义短链跳转地址
-//            "desktop_use_default" : "true|false", // 是否使用desktop默认设置
-//            "desktop_custom_url" : "" // desktop自定义短链跳转地址
-//            "feature":["feature1","feature2"], // 功能
-//            "campaign":["campaign1","campaign2"], // 活动
-//            "stage":["stage1","stage2"], // 阶段
-//            "channel":["channel1","channel2"], // 渠道
-//            "tags":["tag1","tag2"], // 标签
-//            "source":"dashboard", // 来源
-//            "params":{ "key1":"value1", "key2":"value2"} // 自定义参数
-
     public boolean updateUrl( UrlParams urlParams ) {
-        int updateUrlCnt = deepLinkDao.updateUrlInfo( urlParams );
-        return true;
+        return deepLinkDao.updateUrlInfo(urlParams);
     }
 
 }

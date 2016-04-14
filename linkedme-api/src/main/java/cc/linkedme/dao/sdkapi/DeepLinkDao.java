@@ -1,6 +1,7 @@
 package cc.linkedme.dao.sdkapi;
 
 import cc.linkedme.data.model.DeepLink;
+import cc.linkedme.data.model.params.UrlParams;
 
 import java.util.List;
 
@@ -18,5 +19,7 @@ public interface DeepLinkDao {
     boolean deleteDeepLink(long deepLinkId, long appId);
 
     DeepLink getUrlInfo( long deepLinkId, long appid);
+
+    boolean updateUrlInfo(UrlParams urlParams);
 
 }

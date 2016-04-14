@@ -8,6 +8,7 @@ import cc.linkedme.dao.sdkapi.DeepLinkDao;
 import cc.linkedme.data.dao.util.JdbcTemplate;
 import cc.linkedme.data.model.AppInfo;
 import cc.linkedme.data.model.params.SummaryDeepLinkParams;
+import cc.linkedme.data.model.params.UrlParams;
 import com.google.api.client.repackaged.com.google.common.base.Strings;
 import org.springframework.dao.DataAccessException;
 
@@ -35,6 +36,7 @@ public class DeepLinkDaoImpl extends BaseDao implements DeepLinkDao {
     private static final String GET_DEEPLINK_INFO = "GET_DEEPLINK_INFO";
     private static final String DELETE_DEEPLINK = "DELETE_DEEPLINK";
     private static final String GET_URL_INFO = "GET_URL_INFO";
+    private static final String UPDATE_URL_INFO = "UPDATE_URL_INFO";
 
     public int addDeepLink(DeepLink deepLink) {
         int result = 0;
@@ -228,5 +230,54 @@ public class DeepLinkDaoImpl extends BaseDao implements DeepLinkDao {
             throw new LMException(LMExceptionFactor.LM_FAILURE_DB_OP);
         }
         return result > 0;
+    }
+
+    public boolean updateUrlInfo( UrlParams urlParams ) {
+        long deepLinkId = urlParams.deeplink_id;
+        long appId = urlParams.app_id;
+        Date date = UuidHelper.getDateFromId(deepLinkId);
+        TableChannel tableChannel = tableContainer.getTableChannel("deeplink", UPDATE_URL_INFO, appId, date);
+        int result = 0;
+
+        long userid = urlParams.user_id;
+        boolean ios_use_default = urlParams.ios_use_default;
+        String ios_custom_url = urlParams.ios_custom_url;
+        boolean android_use_default = urlParams.android_use_default;
+        String android_custom_url = urlParams.android_custom_url;
+        boolean desktop_use_default = urlParams.desktop_use_default;
+        String desktop_custom_url = urlParams.desktop_custom_url;
+        String feature = "";
+        for( int i = 0; i < urlParams.feature.length - 1; i++ )
+            feature = feature + urlParams.feature[i] + ",";
+        feature = feature + urlParams.feature[urlParams.feature.length-1];
+
+        String campaign = "";
+        for( int i = 0; i < urlParams.campaign.length - 1; i++ )
+            campaign = campaign + urlParams.campaign[i] + ",";
+        campaign = campaign + urlParams.campaign[urlParams.campaign.length-1];
+
+        String stage = "";
+        for( int i = 0; i < urlParams.stage.length - 1; i++ )
+            stage = stage + urlParams.stage[i] + ",";
+        stage = stage + urlParams.stage[urlParams.stage.length-1];
+
+        String channel = "";
+        for( int i = 0; i < urlParams.channel.length - 1; i++ )
+            channel = channel + urlParams.channel[i] + ",";
+        channel = channel + urlParams.channel[urlParams.channel.length-1];
+
+        String tags = "";
+        for( int i = 0; i < urlParams.tags.length - 1; i++ )
+            tags = tags + urlParams.tags[i] + ",";
+        tags = tags + urlParams.tags[urlParams.tags.length-1];
+
+        String source = urlParams.source;
+        String params = urlParams.params.toString();
+
+
+        result += tableChannel.getJdbcTemplate().update(tableChannel.getSql(), new Object[]{appId, ios_use_default, ios_custom_url, android_use_default, android_custom_url, desktop_use_default, desktop_custom_url, feature, campaign, stage, channel, tags, source, params, deepLinkId});
+        if( result == 1 )
+            return true;
+        return false;
     }
 }
