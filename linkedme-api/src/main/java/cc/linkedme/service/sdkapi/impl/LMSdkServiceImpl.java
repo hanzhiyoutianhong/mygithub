@@ -297,12 +297,33 @@ public class LMSdkServiceImpl implements LMSdkService {
             return null;
         }
         String param = deepLink.getParams();
-        JSONObject jsonObject = JSONObject.fromObject(param);
+        if (Strings.isNullOrEmpty(param)) {
+            return null;
+        }
+        JSONObject jsonObject;
+        try {
+            jsonObject = JSONObject.fromObject(param);
+        } catch (Exception e) {
+            ApiLogger.warn("LMSdkServiceImpl.getParamsFromDeepLink failed, param json is invalid", e);
+            return null;
+        }
 
-        String[] tags = deepLink.getTags().split(",");
-        String[] channel = deepLink.getChannel().split(",");
-        String[] feature = deepLink.getFeature().split(",");
-        String[] stage = deepLink.getStage().split(",");
+        String[] tags = new String[0];
+        String[] channel = new String[0];
+        String[] feature = new String[0];
+        String[] stage = new String[0];
+        if (!Strings.isNullOrEmpty(deepLink.getTags())) {
+            tags = deepLink.getTags().split(",");
+        }
+        if (!Strings.isNullOrEmpty(deepLink.getChannel())) {
+            channel = deepLink.getChannel().split(",");
+        }
+        if (!Strings.isNullOrEmpty(deepLink.getFeature())) {
+            feature = deepLink.getFeature().split(",");
+        }
+        if (!Strings.isNullOrEmpty(deepLink.getStage())) {
+            stage = deepLink.getStage().split(",");
+        }
 
         JSONArray tagsJson = JSONArray.fromObject(tags);
         JSONArray channelJson = JSONArray.fromObject(channel);
