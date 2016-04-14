@@ -31,6 +31,8 @@ import cc.linkedme.service.sdkapi.LMSdkService;
 
 import com.google.common.base.Joiner;
 import com.google.common.base.Strings;
+import net.sf.json.JSONArray;
+import net.sf.json.JSONObject;
 import org.apache.http.client.utils.URLEncodedUtils;
 import org.springframework.web.bind.ServletRequestUtils;
 
@@ -100,19 +102,31 @@ public class LMSdkServiceImpl implements LMSdkService {
         clientInfo.setIosTeamId(installParams.ios_team_id);
         clientInfo.setIosBundleId(installParams.ios_bundle_id);
 
-        String params = null;
+        // 根据linkedme_key获取appid和secret
+        JedisPort appKeyClient = clientShardingSupport.getClient(installParams.linkedme_key);
+        String appIdAndSecret = appKeyClient.get(installParams.linkedme_key);
+        long appId = 0;
+        String secret = null;
+        if (!Strings.isNullOrEmpty(appIdAndSecret)) {
+            String[] tmp = appIdAndSecret.split(",");
+            appId = Long.parseLong(tmp[0]);
+            secret = tmp[1];
+        }
+
         String deviceId = installParams.device_id;
         JedisPort clientRedisClient = clientShardingSupport.getClient(deviceId);
         String identityIdStr = clientRedisClient.get(deviceId);
         long identityId;
         long deepLinkId = 0;
+        DeepLink deepLink = null;
         if (Strings.isNullOrEmpty(identityIdStr)) { // 之前不存在identityId
             // device_fingerprint_id 与 browse_fingerprint_id匹配逻辑
             String[] identityIdAndDeepLinkId = matchDfpIdAndBfpId(installParams);
             if (identityIdAndDeepLinkId.length == 2) { // 匹配成功
                 identityId = Long.parseLong(identityIdAndDeepLinkId[0]);
                 deepLinkId = Long.parseLong(identityIdAndDeepLinkId[1]);
-                params = deepLinkService.getDeepLinkParam(deepLinkId);
+                deepLink = deepLinkService.getDeepLinkParam(deepLinkId, appId);
+
             } else {
                 // 匹配不成功, 生成identity_id
                 identityId = uuidCreator.nextId(1); // 1表示发号器的identity_id业务
@@ -135,22 +149,23 @@ public class LMSdkServiceImpl implements LMSdkService {
                                                            // browse_fingerprint_id匹配成功
                     long rightIdentityId = Long.parseLong(identityIdAndDeepLinkId[0]);
                     long dlId = Long.parseLong(identityIdAndDeepLinkId[1]);
-                    params = deepLinkService.getDeepLinkParam(deepLinkId);
+                    deepLink = deepLinkService.getDeepLinkParam(deepLinkId, appId);
                     clientRedisClient.set(deviceId + ".old", identityId);
                     clientRedisClient.set(deviceId, rightIdentityId);
                 }
             } else { // 之前存在identityId, 并有identityId与deepLink的键值对
                 deepLinkId = Long.parseLong(deepLinkIdStr);
-                params = deepLinkService.getDeepLinkParam(deepLinkId); // get params from mc
+                deepLink = deepLinkService.getDeepLinkParam(deepLinkId, appId);
             }
         }
 
-        clientInfo.setIdentityId(identityId);
+        String params = getParamsFromDeepLink(deepLink);
         long fromDeepLinkId = deepLinkId; // 用于统计一个deeplink带来的下载量
         if (Strings.isNullOrEmpty(params)) {
             fromDeepLinkId = 0;
         }
         // 写mcq
+        clientInfo.setIdentityId(identityId);
         clientMsgPusher.addClient(clientInfo, fromDeepLinkId);
 
         JsonBuilder resultJson = new JsonBuilder();
@@ -167,7 +182,7 @@ public class LMSdkServiceImpl implements LMSdkService {
 
     private String[] matchDfpIdAndBfpId(InstallParams installParams) {
         Joiner joiner = Joiner.on("&").skipNulls();
-        //TODO 生成指纹的时候加上appkey信息,去掉屏幕的三个信息
+        // TODO 生成指纹的时候加上appkey信息,去掉屏幕的三个信息
         String deviceFingerprintId = createFingerprintId(installParams.os, installParams.os_version, installParams.screen_dpi,
                 installParams.screen_height, installParams.screen_width);
         JedisPort clientRedisClient = clientShardingSupport.getClient(deviceFingerprintId);
@@ -182,7 +197,7 @@ public class LMSdkServiceImpl implements LMSdkService {
         return result;
     }
 
-    private String createFingerprintId(String os, String os_version, int screen_dpi, int screen_height, int screen_width) {
+    private static String createFingerprintId(String os, String os_version, int screen_dpi, int screen_height, int screen_width) {
         Joiner joiner = Joiner.on("&").skipNulls();
         String deviceParamsStr = joiner.join(os, os_version, screen_dpi, screen_height, screen_width);
         return MD5Utils.md5(deviceParamsStr);
@@ -190,15 +205,15 @@ public class LMSdkServiceImpl implements LMSdkService {
 
     private static String getClickIdFromUri(String deepLinkUrl) {
         String clickId = "";
-        if(deepLinkUrl.startsWith("http") || deepLinkUrl.startsWith("https")) {
+        if (deepLinkUrl.startsWith("http") || deepLinkUrl.startsWith("https")) {
             clickId = DeepLinkUtil.getDeepLinkFromUrl(deepLinkUrl);
         } else {
             try {
                 URI uri = new URI(deepLinkUrl);
                 String paramStr = uri.getQuery();
                 String[] params = paramStr.split("&");
-                for(String param: params) {
-                    if(param.split("=")[0].equals("click_id")) {
+                for (String param : params) {
+                    if (param.split("=")[0].equals("click_id")) {
                         clickId = param.split("=")[1];
                         break;
                     }
@@ -212,6 +227,17 @@ public class LMSdkServiceImpl implements LMSdkService {
 
     public String open(OpenParams openParams) {
         String deepLinkUrl = null;
+        // 根据linkedme_key获取appid和secret
+        JedisPort appKeyClient = clientShardingSupport.getClient(openParams.linkedme_key);
+        String appIdAndSecret = appKeyClient.get(openParams.linkedme_key);
+        long appId = 0;
+        String secret = null;
+        if (!Strings.isNullOrEmpty(appIdAndSecret)) {
+            String[] tmp = appIdAndSecret.split(",");
+            appId = Long.parseLong(tmp[0]);
+            secret = tmp[1];
+        }
+
         if ("Android".equals(openParams.os)) {
             deepLinkUrl = openParams.external_intent_uri;
         } else if ("iOS".equals(openParams.os)) {
@@ -226,47 +252,76 @@ public class LMSdkServiceImpl implements LMSdkService {
             }
 
         } else {
-            return "";
+            return null;
         }
         String clickId = getClickIdFromUri(deepLinkUrl);
         long deepLinkId = Base62.decode(clickId);
-        String param = deepLinkService.getDeepLinkParam(deepLinkId);
-        if (!Strings.isNullOrEmpty(param)) {
-            // count
-            String deviceType = null;
-            if (!Strings.isNullOrEmpty(openParams.os)) {
-                deviceType = openParams.os.trim().toLowerCase();
-            }
-            if ("android".equals(deviceType)) {
-                deviceType = "adr";
-            }
-            String countType = deviceType + "_open";
-            if (!DeepLinkCount.isValidCountType(countType)) {
-                // TODO 对deviceType做判断
-                countType = "other_" + "_open";
-            }
-            final String type = countType;
-            deepLinkCountThreadPool.submit(new Callable<Void>() {
-                @Override
-                public Void call() throws Exception {
-                    try {
-                        // TODO 对deeplink_id的有效性做判断
-                        deepLinkCountComponent.incr(deepLinkId, type, 1);
-                    } catch (Exception e) {
-                        ApiLogger.warn("LMSdkServiceImpl.open deepLinkCountThreadPool count failed", e);
-                    }
-                    return null;
-                }
-            });
+        DeepLink deepLink = deepLinkService.getDeepLinkParam(deepLinkId, appId);
+        if (deepLink == null) {
+            return null;
         }
-        return param;
+        String params = getParamsFromDeepLink(deepLink);
+
+        // count
+        String deviceType = null;
+        if (!Strings.isNullOrEmpty(openParams.os)) {
+            deviceType = openParams.os.trim().toLowerCase();
+        }
+        if ("android".equals(deviceType)) {
+            deviceType = "adr";
+        }
+        String countType = deviceType + "_open";
+        if (!DeepLinkCount.isValidCountType(countType)) {
+            // TODO 对deviceType做判断
+            countType = "other_" + "_open";
+        }
+        final String type = countType;
+        deepLinkCountThreadPool.submit(new Callable<Void>() {
+            @Override
+            public Void call() throws Exception {
+                try {
+                    // TODO 对deeplink_id的有效性做判断
+                    deepLinkCountComponent.incr(deepLinkId, type, 1);
+                } catch (Exception e) {
+                    ApiLogger.warn("LMSdkServiceImpl.open deepLinkCountThreadPool count failed", e);
+                }
+                return null;
+            }
+        });
+
+        return params;
+    }
+
+    private static String getParamsFromDeepLink(DeepLink deepLink) {
+        if (deepLink == null) {
+            return null;
+        }
+        String param = deepLink.getParams();
+        JSONObject jsonObject = JSONObject.fromObject(param);
+
+        String[] tags = deepLink.getTags().split(",");
+        String[] channel = deepLink.getChannel().split(",");
+        String[] feature = deepLink.getFeature().split(",");
+        String[] stage = deepLink.getStage().split(",");
+
+        JSONArray tagsJson = JSONArray.fromObject(tags);
+        JSONArray channelJson = JSONArray.fromObject(channel);
+        JSONArray featureJson = JSONArray.fromObject(feature);
+        JSONArray stageJson = JSONArray.fromObject(stage);
+
+        jsonObject.put("tags", tagsJson);
+        jsonObject.put("channel", channelJson);
+        jsonObject.put("feature", featureJson);
+        jsonObject.put("stage", stageJson);
+        return jsonObject.toString();
     }
 
     public String url(UrlParams urlParams) {
         Joiner joiner = Joiner.on("&").skipNulls();
         Joiner joiner2 = Joiner.on(",").skipNulls();
-        String urlParamsStr = joiner.join(urlParams.linkedme_key, joiner2.join(urlParams.tags), urlParams.alias,  joiner2.join(urlParams.channel),  joiner2.join(urlParams.feature),
-                joiner2.join(urlParams.stage), urlParams.params);
+        // linkedme_key & tags & alias & channel & feature & stage & params
+        String urlParamsStr = joiner.join(urlParams.linkedme_key, joiner2.join(urlParams.tags), urlParams.alias,
+                joiner2.join(urlParams.channel), joiner2.join(urlParams.feature), joiner2.join(urlParams.stage), urlParams.params);
         String deepLinkMd5 = MD5Utils.md5(urlParamsStr);
         // 从redis里查找md5是否存在
         // 如果存在,找出对应的deeplink_id,base62进行编码,
@@ -313,7 +368,7 @@ public class LMSdkServiceImpl implements LMSdkService {
         deepLinkMsgPusher.addDeepLink(link);
         String result = Constants.DEEPLINK_HTTPS_PREFIX + Base62.encode(appId) + "/" + Base62.encode(deepLinkId);
 
-        return result; // linkedme_key & tags & alias & channel & feature & stage & params
+        return result;
     }
 
     public void close(CloseParams closeParams) {

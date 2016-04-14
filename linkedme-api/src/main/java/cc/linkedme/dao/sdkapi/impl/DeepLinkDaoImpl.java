@@ -53,6 +53,7 @@ public class DeepLinkDaoImpl extends BaseDao implements DeepLinkDao {
         String feature = deepLink.getFeature();
         String stage = deepLink.getStage();
         String campaign = deepLink.getCampaign();
+        String params = deepLink.getParams();
         String source = deepLink.getSource();
         String sdk_version = deepLink.getSdkVersion();
 
@@ -69,7 +70,7 @@ public class DeepLinkDaoImpl extends BaseDao implements DeepLinkDao {
         try {
             result += tableChannel.getJdbcTemplate().update(tableChannel.getSql(),
                     new Object[] {deeplink_id, deeplink_md5, linkedme_key, identity_id, appid, create_time, tags, alias, channel, feature,
-                            stage, campaign, source, sdk_version, link_label, ios_use_default, ios_custom_url, android_use_default,
+                            stage, campaign, params, source, sdk_version, link_label, ios_use_default, ios_custom_url, android_use_default,
                             android_custom_url, desktop_use_default, desktop_custom_url});
         } catch (DataAccessException e) {
             if (DaoUtil.isDuplicateInsert(e)) {
@@ -97,6 +98,7 @@ public class DeepLinkDaoImpl extends BaseDao implements DeepLinkDao {
                 dp.setFeature(resultSet.getString("feature"));
                 dp.setStage(resultSet.getString("stage"));
                 dp.setCampaign(resultSet.getString("campaign"));
+                dp.setParams(resultSet.getString("params"));
                 dp.setSource(resultSet.getString("source"));
                 dp.setIos_use_default(resultSet.getBoolean("ios_use_default"));
                 dp.setIos_custom_url(resultSet.getString("ios_custom_url"));

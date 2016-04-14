@@ -1,9 +1,11 @@
 package cc.linkedme.data.model;
 
+import java.io.Serializable;
+
 /**
  * Created by LinkedME01 on 16/3/25.
  */
-public class DeepLinkCount {
+public class DeepLinkCount implements Serializable{
 
     private long deepLinkId;
 
@@ -15,13 +17,12 @@ public class DeepLinkCount {
     private int adr_open;
 
     private int pc_click;
-    private int pc_scan;
+    private int pc_ios_scan;
+    private int pc_adr_scan;
 
     //先忽略
-    private int pc_ios_scan;
     private int pc_ios_install;
     private int pc_ios_open;
-    private int pc_adr_scan;
     private int pc_adr_install;
     private int pc_adr_open;
 
@@ -195,14 +196,6 @@ public class DeepLinkCount {
 
     public void setPc_adr_open(int pc_adr_open) {
         this.pc_adr_open = pc_adr_open;
-    }
-
-    public int getPc_scan() {
-        return pc_scan;
-    }
-
-    public void setPc_scan(int pc_scan) {
-        this.pc_scan = pc_scan;
     }
 
 }

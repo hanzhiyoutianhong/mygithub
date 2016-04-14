@@ -41,7 +41,11 @@ public class ConsumerApp {
     @GET
     @Produces(MediaType.APPLICATION_JSON)
     public String getAppInfo(@QueryParam("user_id") long user_id,
-                             @QueryParam("app_id") long app_id) {
+                             @QueryParam("consumer_app_id") long app_id) {
+        if (app_id <= 0) {
+            throw new LMException(LMExceptionFactor.LM_ILLEGAL_PARAM_VALUE, "app_id <= 0");
+        }
+
         ConsumerAppInfo consumerApp = consumerService.getConsumerAppInfo(app_id);
         if(consumerApp != null) {
             return consumerApp.toJson();

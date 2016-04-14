@@ -2,6 +2,7 @@ package cc.linkedme.service;
 
 import cc.linkedme.commons.counter.component.CountComponent;
 import cc.linkedme.commons.memcache.MemCacheTemplate;
+import cc.linkedme.commons.serialization.KryoSerializationUtil;
 import cc.linkedme.dao.sdkapi.DeepLinkDao;
 import cc.linkedme.dao.sdkapi.DeepLinkParamDao;
 import cc.linkedme.data.model.DeepLink;
@@ -20,10 +21,7 @@ public class DeepLinkService {
     private DeepLinkDao deepLinkDao;
 
     @Resource
-    private MemCacheTemplate<String> deepLinkParamMemCache;
-
-    @Resource
-    private DeepLinkParamDao deepLinkParamDao;
+    private MemCacheTemplate<byte[]> deepLinkParamMemCache;
 
     @Resource
     private CountComponent deepLinkCountComponent;
@@ -32,15 +30,12 @@ public class DeepLinkService {
         int result = 0;
         // insert deepLink table;
         result = deepLinkDao.addDeepLink(deepLink);
-
-        // insert deeplinkparam table
-        result = deepLinkParamDao.addDeepLinkParam(deepLink);
-        // counter
         return result;
     }
 
     public boolean addDeepLinkToCache(DeepLink deepLink) {
-        boolean res = deepLinkParamMemCache.set(String.valueOf(deepLink.getDeeplinkId()), deepLink.getParams());
+        byte[] b = KryoSerializationUtil.serializeObj(deepLink);
+        boolean res = deepLinkParamMemCache.set(String.valueOf(deepLink.getDeeplinkId()), b);
         return res;
     }
 
@@ -51,17 +46,22 @@ public class DeepLinkService {
         return deepLinkDao.getDeepLinkInfo(deepLinkId, appId);
     }
 
-    public String getDeepLinkParam(long deepLinkId) {
+    public DeepLink getDeepLinkParam(long deepLinkId, long appId) {
         // 先从mc里取,如果没有取到,则从mysql里取
         // 从mysql里取到后,回中到mc
-        String deepLinkParam = deepLinkParamMemCache.get(String.valueOf(deepLinkId));
-        if (deepLinkParam == null) {
-            deepLinkParam = deepLinkParamDao.getAddDeeplinkParam(deepLinkId);
-            if (!Strings.isNullOrEmpty(deepLinkParam)) {
-                deepLinkParamMemCache.set(String.valueOf(deepLinkId), deepLinkParam);
-            }
+        DeepLink deepLink;
+        byte[] deepLinkByteArr = deepLinkParamMemCache.get(String.valueOf(deepLinkId));
+        if (deepLinkByteArr != null && deepLinkByteArr.length > 0) {
+            deepLink = KryoSerializationUtil.deserializeObj(deepLinkByteArr, DeepLink.class);
+            return deepLink;
         }
-        return deepLinkParam;
+
+        deepLink = deepLinkDao.getDeepLinkInfo(deepLinkId, appId);
+        if (deepLink != null && deepLink.getDeeplinkId() > 0) {
+            deepLinkParamMemCache.set(String.valueOf(deepLinkId), KryoSerializationUtil.serializeObj(deepLink));
+            return deepLink;
+        }
+        return null;
     }
 
     public boolean deleteDeepLink(long deepLinkId, long appId) {

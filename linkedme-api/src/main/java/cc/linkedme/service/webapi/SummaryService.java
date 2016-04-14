@@ -157,11 +157,11 @@ public class SummaryService {
 
         dplc.setPc_click(dplCountMap.get(DeepLinkCount.CountType.pc_click));
         dplc.setPc_ios_scan(dplCountMap.get(DeepLinkCount.CountType.pc_ios_scan));
-        dplc.setPc_ios_install(dplCountMap.get(DeepLinkCount.CountType.pc_ios_install));
-        dplc.setPc_ios_open(dplCountMap.get(DeepLinkCount.CountType.pc_ios_open));
         dplc.setPc_adr_scan(dplCountMap.get(DeepLinkCount.CountType.pc_adr_scan));
-        dplc.setPc_adr_install(dplCountMap.get(DeepLinkCount.CountType.pc_adr_install));
-        dplc.setPc_adr_open(dplCountMap.get(DeepLinkCount.CountType.pc_adr_open));
+        //dplc.setPc_ios_install(dplCountMap.get(DeepLinkCount.CountType.pc_ios_install));
+        //dplc.setPc_ios_open(dplCountMap.get(DeepLinkCount.CountType.pc_ios_open));
+        //dplc.setPc_adr_install(dplCountMap.get(DeepLinkCount.CountType.pc_adr_install));
+        //dplc.setPc_adr_open(dplCountMap.get(DeepLinkCount.CountType.pc_adr_open));
     }
 
     public String getButtonsIncome(SummaryButtonParams summaryButtonParams) {
@@ -295,6 +295,26 @@ public class SummaryService {
         resultJson.put("order", orderCountJson);
         resultJson.put("income", incomeCountJson);
         resultJson.put("install", installCountJson);
+        return resultJson.toString();
+    }
+
+    public String getBtnTotalCounts(long appId, String btnId, String startDate, String endDate) {
+        List<ButtonCount> buttonCounts = btnCountDao.getButtonCounts(appId, btnId, startDate, endDate);
+        long view = 0, click = 0, order = 0;
+        float income = 0;
+        for (ButtonCount buttonCount : buttonCounts) {
+            view += buttonCount.getViewCount();
+            click += buttonCount.getClickCount();
+            order += buttonCount.getOrderCount();
+            income += buttonCount.getIncome();
+        }
+
+        JSONObject resultJson = new JSONObject();
+        resultJson.put("view", view);
+        resultJson.put("click", click);
+        resultJson.put("order", order);
+        resultJson.put("income", income);
+        resultJson.put("install", 0);
         return resultJson.toString();
     }
 

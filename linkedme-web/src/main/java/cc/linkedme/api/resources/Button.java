@@ -6,6 +6,7 @@ import cc.linkedme.commons.json.JsonBuilder;
 import cc.linkedme.data.model.ButtonInfo;
 import cc.linkedme.data.model.params.ButtonParams;
 import cc.linkedme.service.webapi.BtnService;
+import cc.linkedme.service.webapi.SummaryService;
 import com.google.api.client.repackaged.com.google.common.base.Strings;
 import org.apache.commons.lang.StringUtils;
 import org.springframework.stereotype.Component;
@@ -32,6 +33,9 @@ public class Button {
     @Resource
     BtnService btnService;
 
+    @Resource
+    SummaryService summaryService;
+
     @Path("/create")
     @POST
     @Produces(MediaType.APPLICATION_JSON)
@@ -55,7 +59,7 @@ public class Button {
         return json.flip().toString();
     }
 
-    @Path("/get_btn_info")
+    @Path("/info")
     @GET
     @Produces(MediaType.APPLICATION_JSON)
     public String getBtns(@QueryParam("user_id") long user_id,
@@ -143,6 +147,33 @@ public class Button {
         } else {
             return "{\"ret\" : \"false\"}";
         }
+    }
+
+
+    @Path("/stat")
+    @GET
+    @Produces(MediaType.APPLICATION_JSON)
+    public String btnStat(@QueryParam("user_id") long user_id,
+                          @QueryParam("app_id") long app_id,
+                          @QueryParam("button_id") String button_id,
+                          @QueryParam("start_date") String start_date,
+                          @QueryParam("end_date") String end_date) {
+
+        if (user_id <= 0) {
+            throw new LMException(LMExceptionFactor.LM_ILLEGAL_PARAM_VALUE, "user_id <= 0");
+        }
+
+        if (app_id <= 0) {
+            throw new LMException(LMExceptionFactor.LM_ILLEGAL_PARAM_VALUE, "app_id <= 0");
+        }
+
+        if (Strings.isNullOrEmpty(button_id)) {
+            throw new LMException(LMExceptionFactor.LM_ILLEGAL_PARAM_VALUE, "button_id = null");
+        }
+
+        String result = summaryService.getBtnTotalCounts(app_id, button_id, start_date, end_date);
+        return result;
+
     }
 
 }

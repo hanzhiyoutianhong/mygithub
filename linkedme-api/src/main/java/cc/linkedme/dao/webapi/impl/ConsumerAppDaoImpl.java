@@ -106,6 +106,7 @@ public class ConsumerAppDaoImpl extends BaseDao implements ConsumerAppDao {
         jdbcTemplate.query(tableChannel.getSql(), new Object[] {}, new RowMapper() {
             public Object mapRow(ResultSet rs, int i) throws SQLException {
                 ConsumerAppInfo consumerAppInfo = new ConsumerAppInfo();
+                consumerAppInfo.setAppId(rs.getLong("app_id"));
                 consumerAppInfo.setAppName(rs.getString("app_name"));
                 consumerAppInfo.setAppLogoUrl(rs.getString("app_logo_url"));
                 consumerAppInfo.setCategory(rs.getString("category"));

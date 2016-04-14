@@ -66,9 +66,9 @@ public class UrlServlet extends HttpServlet {
      */
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         // TODO Auto-generated method stub
-        // eg, https://lkme.cc/hafzh/fhza80af; appId, deeplinkId;
+        // eg, https://lkme.cc/hafzh/fhza80af?scan=0; appId, deeplinkId;
         String uri = request.getRequestURI();
-        String[] uriArr = uri.split("/");
+        String[] uriArr = uri.split("/|\\?");
         if (uriArr.length < 3) {
             response.sendRedirect("/index.jsp"); // TODO 重定向为默认配置页面
             // request.getRequestDispatcher("/index.jsp").forward(request, response);
@@ -76,6 +76,7 @@ public class UrlServlet extends HttpServlet {
         }
         long appId = Base62.decode(uriArr[1]);
         long deepLinkId = Base62.decode(uriArr[2]);
+        String urlParam = uriArr[3];
         DeepLink deepLink = deepLinkService.getDeepLinkInfo(deepLinkId, appId); // 根据deepLinkId获取deepLink信息
         AppInfo appInfo = appService.getAppById(appId); // 根据appId获取app信息
 
@@ -104,7 +105,7 @@ public class UrlServlet extends HttpServlet {
         String scheme = "";
         boolean isIOS = false;
         boolean isAndroid = false;
-        String platform;
+        String countType;
         if (osFamily.equals("iOS")) {
             if (appInfo.getIos_search_option().equals("apple_store")) {
                 url = appInfo.getIos_store_url();
@@ -123,7 +124,11 @@ public class UrlServlet extends HttpServlet {
                 isUniversallink = true;
             }
 
-            platform = "ios";
+            if(urlParam.contains("scan=1")) {
+                countType = "pc_ios_scan";
+            } else {
+                countType = "ios_click";
+            }
 
         } else if (osFamily.equals("Android")) {
             if (appInfo.getAndroid_search_option().equals("google_play")) {
@@ -134,16 +139,19 @@ public class UrlServlet extends HttpServlet {
             scheme = appInfo.getAndroid_uri_scheme();
             isAndroid = true;
 
-            platform = "adr";
+            if(urlParam.contains("scan=1")) {
+                countType = "pc_ios_scan";
+            } else {
+                countType = "adr_click";
+            }
         } else {
             // 点击计数else,暂时都计pc
-            platform = "pc";
+            countType = "pc_click";
         }
-        // PC
 
         // iPad
 
-        final String type = platform + "_click";
+        final String type = countType;
         // TODO 如果短链的访问量急剧增长,线程池扛不住,后续考虑推消息队列
         deepLinkCountThreadPool.submit(new Callable<Void>() {
             @Override
@@ -192,25 +200,25 @@ public class UrlServlet extends HttpServlet {
         request.setAttribute("Pkg", appInfo.getAndroid_package_name());
         request.setAttribute("BundleID", appInfo.getIos_bundle_id());
         request.setAttribute("AppID", appId);
-        request.setAttribute("IconUrl", ""); // TODO
+        request.setAttribute("IconUrl", "https://lkme.cc/icon"); // TODO
         request.setAttribute("Url", url);
         request.setAttribute("Match_id", uriArr[2]);
 
-        request.setAttribute("Download_msg", ""); // TODO
-        request.setAttribute("Download_btn_text", ""); // TODO
-        request.setAttribute("Download_title", ""); // TODO
+        request.setAttribute("Download_msg", "Download_msg"); // TODO
+        request.setAttribute("Download_btn_text", "Download_btn_text"); // TODO
+        request.setAttribute("Download_title", "Download_title"); // TODO
 
 
         request.setAttribute("Chrome_major", browseMajor);
         request.setAttribute("Ios_major", osMajor);
-        request.setAttribute("Redirect_url", ""); // TODO
+        request.setAttribute("Redirect_url", "http://www.baidu.com"); // TODO
 
         request.setAttribute("YYB_url", "http://a.app.qq.com/o/simple.jsp?pkgname=" + appInfo.getAndroid_package_name());
         request.setAttribute("Scheme", scheme);
         request.setAttribute("Host", "linkedme"); // TODO
         request.setAttribute("AppInsStatus", 0); // TODO
         request.setAttribute("TimeStamp", System.currentTimeMillis()); // deepLink 创建时间?
-        request.setAttribute("DsTag", ""); // TODO
+        request.setAttribute("DsTag", "DsTag"); // TODO
 
         request.setAttribute("isIOS", isIOS);
         request.setAttribute("isAndroid", isAndroid);

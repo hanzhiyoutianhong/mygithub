@@ -47,12 +47,7 @@ public class Summary {
                 channel, tag, source, unique, return_number, skip_number, orderby);
         Map<Long, DeepLinkCount> countMap = summaryService.getDeepLinkSummary(summaryDeepLinkParams);
         int deepLinkCounts = countMap.size();
-        int ios_click = 0;
-        int ios_install = 0;
-        int ios_open = 0;
-        int adr_click = 0;
-        int adr_install = 0;
-        int adr_open = 0;
+        long ios_click = 0, ios_install = 0, ios_open = 0, adr_click = 0, adr_install = 0, adr_open = 0, pc_click = 0, pc_ios_scan = 0, pc_adr_scan = 0;
         for (Map.Entry<Long, DeepLinkCount> entry : countMap.entrySet()) {
             DeepLinkCount value = entry.getValue();
             if (value != null) {
@@ -63,6 +58,10 @@ public class Summary {
                 adr_click += value.getAdr_click();
                 adr_install += value.getAdr_install();
                 adr_open += value.getAdr_open();
+
+                pc_click += value.getPc_click();
+                pc_ios_scan += value.getPc_ios_scan();
+                pc_adr_scan += value.getPc_adr_scan();
             }
         }
 
@@ -76,10 +75,16 @@ public class Summary {
         adrJson.put("install", adr_install);
         adrJson.put("open", adr_open);
 
+        JSONObject pcJson = new JSONObject();
+        pcJson.put("click", pc_click);
+        pcJson.put("pc_ios_scan", pc_ios_scan);
+        pcJson.put("pc_adr_scan", pc_adr_scan);
+
         JSONObject retJson = new JSONObject();
         retJson.put("link_count", deepLinkCounts);
         retJson.put("ios", iosJson);
         retJson.put("android", adrJson);
+        retJson.put("pc", pcJson);
         return retJson.toString();
     }
 

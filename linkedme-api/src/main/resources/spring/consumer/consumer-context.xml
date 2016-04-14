@@ -29,7 +29,7 @@
                 <entry key="ADD_CONSUMER_APP" value="insert into $db$.$tb$ () values(?, ?, ?, ?, ?, now(), ?, ?)"/>
                 <entry key="GET_CONSUMER_APP_INFO" value="select app_name, app_logo_url, category, online_time, ios_code, android_code, android_config, scheme_url, custom_url, default_url, bundle_id, package_name, client_id, server_token, status from $db$.$tb$ where app_id = ?"/>
                 <entry key="GET_CONSUMER_APPS" value="select app_id, app_name, app_logo_url, category, online_time, ios_code, android_code, android_config, scheme_url, custom_url, default_url, bundle_id, package_name, client_id, server_token, status from $db$.$tb$ where app_id in (:listOfValues)"/>
-                <entry key="GET_ALL_CONSUMER_APPS" value="select app_name, app_logo_url, category, online_time, ios_code, android_code, android_config, scheme_url, custom_url, default_url, bundle_id, package_name, client_id, server_token, status from $db$.$tb$"/>
+                <entry key="GET_ALL_CONSUMER_APPS" value="select app_id, app_name, app_logo_url, category, online_time, ios_code, android_code, android_config, scheme_url, custom_url, default_url, bundle_id, package_name, client_id, server_token, status from $db$.$tb$"/>
                 <entry key="DEL_BUTTON" value="delete from $db$.$tb$ where user_id = ? and id = ?" />
             </map>
         </property>
