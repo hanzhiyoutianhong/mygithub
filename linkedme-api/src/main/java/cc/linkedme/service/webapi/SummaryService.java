@@ -1,11 +1,23 @@
 package cc.linkedme.service.webapi;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.*;
+
+import javax.annotation.Resource;
+
+import net.sf.json.JSONArray;
+import net.sf.json.JSONObject;
+
+import org.apache.commons.lang.StringUtils;
+import org.springframework.stereotype.Service;
+
 import cc.linkedme.commons.counter.component.CountComponent;
 import cc.linkedme.commons.exception.LMException;
 import cc.linkedme.commons.exception.LMExceptionFactor;
-import cc.linkedme.commons.util.Base62;
 import cc.linkedme.commons.redis.JedisPort;
 import cc.linkedme.commons.shard.ShardingSupportHash;
+import cc.linkedme.commons.util.Base62;
 import cc.linkedme.commons.util.Util;
 import cc.linkedme.dao.sdkapi.DeepLinkDao;
 import cc.linkedme.dao.webapi.BtnCountDao;
@@ -16,23 +28,8 @@ import cc.linkedme.data.model.DeepLink;
 import cc.linkedme.data.model.DeepLinkCount;
 import cc.linkedme.data.model.params.SummaryButtonParams;
 import cc.linkedme.data.model.params.SummaryDeepLinkParams;
-import com.google.api.client.repackaged.com.google.common.base.Strings;
-import net.sf.json.JSONArray;
-import net.sf.json.JSONObject;
-import org.apache.commons.lang.StringUtils;
-import org.springframework.stereotype.Service;
 
-import javax.annotation.Resource;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
+import com.google.api.client.repackaged.com.google.common.base.Strings;
 
 /**
  * Created by LinkedME01 on 16/3/20.
@@ -60,10 +57,10 @@ public class SummaryService {
         String end_date = summaryDeepLinkParams.endDate;
 
         String onlineTime = "2016-04-01 00:00:00";
-        SimpleDateFormat sdf = new SimpleDateFormat( onlineTime );
+        SimpleDateFormat sdf = new SimpleDateFormat( "yyyy-MM-dd HH:mm:ss" );
 
         try {
-            Date onlineDate = sdf.parse( "2016-04-01 00:00:00" );
+            Date onlineDate = sdf.parse( onlineTime );
             Date stDate = sdf.parse( start_date );
             Date edDate = sdf.parse( end_date );
             Date currentDate = sdf.parse( sdf.format( new Date() ) );
