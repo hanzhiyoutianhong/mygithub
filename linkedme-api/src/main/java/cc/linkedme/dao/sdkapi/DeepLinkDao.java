@@ -16,4 +16,8 @@ public interface DeepLinkDao {
             String channel, String tag, boolean unique);
 
     boolean deleteDeepLink(long deepLinkId, long appId);
+
+    DeepLink getUrlInfo( long deepLinkId, long appid);
+
+    boolean
 }

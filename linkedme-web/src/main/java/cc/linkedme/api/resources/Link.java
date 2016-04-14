@@ -39,12 +39,14 @@ public class Link {
     @Resource
     private DeepLinkService deepLinkService;
 
+    private static final String CREATE_URL_API = "https://lkme.cc/sdk/url";
+
     @Path("/create")
     @POST
     @Produces({MediaType.APPLICATION_JSON})
     public String createUrl(UrlParams urlParams, @Context HttpServletRequest request) {
         HttpClient client = new HttpClient();
-        PostMethod postMethod = new PostMethod("http://localhost:8888/sdk/url");
+        PostMethod postMethod = new PostMethod(CREATE_URL_API);
         String result = null;
         try {
             RequestEntity se = new StringRequestEntity(JSONObject.fromObject(urlParams).toString(), "application/json", "UTF-8");
@@ -97,10 +99,53 @@ public class Link {
         if (urlParams.deeplink_id <= 0) {
             throw new LMException(LMExceptionFactor.LM_ILLEGAL_PARAM_VALUE, "deeplink_id <= 0");
         }
-        // if (urlParams.app_id <= 0) {
-        // throw new LMException(LMExceptionFactor.LM_ILLEGAL_PARAM_VALUE, "app_id <= 0");
-        // }
+        if (urlParams.app_id <= 0) {
+            throw new LMException(LMExceptionFactor.LM_ILLEGAL_PARAM_VALUE, "app_id <= 0");
+        }
         boolean result = deepLinkService.deleteDeepLink(urlParams.deeplink_id, urlParams.app_id);
         return "{ \"ret\" : " + result + "}";
+    }
+
+    @Path("info")
+    @GET
+    @Produces(MediaType.APPLICATION_JSON)
+    public String urlInfo(@QueryParam("user_id") int user_id,
+                          @QueryParam("app_id") long app_id,
+                          @QueryParam("deeplink_id") long deeplink_id ) { //忽略type和link_label
+        if (user_id <= 0) {
+            throw new LMException(LMExceptionFactor.LM_ILLEGAL_PARAM_VALUE, "user_id <= 0");
+        }
+        if (app_id <= 0) {
+            throw new LMException(LMExceptionFactor.LM_ILLEGAL_PARAM_VALUE, "app_id <= 0");
+        }
+        if (deeplink_id <= 0) {
+            throw new LMException(LMExceptionFactor.LM_ILLEGAL_PARAM_VALUE, "deeplink_id <= 0");
+        }
+        UrlParams urlParams = new UrlParams();
+        urlParams.app_id = app_id;
+        urlParams.user_id = user_id;
+        urlParams.deeplink_id = deeplink_id;
+        String urlInfo = deepLinkService.getUrlInfo( urlParams );
+
+        return urlInfo;
+    }
+
+    @Path("update")
+    @POST
+    @Produces(MediaType.APPLICATION_JSON)
+    public String urlUpdate( UrlParams urlParams, @Context HttpServletRequest request) {//忽略type和link_label
+        if (urlParams.user_id <= 0) {
+            throw new LMException(LMExceptionFactor.LM_ILLEGAL_PARAM_VALUE, "deeplink_id <= 0");
+        }
+        if (urlParams.app_id <= 0) {
+            throw new LMException(LMExceptionFactor.LM_ILLEGAL_PARAM_VALUE, "app_id <= 0");
+        }
+
+        Boolean res = deepLinkService.updateUrl( urlParams );
+
+        JSONObject jsonObject = new JSONObject();
+        jsonObject.put( "ret", res );
+
+        return jsonObject.toString();
     }
 }

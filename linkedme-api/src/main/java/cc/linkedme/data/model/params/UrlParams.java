@@ -14,6 +14,7 @@ import javax.xml.bind.annotation.XmlRootElement;
 public class UrlParams {
 
     public long deeplink_id;
+    public long user_id;
     public long app_id;
     public String alias;
     public String[] tags;

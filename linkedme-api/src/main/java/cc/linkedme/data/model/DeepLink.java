@@ -1,7 +1,10 @@
 package cc.linkedme.data.model;
 
+import cc.linkedme.commons.client.balancer.util.SystemTimer;
+import cc.linkedme.commons.serialization.KryoSerializationUtil;
 import cc.linkedme.commons.util.Base62;
 import cc.linkedme.commons.util.Constants;
+import cc.linkedme.commons.util.Util;
 import com.alibaba.fastjson.JSONObject;
 import com.google.api.client.repackaged.com.google.common.base.Strings;
 import net.sf.json.JSONArray;
@@ -11,14 +14,14 @@ import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.Table;
+import java.io.Serializable;
 import java.sql.Timestamp;
 
 /**
  * Created by LinkedME01 on 16/3/19.
  */
-@Entity
-@Table(name = "deeplink_info_1603", schema = "deeplink_0", catalog = "")
-public class DeepLink {
+
+public class DeepLink implements Serializable{
 
     private long deeplinkId;
     private String deeplinkMd5;
@@ -380,12 +383,13 @@ public class DeepLink {
 
             JSONObject adrCount = new JSONObject();
             adrCount.put("adr_click", deepLinkCount.getAdr_click());
-            adrCount.put("adr_install", deepLinkCount.getIos_install());
-            adrCount.put("adr_open", deepLinkCount.getIos_open());
+            adrCount.put("adr_install", deepLinkCount.getAdr_install());
+            adrCount.put("adr_open", deepLinkCount.getAdr_open());
 
             JSONObject pcCount = new JSONObject();
             pcCount.put("pc_click", deepLinkCount.getPc_click());
-            pcCount.put("pc_scan", deepLinkCount.getPc_scan());
+            pcCount.put("pc_ios_scan", deepLinkCount.getPc_ios_scan());
+            pcCount.put("pc_adr_scan", deepLinkCount.getPc_adr_scan());
 
             jsonObject.put("ios", iosCount);
             jsonObject.put("android", adrCount);
@@ -402,5 +406,49 @@ public class DeepLink {
         String[] channel = new String[]{"aa", "bb"};
         JSONArray jarr = JSONArray.fromObject(channel);
         System.out.println(jarr.toString());
+
+
+        DeepLink deepLink = new DeepLink();
+        deepLink.linkedmeKey = Util.getUUID();
+        deepLink.appId = 11234;
+        deepLink.alias = "adf,adfa";
+        deepLink.deeplinkId = 1234123412341L;
+        deepLink.deeplinkMd5 = "asdfasdfasdfasdfasdfasdf";
+        deepLink.identityId = 234534523453451354L;
+        deepLink.createTime = "2016-04-13 09:20:20";
+        deepLink.tags = "asd,asdf,adsf";
+        deepLink.channel = "weibo,weixin";
+        deepLink.feature = "adsf,adfa";
+        deepLink.stage = "adf,adf";
+        deepLink.params = "adsfadsfasdfasdfa;sldfkasdjfal;skdfjals;dkfjasd;lfkasdjf;lasdfas";
+        deepLink.source = "ios";
+        deepLink.sdkVersion = "1.0.1";
+        deepLink.state = 12;
+        deepLink.link_label = "asdfasdf";
+        deepLink.ios_use_default = false;
+        deepLink.ios_custom_url = "asdfadsf";
+        deepLink.android_custom_url = "asdfasdf";
+        deepLink.android_use_default = false;
+        deepLink.desktop_custom_url = "asdfasdf";
+        deepLink.desktop_use_default = false;
+        DeepLinkCount deepLinkCount = new DeepLinkCount();
+        deepLinkCount.setAdr_open(12);
+        deepLinkCount.setAdr_install(23);
+        deepLink.deepLinkCount = deepLinkCount;
+
+        long start = System.currentTimeMillis();
+        byte[] b = KryoSerializationUtil.serializeObj(deepLink);
+        long end = System.currentTimeMillis();
+        long serializeCost = System.currentTimeMillis() - start;
+        System.out.println(b.length);
+        System.out.println(serializeCost);
+        DeepLink deepLink1 = KryoSerializationUtil.deserializeObj(b, DeepLink.class);
+        long desCost = System.currentTimeMillis() - end;
+        DeepLinkCount deepLinkCount1 = deepLink1.deepLinkCount;
+
+        String json = deepLink1.toJson();
+        System.out.println(deepLink1.toJson());
+        System.out.println(desCost);
+        System.out.print(deepLinkCount1.getAdr_install());
     }
 }

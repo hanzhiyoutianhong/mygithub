@@ -134,7 +134,7 @@ public class ButtonInfo {
             json.put("consumer_app_status", consumerAppInfo.getStatus());
             json.put("online_date", consumerAppInfo.getOnlineTime());
             json.put("category", consumerAppInfo.getCategory());
-            json.put("status", checkStatus == 1 ? "online" : "offline");
+            json.put("status", checkStatus);
         }
         return json.toString();
     }

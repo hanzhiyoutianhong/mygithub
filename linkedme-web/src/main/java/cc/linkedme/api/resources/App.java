@@ -7,20 +7,27 @@ import cc.linkedme.commons.json.JsonBuilder;
 import cc.linkedme.data.model.AppInfo;
 import cc.linkedme.data.model.params.AppParams;
 import cc.linkedme.service.webapi.AppService;
+import com.sun.javaws.jnl.XMLUtils;
+import com.sun.jersey.core.header.FormDataContentDisposition;
+import com.sun.jersey.multipart.FormDataParam;
 import net.sf.json.JSONObject;
+import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang.StringUtils;
+import org.aspectj.util.FileUtil;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Component;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
-import javax.ws.rs.GET;
-import javax.ws.rs.POST;
-import javax.ws.rs.Path;
-import javax.ws.rs.Produces;
-import javax.ws.rs.QueryParam;
+import javax.servlet.http.HttpServletResponse;
+import javax.ws.rs.*;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
+import javax.ws.rs.ext.ExceptionMapper;
+import java.io.*;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.List;
 
 /**
@@ -32,6 +39,8 @@ import java.util.List;
 public class App {
     @Resource
     private AppService appService;
+
+    public static final String ImgPath = "/Users/LinkedME01/Pictures";
 
     @Path("/create_app")
     @POST
@@ -161,6 +170,54 @@ public class App {
         JsonBuilder resultJson = new JsonBuilder();
         resultJson.append("ret", result > 0);
         return resultJson.flip().toString();
+    }
+
+    @Path("/uploadimg")
+    @POST
+    @Produces(MediaType.APPLICATION_JSON)
+    @Consumes(MediaType.MULTIPART_FORM_DATA)
+    public String uploadImg(@FormDataParam("file") InputStream fileInputStream,
+                            @FormDataParam("file") FormDataContentDisposition dataContentDisposition,
+                            @Context HttpServletRequest request) {
+        String imgName = Calendar.getInstance().getTimeInMillis() + dataContentDisposition.getFileName();
+        File file = new File(ImgPath + imgName);
+        try {
+            FileUtils.copyInputStreamToFile(fileInputStream, file);
+        } catch (IOException e) {
+            throw new LMException(LMExceptionFactor.LM_ILLEGAL_REQUEST);
+        }
+        JsonBuilder resultJson = new JsonBuilder();
+        resultJson.append("ret", request.getScheme() + "://" + request.getServerName() + ":"
+                + request.getServerPort() + "/app/images/" + imgName);
+        return resultJson.toString();
+    }
+
+    @Path("/images/{name}.{type}")
+    @GET
+    public void showImg(@PathParam("name") String imageName,
+                        @PathParam("type") String type,
+                        @Context HttpServletResponse response)
+            throws IOException {
+        InputStream inputStream = null;
+        OutputStream out = null;
+        try {
+            File file = new File(ImgPath + imageName + "." + type);
+            inputStream = new FileInputStream(file);
+            out = response.getOutputStream();
+            // pic size = 1M
+            byte[] bytes = new byte[1024 * 1024];
+            int len = 0;
+            while ((len = inputStream.read(bytes)) > 0) {
+                out.write(bytes, 0, len);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            if (inputStream != null)
+                inputStream.close();
+            if (out != null)
+                out.close();
+        }
     }
 
 }

@@ -43,7 +43,7 @@ public class ClientServiceImpl implements ClientService {
             long appId = 0; // 根据deepLinkId查找appId
             String value = clientShardingSupport.getClient(clientInfo.getLinkedmeKey()).get(clientInfo.getLinkedmeKey());
             if (!Strings.isNullOrEmpty(value)) {
-                appId = Long.parseLong(value.split(",")[0]); // 根据linkedme_key去库里查询
+                appId = Long.parseLong(value.split(",")[0]);
             }
             DeepLink deepLink = deepLinkService.getDeepLinkInfo(deepLinkId, appId);
             String countType = clientInfo.getOs() + "_install";

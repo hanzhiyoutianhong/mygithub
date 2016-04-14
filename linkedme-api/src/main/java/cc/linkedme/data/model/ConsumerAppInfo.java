@@ -14,7 +14,7 @@ import javax.persistence.Table;
 @Entity
 @Table(name = "consumer_info_0", schema = "consumer_0", catalog = "")
 public class ConsumerAppInfo {
-    private int appId;
+    private long appId;
     private String appName;
     private String appLogoUrl;
     private String category;
@@ -33,11 +33,11 @@ public class ConsumerAppInfo {
 
     @Id
     @Column(name = "app_id")
-    public int getAppId() {
+    public long getAppId() {
         return appId;
     }
 
-    public void setAppId(int appId) {
+    public void setAppId(long appId) {
         this.appId = appId;
     }
 

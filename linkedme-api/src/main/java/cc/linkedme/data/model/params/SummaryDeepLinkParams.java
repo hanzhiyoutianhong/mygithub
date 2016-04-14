@@ -6,6 +6,7 @@ package cc.linkedme.data.model.params;
 public class SummaryDeepLinkParams {
 
     public long appid;
+    public int userid;
     public String startDate;
     public String endDate;
     public String feature;

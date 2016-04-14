@@ -98,6 +98,11 @@
 
     <servlet-mapping>
         <servlet-name>default</servlet-name>
+        <url-pattern>/baidu_verify_t7b4nhNged.html</url-pattern>
+    </servlet-mapping>
+
+    <servlet-mapping>
+        <servlet-name>default</servlet-name>
         <url-pattern>/favicon.ico</url-pattern>
     </servlet-mapping>
 

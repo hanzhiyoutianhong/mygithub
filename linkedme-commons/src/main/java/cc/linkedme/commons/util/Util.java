@@ -789,8 +789,6 @@ public class Util {
         Calendar end_date_min = Calendar.getInstance();
         Calendar end_date_max = Calendar.getInstance();
 
-
-
         try {
             start_date_min.setTime( sdf.parse( minDate ) );
             start_date_max.setTime( sdf.parse( minDate ) );
@@ -802,7 +800,7 @@ public class Util {
 
 
             min.setTime(sdf.parse(minDate));
-            min.set(min.get(Calendar.YEAR), min.get(Calendar.MONTH) + 1, 1);
+            min.set(min.get(Calendar.YEAR), min.get(Calendar.MONTH), 1);
 
             max.setTime(sdf.parse(maxDate));
             max.set(max.get(Calendar.YEAR), max.get(Calendar.MONTH), 1);
@@ -812,40 +810,54 @@ public class Util {
             throw new LMException("Util.getBetweenMonths parse date failed");
         }
 
-        DateDuration start_date_duration = new DateDuration();
-        start_date_duration.setMin_date( sdf.format(start_date_min.getTime()));
-        start_date_duration.setMax_date( sdf.format(start_date_max.getTime()));
-        result.add( start_date_duration );
-
-        Calendar curr_min = min;
-        Calendar curr_max;
-
-        while (curr_min.before(max)) {
-            DateDuration dateDuration_tmp = new DateDuration();
-
-            curr_min.set( Calendar.DAY_OF_MONTH, curr_min.getActualMinimum( Calendar.DAY_OF_MONTH ) );
-            curr_max = curr_min;
-
-            dateDuration_tmp.setMin_date( sdf.format( curr_min.getTime() ) );
-
-            curr_max.set( Calendar.DAY_OF_MONTH, curr_max.getActualMaximum( Calendar.DAY_OF_MONTH ) );
-
-            dateDuration_tmp.setMax_date( sdf.format( curr_max.getTime() ) );
-
-            result.add( dateDuration_tmp );
-
-            curr_min.add(Calendar.MONTH, 1);
+        if( min.equals(max) ) {
+            try {
+                DateDuration start_date_duration = new DateDuration();
+                start_date_duration.setMin_date(sdf.format(sdf.parse(minDate).getTime()));
+                start_date_duration.setMax_date(sdf.format(sdf.parse(maxDate).getTime()));
+                result.add(start_date_duration);
+            } catch (ParseException e) {
+                ApiLogger.error("Util.getBetweenMonths parse time failed", e);
+                throw new LMException("Util.getBetweenMonths parse date failed");
+            }
         }
-        DateDuration end_date_duration = new DateDuration();
-        end_date_duration.setMin_date( sdf.format( end_date_min.getTime() ) );
-        end_date_duration.setMax_date( sdf.format( end_date_max.getTime() ) );
-        result.add( end_date_duration );
+        else {
+            DateDuration start_date_duration = new DateDuration();
+            start_date_duration.setMin_date( sdf.format(start_date_min.getTime()));
+            start_date_duration.setMax_date( sdf.format(start_date_max.getTime()));
+            result.add( start_date_duration );
+
+            min.set(min.get(Calendar.YEAR), min.get(Calendar.MONTH) + 1, 1);
+            Calendar curr_min = min;
+            Calendar curr_max;
+
+            while (curr_min.before(max)) {
+                DateDuration dateDuration_tmp = new DateDuration();
+
+                curr_min.set(Calendar.DAY_OF_MONTH, curr_min.getActualMinimum(Calendar.DAY_OF_MONTH));
+                curr_max = curr_min;
+
+                dateDuration_tmp.setMin_date(sdf.format(curr_min.getTime()));
+
+                curr_max.set(Calendar.DAY_OF_MONTH, curr_max.getActualMaximum(Calendar.DAY_OF_MONTH));
+
+                dateDuration_tmp.setMax_date(sdf.format(curr_max.getTime()));
+
+                result.add(dateDuration_tmp);
+
+                curr_min.add(Calendar.MONTH, 1);
+            }
+            DateDuration end_date_duration = new DateDuration();
+            end_date_duration.setMin_date(sdf.format(end_date_min.getTime()));
+            end_date_duration.setMax_date(sdf.format(end_date_max.getTime()));
+            result.add(end_date_duration);
+        }
         return result;
     }
 
     public static void main( String args[] ) {
-        String start_month = "2016-01-05";
-        String end_month = "2016-06-20";
+        String start_month = "2016-07-20";
+        String end_month = "2016-07-20";
         List<DateDuration> months = getBetweenMonths( start_month, end_month );
 
         for( int i = 0; i < months.size(); i++ ) {

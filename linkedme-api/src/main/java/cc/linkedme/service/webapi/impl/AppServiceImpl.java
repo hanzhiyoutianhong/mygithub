@@ -22,6 +22,7 @@ import java.util.Random;
 public class AppServiceImpl implements AppService {
     @Resource
     UuidCreator uuidCreator;
+
     @Resource
     private AppDao appDao;
 

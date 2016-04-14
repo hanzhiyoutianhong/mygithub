@@ -60,7 +60,7 @@ public class LMSdkResources {
     @Produces({MediaType.APPLICATION_JSON})
     public String open(OpenParams openParams, @Context HttpServletRequest request) {
 
-        String deepLinkParam = "";
+        String deepLinkParam = null;
         boolean clicked_linkedme_link = false;
         String extra_uri_data = openParams.extra_uri_data;
 

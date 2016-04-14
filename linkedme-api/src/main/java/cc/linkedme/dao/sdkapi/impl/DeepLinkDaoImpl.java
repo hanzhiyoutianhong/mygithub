@@ -34,6 +34,7 @@ public class DeepLinkDaoImpl extends BaseDao implements DeepLinkDao {
     private static final String GET_DEEPLINKS = "GET_DEEPLINKS";
     private static final String GET_DEEPLINK_INFO = "GET_DEEPLINK_INFO";
     private static final String DELETE_DEEPLINK = "DELETE_DEEPLINK";
+    private static final String GET_URL_INFO = "GET_URL_INFO";
 
     public int addDeepLink(DeepLink deepLink) {
         int result = 0;
@@ -53,6 +54,7 @@ public class DeepLinkDaoImpl extends BaseDao implements DeepLinkDao {
         String feature = deepLink.getFeature();
         String stage = deepLink.getStage();
         String campaign = deepLink.getCampaign();
+        String params = deepLink.getParams();
         String source = deepLink.getSource();
         String sdk_version = deepLink.getSdkVersion();
 
@@ -69,7 +71,7 @@ public class DeepLinkDaoImpl extends BaseDao implements DeepLinkDao {
         try {
             result += tableChannel.getJdbcTemplate().update(tableChannel.getSql(),
                     new Object[] {deeplink_id, deeplink_md5, linkedme_key, identity_id, appid, create_time, tags, alias, channel, feature,
-                            stage, campaign, source, sdk_version, link_label, ios_use_default, ios_custom_url, android_use_default,
+                            stage, campaign, params, source, sdk_version, link_label, ios_use_default, ios_custom_url, android_use_default,
                             android_custom_url, desktop_use_default, desktop_custom_url});
         } catch (DataAccessException e) {
             if (DaoUtil.isDuplicateInsert(e)) {
@@ -97,6 +99,7 @@ public class DeepLinkDaoImpl extends BaseDao implements DeepLinkDao {
                 dp.setFeature(resultSet.getString("feature"));
                 dp.setStage(resultSet.getString("stage"));
                 dp.setCampaign(resultSet.getString("campaign"));
+                dp.setParams(resultSet.getString("params"));
                 dp.setSource(resultSet.getString("source"));
                 dp.setIos_use_default(resultSet.getBoolean("ios_use_default"));
                 dp.setIos_custom_url(resultSet.getString("ios_custom_url"));
@@ -104,6 +107,45 @@ public class DeepLinkDaoImpl extends BaseDao implements DeepLinkDao {
                 dp.setAndroid_custom_url(resultSet.getString("android_custom_url"));
                 dp.setDesktop_use_default(resultSet.getBoolean("desktop_use_default"));
                 dp.setDesktop_custom_url(resultSet.getString("desktop_custom_url"));
+                deepLinks.add(dp);
+                return null;
+            }
+        });
+        if(deepLinks.size() > 0) {
+            return deepLinks.get(0);
+        }
+        return null;
+    }
+
+    //            "userid" : "", // 用户id
+//            "app_id" : "", // app id
+//            "type" : "", // live 或 test   --> app
+
+
+
+
+    public DeepLink getUrlInfo( long deepLinkId, long appid ) {
+        Date date = UuidHelper.getDateFromId(deepLinkId);   //根据deepLinkId获取日期
+        final List<DeepLink> deepLinks = new ArrayList<DeepLink>();
+        TableChannel tableChannel = tableContainer.getTableChannel("deeplink", GET_URL_INFO, appid, date);
+        tableChannel.getJdbcTemplate().query(tableChannel.getSql(), new Object[] {deepLinkId, appid}, new RowMapper() {
+            public Object mapRow(ResultSet resultSet, int i) throws SQLException {
+                DeepLink dp = new DeepLink();
+                dp.setLink_label( resultSet.getString("link_label") );
+                dp.setIos_use_default( resultSet.getBoolean("ios_use_default") );
+                dp.setIos_custom_url( resultSet.getString("ios_custom_url") );
+                dp.setAndroid_use_default( resultSet.getBoolean("android_use_default") );
+                dp.setAndroid_custom_url( resultSet.getString("android_custom_url") );
+                dp.setDesktop_use_default( resultSet.getBoolean("desktop_use_default") );
+                dp.setDesktop_custom_url( resultSet.getString("desktop_custom_url") );
+                dp.setFeature(resultSet.getString("feature"));
+                dp.setCampaign(resultSet.getString("campaign"));
+                dp.setStage(resultSet.getString("stage"));
+                dp.setChannel(resultSet.getString("channel"));
+                dp.setTags(resultSet.getString("tags"));
+                dp.setSource(resultSet.getString("source"));
+                dp.setParams(resultSet.getString("params"));
+
                 deepLinks.add(dp);
                 return null;
             }
