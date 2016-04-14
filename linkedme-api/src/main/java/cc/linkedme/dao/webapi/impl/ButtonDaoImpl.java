@@ -26,8 +26,10 @@ public class ButtonDaoImpl extends BaseDao implements ButtonDao {
     private static final String GET_BUTTONS_BY_APPID = "GET_BUTTONS_BY_APPID";
     private static final String GET_BUTTONS_BY_BTNID = "GET_BUTTONS_BY_BTNID";
     private static final String DELETE_BUTTON_BY_BTNID = "DELETE_BUTTON_BY_BTNID";
-    private static final String UPDATE_BUTTON_BY_BTNID = "UPDATE_BUTTON_BY_BTNID";
+    private static final String UPDATE_BUTTON_BY_BTNID_APPID = "UPDATE_BUTTON_BY_BTNID_APPID";
+    private static final String UPDATE_CONSUMER_ONLINE_STATUS = "UPDATE_CONSUMER_ONLINE_STATUS";
     private static final int CONSUMER_ONLINE_STATUS = 1;
+    private static final int CONSUMER_OFFLINE_STATUS = 0;
 
     @Override
     public int insertButton(ButtonInfo buttonInfo) {
@@ -126,15 +128,47 @@ public class ButtonDaoImpl extends BaseDao implements ButtonDao {
 
     @Override
     public boolean updateButton(ButtonInfo buttonInfo) {
-        //TODO 若btn_id不存在，应抛出相应异常，在DaoUtil类中实现
-        TableChannel tableChannel = tableContainer.getTableChannel("btnInfo", UPDATE_BUTTON_BY_BTNID, 0L, 0L);
-        JdbcTemplate jdbcTemplate = tableChannel.getJdbcTemplate();
+        List<ButtonInfo> buttonInfoList = getButtonListByBtnId(buttonInfo.getBtnId());
+        boolean isAppIdExsit = false;
         int result = 0;
-        try {
-            result += jdbcTemplate.update(tableChannel.getSql(),
-                    new Object[] {buttonInfo.getBtnName(), buttonInfo.getAppId(),buttonInfo.getBtnId()});
-        } catch (DataAccessException e) {
-            throw new LMException(LMExceptionFactor.LM_FAILURE_DB_OP);
+        for (ButtonInfo iter : buttonInfoList) {
+            if(iter.getAppId() == buttonInfo.getAppId()) {
+                isAppIdExsit = true;
+                break;
+            }
+        }
+        // app id 已存在，则根据app id和btn id来修改btn的信息
+        // 若app id不存在，说明用户为btn新添加一个app id，将之前的btn的 online status设置为0，并插入一条新的记录
+        if(isAppIdExsit) {
+            TableChannel tableChannel = tableContainer.getTableChannel("btnInfo", UPDATE_BUTTON_BY_BTNID_APPID, 0L, 0L);
+            JdbcTemplate jdbcTemplate = tableChannel.getJdbcTemplate();
+            try {
+                result += jdbcTemplate.update(tableChannel.getSql(),
+                        new Object[] {buttonInfo.getBtnName(), buttonInfo.getOnlineStatus(), buttonInfo.getBtnId(), buttonInfo.getAppId()});
+            } catch (DataAccessException e) {
+                throw new LMException(LMExceptionFactor.LM_FAILURE_DB_OP);
+            }
+        } else {
+            //获取当前在线的button信息
+            ButtonInfo currentButtonInfo = getButtonInfo(buttonInfo.getBtnId());
+
+            //将当前在线的button改为下线
+            TableChannel tableChannel = tableContainer.getTableChannel("btnInfo", UPDATE_CONSUMER_ONLINE_STATUS, 0L, 0L);
+            JdbcTemplate jdbcTemplate = tableChannel.getJdbcTemplate();
+            try {
+                result += jdbcTemplate.update(tableChannel.getSql(),
+                        new Object[] {CONSUMER_OFFLINE_STATUS, currentButtonInfo.getBtnId(), CONSUMER_ONLINE_STATUS});
+            } catch (DataAccessException e) {
+                throw new LMException(LMExceptionFactor.LM_FAILURE_DB_OP);
+            }
+
+            //将新的appid的button插入表中
+            currentButtonInfo.setAppId(buttonInfo.getAppId());
+            currentButtonInfo.setBtnName(buttonInfo.getBtnName());
+            currentButtonInfo.setOnlineStatus(buttonInfo.getOnlineStatus());
+            result += insertButton(currentButtonInfo);
+            //操作成功的话，result = 2
+            result--;
         }
         return result > 0;
     }
