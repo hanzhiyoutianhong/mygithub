@@ -83,14 +83,14 @@
 
     <!-- ************** count dao start ******************* -->
     <bean id="deepLinkCountDao" class="cc.linkedme.commons.counter.dao.impl.CountDaoImpl">
-        <property name="shardingSupport">
-            <bean class="cc.linkedme.commons.shard.ShardingSupportHash">
-                <property name="clients" ref="countClientsMap" />
-                <property name="hashAlg" value="crc32" />
-                <property name="hashGene" value="256" />
-                <property name="tablePerDb" value="64" />
-            </bean>
-        </property>
+        <property name="shardingSupport" ref="deepLinkCountShardingSupport"/>
+    </bean>
+
+    <bean id="deepLinkCountShardingSupport" class="cc.linkedme.commons.shard.ShardingSupportHash">
+        <property name="clients" ref="countClientsMap"/>
+        <property name="hashAlg" value="crc32"/>
+        <property name="hashGene" value="256"/>
+        <property name="tablePerDb" value="64"/>
     </bean>
 
     <bean id="countClientsMap" class="java.util.HashMap">

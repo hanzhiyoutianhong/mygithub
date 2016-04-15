@@ -1,12 +1,12 @@
 package cc.linkedme.service.sdkapi.impl;
 
-import cc.linkedme.commons.counter.component.CountComponent;
 import cc.linkedme.commons.log.ApiLogger;
 import cc.linkedme.commons.redis.JedisPort;
 import cc.linkedme.commons.shard.ShardingSupportHash;
 import cc.linkedme.dao.sdkapi.ClientDao;
 import cc.linkedme.data.model.ClientInfo;
 import cc.linkedme.data.model.DeepLink;
+import cc.linkedme.data.model.DeepLinkCount;
 import cc.linkedme.service.DeepLinkService;
 import cc.linkedme.service.sdkapi.ClientService;
 import com.google.common.base.Strings;
@@ -28,7 +28,7 @@ public class ClientServiceImpl implements ClientService {
     private DeepLinkService deepLinkService;
 
     @Resource
-    private CountComponent deepLinkCountComponent;
+    private ShardingSupportHash<JedisPort> deepLinkCountShardingSupport;
 
     @Resource
     private ShardingSupportHash<JedisPort> clientShardingSupport;
@@ -46,14 +46,15 @@ public class ClientServiceImpl implements ClientService {
                 appId = Long.parseLong(value.split(",")[0]);
             }
             DeepLink deepLink = deepLinkService.getDeepLinkInfo(deepLinkId, appId);
-            String countType = clientInfo.getOs() + "_install";
             // count
+            final String type = DeepLinkCount.getCountTypeFromOs(clientInfo.getOs(), "_install");
             deepLinkCountThreadPool.submit(new Callable<Void>() {
                 @Override
                 public Void call() throws Exception {
                     try {
                         // TODO 对deeplink_id的有效性做判断
-                        deepLinkCountComponent.incr(deepLinkId, countType, 1);
+                        JedisPort countClient = deepLinkCountShardingSupport.getClient(deepLinkId);
+                        countClient.hincrBy(String.valueOf(deepLinkId), type, 1);
                     } catch (Exception e) {
                         ApiLogger.warn("ClientServiceImpl.addClient deepLinkCountThreadPool count failed", e);
                     }

@@ -1,12 +1,9 @@
 package cc.linkedme.service;
 
-import cc.linkedme.commons.counter.component.CountComponent;
 import cc.linkedme.commons.memcache.MemCacheTemplate;
 import cc.linkedme.commons.serialization.KryoSerializationUtil;
 import cc.linkedme.dao.sdkapi.DeepLinkDao;
-import cc.linkedme.dao.sdkapi.DeepLinkParamDao;
 import cc.linkedme.data.model.DeepLink;
-import com.google.common.base.Strings;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
@@ -22,9 +19,6 @@ public class DeepLinkService {
 
     @Resource
     private MemCacheTemplate<byte[]> deepLinkParamMemCache;
-
-    @Resource
-    private CountComponent deepLinkCountComponent;
 
     public int addDeepLink(DeepLink deepLink) {
         int result = 0;
@@ -43,10 +37,6 @@ public class DeepLinkService {
      * 根据deepLinkId和appId获取deepLink的信息
      */
     public DeepLink getDeepLinkInfo(long deepLinkId, long appId) {
-        return deepLinkDao.getDeepLinkInfo(deepLinkId, appId);
-    }
-
-    public DeepLink getDeepLinkParam(long deepLinkId, long appId) {
         // 先从mc里取,如果没有取到,则从mysql里取
         // 从mysql里取到后,回中到mc
         DeepLink deepLink;

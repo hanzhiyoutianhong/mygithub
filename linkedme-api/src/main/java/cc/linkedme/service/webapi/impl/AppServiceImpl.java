@@ -1,6 +1,7 @@
 package cc.linkedme.service.webapi.impl;
 
 import cc.linkedme.commons.exception.LMException;
+import cc.linkedme.commons.exception.LMExceptionFactor;
 import cc.linkedme.commons.redis.JedisPort;
 import cc.linkedme.commons.shard.ShardingSupportHash;
 import cc.linkedme.commons.util.MD5Utils;
@@ -47,7 +48,7 @@ public class AppServiceImpl implements AppService {
             liveClient.set(live_md5_key, appId + "," + live_md5_secret);
             return appId;
         }
-        throw new LMException("Create appInfo failed");
+        throw new LMException(LMExceptionFactor.LM_SYS_ERROR, "Create appInfo failed");
     }
 
     public List<AppInfo> getAppsByUserId(AppParams appParams) {

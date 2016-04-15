@@ -1,6 +1,5 @@
 package cc.linkedme.api.resources;
 
-
 import cc.linkedme.commons.exception.LMException;
 import cc.linkedme.commons.exception.LMExceptionFactor;
 import cc.linkedme.commons.json.JsonBuilder;
@@ -9,19 +8,9 @@ import cc.linkedme.data.model.params.AppParams;
 import cc.linkedme.service.webapi.AppService;
 import com.google.api.client.repackaged.com.google.common.base.Strings;
 import com.google.api.client.repackaged.org.apache.commons.codec.binary.Base64;
-import com.google.api.client.repackaged.org.apache.commons.codec.binary.BaseNCodec;
-import com.sun.javaws.jnl.XMLUtils;
-import com.sun.jersey.core.header.FormDataContentDisposition;
-import com.sun.jersey.multipart.FormDataParam;
 import net.sf.json.JSONObject;
-import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang.StringUtils;
-import org.aspectj.util.FileUtil;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Component;
-import sun.misc.BASE64Decoder;
-import sun.misc.BASE64Encoder;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
@@ -29,7 +18,6 @@ import javax.servlet.http.HttpServletResponse;
 import javax.ws.rs.*;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
-import javax.ws.rs.ext.ExceptionMapper;
 import java.io.*;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -45,7 +33,7 @@ public class App {
     @Resource
     private AppService appService;
 
-    public static final String ImgPath = "D:/LinkedMe/";
+    public static final String ImgPath = "./";
 
     @Path("/create_app")
     @POST

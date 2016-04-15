@@ -26,7 +26,6 @@ import java.util.Map;
 @Path("summary")
 @Component
 public class Summary {
-
     @Resource
     private SummaryService summaryService;
 
@@ -92,41 +91,41 @@ public class Summary {
         return retJson.toString();
     }
 
-    @Path("get_deeplink_info")
+    @Path("deeplink_count")
     @GET
-
     @Produces({MediaType.APPLICATION_JSON})
-    public String getDeepLinkInfo( @QueryParam("deeplink_id") long deeplink_id,
-                                   @QueryParam("token") String token ) {
+    public String getDeepLinkInfo(@QueryParam("deeplink_id") long deeplink_id,
+                                  @QueryParam("app_id") long app_id,
+                                  @QueryParam("token") String token) {
         SummaryDeepLinkParams summaryDeepLinkParams = new SummaryDeepLinkParams();
         summaryDeepLinkParams.deepLinkId = deeplink_id;
+        summaryDeepLinkParams.appid = app_id;
 
-        return summaryService.getDeepLinkInfoByDeepLinkId( summaryDeepLinkParams );
+        return summaryService.getDeepLinkInfoByDeepLinkId(summaryDeepLinkParams);
     }
 
-    @Path( "get_multi_deeplink_info" )
+    @Path("multi_deeplink_count")
     @GET
-
     @Produces({MediaType.APPLICATION_JSON})
-    public String getMultiDeepLinkInfo( @QueryParam("deeplink_ids") String deeplink_ids,
-                                        @QueryParam("token") String token ) {
+    public String getMultiDeepLinkInfo(@QueryParam("deeplink_ids") String deeplink_ids,
+                                       @QueryParam("token") String token) {
         String[] deeplink_id = deeplink_ids.split(",");
 
         int click = 0;
         int open = 0;
         int install = 0;
 
-        for( int i = 0; i < deeplink_id.length; i++ ) {
-            int[] tmp = summaryService.getDeepLikCounts( Long.parseLong(deeplink_id[i]) );
+        for (int i = 0; i < deeplink_id.length; i++) {
+            int[] tmp = summaryService.getDeepLikCounts(Long.parseLong(deeplink_id[i]));
             click += tmp[0];
             open += tmp[1];
             install += tmp[2];
         }
 
         JSONObject resultJson = new JSONObject();
-        resultJson.put( "click", click );
-        resultJson.put( "open", open );
-        resultJson.put( "install", install );
+        resultJson.put("click", click);
+        resultJson.put("open", open);
+        resultJson.put("install", install);
 
         return resultJson.toString();
     }
