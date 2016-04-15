@@ -22,6 +22,7 @@ import org.springframework.jdbc.core.RowMapper;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Timestamp;
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -119,15 +120,23 @@ public class DeepLinkDaoImpl extends BaseDao implements DeepLinkDao {
         return null;
     }
 
-    //            "userid" : "", // 用户id
-//            "app_id" : "", // app id
-//            "type" : "", // live 或 test   --> app
-
-
-
-
     public DeepLink getUrlInfo( long deepLinkId, long appid ) {
         Date date = UuidHelper.getDateFromId(deepLinkId);   //根据deepLinkId获取日期
+
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+        try {
+            Date onlineDate = sdf.parse("2016-04-01");
+            Date currentDate = new Date();
+
+            if (date.after(currentDate) || date.before(onlineDate)) {
+                throw new LMException(LMExceptionFactor.LM_ILLEGAL_REQUEST,"deep link id does not exist!");
+            }
+        } catch (ParseException e) {
+            ApiLogger.warn("SummaryService.getDeepLinks parse date failed", e);
+            throw new LMException(LMExceptionFactor.LM_ILLEGAL_PARAM_VALUE, "date param is illegal");
+        }
+
+
         final List<DeepLink> deepLinks = new ArrayList<DeepLink>();
         TableChannel tableChannel = tableContainer.getTableChannel("deeplink", GET_URL_INFO, appid, date);
         tableChannel.getJdbcTemplate().query(tableChannel.getSql(), new Object[] {deepLinkId, appid}, new RowMapper() {
@@ -203,6 +212,7 @@ public class DeepLinkDaoImpl extends BaseDao implements DeepLinkDao {
         jdbcTemplate.query(sql, paramList.toArray(), new RowMapper() {
             public Object mapRow(ResultSet resultSet, int i) throws SQLException {
                 DeepLink dp = new DeepLink();
+                dp.setAppId(appid);
                 dp.setDeeplinkId(resultSet.getBigDecimal("deeplink_id").longValue());
                 dp.setCreateTime(resultSet.getString("create_time"));
                 dp.setTags(resultSet.getString("tags"));
@@ -275,7 +285,7 @@ public class DeepLinkDaoImpl extends BaseDao implements DeepLinkDao {
         String params = urlParams.params.toString();
 
 
-        result += tableChannel.getJdbcTemplate().update(tableChannel.getSql(), new Object[]{appId, ios_use_default, ios_custom_url, android_use_default, android_custom_url, desktop_use_default, desktop_custom_url, feature, campaign, stage, channel, tags, source, params, deepLinkId});
+        result += tableChannel.getJdbcTemplate().update(tableChannel.getSql(), new Object[]{appId, ios_use_default, ios_custom_url, android_use_default, android_custom_url, desktop_use_default, desktop_custom_url, feature, campaign, stage, channel, tags, source, params, deepLinkId, appId});
         if( result == 1 )
             return true;
         return false;

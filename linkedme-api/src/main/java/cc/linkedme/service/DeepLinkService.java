@@ -1,12 +1,12 @@
 package cc.linkedme.service;
 
-import cc.linkedme.commons.counter.component.CountComponent;
+import cc.linkedme.commons.exception.LMException;
+import cc.linkedme.commons.exception.LMExceptionFactor;
 import cc.linkedme.commons.memcache.MemCacheTemplate;
 import cc.linkedme.commons.serialization.KryoSerializationUtil;
 import cc.linkedme.commons.util.Base62;
 import cc.linkedme.commons.util.Constants;
 import cc.linkedme.dao.sdkapi.DeepLinkDao;
-import cc.linkedme.dao.sdkapi.DeepLinkParamDao;
 import cc.linkedme.data.model.DeepLink;
 import cc.linkedme.data.model.DeepLinkCount;
 import cc.linkedme.data.model.params.SummaryDeepLinkParams;
@@ -30,9 +30,6 @@ public class DeepLinkService {
 
     @Resource
     private MemCacheTemplate<byte[]> deepLinkParamMemCache;
-
-    @Resource
-    private CountComponent deepLinkCountComponent;
 
     public int addDeepLink(DeepLink deepLink) {
         int result = 0;
@@ -76,10 +73,13 @@ public class DeepLinkService {
     public String getUrlInfo( UrlParams urlParams ) {
         DeepLink deepLinkInfo = deepLinkDao.getUrlInfo(urlParams.deeplink_id, urlParams.app_id);
 
+        if( deepLinkInfo == null )
+            throw new LMException(LMExceptionFactor.LM_ILLEGAL_REQUEST, "deep link id does not exist!");
+
         JSONObject resultJson = new JSONObject();
 
         resultJson.put("userid", urlParams.user_id);
-        resultJson.put("app_id", urlParams.user_id);
+        resultJson.put("app_id", urlParams.app_id);
         resultJson.put("link_label", deepLinkInfo.getLink_label());
         resultJson.put("ios_use_default", deepLinkInfo.isIos_use_default());
         resultJson.put("ios_custom_url", deepLinkInfo.getIos_custom_url());

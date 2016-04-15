@@ -13,8 +13,9 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import cc.linkedme.commons.counter.component.CountComponent;
 import cc.linkedme.commons.log.ApiLogger;
+import cc.linkedme.commons.redis.JedisPort;
+import cc.linkedme.commons.shard.ShardingSupportHash;
 import cc.linkedme.commons.useragent.Client;
 import cc.linkedme.commons.useragent.Parser;
 import cc.linkedme.commons.util.Base62;
@@ -37,7 +38,7 @@ public class UrlServlet extends HttpServlet {
 
     private AppService appService;
 
-    private CountComponent deepLinkCountComponent;
+    private ShardingSupportHash<JedisPort> deepLinkCountShardingSupport;
 
     private static ThreadPoolExecutor deepLinkCountThreadPool = new ThreadPoolExecutor(20, 20, 60L, TimeUnit.SECONDS,
             new LinkedBlockingQueue<Runnable>(300), new ThreadPoolExecutor.DiscardOldestPolicy());
@@ -58,7 +59,7 @@ public class UrlServlet extends HttpServlet {
         userAgentParser = (Parser) context.getBean("userAgentParser");
         deepLinkService = (DeepLinkService) context.getBean("deepLinkService");
         appService = (AppService) context.getBean("appService");
-        deepLinkCountComponent = (CountComponent) context.getBean("deepLinkCountComponent");
+        deepLinkCountShardingSupport = (ShardingSupportHash) context.getBean("deepLinkCountShardingSupport");
     }
 
     /**
@@ -161,7 +162,8 @@ public class UrlServlet extends HttpServlet {
             public Void call() throws Exception {
                 try {
                     // TODO 对deeplink_id的有效性做判断
-                    deepLinkCountComponent.incr(deepLinkId, type, 1);
+                    JedisPort countClient = deepLinkCountShardingSupport.getClient(deepLinkId);
+                    countClient.hincrBy(String.valueOf(deepLinkId), countType, 1);
                 } catch (Exception e) {
                     ApiLogger.warn("UrlServlet deepLinkCountThreadPool count failed", e);
                 }

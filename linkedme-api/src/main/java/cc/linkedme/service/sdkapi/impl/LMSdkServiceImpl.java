@@ -2,7 +2,6 @@ package cc.linkedme.service.sdkapi.impl;
 
 import javax.annotation.Resource;
 
-import cc.linkedme.commons.counter.component.CountComponent;
 import cc.linkedme.commons.json.JsonBuilder;
 import cc.linkedme.commons.log.ApiLogger;
 import cc.linkedme.commons.redis.JedisPort;
@@ -33,11 +32,8 @@ import com.google.common.base.Joiner;
 import com.google.common.base.Strings;
 import net.sf.json.JSONArray;
 import net.sf.json.JSONObject;
-import org.apache.http.client.utils.URLEncodedUtils;
-import org.springframework.web.bind.ServletRequestUtils;
 
 import java.net.URI;
-import java.net.URISyntaxException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.concurrent.Callable;
@@ -71,7 +67,7 @@ public class LMSdkServiceImpl implements LMSdkService {
     public ClientDao clientDao;
 
     @Resource
-    private CountComponent deepLinkCountComponent;
+    private ShardingSupportHash<JedisPort> deepLinkCountShardingSupport;
 
     private static ThreadPoolExecutor deepLinkCountThreadPool = new ThreadPoolExecutor(20, 20, 60L, TimeUnit.SECONDS,
             new LinkedBlockingQueue<Runnable>(300), new ThreadPoolExecutor.DiscardOldestPolicy());
@@ -263,25 +259,14 @@ public class LMSdkServiceImpl implements LMSdkService {
         String params = getParamsFromDeepLink(deepLink);
 
         // count
-        String deviceType = null;
-        if (!Strings.isNullOrEmpty(openParams.os)) {
-            deviceType = openParams.os.trim().toLowerCase();
-        }
-        if ("android".equals(deviceType)) {
-            deviceType = "adr";
-        }
-        String countType = deviceType + "_open";
-        if (!DeepLinkCount.isValidCountType(countType)) {
-            // TODO 对deviceType做判断
-            countType = "other_" + "_open";
-        }
-        final String type = countType;
+        final String type = DeepLinkCount.getCountTypeFromOs(openParams.os, "_open");
         deepLinkCountThreadPool.submit(new Callable<Void>() {
             @Override
             public Void call() throws Exception {
                 try {
                     // TODO 对deeplink_id的有效性做判断
-                    deepLinkCountComponent.incr(deepLinkId, type, 1);
+                    JedisPort countClient = deepLinkCountShardingSupport.getClient(deepLinkId);
+                    countClient.hincrBy(String.valueOf(deepLinkId), type, 1);
                 } catch (Exception e) {
                     ApiLogger.warn("LMSdkServiceImpl.open deepLinkCountThreadPool count failed", e);
                 }
