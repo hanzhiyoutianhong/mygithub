@@ -7,6 +7,9 @@ import cc.linkedme.commons.json.JsonBuilder;
 import cc.linkedme.data.model.AppInfo;
 import cc.linkedme.data.model.params.AppParams;
 import cc.linkedme.service.webapi.AppService;
+import com.google.api.client.repackaged.com.google.common.base.Strings;
+import com.google.api.client.repackaged.org.apache.commons.codec.binary.Base64;
+import com.google.api.client.repackaged.org.apache.commons.codec.binary.BaseNCodec;
 import com.sun.javaws.jnl.XMLUtils;
 import com.sun.jersey.core.header.FormDataContentDisposition;
 import com.sun.jersey.multipart.FormDataParam;
@@ -17,6 +20,8 @@ import org.aspectj.util.FileUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Component;
+import sun.misc.BASE64Decoder;
+import sun.misc.BASE64Encoder;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
@@ -175,22 +180,41 @@ public class App {
     @Path("/uploadimg")
     @POST
     @Produces(MediaType.APPLICATION_JSON)
-    @Consumes(MediaType.MULTIPART_FORM_DATA)
-    public String uploadImg(@FormDataParam("file") InputStream fileInputStream,
-                            @FormDataParam("file") FormDataContentDisposition dataContentDisposition,
-                            @Context HttpServletRequest request) {
-        String imgName = Calendar.getInstance().getTimeInMillis() + dataContentDisposition.getFileName();
-        File file = new File(ImgPath + imgName);
+    @Consumes(MediaType.APPLICATION_JSON)
+    public String uploadImg(AppParams appParams, @Context HttpServletRequest request) {
+        if (appParams.user_id <= 0) {
+            throw new LMException(LMExceptionFactor.LM_ILLEGAL_PARAM_VALUE, "user_id is null");
+        }
+
+        if (appParams.app_id <= 0) {
+            throw new LMException(LMExceptionFactor.LM_ILLEGAL_PARAM_VALUE, "app_id is null");
+        }
+
+        if (Strings.isNullOrEmpty(appParams.img_data)) {
+            throw new LMException(LMExceptionFactor.LM_ILLEGAL_PARAM_VALUE, "img is null");
+        }
+
+        if (Strings.isNullOrEmpty(appParams.img_encoding)) {
+            throw new LMException(LMExceptionFactor.LM_ILLEGAL_PARAM_VALUE, "img encoding is null");
+        }
+        String imageName = Calendar.getInstance().getTimeInMillis() + ".png";
+        String imagePath = ImgPath + imageName;
+        Base64 base64 = new Base64();
         try {
-            FileUtils.copyInputStreamToFile(fileInputStream, file);
+            byte[] bytes = base64.decode(appParams.img_data.substring(22));
+            OutputStream out = new FileOutputStream(imagePath);
+            out.write(bytes);
+            out.flush();
+            out.close();
         } catch (IOException e) {
-            throw new LMException(LMExceptionFactor.LM_ILLEGAL_REQUEST);
+            throw new LMException(LMExceptionFactor.LM_ILLEGAL_REQUEST, "decode failed");
         }
         JsonBuilder resultJson = new JsonBuilder();
         resultJson.append("ret", request.getScheme() + "://" + request.getServerName() + ":"
-                + request.getServerPort() + "/app/images/" + imgName);
+                + request.getServerPort() + "/app/images/" + imageName);
         return resultJson.toString();
     }
+
 
     @Path("/images/{name}.{type}")
     @GET
@@ -206,7 +230,7 @@ public class App {
             out = response.getOutputStream();
             // pic size = 1M
             byte[] bytes = new byte[1024 * 1024];
-            int len = 0;
+            int len;
             while ((len = inputStream.read(bytes)) > 0) {
                 out.write(bytes, 0, len);
             }
