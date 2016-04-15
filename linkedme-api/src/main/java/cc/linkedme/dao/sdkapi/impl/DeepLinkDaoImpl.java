@@ -161,6 +161,7 @@ public class DeepLinkDaoImpl extends BaseDao implements DeepLinkDao {
         jdbcTemplate.query(sql, paramList.toArray(), new RowMapper() {
             public Object mapRow(ResultSet resultSet, int i) throws SQLException {
                 DeepLink dp = new DeepLink();
+                dp.setAppId(appid);
                 dp.setDeeplinkId(resultSet.getBigDecimal("deeplink_id").longValue());
                 dp.setCreateTime(resultSet.getString("create_time"));
                 dp.setTags(resultSet.getString("tags"));

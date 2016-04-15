@@ -1,5 +1,7 @@
 package cc.linkedme.data.model;
 
+import com.google.common.base.Strings;
+
 import java.io.Serializable;
 
 /**
@@ -30,14 +32,16 @@ public class DeepLinkCount implements Serializable{
         ios_click("ic"),
         ios_install("ii"),
         ios_open("io"),
+
         adr_click("ac"),
         adr_install("ai"),
         adr_open("ao"),
+
         pc_click("pcc"),
         pc_scan("pcs"),
-
         pc_ios_scan("pcis"),
         pc_ios_install("pcii"),
+
         pc_ios_open("pcio"),
         pc_adr_scan("pcas"),
         pc_adr_install("pcai"),
@@ -74,11 +78,28 @@ public class DeepLinkCount implements Serializable{
             return true;
         }
 
-        if (CountType.pc_click.toString().equals(type) || CountType.pc_scan.toString().equals(type)) {
+        if (CountType.pc_click.toString().equals(type) || CountType.pc_ios_scan.toString().equals(type)
+                || CountType.pc_adr_scan.toString().equals(type)) {
             return true;
         }
 
         return false;
+    }
+
+    public static String getCountTypeFromOs(String os, String actionType) {
+        String deviceType = null;
+        if (!Strings.isNullOrEmpty(os)) {
+            deviceType = os.trim().toLowerCase();
+        }
+        if ("android".equals(deviceType)) {
+            deviceType = "adr";
+        }
+        String countType = deviceType + actionType;
+        if (!DeepLinkCount.isValidCountType(countType)) {
+            // TODO 对deviceType做判断
+            countType = "other_" + "_open";
+        }
+        return countType;
     }
 
     public DeepLinkCount() {}

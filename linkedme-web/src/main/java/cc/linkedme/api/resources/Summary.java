@@ -95,9 +95,11 @@ public class Summary {
     @GET
     @Produces({MediaType.APPLICATION_JSON})
     public String getDeepLinkInfo(@QueryParam("deeplink_id") long deeplink_id,
+                                  @QueryParam("app_id") long app_id,
                                   @QueryParam("token") String token) {
         SummaryDeepLinkParams summaryDeepLinkParams = new SummaryDeepLinkParams();
         summaryDeepLinkParams.deepLinkId = deeplink_id;
+        summaryDeepLinkParams.appid = app_id;
 
         return summaryService.getDeepLinkInfoByDeepLinkId(summaryDeepLinkParams);
     }
