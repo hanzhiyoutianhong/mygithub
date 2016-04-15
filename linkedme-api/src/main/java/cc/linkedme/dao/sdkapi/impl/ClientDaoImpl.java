@@ -35,10 +35,10 @@ public class ClientDaoImpl extends BaseDao implements ClientDao {
         int screenWidth = clientInfo.getScreenWidth();
         boolean isWifi = clientInfo.getIsWifi();
         boolean isReferable = clientInfo.getIsReferable();
-        String latVal = clientInfo.getLatVal();
+        boolean latVal = clientInfo.getLatVal();
         String carrier = clientInfo.getCarrier();
         String appVersion = clientInfo.getAppVersion();
-        String sdk_update = clientInfo.getSdkUpdate();
+        int sdk_update = clientInfo.getSdkUpdate();
         String iOSTeamId = clientInfo.getIosTeamId();
         String iOSBundle = clientInfo.getIosBundleId();
 

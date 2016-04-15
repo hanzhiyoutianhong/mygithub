@@ -29,14 +29,14 @@ public class InstallParams {
     public int screen_width;
     public boolean is_wifi;
     public boolean is_referable;
-    public String lat_val;
+    public boolean lat_val;
     public String carrier;
     public String app_version;
     public String extra_uri_data;
     public String external_intent_uri;
     public String spotlight_identifier;
     public String universal_link_url;
-    public String sdk_update;
+    public int sdk_update;
     public String sdk_version;
     public String ios_team_id;
     public String ios_bundle_id;
@@ -195,11 +195,11 @@ public class InstallParams {
         this.is_referable = is_referable;
     }
 
-    public String getLat_val() {
+    public boolean getLat_val() {
         return lat_val;
     }
 
-    public void setLat_val(String lat_val) {
+    public void setLat_val(boolean lat_val) {
         this.lat_val = lat_val;
     }
 
@@ -219,11 +219,11 @@ public class InstallParams {
         this.app_version = app_version;
     }
 
-    public String getSdk_update() {
+    public int getSdk_update() {
         return sdk_update;
     }
 
-    public void setSdk_update(String sdk_update) {
+    public void setSdk_update(int sdk_update) {
         this.sdk_update = sdk_update;
     }
 

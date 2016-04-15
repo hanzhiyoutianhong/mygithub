@@ -88,6 +88,7 @@ public class MsgUtils {
         info.append("latVal", clientInfo.getLatVal());
         info.append("carrier", clientInfo.getCarrier());
         info.append("appVersion", clientInfo.getAppVersion());
+        info.append("sdkUpdate", clientInfo.getSdkUpdate());
         info.append("sdkVersion", clientInfo.getSdkUpdate());
         info.append("iOSTeamId", clientInfo.getIosTeamId());
         info.append("iOSBundleId", clientInfo.getIosBundleId());
@@ -112,9 +113,10 @@ public class MsgUtils {
         clientInfo.setScreenWidth(clientMsg.getInt("screenWidth"));
         clientInfo.setIsWifi(clientMsg.getBoolean("isWifi"));
         clientInfo.setIsReferable(clientMsg.getBoolean("isReferable"));
-        clientInfo.setLatVal(clientMsg.getString("latVal"));
+        clientInfo.setLatVal(clientMsg.getBoolean("latVal"));
         clientInfo.setCarrier(clientMsg.getString("carrier"));
         clientInfo.setAppVersion(clientMsg.getString("appVersion"));
+        clientInfo.setSdkUpdate(clientMsg.getInt("sdkUpdate"));
         clientInfo.setIosTeamId(clientMsg.getString("iOSTeamId"));
         clientInfo.setIosBundleId(clientMsg.getString("iOSBundleId"));
         clientInfo.setLinkedmeKey(clientMsg.getString("linkedmeKey"));
