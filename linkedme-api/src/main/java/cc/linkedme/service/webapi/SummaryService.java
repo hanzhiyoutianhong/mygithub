@@ -66,17 +66,16 @@ public class SummaryService {
         String start_date = summaryDeepLinkParams.startDate;
         String end_date = summaryDeepLinkParams.endDate;
 
-
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
         String onlineTime = "2016-04-01";
         try {
-            Date onlineDate = sdf.parse("2016-04-01");
+            Date onlineDate = sdf.parse(onlineTime);
             Date stDate = sdf.parse(start_date);
             Date edDate = sdf.parse(end_date);
             Date currentDate = new Date();
 
             if (stDate.after(currentDate) || edDate.before(onlineDate)) {
-                throw new LMException(LMExceptionFactor.LM_ILLEGAL_PARAM_VALUE);
+                throw new LMException(LMExceptionFactor.LM_ILLEGAL_PARAM_VALUE, "date is invalid!");
             } else {
                 if (stDate.before(onlineDate)) {
                     start_date = onlineTime;
@@ -256,6 +255,9 @@ public class SummaryService {
             if (counts != null && counts.size() > 0) {
                 Map<Long, DeepLinkCount> dplMap = new HashMap<>();
                 for (int j = 0; j < tmpIds.length; j++) {
+                    if (tmpIds[j] == 0) {
+                        continue;
+                    }
                     DeepLinkCount deepLinkCount = new DeepLinkCount(tmpIds[j]);
                     Map<String, String> countMap = counts.get(tmpIds[j]);
                     if (countMap != null) {

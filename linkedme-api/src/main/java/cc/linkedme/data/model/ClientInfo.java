@@ -203,15 +203,15 @@ public class ClientInfo {
         this.isReferable = isReferable;
     }
 
-    private String latVal;
+    private boolean latVal;
 
     @Basic
     @javax.persistence.Column(name = "lat_val")
-    public String getLatVal() {
+    public boolean getLatVal() {
         return latVal;
     }
 
-    public void setLatVal(String latVal) {
+    public void setLatVal(boolean latVal) {
         this.latVal = latVal;
     }
 
@@ -239,15 +239,15 @@ public class ClientInfo {
         this.appVersion = appVersion;
     }
 
-    private String sdkUpdate;
+    private int sdkUpdate;
 
     @Basic
     @javax.persistence.Column(name = "sdk_update")
-    public String getSdkUpdate() {
+    public int getSdkUpdate() {
         return sdkUpdate;
     }
 
-    public void setSdkUpdate(String sdkUpdate) {
+    public void setSdkUpdate(int sdkUpdate) {
         this.sdkUpdate = sdkUpdate;
     }
 

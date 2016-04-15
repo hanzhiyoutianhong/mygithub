@@ -45,6 +45,8 @@ public class AppParams {
 
     public int ios_android_flag;
 
+    public String img_data;
+    public String img_encoding;
     public long getApp_id() {
         return app_id;
     }
@@ -269,4 +271,19 @@ public class AppParams {
         this.custom_landing_page = custom_landing_page;
     }
 
+    public String getImg_data() {
+        return img_data;
+    }
+
+    public void setImg_data(String img_data) {
+        this.img_data = img_data;
+    }
+
+    public String getImg_encoding() {
+        return img_encoding;
+    }
+
+    public void setImg_encoding(String img_encoding) {
+        this.img_encoding = img_encoding;
+    }
 }
