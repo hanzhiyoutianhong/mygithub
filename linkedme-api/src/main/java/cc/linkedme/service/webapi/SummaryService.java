@@ -2,7 +2,14 @@ package cc.linkedme.service.webapi;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
 import javax.annotation.Resource;
 
@@ -12,10 +19,11 @@ import net.sf.json.JSONObject;
 import org.apache.commons.lang.StringUtils;
 import org.springframework.stereotype.Service;
 
-import cc.linkedme.commons.counter.component.CountComponent;
 import cc.linkedme.commons.exception.LMException;
 import cc.linkedme.commons.exception.LMExceptionFactor;
 import cc.linkedme.commons.log.ApiLogger;
+import cc.linkedme.commons.redis.JedisPipelineReadCallback;
+import cc.linkedme.commons.redis.JedisReadPipeline;
 import cc.linkedme.commons.util.Base62;
 import cc.linkedme.commons.redis.JedisPort;
 import cc.linkedme.commons.shard.ShardingSupportHash;
@@ -30,8 +38,8 @@ import cc.linkedme.data.model.DeepLink;
 import cc.linkedme.data.model.DeepLinkCount;
 import cc.linkedme.data.model.params.SummaryButtonParams;
 import cc.linkedme.data.model.params.SummaryDeepLinkParams;
-
 import com.google.api.client.repackaged.com.google.common.base.Strings;
+import org.springframework.util.CollectionUtils;
 
 /**
  * Created by LinkedME01 on 16/3/20.
@@ -46,7 +54,7 @@ public class SummaryService {
     BtnCountDao btnCountDao;
 
     @Resource
-    private CountComponent deepLinkCountComponent;
+    private ShardingSupportHash<JedisPort> deepLinkCountShardingSupport;
 
     @Resource
     private BtnService btnService;
@@ -107,23 +115,23 @@ public class SummaryService {
         for (int i = startIndex; i < endIndex; i++) {
             tmpIds[i - startIndex] = deepLinks.get(i).getDeeplinkId();
         }
-        Map<Long, Map<String, Integer>> counts = deepLinkCountComponent.getsAll(tmpIds); // 获取短链的计数
+
+        Map<Long, Map<String, String>> counts = getCounts(tmpIds);
 
         JSONObject resultJson = new JSONObject();
         resultJson.put("total_count", deepLinkNum);
         JSONArray deepLinkJsonArr = new JSONArray();
 
         // 遍历deepLinks,对应给count赋值(只遍历startIndex和endIndex之间的元素)
-        List<DeepLink> resultDeepLinks = new ArrayList<>(deepLinkNum);
         for (int i = startIndex; i < endIndex; i++) {
             long deepLinkId = deepLinks.get(i).getDeeplinkId();
             DeepLinkCount deepLinkCountObject = new DeepLinkCount(deepLinkId);
-            Map<String, Integer> countMap = counts.get(deepLinkId);
+            Map<String, String> countMap = counts.get(deepLinkId);
             if (countMap != null && countMap.size() > 0) {
                 setDeepLinkCount(deepLinkCountObject, countMap);
             }
             deepLinks.get(i).setDeepLinkCount(deepLinkCountObject);
-            deepLinkJsonArr.add(deepLinks.get(i).toJsonObject());
+            deepLinkJsonArr.add(i, deepLinks.get(i).toJsonObject());
         }
         resultJson.put("ret", deepLinkJsonArr);
         return resultJson.toString();
@@ -132,7 +140,7 @@ public class SummaryService {
     public String getDeepLinkInfoByDeepLinkId(SummaryDeepLinkParams summaryDeepLinkParams) {
         DeepLink deepLinkInfo = deepLinkDao.getDeepLinkInfo(summaryDeepLinkParams.deepLinkId, summaryDeepLinkParams.appid);
 
-        Map<String, Integer> count = deepLinkCountComponent.getAll(summaryDeepLinkParams.deepLinkId);
+        Map<String, String> count = getCount(summaryDeepLinkParams.deepLinkId);
 
         DeepLinkCount deepLinkCount = new DeepLinkCount(summaryDeepLinkParams.deepLinkId);
 
@@ -162,16 +170,45 @@ public class SummaryService {
         resultJson.put("unique", "0");
         resultJson.put("tag", deepLinkInfo.getTags());
         resultJson.put("creation_time", deepLinkInfo.getCreateTime());
-        // TODO Judge source type
         resultJson.put("creation_type", deepLinkInfo.getSource());
 
+        JSONObject retJson = getCountJson(deepLinkCount.getIos_click(), deepLinkCount.getIos_install(), deepLinkCount.getIos_open(),
+                deepLinkCount.getAdr_click(), deepLinkCount.getAdr_install(), deepLinkCount.getAdr_open(), deepLinkCount.getPc_click(),
+                deepLinkCount.getPc_ios_scan(), deepLinkCount.getPc_adr_scan());
+
+        resultJson.put("data", retJson);
+
         return resultJson.toString();
+    }
+
+    public JSONObject getCountJson(int iosClick, int iosInstall, int iosOpen, int adrClick, int adrInstall, int adrOpen, int pcClick,
+            int pcIosScan, int pcAdrScan) {
+        JSONObject iosJson = new JSONObject();
+        iosJson.put("click", iosClick);
+        iosJson.put("install", iosInstall);
+        iosJson.put("open", iosOpen);
+
+        JSONObject adrJson = new JSONObject();
+        adrJson.put("click", adrClick);
+        adrJson.put("install", adrInstall);
+        adrJson.put("open", adrOpen);
+
+        JSONObject pcJson = new JSONObject();
+        pcJson.put("click", pcClick);
+        pcJson.put("pc_ios_scan", pcIosScan);
+        pcJson.put("pc_adr_scan", pcAdrScan);
+
+        JSONObject retJson = new JSONObject();
+        retJson.put("ios", iosJson);
+        retJson.put("android", adrJson);
+        retJson.put("pc", pcJson);
+        return retJson;
     }
 
     public int[] getDeepLikCounts(long deepLinkId) {
         int[] res = new int[3];
 
-        Map<String, Integer> count = deepLinkCountComponent.getAll(deepLinkId);
+        Map<String, String> count = getCount(deepLinkId);
 
         DeepLinkCount deepLinkCount = new DeepLinkCount(deepLinkId);
 
@@ -195,13 +232,13 @@ public class SummaryService {
         for (int i = 0; i < deepLinks.size(); i++) {
             tmpIds[(i % 50)] = deepLinks.get(i).getDeeplinkId();
             if ((i + 1) % 50 == 0) {
-                Map<Long, Map<String, Integer>> counts = deepLinkCountComponent.getsAll(tmpIds);
+                Map<Long, Map<String, String>> counts = getCounts(tmpIds);
                 // 遍历counts,转成Map<Long, DeepLinkCount>
                 if (counts != null && counts.size() > 0) {
-                    Map<Long, DeepLinkCount> dplMap = new HashMap<>(50);
+                    Map<Long, DeepLinkCount> dplMap = new HashMap<>();
                     for (int j = 0; j < 50; j++) {
                         DeepLinkCount deepLinkCount = new DeepLinkCount(tmpIds[j]);
-                        Map<String, Integer> countMap = counts.get(tmpIds);
+                        Map<String, String> countMap = counts.get(tmpIds);
                         if (countMap != null) {
                             setDeepLinkCount(deepLinkCount, countMap);
                         }
@@ -211,16 +248,16 @@ public class SummaryService {
                 }
                 tmpIds = new long[50];
             }
-        }
+        } // 只查返回有count的deeplink
 
         if (deepLinks.size() % 50 != 0) {
-            Map<Long, Map<String, Integer>> counts = deepLinkCountComponent.getsAll(tmpIds);
+            Map<Long, Map<String, String>> counts = getCounts(tmpIds);
             // 遍历counts,转成Map<Long, DeepLinkCount>
             if (counts != null && counts.size() > 0) {
-                Map<Long, DeepLinkCount> dplMap = new HashMap<>(tmpIds.length);
+                Map<Long, DeepLinkCount> dplMap = new HashMap<>();
                 for (int j = 0; j < tmpIds.length; j++) {
                     DeepLinkCount deepLinkCount = new DeepLinkCount(tmpIds[j]);
-                    Map<String, Integer> countMap = counts.get(tmpIds);
+                    Map<String, String> countMap = counts.get(tmpIds[j]);
                     if (countMap != null) {
                         setDeepLinkCount(deepLinkCount, countMap);
                     }
@@ -233,17 +270,47 @@ public class SummaryService {
         return deepLinkCountMap;
     }
 
-    private void setDeepLinkCount(DeepLinkCount dplc, Map<String, Integer> dplCountMap) {
-        dplc.setIos_click(dplCountMap.get(DeepLinkCount.CountType.ios_click));
-        dplc.setIos_install(dplCountMap.get(DeepLinkCount.CountType.ios_click.toString()));
-        dplc.setIos_open(dplCountMap.get(DeepLinkCount.CountType.ios_open.toString()));
-        dplc.setAdr_click(dplCountMap.get(DeepLinkCount.CountType.adr_click.toString()));
-        dplc.setAdr_install(dplCountMap.get(DeepLinkCount.CountType.adr_install.toString()));
-        dplc.setAdr_open(dplCountMap.get(DeepLinkCount.CountType.adr_open.toString()));
+    private void setDeepLinkCount(DeepLinkCount dplc, Map<String, String> dplCountMap) {
+        int iosClick = 0, iosInstall = 0, iosOpen = 0, adrClick = 0;
+        if (dplCountMap.get(DeepLinkCount.CountType.ios_click.toString()) != null) {
+            iosClick = Integer.parseInt(dplCountMap.get(DeepLinkCount.CountType.ios_click.toString()));
+            dplc.setIos_click(iosClick);
+        }
+        if (dplCountMap.get(DeepLinkCount.CountType.ios_install.toString()) != null) {
+            iosInstall = Integer.parseInt(dplCountMap.get(DeepLinkCount.CountType.ios_install.toString()));
+            dplc.setIos_install(iosInstall);
+        }
+        if (dplCountMap.get(DeepLinkCount.CountType.ios_open.toString()) != null) {
+            iosOpen = Integer.parseInt(dplCountMap.get(DeepLinkCount.CountType.ios_open.toString()));
+            dplc.setIos_open(iosOpen);
+        }
 
-        dplc.setPc_click(dplCountMap.get(DeepLinkCount.CountType.pc_click));
-        dplc.setPc_ios_scan(dplCountMap.get(DeepLinkCount.CountType.pc_ios_scan));
-        dplc.setPc_adr_scan(dplCountMap.get(DeepLinkCount.CountType.pc_adr_scan));
+        if (dplCountMap.get(DeepLinkCount.CountType.adr_click.toString()) != null) {
+            adrClick = Integer.parseInt(dplCountMap.get(DeepLinkCount.CountType.adr_click.toString()));
+            dplc.setAdr_click(adrClick);
+        }
+
+        if (dplCountMap.get(DeepLinkCount.CountType.adr_install.toString()) != null) {
+            dplc.setAdr_install(Integer.parseInt(dplCountMap.get(DeepLinkCount.CountType.adr_install.toString())));
+        }
+
+        if (dplCountMap.get(DeepLinkCount.CountType.adr_open.toString()) != null) {
+            dplc.setAdr_open(Integer.parseInt(dplCountMap.get(DeepLinkCount.CountType.adr_open.toString())));
+        }
+
+        if (dplCountMap.get(DeepLinkCount.CountType.pc_click.toString()) != null) {
+
+            dplc.setPc_click(Integer.parseInt(dplCountMap.get(DeepLinkCount.CountType.pc_click.toString())));
+        }
+        if (dplCountMap.get(DeepLinkCount.CountType.pc_ios_scan.toString()) != null) {
+
+            dplc.setPc_ios_scan(Integer.parseInt(dplCountMap.get(DeepLinkCount.CountType.pc_ios_scan.toString())));
+        }
+        if (dplCountMap.get(DeepLinkCount.CountType.pc_adr_scan.toString()) != null) {
+
+            dplc.setPc_adr_scan(Integer.parseInt(dplCountMap.get(DeepLinkCount.CountType.pc_adr_scan.toString())));
+        }
+
         // dplc.setPc_ios_install(dplCountMap.get(DeepLinkCount.CountType.pc_ios_install));
         // dplc.setPc_ios_open(dplCountMap.get(DeepLinkCount.CountType.pc_ios_open));
         // dplc.setPc_adr_install(dplCountMap.get(DeepLinkCount.CountType.pc_adr_install));
@@ -432,6 +499,38 @@ public class SummaryService {
         return 0L;
     }
 
+    public Map<Long, Map<String, String>> getCounts(long[] ids) {
+        Map<Long, Map<String, String>> counts = new HashMap<>(); // 获取短链的计数
+        Map<Integer, List<Long>> dbIdsMap = deepLinkCountShardingSupport.getDbSharding(ids);
+        for (Map.Entry<Integer, List<Long>> entry : dbIdsMap.entrySet()) {
+            // TODO 后续可以改成多线程调用
+            int db = entry.getKey();
+            List<Long> idList = entry.getValue();
+            JedisPort client = deepLinkCountShardingSupport.getClient(db);
+            List<Object> list = client.pipeline(new JedisPipelineReadCallback() {
+                @Override
+                public void call(JedisReadPipeline pipeline) {
+                    for (long id : idList) {
+                        pipeline.hgetAll(String.valueOf(id));
+                    }
+                }
+            });
+            for (int i = 0; i < idList.size(); i++) {
+                Map<String, String> countMap = (Map<String, String>) list.get(i);
+                if (CollectionUtils.isEmpty(countMap)) {
+                    continue;
+                }
+                counts.put(idList.get(i), countMap);
+            }
+        }
+        return counts;
+    }
+
+    public Map<String, String> getCount(long id) {
+        JedisPort client = deepLinkCountShardingSupport.getClient(id);
+        return client.hgetAll(String.valueOf(id));
+    }
+
     class CountRank implements Comparable<CountRank> {
         public long app_id;
         public String app_name;
@@ -461,4 +560,5 @@ public class SummaryService {
             return result;
         }
     }
+
 }

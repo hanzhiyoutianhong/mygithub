@@ -1,23 +1,15 @@
 package cc.linkedme.service;
 
-import cc.linkedme.commons.counter.component.CountComponent;
 import cc.linkedme.commons.memcache.MemCacheTemplate;
 import cc.linkedme.commons.serialization.KryoSerializationUtil;
-import cc.linkedme.commons.util.Base62;
-import cc.linkedme.commons.util.Constants;
 import cc.linkedme.dao.sdkapi.DeepLinkDao;
-import cc.linkedme.dao.sdkapi.DeepLinkParamDao;
 import cc.linkedme.data.model.DeepLink;
-import cc.linkedme.data.model.DeepLinkCount;
-import cc.linkedme.data.model.params.SummaryDeepLinkParams;
 import cc.linkedme.data.model.params.UrlParams;
-import com.google.common.base.Strings;
 import net.sf.json.JSONArray;
 import net.sf.json.JSONObject;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
-import java.util.Map;
 
 /**
  * Created by LinkedME01 on 16/3/10.
@@ -30,9 +22,6 @@ public class DeepLinkService {
 
     @Resource
     private MemCacheTemplate<byte[]> deepLinkParamMemCache;
-
-    @Resource
-    private CountComponent deepLinkCountComponent;
 
     public int addDeepLink(DeepLink deepLink) {
         int result = 0;
@@ -73,7 +62,7 @@ public class DeepLinkService {
         return result;
     }
 
-    public String getUrlInfo( UrlParams urlParams ) {
+    public String getUrlInfo(UrlParams urlParams) {
         DeepLink deepLinkInfo = deepLinkDao.getUrlInfo(urlParams.deeplink_id, urlParams.app_id);
 
         JSONObject resultJson = new JSONObject();
@@ -83,43 +72,43 @@ public class DeepLinkService {
         resultJson.put("link_label", deepLinkInfo.getLink_label());
         resultJson.put("ios_use_default", deepLinkInfo.isIos_use_default());
         resultJson.put("ios_custom_url", deepLinkInfo.getIos_custom_url());
-        resultJson.put("android_use_default", deepLinkInfo.isAndroid_use_default() );
+        resultJson.put("android_use_default", deepLinkInfo.isAndroid_use_default());
         resultJson.put("android_custom_url", deepLinkInfo.getAndroid_custom_url());
         resultJson.put("desktop_use_default", deepLinkInfo.isDesktop_use_default());
         resultJson.put("desktop_custom_url", deepLinkInfo.getDesktop_custom_url());
 
         String[] features = deepLinkInfo.getFeature().split(",");
         JSONArray featureArray = new JSONArray();
-        for( int i = 0; i < features.length; i++ ) {
-            featureArray.add( features[i] );
+        for (int i = 0; i < features.length; i++) {
+            featureArray.add(features[i]);
         }
         resultJson.put("feature", featureArray);
 
         String[] campaigns = deepLinkInfo.getCampaign().split(",");
         JSONArray campaignArray = new JSONArray();
-        for( int i = 0; i < campaigns.length; i++ ) {
-            campaignArray.add( features[i] );
+        for (int i = 0; i < campaigns.length; i++) {
+            campaignArray.add(features[i]);
         }
         resultJson.put("campaign", campaignArray);
 
         String[] stages = deepLinkInfo.getStage().split(",");
         JSONArray stageArray = new JSONArray();
-        for( int i = 0; i < stages.length; i++ ) {
-            stageArray.add( stages[i] );
+        for (int i = 0; i < stages.length; i++) {
+            stageArray.add(stages[i]);
         }
         resultJson.put("stage", stageArray);
 
         String[] channels = deepLinkInfo.getChannel().split(",");
         JSONArray channelArray = new JSONArray();
-        for( int i = 0; i < channels.length; i++ ) {
-            channelArray.add( channels[i] );
+        for (int i = 0; i < channels.length; i++) {
+            channelArray.add(channels[i]);
         }
         resultJson.put("channel", channelArray);
 
         String[] tags = deepLinkInfo.getTags().split(",");
         JSONArray tagArray = new JSONArray();
-        for( int i = 0; i < tags.length; i++ ) {
-            tagArray.add( tags[i] );
+        for (int i = 0; i < tags.length; i++) {
+            tagArray.add(tags[i]);
         }
         resultJson.put("tags", tagArray);// "tags":["tags1", "tags2"]
 
@@ -128,7 +117,7 @@ public class DeepLinkService {
         return resultJson.toString();
     }
 
-    public boolean updateUrl( UrlParams urlParams ) {
+    public boolean updateUrl(UrlParams urlParams) {
         return deepLinkDao.updateUrlInfo(urlParams);
     }
 
