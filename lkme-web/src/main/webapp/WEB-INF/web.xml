@@ -71,10 +71,21 @@
 
         <load-on-startup>1</load-on-startup>
     </servlet>
+
+    <servlet>
+        <servlet-name>codeServlet</servlet-name>
+        <servlet-class>cc.linkedme.servlet.CodeServlet</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>codeServlet</servlet-name>
+        <url-pattern>/code.jsp</url-pattern>
+    </servlet-mapping>
+
     <servlet-mapping>
         <servlet-name>lkmeServlet</servlet-name>
         <url-pattern>/i/*</url-pattern>
     </servlet-mapping>
+
 
     <servlet-mapping>
         <servlet-name>default</servlet-name>
@@ -115,6 +126,8 @@
         <url-pattern>/</url-pattern>
     </servlet-mapping>
 
+
+
     <welcome-file-list>
         <welcome-file>index.jsp</welcome-file>
     </welcome-file-list>
@@ -127,5 +140,4 @@
         <error-code>500</error-code>
         <location>/500.jsp</location>
     </error-page>
-
 </web-app>

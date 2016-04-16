@@ -77,4 +77,9 @@ public class AppServiceImpl implements AppService {
         return appDao.updateApp(appParams);
     }
 
+    @Override
+    public String uploadImg(AppParams appParams) {
+        return appDao.uploadImg(appParams);
+    }
+
 }

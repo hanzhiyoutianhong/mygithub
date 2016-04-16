@@ -9,21 +9,22 @@ import cc.linkedme.data.dao.strategy.TableChannel;
 import cc.linkedme.data.dao.util.DaoUtil;
 import cc.linkedme.data.dao.util.JdbcTemplate;
 import cc.linkedme.data.model.AppInfo;
-import cc.linkedme.data.model.UserInfo;
 import cc.linkedme.data.model.params.AppParams;
-import cc.linkedme.data.model.params.UserParams;
+import org.apache.commons.codec.binary.Base64;
 import org.springframework.dao.DataAccessException;
 import org.springframework.jdbc.core.RowMapper;
 
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.OutputStream;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Timestamp;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Date;
+import java.util.Calendar;
 import java.util.List;
-import java.util.Objects;
 
 /**
  * Created by LinkedME01 on 16/3/18.
@@ -35,6 +36,8 @@ public class AppDaoImpl extends BaseDao implements AppDao {
     private static final String DEL_APP_BY_USERID_AND_APPID = "DEL_APP_BY_USERID_AND_APPID";
     private static final String GET_APP_BY_APPID = "GET_APP_BY_APPID";
     private static final String UPDATE_APP_BY_APPID = "UPDATE_APP_BY_APPID";
+    private static final String UPLOAD_IMG = "UPLOAD_IMG";
+    public static final String ImgPath = "./";
 
     public int insertApp(AppInfo appInfo) {
         int result = 0;
@@ -192,6 +195,33 @@ public class AppDaoImpl extends BaseDao implements AppDao {
         }
         return res;
 
+    }
+
+    @Override
+    public String uploadImg(AppParams appParams) {
+        String imageName = Calendar.getInstance().getTimeInMillis() + ".png";
+        String imagePath = ImgPath + imageName;
+        Base64 base64 = new Base64();
+        try {
+            byte[] bytes = base64.decode(appParams.img_data);
+            OutputStream out = new FileOutputStream(imagePath);
+            out.write(bytes);
+            out.flush();
+            out.close();
+        } catch (IOException e) {
+            throw new LMException(LMExceptionFactor.LM_ILLEGAL_REQUEST, "decode failed");
+        }
+        int res = 0;
+        TableChannel tableChannel = tableContainer.getTableChannel("appInfo", UPLOAD_IMG, 0L, 0L);
+        JdbcTemplate jdbcTemplate = tableChannel.getJdbcTemplate();
+         try {
+             res +=
+                     jdbcTemplate.update(tableChannel.getSql(),
+                             new Object[] {imagePath, appParams.app_id, appParams.user_id});
+         } catch (DataAccessException e) {
+             throw new LMException(LMExceptionFactor.LM_FAILURE_DB_OP);
+         }
+         return res > 0 ? imageName : null;
     }
 
 }
