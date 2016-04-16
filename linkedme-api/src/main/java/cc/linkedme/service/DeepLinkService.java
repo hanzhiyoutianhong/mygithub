@@ -59,8 +59,14 @@ public class DeepLinkService {
         return null;
     }
 
-    public boolean deleteDeepLink(long deepLinkId, long appId) {
-        boolean result = deepLinkDao.deleteDeepLink(deepLinkId, appId);
+    public boolean deleteDeepLink(long[] deepLinkIds, long appId) {
+        boolean result = true;
+        for( int i = 0; i < deepLinkIds.length; i++ ) {
+            if( !deepLinkDao.deleteDeepLink(deepLinkIds[i], appId) ) {
+                result = false;
+                break;
+            }
+        }
         return result;
     }
 
