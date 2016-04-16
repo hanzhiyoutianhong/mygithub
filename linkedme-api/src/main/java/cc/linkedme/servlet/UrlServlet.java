@@ -66,6 +66,14 @@ public class UrlServlet extends HttpServlet {
      * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
      */
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        // TODO 显示二维码代码 CodeServlet code.jsp
+        if (1 == 1) {
+            String location = request.getScheme() + "://" + request.getServerName() + ":"
+                    + request.getServerPort() + "/code.jsp";
+            response.sendRedirect(location + "?code_url=" + "http://www.baidu.com");
+            return;
+        }
+
         // TODO Auto-generated method stub
         // eg, https://lkme.cc/hafzh/fhza80af?scan=0; appId, deeplinkId;
         String uri = request.getRequestURI();
@@ -248,6 +256,12 @@ public class UrlServlet extends HttpServlet {
             String location = "intent://linkedme?click_id=" + uriArr[2] + "#Intent;scheme=" + scheme + ";package="
                     + appInfo.getAndroid_package_name() + ";S.browser_fallback_url=" + url + ";end";
             response.sendRedirect(location);
+            return;
+        }
+        if (!isAndroid && !isIOS) {
+            String location = request.getScheme() + "://" + request.getServerName() + ":"
+                    + request.getServerPort() + "/code.jsp";
+            response.sendRedirect(location + "?code_url=" + "http://www.baidu.com");
             return;
         }
 
