@@ -18,4 +18,6 @@ public interface AppDao {
     AppInfo getAppsByAppId(long appId);
 
     int updateApp(final AppParams appParams);
+
+    String uploadImg(AppParams appParams, String imagePath);
 }

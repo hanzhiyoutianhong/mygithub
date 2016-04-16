@@ -20,4 +20,6 @@ public interface AppService {
     AppInfo getAppById(long appId);
 
     int updateApp(AppParams appParams);
+
+    String uploadImg(AppParams appParams, String imagePath);
 }
