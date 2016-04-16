@@ -85,6 +85,7 @@ public class AppDaoImpl extends BaseDao implements AppDao {
                 app.setType(resultSet.getString("type"));
                 app.setUser_id(appParams.user_id);
                 app.setApp_name(resultSet.getString("app_name"));
+                app.setApp_logo(resultSet.getString("app_logo"));
                 app.setApp_key(resultSet.getString("app_key"));
                 app.setApp_secret(resultSet.getString("app_secret"));
                 app.setIos_uri_scheme(resultSet.getString("ios_uri_scheme"));
@@ -138,6 +139,7 @@ public class AppDaoImpl extends BaseDao implements AppDao {
                 app.setApp_id(app_id);
                 app.setUser_id(resultSet.getLong("user_id"));
                 app.setApp_name(resultSet.getString("app_name"));
+                app.setApp_logo(resultSet.getString("app_logo"));
                 app.setApp_key(resultSet.getString("app_key"));
                 app.setApp_secret(resultSet.getString("app_secret"));
 

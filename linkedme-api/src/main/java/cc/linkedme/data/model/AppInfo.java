@@ -12,6 +12,7 @@ public class AppInfo {
     private long app_id;
     private long user_id;
     private String app_name;
+    private String app_logo;
     private String type;
     private String creation_time;
 
@@ -61,6 +62,14 @@ public class AppInfo {
 
     public void setApp_name(String app_name) {
         this.app_name = app_name;
+    }
+
+    public String getApp_logo() {
+        return app_logo;
+    }
+
+    public void setApp_logo(String app_logo) {
+        this.app_logo = app_logo;
     }
 
     public String getType() {
@@ -279,6 +288,7 @@ public class AppInfo {
         JsonBuilder resultJson = new JsonBuilder();
         resultJson.append("app_id", app_id);
         resultJson.append("app_name", app_name);
+        resultJson.append("app_logo", app_logo);
         resultJson.append("lkme_key", app_key);
         resultJson.append("lkme_secret", app_secret);
         resultJson.append("link_setting", link_setting.flip());
