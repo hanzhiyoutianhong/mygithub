@@ -1,7 +1,7 @@
 /**
  * Created by LinkedME01 on 16/4/1.
  */
-var ResPath = "./jsserver/";
+var ResPath = "https://lkme.cc/jsserver/";
 var ResPathLang = ResPath + "en/";
 var ResGotoAppStore = "Go to APP Store";
 var ResGotoAppStoreDownload = "Go to APP Store and Download";

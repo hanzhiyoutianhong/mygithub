@@ -33,7 +33,7 @@ public class App {
     @Resource
     private AppService appService;
 
-    public static final String ImgPath = "./";
+    public static final String ImgPath = "./";  //TODO 改路径
 
     @Path("/create_app")
     @POST

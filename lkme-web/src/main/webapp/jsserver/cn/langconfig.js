@@ -1,7 +1,7 @@
 /**
  * Created by LinkedME01 on 16/4/1.
  */
-var ResPath = "./jsserver/";
+var ResPath = "https://lkme.cc/jsserver/";
 var ResPathLang = ResPath + "cn/";
 var ResGotoAppStore = "前往应用商店";
 var ResGotoAppStoreDownload = "前往应用商店下载";
