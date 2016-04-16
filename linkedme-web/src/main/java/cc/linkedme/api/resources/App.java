@@ -183,10 +183,11 @@ public class App {
         if (Strings.isNullOrEmpty(appParams.img_encoding)) {
             throw new LMException(LMExceptionFactor.LM_ILLEGAL_PARAM_VALUE, "img encoding is null");
         }
-        String imageName = appService.uploadImg(appParams);
+        String basePath = request.getScheme() + "://" + request.getServerName() + ":"
+                + request.getServerPort() + "/app/images/";
+        String imageName = appService.uploadImg(appParams, basePath);
         JsonBuilder resultJson = new JsonBuilder();
-        resultJson.append("img_url", request.getScheme() + "://" + request.getServerName() + ":"
-                + request.getServerPort() + "/app/images/" + imageName);
+        resultJson.append("img_url", basePath + imageName);
         return resultJson.toString();
     }
 

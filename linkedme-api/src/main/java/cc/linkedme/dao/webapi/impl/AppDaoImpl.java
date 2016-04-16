@@ -198,13 +198,13 @@ public class AppDaoImpl extends BaseDao implements AppDao {
     }
 
     @Override
-    public String uploadImg(AppParams appParams) {
+    public String uploadImg(AppParams appParams, String imagePath) {
         String imageName = Calendar.getInstance().getTimeInMillis() + ".png";
-        String imagePath = ImgPath + imageName;
+        String imageLocalPath = ImgPath + imageName;
         Base64 base64 = new Base64();
         try {
             byte[] bytes = base64.decode(appParams.img_data);
-            OutputStream out = new FileOutputStream(imagePath);
+            OutputStream out = new FileOutputStream(imageLocalPath);
             out.write(bytes);
             out.flush();
             out.close();
@@ -217,7 +217,7 @@ public class AppDaoImpl extends BaseDao implements AppDao {
          try {
              res +=
                      jdbcTemplate.update(tableChannel.getSql(),
-                             new Object[] {imagePath, appParams.app_id, appParams.user_id});
+                             new Object[] {imagePath + imageName, appParams.app_id, appParams.user_id});
          } catch (DataAccessException e) {
              throw new LMException(LMExceptionFactor.LM_FAILURE_DB_OP);
          }
