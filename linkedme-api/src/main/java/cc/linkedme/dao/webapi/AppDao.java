@@ -19,5 +19,5 @@ public interface AppDao {
 
     int updateApp(final AppParams appParams);
 
-    String uploadImg(AppParams appParams);
+    String uploadImg(AppParams appParams, String imagePath);
 }

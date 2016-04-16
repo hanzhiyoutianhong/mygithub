@@ -21,5 +21,5 @@ public interface AppService {
 
     int updateApp(AppParams appParams);
 
-    String uploadImg(AppParams appParams);
+    String uploadImg(AppParams appParams, String imagePath);
 }
