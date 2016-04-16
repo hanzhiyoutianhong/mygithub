@@ -6,11 +6,7 @@ import cc.linkedme.commons.json.JsonBuilder;
 import cc.linkedme.commons.log.ApiLogger;
 import cc.linkedme.commons.redis.JedisPort;
 import cc.linkedme.commons.shard.ShardingSupportHash;
-import cc.linkedme.commons.util.ArrayUtil;
-import cc.linkedme.commons.util.Base62;
-import cc.linkedme.commons.util.Constants;
-import cc.linkedme.commons.util.DeepLinkUtil;
-import cc.linkedme.commons.util.MD5Utils;
+import cc.linkedme.commons.util.*;
 import cc.linkedme.commons.uuid.UuidCreator;
 import cc.linkedme.dao.sdkapi.ClientDao;
 import cc.linkedme.data.model.ClientInfo;
@@ -365,7 +361,8 @@ public class LMSdkServiceImpl implements LMSdkService {
 
 
         SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-        link.setCreateTime(df.format(new Date())); // 设置deeplink的创建时间
+        Date createTime = UuidHelper.getDateFromId( deepLinkId );
+        link.setCreateTime(df.format(createTime)); // 设置deeplink的创建时间
         link.setAppId(appId);
         // 写redis
         redisClient.set(deepLinkMd5, deepLinkId);

@@ -14,6 +14,7 @@ import javax.xml.bind.annotation.XmlRootElement;
 public class UrlParams {
 
     public long deeplink_id;
+    public long[] deeplink_ids;
     public long user_id;
     public long app_id;
     public String alias;
@@ -231,5 +232,13 @@ public class UrlParams {
 
     public void setDeeplink_id(long deeplink_id) {
         this.deeplink_id = deeplink_id;
+    }
+
+    public long[] getDeeplink_ids() {
+        return deeplink_ids;
+    }
+
+    public void setDeeplink_ids(long[] deeplink_ids) {
+        this.deeplink_ids = deeplink_ids;
     }
 }

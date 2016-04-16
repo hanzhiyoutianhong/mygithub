@@ -39,7 +39,8 @@ public class Link {
     @Resource
     private DeepLinkService deepLinkService;
 
-    private static final String CREATE_URL_API = "https://lkme.cc/sdk/url";
+    private static final String CREATE_URL_API = "https://lkme.cc/i/sdk/url";
+    //private static final String CREATE_URL_API = "192.168.0.109/i/sdk/url";
 
     @Path("/create")
     @POST
@@ -96,13 +97,14 @@ public class Link {
     @POST
     @Produces()
     public String deleteUrl(UrlParams urlParams, @Context HttpServletRequest request) {
-        if (urlParams.deeplink_id <= 0) {
-            throw new LMException(LMExceptionFactor.LM_ILLEGAL_PARAM_VALUE, "deeplink_id <= 0");
-        }
-        if (urlParams.app_id <= 0) {
-            throw new LMException(LMExceptionFactor.LM_ILLEGAL_PARAM_VALUE, "app_id <= 0");
-        }
-        boolean result = deepLinkService.deleteDeepLink(urlParams.deeplink_id, urlParams.app_id);
+//        if (urlParams.deeplink_id <= 0) {
+//            throw new LMException(LMExceptionFactor.LM_ILLEGAL_PARAM_VALUE, "deeplink_id <= 0");
+//        }
+//        if (urlParams.app_id <= 0) {
+//            throw new LMException(LMExceptionFactor.LM_ILLEGAL_PARAM_VALUE, "app_id <= 0");
+//        }
+
+        boolean result = deepLinkService.deleteDeepLink(urlParams.deeplink_ids, urlParams.app_id);
         return "{ \"ret\" : " + result + "}";
     }
 
@@ -134,13 +136,12 @@ public class Link {
     @POST
     @Produces(MediaType.APPLICATION_JSON)
     public String urlUpdate( UrlParams urlParams, @Context HttpServletRequest request) {//忽略type和link_label
-        if (urlParams.user_id <= 0) {
+        if (urlParams.deeplink_id <= 0) {
             throw new LMException(LMExceptionFactor.LM_ILLEGAL_PARAM_VALUE, "deeplink_id <= 0");
         }
         if (urlParams.app_id <= 0) {
             throw new LMException(LMExceptionFactor.LM_ILLEGAL_PARAM_VALUE, "app_id <= 0");
         }
-
         Boolean res = deepLinkService.updateUrl( urlParams );
 
         JSONObject jsonObject = new JSONObject();

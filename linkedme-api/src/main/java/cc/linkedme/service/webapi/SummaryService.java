@@ -18,7 +18,6 @@ import net.sf.json.JSONObject;
 
 import org.apache.commons.lang.StringUtils;
 import org.springframework.stereotype.Service;
-
 import cc.linkedme.commons.exception.LMException;
 import cc.linkedme.commons.exception.LMExceptionFactor;
 import cc.linkedme.commons.log.ApiLogger;
@@ -38,6 +37,7 @@ import cc.linkedme.data.model.DeepLink;
 import cc.linkedme.data.model.DeepLinkCount;
 import cc.linkedme.data.model.params.SummaryButtonParams;
 import cc.linkedme.data.model.params.SummaryDeepLinkParams;
+
 import com.google.api.client.repackaged.com.google.common.base.Strings;
 import org.springframework.util.CollectionUtils;
 
