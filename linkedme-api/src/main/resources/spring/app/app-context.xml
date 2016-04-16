@@ -39,6 +39,8 @@
                 <entry key="UPDATE_APP_BY_APPID" value= "update $db$.$tb$ set app_name=?, type=?, ios_uri_scheme=?, ios_not_url=?, ios_search_option=?, ios_store_url=?, ios_custom_url=?, ios_bundle_id=?, ios_app_prefix=?, android_uri_scheme=?, android_not_url=?, android_search_option=?, google_play_url=?, android_custom_url=?, android_package_name=?, android_sha256_fingerprints=?, ios_android_flag=?, use_default_landing_page=?, custom_landing_page=? where id = ?"/>
 
                 <entry key="UPLOAD_IMG" value="update $db$.$tb$ set app_logo = ? where id = ? and user_id = ?"/>
+
+                <entry key="GET_IMG" value="select app_logo from $db$.$tb$ where id = ? and user_id = ?"/>
             </map>
         </property>
         <property name="jdbcTemplates">

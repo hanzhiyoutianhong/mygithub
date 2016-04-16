@@ -14,6 +14,7 @@ import org.apache.commons.codec.binary.Base64;
 import org.springframework.dao.DataAccessException;
 import org.springframework.jdbc.core.RowMapper;
 
+import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
@@ -25,6 +26,8 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 /**
  * Created by LinkedME01 on 16/3/18.
@@ -37,6 +40,7 @@ public class AppDaoImpl extends BaseDao implements AppDao {
     private static final String GET_APP_BY_APPID = "GET_APP_BY_APPID";
     private static final String UPDATE_APP_BY_APPID = "UPDATE_APP_BY_APPID";
     private static final String UPLOAD_IMG = "UPLOAD_IMG";
+    private static final String GET_IMG = "GET_IMG";
     public static final String ImgPath = "./";
 
     public int insertApp(AppInfo appInfo) {
@@ -201,11 +205,12 @@ public class AppDaoImpl extends BaseDao implements AppDao {
 
     @Override
     public String uploadImg(AppParams appParams, String imagePath) {
+        deleteOldImg(appParams);
         String imageName = Calendar.getInstance().getTimeInMillis() + ".png";
         String imageLocalPath = ImgPath + imageName;
         Base64 base64 = new Base64();
         try {
-            byte[] bytes = base64.decode(appParams.img_data);
+            byte[] bytes = base64.decode(appParams.img_data.substring(22));
             OutputStream out = new FileOutputStream(imageLocalPath);
             out.write(bytes);
             out.flush();
@@ -226,4 +231,37 @@ public class AppDaoImpl extends BaseDao implements AppDao {
          return res > 0 ? imageName : null;
     }
 
-}
+    public int deleteOldImg(AppParams appParams) {
+        TableChannel tableChannel = tableContainer.getTableChannel("appInfo", GET_IMG, 0L, 0L);
+        JdbcTemplate jdbcTemplate = tableChannel.getJdbcTemplate();
+        int res = 0;
+        final List<AppInfo> appInfos = new ArrayList<AppInfo>();
+        jdbcTemplate.query(tableChannel.getSql(), new Object[]{appParams.app_id, appParams.user_id},
+                    new RowMapper() {
+                        @Override
+                        public Object mapRow(ResultSet resultSet, int i) throws SQLException {
+                            AppInfo app = new AppInfo();
+                            app.setApp_logo(resultSet.getString("app_logo"));
+                            appInfos.add(app);
+                            return null;
+                        }
+                    });
+        AppInfo appInfo = new AppInfo();
+        if (!appInfos.isEmpty()) {
+            appInfo = appInfos.get(0);
+        }
+        String path = appInfo.getApp_logo();
+        Pattern pattern = Pattern.compile(".*images/(.*)");
+        Matcher matcher = pattern.matcher(path);
+        String imagePath = null;
+        while (matcher.find()) {
+            imagePath = matcher.group(1);
+        }
+        //delete img
+        File file = new File(ImgPath + imagePath);
+        if (!file.exists())
+            return -1;
+        boolean flag = file.delete();
+        return flag ? 1 : -1;
+    }
+ }
