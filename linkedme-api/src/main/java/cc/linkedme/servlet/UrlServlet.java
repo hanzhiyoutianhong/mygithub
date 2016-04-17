@@ -66,6 +66,14 @@ public class UrlServlet extends HttpServlet {
      * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
      */
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        // TODO 显示二维码代码 CodeServlet code.jsp
+        if (1 == 1) {
+            String location = request.getScheme() + "://" + request.getServerName() + ":"
+                    + request.getServerPort() + "/code.jsp";
+            response.sendRedirect(location + "?code_url=" + "http://www.baidu.com");
+            return;
+        }
+
         // TODO Auto-generated method stub
         // eg, https://lkme.cc/hafzh/fhza80af?scan=0; appId, deeplinkId;
         String uri = request.getRequestURI();
@@ -205,7 +213,7 @@ public class UrlServlet extends HttpServlet {
         request.setAttribute("Pkg", appInfo.getAndroid_package_name());
         request.setAttribute("BundleID", appInfo.getIos_bundle_id());
         request.setAttribute("AppID", appId);
-        request.setAttribute("IconUrl", "https://lkme.cc/icon"); // TODO
+        request.setAttribute("IconUrl", "http://ww2.sinaimg.cn/crop.0.0.1152.1152.1024/005Y9c72jw8epp0o2ogxjj30w00w0abq.jpg"); // TODO
         request.setAttribute("Url", url);
         request.setAttribute("Match_id", uriArr[2]);
 
@@ -247,7 +255,14 @@ public class UrlServlet extends HttpServlet {
         if (isAndroid && isChrome && userAgentMajor >= 25) {
             String location = "intent://linkedme?click_id=" + uriArr[2] + "#Intent;scheme=" + scheme + ";package="
                     + appInfo.getAndroid_package_name() + ";S.browser_fallback_url=" + url + ";end";
+            response.setStatus(307);
             response.sendRedirect(location);
+            return;
+        }
+        if (!isAndroid && !isIOS) {
+            String location = request.getScheme() + "://" + request.getServerName() + ":"
+                    + request.getServerPort() + "/code.jsp";
+            response.sendRedirect(location + "?code_url=" + "http://www.baidu.com");
             return;
         }
 

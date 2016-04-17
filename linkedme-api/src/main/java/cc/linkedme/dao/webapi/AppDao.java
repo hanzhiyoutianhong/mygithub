@@ -21,4 +21,6 @@ public interface AppDao {
     int updateApp(final AppParams appParams);
 
     UrlTagsInfo getUrlTagsByAppId(AppParams appParams );
+    
+    String uploadImg(AppParams appParams, String imagePath);
 }

@@ -1,8 +1,8 @@
 /**
  * Created by LinkedME01 on 16/4/1.
+ * modify at 4.15
  */
 function start() {
-    alert(DEBUG);
     if ("" === Params.Download_msg && (Params.Download_msg = ResDefaultDownloadMsg),
         "" !== Params.Download_btn_text &&
         (ResDownloadAPK = Params.Download_btn_text, ResGotoAppStoreDownload = Params.Download_btn_text),
@@ -42,7 +42,7 @@ function start() {
         } else DEBUG && alert("cookie Not Enabled"),
             gotoIOSLandingPage();
         else DEBUG && alert("is safari"),
-                deeplinkLaunch(a, 500,
+                deeplinkLaunch(a, 2500,
                     function() {
                         gotoUrl(Params.Url)
                     })
@@ -59,14 +59,12 @@ function start() {
     else if (Params.isChrome() && Params.Chrome_major >= 25 && !Params.isForceUseScheme()) {
         DEBUG && alert("Chrome_major:" + Params.Chrome_major);
         var b = Params.Host;
-        alert("123");
         Params.Match_id && Params.Match_id.length > 0 && (b += "?click_id=" + Params.Match_id);
         var c = Params.Pkg,
             d = "intent://" + b + "#Intent;scheme=" + Params.Scheme + ";package=" + c + ";S.browser_fallback_url=" + Params.Url + ";end";
             alert("d=" + d);
         deeplinkLaunch(d, 2e3,
             function() {
-                alert(234);
                 gotoAndroidNewInstall()
             })
     } else DEBUG && alert("default browser"),
@@ -320,7 +318,7 @@ var winWidth = $(window).width(),
         deeplinkLocation = a,
         DEBUG && alert(deeplinkLocation),
             dsAction.reportDSJSEvent(dsAction.actionJSDeepLink, a),
-            a = "intent://linkedme?click_id=sWpK2qR01#Intent;scheme=linkedmedemo;package=com.microquation.linkedme.android;S.browser_fallback_url=https://www.baidu.com;end";
+           // a = "intent://linkedme?click_id=sWpK2qR01#Intent;scheme=linkedmedemo;package=com.microquation.linkedme.android;S.browser_fallback_url=https://www.baidu.com;end";
             env.windowLocation(a);
         var d = setTimeout(function() {
                 c()
@@ -352,7 +350,6 @@ var winWidth = $(window).width(),
             deeplinkLocation = a,
             dsAction.reportDSJSEvent(dsAction.actionJSDeepLink, a);
         var e = setTimeout(function() {
-                alert("chenhao"),
                 c()
             },
             b);

@@ -12,19 +12,24 @@ import cc.linkedme.data.model.AppInfo;
 import cc.linkedme.data.model.UrlTagsInfo;
 import cc.linkedme.data.model.UserInfo;
 import cc.linkedme.data.model.params.AppParams;
-import cc.linkedme.data.model.params.UserParams;
+import org.apache.commons.codec.binary.Base64;
 import org.springframework.dao.DataAccessException;
 import org.springframework.jdbc.core.RowMapper;
 
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.OutputStream;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Timestamp;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Date;
+import java.util.Calendar;
 import java.util.List;
-import java.util.Objects;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 /**
  * Created by LinkedME01 on 16/3/18.
@@ -37,6 +42,9 @@ public class AppDaoImpl extends BaseDao implements AppDao {
     private static final String GET_APP_BY_APPID = "GET_APP_BY_APPID";
     private static final String UPDATE_APP_BY_APPID = "UPDATE_APP_BY_APPID";
     private static final String GET_URL_TAGS_BY_APPID = "GET_URL_TAGS_BY_APPID";
+    private static final String UPLOAD_IMG = "UPLOAD_IMG";
+    private static final String GET_IMG = "GET_IMG";
+    public static final String ImgPath = "./";
 
     public int insertApp(AppInfo appInfo) {
         int result = 0;
@@ -87,6 +95,7 @@ public class AppDaoImpl extends BaseDao implements AppDao {
                 app.setType(resultSet.getString("type"));
                 app.setUser_id(appParams.user_id);
                 app.setApp_name(resultSet.getString("app_name"));
+                app.setApp_logo(resultSet.getString("app_logo"));
                 app.setApp_key(resultSet.getString("app_key"));
                 app.setApp_secret(resultSet.getString("app_secret"));
                 app.setIos_uri_scheme(resultSet.getString("ios_uri_scheme"));
@@ -140,6 +149,7 @@ public class AppDaoImpl extends BaseDao implements AppDao {
                 app.setApp_id(app_id);
                 app.setUser_id(resultSet.getLong("user_id"));
                 app.setApp_name(resultSet.getString("app_name"));
+                app.setApp_logo(resultSet.getString("app_logo"));
                 app.setApp_key(resultSet.getString("app_key"));
                 app.setApp_secret(resultSet.getString("app_secret"));
 
@@ -221,4 +231,65 @@ public class AppDaoImpl extends BaseDao implements AppDao {
             return null;
     }
 
-}
+    @Override
+    public String uploadImg(AppParams appParams, String imagePath) {
+        deleteOldImg(appParams);
+        String imageName = Calendar.getInstance().getTimeInMillis() + ".png";
+        String imageLocalPath = ImgPath + imageName;
+        Base64 base64 = new Base64();
+        try {
+            byte[] bytes = base64.decode(appParams.img_data.substring(22));
+            OutputStream out = new FileOutputStream(imageLocalPath);
+            out.write(bytes);
+            out.flush();
+            out.close();
+        } catch (IOException e) {
+            throw new LMException(LMExceptionFactor.LM_ILLEGAL_REQUEST, "decode failed");
+        }
+        int res = 0;
+        TableChannel tableChannel = tableContainer.getTableChannel("appInfo", UPLOAD_IMG, 0L, 0L);
+        JdbcTemplate jdbcTemplate = tableChannel.getJdbcTemplate();
+         try {
+             res +=
+                     jdbcTemplate.update(tableChannel.getSql(),
+                             new Object[] {imagePath + imageName, appParams.app_id, appParams.user_id});
+         } catch (DataAccessException e) {
+             throw new LMException(LMExceptionFactor.LM_FAILURE_DB_OP);
+         }
+         return res > 0 ? imageName : null;
+    }
+
+    public int deleteOldImg(AppParams appParams) {
+        TableChannel tableChannel = tableContainer.getTableChannel("appInfo", GET_IMG, 0L, 0L);
+        JdbcTemplate jdbcTemplate = tableChannel.getJdbcTemplate();
+        int res = 0;
+        final List<AppInfo> appInfos = new ArrayList<AppInfo>();
+        jdbcTemplate.query(tableChannel.getSql(), new Object[]{appParams.app_id, appParams.user_id},
+                    new RowMapper() {
+                        @Override
+                        public Object mapRow(ResultSet resultSet, int i) throws SQLException {
+                            AppInfo app = new AppInfo();
+                            app.setApp_logo(resultSet.getString("app_logo"));
+                            appInfos.add(app);
+                            return null;
+                        }
+                    });
+        AppInfo appInfo = new AppInfo();
+        if (!appInfos.isEmpty()) {
+            appInfo = appInfos.get(0);
+        }
+        String path = appInfo.getApp_logo();
+        Pattern pattern = Pattern.compile(".*images/(.*)");
+        Matcher matcher = pattern.matcher(path);
+        String imagePath = null;
+        while (matcher.find()) {
+            imagePath = matcher.group(1);
+        }
+        //delete img
+        File file = new File(ImgPath + imagePath);
+        if (!file.exists())
+            return -1;
+        boolean flag = file.delete();
+        return flag ? 1 : -1;
+    }
+ }

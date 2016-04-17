@@ -8,15 +8,13 @@ import cc.linkedme.data.model.UrlTagsInfo;
 import cc.linkedme.data.model.params.AppParams;
 import cc.linkedme.service.webapi.AppService;
 import com.google.api.client.repackaged.com.google.common.base.Strings;
-import com.google.api.client.repackaged.org.apache.commons.codec.binary.Base64;
-import net.sf.json.JSON;
 import net.sf.json.JSONArray;
+
 import net.sf.json.JSONObject;
 import org.apache.commons.lang.StringUtils;
 import org.springframework.stereotype.Component;
 
 import javax.annotation.Resource;
-import javax.print.attribute.standard.Media;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.ws.rs.*;
@@ -24,7 +22,6 @@ import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 import java.io.*;
 import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.List;
 
 /**
@@ -37,7 +34,7 @@ public class App {
     @Resource
     private AppService appService;
 
-    public static final String ImgPath = "./";
+    public static final String ImgPath = "./";  //TODO 改路径
 
     @Path("/create_app")
     @POST
@@ -250,21 +247,11 @@ public class App {
         if (Strings.isNullOrEmpty(appParams.img_encoding)) {
             throw new LMException(LMExceptionFactor.LM_ILLEGAL_PARAM_VALUE, "img encoding is null");
         }
-        String imageName = Calendar.getInstance().getTimeInMillis() + ".png";
-        String imagePath = ImgPath + imageName;
-        Base64 base64 = new Base64();
-        try {
-            byte[] bytes = base64.decode(appParams.img_data.substring(22));
-            OutputStream out = new FileOutputStream(imagePath);
-            out.write(bytes);
-            out.flush();
-            out.close();
-        } catch (IOException e) {
-            throw new LMException(LMExceptionFactor.LM_ILLEGAL_REQUEST, "decode failed");
-        }
+        String basePath = request.getScheme() + "://" + request.getServerName() + ":"
+                + request.getServerPort() + "/app/images/";
+        String imageName = appService.uploadImg(appParams, basePath);
         JsonBuilder resultJson = new JsonBuilder();
-        resultJson.append("ret", request.getScheme() + "://" + request.getServerName() + ":"
-                + request.getServerPort() + "/app/images/" + imageName);
+        resultJson.append("img_url", basePath + imageName);
         return resultJson.toString();
     }
 

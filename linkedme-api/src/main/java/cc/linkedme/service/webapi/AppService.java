@@ -23,5 +23,9 @@ public interface AppService {
 
     int updateApp(AppParams appParams);
 
+<<<<<<< HEAD
     UrlTagsInfo getUrlTags(AppParams appParams);
+=======
+    String uploadImg(AppParams appParams, String imagePath);
+>>>>>>> master
 }

@@ -85,4 +85,10 @@ public class AppServiceImpl implements AppService {
         else
             throw new LMException( LMExceptionFactor.LM_SYS_ERROR, "query mysql failed!" );
     }
+
+    @Override
+    public String uploadImg(AppParams appParams, String imagePath) {
+        return appDao.uploadImg(appParams, imagePath);
+    }
+
 }
