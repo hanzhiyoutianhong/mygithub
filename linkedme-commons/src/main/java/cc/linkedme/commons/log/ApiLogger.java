@@ -21,6 +21,10 @@ public class ApiLogger {
 
     private static Logger redoLog = Logger.getLogger("redoLog");
     private static Logger fireLog = Logger.getLogger("fire");
+
+    private static Logger bizLog = Logger.getLogger("biz");
+
+
     /**
      * 触发自动降级的日志文件。
      */
@@ -303,6 +307,10 @@ public class ApiLogger {
 
         // 如果是vip用户，记录日志
         debug(msg, DebugType.error.name(), e);
+    }
+
+    public static void biz(Object msg) {
+        bizLog.info(msg);
     }
 
     /**

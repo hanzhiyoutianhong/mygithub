@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:schemaLocation="
+       http://www.springframework.org/schema/beans
+       http://www.springframework.org/schema/beans/spring-beans.xsd">
+
+    <bean id="deepLinkDateCountDao" class="cc.linkedme.dao.webapi.impl.DeepLinkDateCountDaoImpl">
+        <property name="tableContainer">
+            <bean class="cc.linkedme.data.dao.strategy.TableContainer">
+                <property name="tablesItems">
+                    <map>
+                        <entry key="deepLinkDateCount" value-ref="deepLinkDateCount" />
+                    </map>
+                </property>
+            </bean>
+        </property>
+    </bean>
+
+    <bean id="deepLinkDateCount" class="cc.linkedme.data.dao.strategy.TableItem">
+        <property name="itemName" value="deepLinkDateCount"/>
+        <property name="dbNamePrefix"  value="count"/>
+        <property name="dbCount"  value="1"/>
+
+        <property name="tableNamePrefix" value="url_count" />
+        <property name="tableCount" value="1" />
+        <property name="sqls">
+            <map>
+                <entry key="ADD_DEEPLINK" value="insert into $db$.$tb$ (deeplink_id, deeplink_md5, linkedme_key, identity_id, appid, create_time, tags, alias, channel, feature, stage, campaign, params, source, sdk_version, link_label, ios_use_default, ios_custom_url, android_use_default, android_custom_url, desktop_use_default, desktop_custom_url, update_time) values(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, now())"/>
+                <entry key="GET_DEEPLINKS" value="select deeplink_id, create_time, tags, alias, channel, feature, stage, campaign, source, ios_use_default, ios_custom_url, android_use_default, android_custom_url, desktop_use_default, desktop_custom_url from $db$.$tb$ where appid = ? and valid_status = '1' " />
+                <entry key="DELETE_DEEPLINK" value="update $db$.$tb$ set valid_status = '0' where deeplink_id = ?"/>
+                <entry key="UPDATE_URL_INFO" value="update $db$.$tb$ set appid = ?, ios_use_default = ?, ios_custom_url = ?, android_use_default = ?, android_custom_url = ?, desktop_use_default = ?, desktop_custom_url = ?, feature = ?, campaign = ?, stage = ?, channel = ?, tags = ?, source = ?, params = ? where deeplink_id = ? and appid = ? and valid_status = '1' "/>
+            </map>
+        </property>
+        <property name="jdbcTemplates">
+            <list>
+                <ref bean="deeplink_datecount_jdbctemplate_0"/>
+            </list>
+        </property>
+    </bean>
+
+</beans>

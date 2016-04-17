@@ -1,6 +1,5 @@
 package cc.linkedme.data.model;
 
-import cc.linkedme.commons.client.balancer.util.SystemTimer;
 import cc.linkedme.commons.serialization.KryoSerializationUtil;
 import cc.linkedme.commons.util.Base62;
 import cc.linkedme.commons.util.Constants;
@@ -11,9 +10,7 @@ import net.sf.json.JSONArray;
 
 import javax.persistence.Basic;
 import javax.persistence.Column;
-import javax.persistence.Entity;
 import javax.persistence.Id;
-import javax.persistence.Table;
 import java.io.Serializable;
 import java.sql.Timestamp;
 
