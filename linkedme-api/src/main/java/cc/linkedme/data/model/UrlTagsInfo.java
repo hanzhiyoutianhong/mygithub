@@ -5,11 +5,8 @@ package cc.linkedme.data.model;
  */
 public class UrlTagsInfo {
     private long appId;
-    private String feature;
-    private String campaign;
-    private String stage;
-    private String channel;
-    private String tag;
+    private String tag_content;
+    private String tag_type;
 
     public long getAppId() {
         return appId;
@@ -19,43 +16,19 @@ public class UrlTagsInfo {
         this.appId = appId;
     }
 
-    public String getFeature() {
-        return feature;
+    public String getTag_content() {
+        return tag_content;
     }
 
-    public void setFeature(String feature) {
-        this.feature = feature;
+    public void setTag_content(String tag_content) {
+        this.tag_content = tag_content;
     }
 
-    public String getCampaign() {
-        return campaign;
+    public String getTag_type() {
+        return tag_type;
     }
 
-    public void setCampaign(String campaign) {
-        this.campaign = campaign;
-    }
-
-    public String getStage() {
-        return stage;
-    }
-
-    public void setStage(String stage) {
-        this.stage = stage;
-    }
-
-    public String getChannel() {
-        return channel;
-    }
-
-    public void setChannel(String channel) {
-        this.channel = channel;
-    }
-
-    public String getTag() {
-        return tag;
-    }
-
-    public void setTag(String tag) {
-        this.tag = tag;
+    public void setTag_type(String tag_type) {
+        this.tag_type = tag_type;
     }
 }

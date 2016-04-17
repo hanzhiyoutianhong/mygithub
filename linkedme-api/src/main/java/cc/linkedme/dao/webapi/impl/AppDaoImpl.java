@@ -12,7 +12,10 @@ import cc.linkedme.data.model.AppInfo;
 import cc.linkedme.data.model.UrlTagsInfo;
 import cc.linkedme.data.model.UserInfo;
 import cc.linkedme.data.model.params.AppParams;
+import cc.linkedme.data.model.params.UrlParams;
+import com.sun.jersey.server.probes.UriRuleProbeProvider;
 import org.apache.commons.codec.binary.Base64;
+import org.apache.commons.collections.map.HashedMap;
 import org.springframework.dao.DataAccessException;
 import org.springframework.jdbc.core.RowMapper;
 
@@ -28,6 +31,7 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
+import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -42,6 +46,8 @@ public class AppDaoImpl extends BaseDao implements AppDao {
     private static final String GET_APP_BY_APPID = "GET_APP_BY_APPID";
     private static final String UPDATE_APP_BY_APPID = "UPDATE_APP_BY_APPID";
     private static final String GET_URL_TAGS_BY_APPID = "GET_URL_TAGS_BY_APPID";
+    private static final String GET_URL_TAGS_BY_APPID_AND_TYPE = "GET_URL_TAGS_BY_APPID_AND_TYPE";
+    private static final String SET_URL_TAGS_BY_APPID_AND_TYPE = "SET_URL_TAGS_BY_APPID_AND_TYPE";
     private static final String UPLOAD_IMG = "UPLOAD_IMG";
     private static final String GET_IMG = "GET_IMG";
     public static final String ImgPath = "./";
@@ -206,29 +212,80 @@ public class AppDaoImpl extends BaseDao implements AppDao {
 
     }
 
-    public UrlTagsInfo getUrlTagsByAppId( AppParams appParams ) {
-        TableChannel tableChannel = tableContainer.getTableChannel("urlTags", GET_URL_TAGS_BY_APPID, appParams.user_id, appParams.user_id );
+    public List<UrlTagsInfo> getUrlTagsByAppId( AppParams appParams ) {
+        TableChannel tableChannel = tableContainer.getTableChannel("urlTags", GET_URL_TAGS_BY_APPID, 0L, 0L );
         JdbcTemplate jdbcTemplate = tableChannel.getJdbcTemplate();
         final List<UrlTagsInfo> urlTagsInfos = new ArrayList<UrlTagsInfo>();
         jdbcTemplate.query(tableChannel.getSql(), new Object[]{appParams.app_id}, new RowMapper() {
 
             public Object mapRow(ResultSet resultSet, int i) throws SQLException {
-                UrlTagsInfo urlTags = new UrlTagsInfo();
-                urlTags.setAppId( appParams.app_id );
-                urlTags.setFeature( resultSet.getString( "feature" ) );
-                urlTags.setCampaign( resultSet.getString( "campaign" ) );
-                urlTags.setStage( resultSet.getString( "stage" ) );
-                urlTags.setChannel( resultSet.getString( "channel" ) );
-                urlTags.setTag( resultSet.getString( "tags" ) );
+                do {
+                    UrlTagsInfo urlTagsInfo = new UrlTagsInfo();
+                    urlTagsInfo.setAppId( appParams.app_id );
+                    urlTagsInfo.setTag_content( resultSet.getString("tag_content") );
+                    urlTagsInfo.setTag_type( resultSet.getString("tag_type") );
 
-                urlTagsInfos.add( urlTags );
+                    urlTagsInfos.add( urlTagsInfo );
+                } while( resultSet.next() );
                 return null;
             }
         });
         if( !urlTagsInfos.isEmpty() )
-            return urlTagsInfos.get( 0 );
+            return urlTagsInfos;
         else
             return null;
+    }
+
+    public boolean configUrlTags(UrlParams urlParams) {
+
+        String[] values = urlParams.value.split(",");
+        String type = urlParams.type;
+
+        TableChannel tableChannel = tableContainer.getTableChannel("urlTags", GET_URL_TAGS_BY_APPID_AND_TYPE, 0L, 0L );
+        JdbcTemplate jdbcTemplate = tableChannel.getJdbcTemplate();
+
+        final List<UrlTagsInfo> urlTagsInfos = new ArrayList<UrlTagsInfo>();
+
+        jdbcTemplate.query(tableChannel.getSql(), new Object[]{urlParams.app_id, urlParams.type}, new RowMapper() {
+
+            public Object mapRow(ResultSet resultSet, int i) throws SQLException {
+                do {
+                    UrlTagsInfo urlTagsInfo = new UrlTagsInfo();
+                    urlTagsInfo.setAppId( urlParams.app_id );
+                    urlTagsInfo.setTag_content( resultSet.getString("tag_content") );
+                    urlTagsInfo.setTag_type( urlParams.type );
+
+                    urlTagsInfos.add( urlTagsInfo );
+                } while( resultSet.next() );
+                return null;
+            }
+        });
+
+        Map<String, Long> tagMap = new HashedMap();
+
+        for( int i = 0; i < urlTagsInfos.size(); i++ ) {
+            tagMap.put( urlTagsInfos.get( i ).getTag_content(), 1L );
+        }
+
+        int result = 0;
+        int flag = 0;
+        for( int i = 0; i < values.length; i++ ) {
+            if( !tagMap.isEmpty() && tagMap.get( values[i] ) != null && tagMap.get( values[i] ) == 1L ) {
+                flag++;
+                continue;
+            }
+            else {
+                TableChannel tableChannel_set = tableContainer.getTableChannel("urlTags", SET_URL_TAGS_BY_APPID_AND_TYPE, 0L, 0L );
+                JdbcTemplate jdbcTemplate_set = tableChannel_set.getJdbcTemplate();
+
+                result += jdbcTemplate_set.update( tableChannel_set.getSql(), new Object[]{urlParams.app_id, values[i], type} );
+            }
+        }
+        if( result > 0 )
+            return true;
+        if( result == 0 && flag == values.length )
+            return true;
+        return false;
     }
 
     @Override
