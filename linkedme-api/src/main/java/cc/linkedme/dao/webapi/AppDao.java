@@ -1,6 +1,7 @@
 package cc.linkedme.dao.webapi;
 
 import cc.linkedme.data.model.AppInfo;
+import cc.linkedme.data.model.UrlTagsInfo;
 import cc.linkedme.data.model.params.AppParams;
 
 import java.util.List;
@@ -18,4 +19,6 @@ public interface AppDao {
     AppInfo getAppsByAppId(long appId);
 
     int updateApp(final AppParams appParams);
+
+    UrlTagsInfo getUrlTagsByAppId(AppParams appParams );
 }

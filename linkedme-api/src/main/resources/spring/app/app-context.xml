@@ -1,9 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <beans xmlns="http://www.springframework.org/schema/beans"
-       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-       xsi:schemaLocation="
-       http://www.springframework.org/schema/beans
-       http://www.springframework.org/schema/beans/spring-beans.xsd ">
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:wfc="http://www.springframework.org/schema/wfc"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
+       http://www.springframework.org/schema/beans/spring-beans.xsd http://www.springframework.org/schema/wfc http://www.springframework.org/schema/wfc.xsd">
 
     <bean id="appDao" class="cc.linkedme.dao.webapi.impl.AppDaoImpl">
         <property name="tableContainer">
@@ -42,13 +41,30 @@
         </property>
         <property name="jdbcTemplates">
             <list>
-                <ref bean="app_jdbctemplate_0"/>
+                <ref bean="url_tags_jdbctemplate_0"/>
                 <!--<ref bean="deeplink_jdbctemplate_1"/> -->
             </list>
         </property>
     </bean>
 
-    <bean id="appService" class="cc.linkedme.service.webapi.impl.AppServiceImpl" />
+    <bean id="urlTags" class="cc.linkedme.data.dao.strategy.TableItem">
+        <property name="itemName" value="url_tags"/>
+        <property name="dbNamePrefix" value="url_tag"/>
+        <property name="dbCount" value="1"/>
 
+        <property name="tableNamePrefix" value="url_tag_info"/>
+        <property name="tableCount" value="8"/>
+        <property name="sqls">
+            <map>
+                <entry key="GET_URL_TAGS_BY_APPID" value="select feature, campaign, stage, channel, tag from $db$.$tb$ where app_id = ?"/>
+            </map>
+        </property>
+        <property name="jdbcTemplates">
+            <list>
+                <ref bean="app_jdbctemplate_0"/>
+                <!--<ref bean="deeplink_jdbctemplate_1"/> -->
+            </list>
+        </property>
+    </bean>
 
 </beans>

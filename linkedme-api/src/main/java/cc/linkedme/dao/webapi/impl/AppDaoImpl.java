@@ -9,6 +9,7 @@ import cc.linkedme.data.dao.strategy.TableChannel;
 import cc.linkedme.data.dao.util.DaoUtil;
 import cc.linkedme.data.dao.util.JdbcTemplate;
 import cc.linkedme.data.model.AppInfo;
+import cc.linkedme.data.model.UrlTagsInfo;
 import cc.linkedme.data.model.UserInfo;
 import cc.linkedme.data.model.params.AppParams;
 import cc.linkedme.data.model.params.UserParams;
@@ -35,6 +36,7 @@ public class AppDaoImpl extends BaseDao implements AppDao {
     private static final String DEL_APP_BY_USERID_AND_APPID = "DEL_APP_BY_USERID_AND_APPID";
     private static final String GET_APP_BY_APPID = "GET_APP_BY_APPID";
     private static final String UPDATE_APP_BY_APPID = "UPDATE_APP_BY_APPID";
+    private static final String GET_URL_TAGS_BY_APPID = "GET_URL_TAGS_BY_APPID";
 
     public int insertApp(AppInfo appInfo) {
         int result = 0;
@@ -192,6 +194,31 @@ public class AppDaoImpl extends BaseDao implements AppDao {
         }
         return res;
 
+    }
+
+    public UrlTagsInfo getUrlTagsByAppId( AppParams appParams ) {
+        TableChannel tableChannel = tableContainer.getTableChannel("urlTags", GET_URL_TAGS_BY_APPID, appParams.user_id, appParams.user_id );
+        JdbcTemplate jdbcTemplate = tableChannel.getJdbcTemplate();
+        final List<UrlTagsInfo> urlTagsInfos = new ArrayList<UrlTagsInfo>();
+        jdbcTemplate.query(tableChannel.getSql(), new Object[]{appParams.app_id}, new RowMapper() {
+
+            public Object mapRow(ResultSet resultSet, int i) throws SQLException {
+                UrlTagsInfo urlTags = new UrlTagsInfo();
+                urlTags.setAppId( appParams.app_id );
+                urlTags.setFeature( resultSet.getString( "feature" ) );
+                urlTags.setCampaign( resultSet.getString( "campaign" ) );
+                urlTags.setStage( resultSet.getString( "stage" ) );
+                urlTags.setChannel( resultSet.getString( "channel" ) );
+                urlTags.setTag( resultSet.getString( "tags" ) );
+
+                urlTagsInfos.add( urlTags );
+                return null;
+            }
+        });
+        if( !urlTagsInfos.isEmpty() )
+            return urlTagsInfos.get( 0 );
+        else
+            return null;
     }
 
 }

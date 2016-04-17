@@ -4,15 +4,19 @@ import cc.linkedme.commons.exception.LMException;
 import cc.linkedme.commons.exception.LMExceptionFactor;
 import cc.linkedme.commons.json.JsonBuilder;
 import cc.linkedme.data.model.AppInfo;
+import cc.linkedme.data.model.UrlTagsInfo;
 import cc.linkedme.data.model.params.AppParams;
 import cc.linkedme.service.webapi.AppService;
 import com.google.api.client.repackaged.com.google.common.base.Strings;
 import com.google.api.client.repackaged.org.apache.commons.codec.binary.Base64;
+import net.sf.json.JSON;
+import net.sf.json.JSONArray;
 import net.sf.json.JSONObject;
 import org.apache.commons.lang.StringUtils;
 import org.springframework.stereotype.Component;
 
 import javax.annotation.Resource;
+import javax.print.attribute.standard.Media;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.ws.rs.*;
@@ -163,6 +167,67 @@ public class App {
         JsonBuilder resultJson = new JsonBuilder();
         resultJson.append("ret", result > 0);
         return resultJson.flip().toString();
+    }
+
+    @Path("/url_tags")
+    @GET
+    @Produces(MediaType.APPLICATION_JSON)
+    public String urlTags( @QueryParam("user_id") long user_id,
+                           @QueryParam("app_id") long app_id,
+                           @QueryParam("token") String token ) {
+        AppParams appParams = new AppParams();
+        appParams.user_id = user_id;
+        appParams.app_id = app_id;
+
+        if (appParams.user_id <= 0) {
+            throw new LMException(LMExceptionFactor.LM_ILLEGAL_PARAM_VALUE);
+        }
+
+        if (appParams.app_id <= 0) {
+            throw new LMException(LMExceptionFactor.LM_ILLEGAL_PARAM_VALUE);
+        }
+
+        UrlTagsInfo result = appService.getUrlTags( appParams );
+
+        JSONObject resultJson = new JSONObject();
+        JSONArray feature = new JSONArray();
+        JSONArray campaign = new JSONArray();
+        JSONArray stage = new JSONArray();
+        JSONArray channel = new JSONArray();
+        JSONArray tag = new JSONArray();
+
+        String[] features = result.getFeature().split(",");
+        for( int i = 0; i < features.length; i++ ) {
+            feature.add( features[i] );
+        }
+
+        String[] campaigns = result.getCampaign().split(",");
+        for( int i = 0; i < campaigns.length; i++ ) {
+            campaign.add( campaigns[i] );
+        }
+
+        String[] stages = result.getStage().split(",");
+        for( int i = 0; i < stages.length; i++) {
+            stage.add( stages[i] );
+        }
+
+        String[] channels = result.getChannel().split(",");
+        for( int i = 0; i < channels.length; i++ ) {
+            channel.add( channels[i] );
+        }
+
+        String[] tags = result.getTag().split(",");
+        for( int i = 0; i < tags.length; i++ ) {
+            tag.add(tags[i]);
+        }
+
+        resultJson.put( "feature", feature );
+        resultJson.put( "campaign", campaign );
+        resultJson.put( "stage", stage );
+        resultJson.put( "channel", channel );
+        resultJson.put( "tag", tag );
+
+        return resultJson.toString();
     }
 
     @Path("/uploadimg")
