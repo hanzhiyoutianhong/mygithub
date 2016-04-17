@@ -30,6 +30,8 @@
                 <entry key="USER_INFO_QUERY" value="select id, email, pwd, name, company, role_id, register_time, last_login_time from $db$.$tb$ where email= ? and valid_status = '1' "/>
                 <entry key="PWD_RESET" value="update $db$.$tb$ set pwd=? where email= ? and valid_status = '1' "/>
                 <entry key="LAST_LOGIN_TIME_RESET" value="update $db$.$tb$ set last_login_time=? where email= ? and valid_status = '1' "/>
+                <entry key="UPDATE_TOKEN" value="update $db$.$tb$ set token = ? where email = ? and valid_status = '1'"/>
+                <entry key="GET_TOKEN" value="select token from $db$.$tb$ where email = ? and valid_status = '1'"/>
             </map>
         </property>
         <property name="jdbcTemplates">

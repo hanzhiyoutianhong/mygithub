@@ -30,7 +30,8 @@ public class UserDaoImpl extends BaseDao implements UserDao {
     public static final String EMAIL_EXISTENCE_QUERY = "EMAIL_EXISTENCE_QUERY";
     public static final String PWD_RESET = "PWD_RESET";
     public static final String LAST_LOGIN_TIME_RESET = "LAST_LOGIN_TIME_RESET";
-
+    public static final String UPDATE_TOKEN = "UPDATE_TOKEN";
+    public static final String GET_TOKEN = "GET_TOKEN";
     public int updateUserInfo(UserParams userParams) {
         int res = 0;
         TableChannel tableChannel = tableContainer.getTableChannel("userInfo", REGISTER, 0L, 0L);
@@ -133,4 +134,38 @@ public class UserDaoImpl extends BaseDao implements UserDao {
         return true;
     }
 
+    @Override
+    public int updateToken(UserParams userParams) {
+        int res = 0;
+        TableChannel tableChannel = tableContainer.getTableChannel("userInfo", UPDATE_TOKEN, 0L, 0L);
+        JdbcTemplate jdbcTemplate = tableChannel.getJdbcTemplate();
+        try {
+            res +=
+                    jdbcTemplate.update(tableChannel.getSql(), new Object[] {userParams.token,
+                    userParams.email});
+        } catch (DataAccessException e) {
+            throw new LMException(LMExceptionFactor.LM_FAILURE_DB_OP);
+        }
+        return res;
+    }
+
+    @Override
+    public String getToken(String email) {
+        TableChannel tableChannel = tableContainer.getTableChannel("userInfo", GET_TOKEN, 0L, 0L);
+        JdbcTemplate jdbcTemplate = tableChannel.getJdbcTemplate();
+        final List<UserInfo> userInfos = new ArrayList<>();
+        Object[] values = {email};
+        jdbcTemplate.query(tableChannel.getSql(), values, new RowMapper() {
+            @Override
+            public Object mapRow(ResultSet resultSet, int i) throws SQLException {
+                UserInfo user = new UserInfo();
+                user.setToken(resultSet.getString("token"));
+                userInfos.add(user);
+                return null;
+            }
+        });
+        if (!userInfos.isEmpty())
+            return userInfos.get(0).getToken();
+        return "403Forbidden";
+    }
 }

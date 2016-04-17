@@ -16,6 +16,7 @@ public class UserInfo {
     private short role_id;
     private String register_time;
     private String last_login_time;
+    private String token;
 
     public String toJson() {
         JsonBuilder json = new JsonBuilder();
@@ -91,5 +92,13 @@ public class UserInfo {
 
     public void setLast_login_time( String last_login_time ) {
         this.last_login_time = last_login_time;
+    }
+
+    public String getToken() {
+        return token;
+    }
+
+    public void setToken(String token) {
+        this.token = token;
     }
 }
