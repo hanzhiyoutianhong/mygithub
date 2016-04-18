@@ -62,16 +62,18 @@ public class BtnService {
                 consumerAppIds.add(btn.getConsumerAppId());
             }
         }
+        if (consumerAppIds.size() != 0) {
+            Map<Long, ConsumerAppInfo> consumerAppInfos = consumerAppDao.getConsumerAppList(consumerAppIds);
 
+            for (ButtonInfo btn : buttons) {
+                btn.setConsumerAppInfo(consumerAppInfos.get(btn.getConsumerAppId()));
+            }
+            if (buttons.size() > 0) {
+                return buttons;
+            }
+        }
         // 根据buttons对应的consumerAppId获取button对应的ConsumerApp信息
-        Map<Long, ConsumerAppInfo> consumerAppInfos = consumerAppDao.getConsumerAppList(consumerAppIds);
 
-        for (ButtonInfo btn : buttons) {
-            btn.setConsumerAppInfo(consumerAppInfos.get(btn.getConsumerAppId()));
-        }
-        if (buttons.size() > 0) {
-            return buttons;
-        }
         return new ArrayList<ButtonInfo>();
     }
 

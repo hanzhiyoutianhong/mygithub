@@ -17,4 +17,8 @@ public interface UserDao {
     UserInfo getUserInfo(String email);
 
     boolean queryEmail(String email); // 验证邮箱是否存在
+
+    int updateToken(UserParams userParams);
+
+    String getToken(String email);
 }
