@@ -18,13 +18,20 @@ public class AuthFilter implements Filter {
     public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain) throws IOException, ServletException {
 
         HttpServletRequest httpRequest = (HttpServletRequest) request;
+        String path = httpRequest.getRequestURI();
+        //登录、注册、下载demo不需要token
+        if (path.contains("/user/login") || path.contains("/user/register") || path.contains("/v1/request_demo")) {
+            chain.doFilter(request, response);
+            return;
+        }
+
         String authInfo = httpRequest.getHeader("Authorization");
         String[] authInfos = authInfo.split(":");
         String authMethod = authInfos[0] == null ? "" : authInfos[0];
-        String[] authInfos1 = authInfos[1].split(" ");
+        String[] authInfos1 = authInfos[1].trim().split(" ");
         String token = authInfos1[0] == null ? "" : authInfos1[0];
         String user_id = authInfos1[1] == null ? "" : authInfos1[1];
-        if(authMethod.equals("Sign")){
+        if(authMethod.trim().equals("Sign")){
             if (signAuthService.doAuth(request, response)) {
                 chain.doFilter(request, response);
             } else {
@@ -37,7 +44,7 @@ public class AuthFilter implements Filter {
                 output.close();
             }
         }
-        if (authMethod.equals("Token")) {
+        if (authMethod.trim().equals("Token")) {
             if (linkedWebAuthService.doAuth(request, user_id, token)) {
                 try {
                     chain.doFilter(request, response);

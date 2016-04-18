@@ -44,6 +44,7 @@ public class UserServiceImpl implements UserService {
             String token = UUIDUtils.createUUID();
             userParams.setToken(token);
             userDao.updateToken(userParams);
+            userInfo.setToken(token);
             return userInfo;
         } else {
             throw new LMException(LMExceptionFactor.LM_USER_WRONG_PWD);

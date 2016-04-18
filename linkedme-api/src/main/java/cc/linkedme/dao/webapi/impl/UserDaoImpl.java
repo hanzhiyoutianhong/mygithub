@@ -164,8 +164,10 @@ public class UserDaoImpl extends BaseDao implements UserDao {
                 return null;
             }
         });
-        if (!userInfos.isEmpty())
-            return userInfos.get(0).getToken();
+        if (!userInfos.isEmpty()) {
+            String token = userInfos.get(0).getToken();
+            return token;
+        }
         return "403Forbidden";
     }
 }
