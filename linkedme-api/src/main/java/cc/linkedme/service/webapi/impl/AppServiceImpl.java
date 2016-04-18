@@ -7,8 +7,11 @@ import cc.linkedme.commons.shard.ShardingSupportHash;
 import cc.linkedme.commons.util.MD5Utils;
 import cc.linkedme.commons.uuid.UuidCreator;
 import cc.linkedme.dao.webapi.AppDao;
+import cc.linkedme.data.dao.strategy.TableChannel;
 import cc.linkedme.data.model.AppInfo;
+import cc.linkedme.data.model.UrlTagsInfo;
 import cc.linkedme.data.model.params.AppParams;
+import cc.linkedme.data.model.params.UrlParams;
 import cc.linkedme.service.webapi.AppService;
 import org.apache.commons.collections.CollectionUtils;
 
@@ -26,6 +29,9 @@ public class AppServiceImpl implements AppService {
 
     @Resource
     private AppDao appDao;
+
+    @Resource
+    private AppDao urlTagDao;
 
     @Resource
     private ShardingSupportHash<JedisPort> clientShardingSupport;
@@ -75,6 +81,14 @@ public class AppServiceImpl implements AppService {
 
     public int updateApp(AppParams appParams) {
         return appDao.updateApp(appParams);
+    }
+
+    public List<UrlTagsInfo> getUrlTags( AppParams appParams ) {
+        return urlTagDao.getUrlTagsByAppId( appParams );
+    }
+
+    public boolean configUrlTags(UrlParams urlParams) {
+        return urlTagDao.configUrlTags( urlParams );
     }
 
     @Override

@@ -4,9 +4,13 @@ import cc.linkedme.commons.exception.LMException;
 import cc.linkedme.commons.exception.LMExceptionFactor;
 import cc.linkedme.commons.json.JsonBuilder;
 import cc.linkedme.data.model.AppInfo;
+import cc.linkedme.data.model.UrlTagsInfo;
 import cc.linkedme.data.model.params.AppParams;
+import cc.linkedme.data.model.params.UrlParams;
 import cc.linkedme.service.webapi.AppService;
 import com.google.api.client.repackaged.com.google.common.base.Strings;
+import net.sf.json.JSONArray;
+
 import net.sf.json.JSONObject;
 import org.apache.commons.lang.StringUtils;
 import org.springframework.stereotype.Component;
@@ -162,6 +166,71 @@ public class App {
         resultJson.append("ret", result > 0);
         return resultJson.flip().toString();
     }
+
+    @Path("/url_tags")
+    @GET
+    @Produces(MediaType.APPLICATION_JSON)
+    public String urlTags( @QueryParam("user_id") long user_id,
+                           @QueryParam("app_id") long app_id,
+                           @QueryParam("token") String token ) {
+        AppParams appParams = new AppParams();
+        appParams.user_id = user_id;
+        appParams.app_id = app_id;
+
+        if (appParams.user_id <= 0) {
+            throw new LMException(LMExceptionFactor.LM_ILLEGAL_PARAM_VALUE);
+        }
+
+        if (appParams.app_id <= 0) {
+            throw new LMException(LMExceptionFactor.LM_ILLEGAL_PARAM_VALUE);
+        }
+
+        List<UrlTagsInfo> result = appService.getUrlTags( appParams );
+
+        JSONObject resultJson = new JSONObject();
+        JSONArray feature = new JSONArray();
+        JSONArray campaign = new JSONArray();
+        JSONArray stage = new JSONArray();
+        JSONArray channel = new JSONArray();
+        JSONArray tag = new JSONArray();
+
+        for( int i = 0; result != null && i < result.size(); i++ ) {
+            UrlTagsInfo tmp = result.get( i );
+            if( tmp.getTag_type().equals( "feature" ) )
+                feature.add( tmp.getTag_content() );
+            else if( tmp.getTag_type().equals( "campaign" ) )
+                campaign.add( tmp.getTag_content() );
+            else if( tmp.getTag_type().equals( "stage" ) )
+                stage.add( tmp.getTag_content() );
+            else if( tmp.getTag_type().equals( "channel" ) )
+                channel.add( tmp.getTag_content() );
+            else if( tmp.getTag_type().equals( "tag" ) )
+                tag.add( tmp.getTag_content() );
+        }
+
+        resultJson.put( "feature", feature );
+        resultJson.put( "campaign", campaign );
+        resultJson.put( "stage", stage );
+        resultJson.put( "channel", channel );
+        resultJson.put( "tag", tag );
+
+        return resultJson.toString();
+    }
+
+    @Path("/config")
+    @POST
+    @Produces(MediaType.APPLICATION_JSON)
+    public String urlTagsConfig(UrlParams urlParams, @Context HttpServletRequest request ) {
+
+        boolean result = appService.configUrlTags( urlParams );
+
+        JSONObject resultJson = new JSONObject();
+        resultJson.put( "ret", result );
+        return resultJson.toString();
+    }
+
+
+
 
     @Path("/uploadimg")
     @POST
