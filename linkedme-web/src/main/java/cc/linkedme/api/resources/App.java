@@ -213,10 +213,10 @@ public class App {
         } catch (Exception e) {
             e.printStackTrace();
         } finally {
-            if (inputStream != null)
-                inputStream.close();
             if (out != null)
                 out.close();
+            if (inputStream != null)
+                inputStream.close();
         }
     }
 

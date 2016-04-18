@@ -1,4 +1,4 @@
-package cc.linkedme.commons.auth;
+package cc.linkedme.common.auth;
 
 import cc.linkedme.commons.util.MD5Utils;
 import com.google.common.base.Joiner;
