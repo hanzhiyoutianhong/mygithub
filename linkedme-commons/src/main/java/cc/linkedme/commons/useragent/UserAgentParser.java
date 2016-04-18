@@ -16,6 +16,8 @@
 
 package cc.linkedme.commons.useragent;
 
+import org.springframework.util.CollectionUtils;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -57,6 +59,24 @@ public class UserAgentParser {
             }
         }
         return new UserAgent("Other", null, null, null);
+    }
+
+    public List<UserAgent> parseUA(String userAgentStr) {
+        if (userAgentStr == null) {
+            return null;
+        }
+        List<UserAgent> agentList = new ArrayList<UserAgent>();
+        UserAgent agent;
+        for (UAPattern p : patterns) {
+            if ((agent = p.match(userAgentStr)) != null) {
+                agentList.add(agent);
+            }
+        }
+        if(CollectionUtils.isEmpty(agentList)) {
+
+         agentList.add(new UserAgent("Other", null, null, null));
+        }
+        return agentList;
     }
 
     protected static UAPattern patternFromMap(Map<String, String> configMap) {

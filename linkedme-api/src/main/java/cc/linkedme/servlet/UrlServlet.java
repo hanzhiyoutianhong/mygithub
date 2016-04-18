@@ -1,6 +1,9 @@
 package cc.linkedme.servlet;
 
 import java.io.IOException;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 import java.util.concurrent.Callable;
 import java.util.concurrent.LinkedBlockingQueue;
 import java.util.concurrent.ThreadPoolExecutor;
@@ -18,6 +21,7 @@ import cc.linkedme.commons.redis.JedisPort;
 import cc.linkedme.commons.shard.ShardingSupportHash;
 import cc.linkedme.commons.useragent.Client;
 import cc.linkedme.commons.useragent.Parser;
+import cc.linkedme.commons.useragent.UserAgent;
 import cc.linkedme.commons.util.Base62;
 import cc.linkedme.data.model.AppInfo;
 import cc.linkedme.data.model.DeepLink;
@@ -66,18 +70,10 @@ public class UrlServlet extends HttpServlet {
      * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
      */
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        // TODO 显示二维码代码 CodeServlet code.jsp
-        if (1 == 1) {
-            String location = request.getScheme() + "://" + request.getServerName() + ":"
-                    + request.getServerPort() + "/code.jsp";
-            response.sendRedirect(location + "?code_url=" + "http://www.baidu.com");
-            return;
-        }
-
         // TODO Auto-generated method stub
         // eg, https://lkme.cc/hafzh/fhza80af?scan=0; appId, deeplinkId;
         String uri = request.getRequestURI();
-        String[] uriArr = uri.split("/|\\?");
+        String[] uriArr = uri.split("/");
         if (uriArr.length < 3) {
             response.sendRedirect("/index.jsp"); // TODO 重定向为默认配置页面
             // request.getRequestDispatcher("/index.jsp").forward(request, response);
@@ -85,24 +81,20 @@ public class UrlServlet extends HttpServlet {
         }
         long appId = Base62.decode(uriArr[1]);
         long deepLinkId = Base62.decode(uriArr[2]);
-        String urlParam = "";
-        if(uriArr.length > 3) {
-            urlParam = uriArr[3];
-        }
+        String urlParam = request.getParameter("scan");
         DeepLink deepLink = deepLinkService.getDeepLinkInfo(deepLinkId, appId); // 根据deepLinkId获取deepLink信息
         AppInfo appInfo = appService.getAppById(appId); // 根据appId获取app信息 TODO 添加appInfo添加mc
 
         // useAgent
         // 使用yaml解析user agent,测试匹配优先级,速度,打日志统计时间,优化正则表达式(单个正则表达式,优先级);
         String userAgent = request.getHeader("user-agent");
-        Client client = userAgentParser.parse(userAgent);
-        String userAgentFamily = client.userAgent.family;
-        int userAgentMajor = 0;
-        try {
-            userAgentMajor = Integer.valueOf(client.userAgent.major);
-        } catch (NumberFormatException e) {
-            ApiLogger.warn("UrlServlet userAgentMajor is not a number, userAgentMajor=" + userAgentMajor);
+        Client client = userAgentParser.parseUA(userAgent);
+        List<UserAgent> userAgentList = client.userAgent;
+        Map<String, UserAgent> uaMap = new HashMap<String, UserAgent>(userAgentList.size());
+        for (UserAgent ua : userAgentList) {
+            uaMap.put(ua.family, ua);
         }
+
         String osFamily = client.os.family;
         String osMajor = client.os.major;
         String deviceFamily = client.device.family;
@@ -136,7 +128,7 @@ public class UrlServlet extends HttpServlet {
                 isUniversallink = true;
             }
 
-            if(urlParam.contains("scan=1")) {
+            if ("1".equals(urlParam)) {
                 countType = "pc_ios_scan";
             } else {
                 countType = "ios_click";
@@ -151,7 +143,7 @@ public class UrlServlet extends HttpServlet {
             scheme = appInfo.getAndroid_uri_scheme();
             isAndroid = true;
 
-            if(urlParam.contains("scan=1")) {
+            if ("1".equals(urlParam)) {
                 countType = "pc_ios_scan";
             } else {
                 countType = "adr_click";
@@ -159,6 +151,12 @@ public class UrlServlet extends HttpServlet {
         } else {
             // 点击计数else,暂时都计pc
             countType = "pc_click";
+
+            // TODO 显示二维码代码 CodeServlet code.jsp
+            String location = "https://lkme.cc/code.jsp";
+            String codeUrl = "https://lkme.cc" + request.getRequestURI() + "?scan=1";
+            response.sendRedirect(location + "?code_url=" + codeUrl);
+            return;
         }
 
         // iPad
@@ -191,22 +189,34 @@ public class UrlServlet extends HttpServlet {
         boolean DEBUG = false;
 
 
-        int browseMajor = 0;
-
+        int userAgentMajor = 0;
         // 计数
-        if (userAgentFamily.equals("Chrome")) {
+        if (uaMap.containsKey("Chrome")) {
             isChrome = true;
-            browseMajor = userAgentMajor;
-        } else if (userAgentFamily.equals("Firefox")) {
+            UserAgent ua = uaMap.get("Chrome");
+            try {
+                userAgentMajor = Integer.valueOf(ua.major);
+            } catch (NumberFormatException e) {
+                ApiLogger.warn("UrlServlet userAgentMajor is not a number, userAgentMajor=" + userAgentMajor);
+            }
+        } else if (uaMap.containsKey("Firefox")) {
             isFirefox = true;
-        } else if (userAgentFamily.equals("WeChat")) {
-            isWechat = true;
-        } else if (userAgentFamily.equals("Weibo")) {
-            isWeibo = true;
-        } else if (userAgentFamily.equals("QQ Browser")) {
+        }
+        if (uaMap.containsKey("QQ Browser")) {
             isQQBrowser = true;
-        } else if (userAgentFamily.equals("QQInner")) {
+        }
+        if (uaMap.containsKey("QQInner")) {
             isQQ = true;
+        }
+
+        if (uaMap.containsKey("WeChat")) {
+            isWechat = true;
+        }
+        if (uaMap.containsKey("Weibo")) {
+            isWeibo = true;
+        }
+        if (uaMap.containsKey("UC Browser")) {
+            isUC = true;
         }
 
         request.setAttribute("AppName", appInfo.getApp_name());
@@ -222,7 +232,7 @@ public class UrlServlet extends HttpServlet {
         request.setAttribute("Download_title", "Download_title"); // TODO
 
 
-        request.setAttribute("Chrome_major", browseMajor);
+        request.setAttribute("Chrome_major", userAgentMajor);
         request.setAttribute("Ios_major", osMajor);
         request.setAttribute("Redirect_url", "http://www.baidu.com"); // TODO
 
@@ -242,6 +252,7 @@ public class UrlServlet extends HttpServlet {
         request.setAttribute("isQQBrowser", isQQBrowser);
         request.setAttribute("isFirefox", isFirefox);
         request.setAttribute("isChrome", isChrome);
+        request.setAttribute("isUC", isUC);
 
         request.setAttribute("isUniversallink", isUniversallink);
         request.setAttribute("isDownloadDirectly", isDownloadDirectly);
@@ -252,17 +263,11 @@ public class UrlServlet extends HttpServlet {
 
         request.setAttribute("DEBUG", DEBUG);
 
-        if (isAndroid && isChrome && userAgentMajor >= 25) {
+        if ((!isWechat) && (!isWeibo) && isAndroid && isChrome && userAgentMajor >= 25) {
             String location = "intent://linkedme?click_id=" + uriArr[2] + "#Intent;scheme=" + scheme + ";package="
                     + appInfo.getAndroid_package_name() + ";S.browser_fallback_url=" + url + ";end";
             response.setStatus(307);
             response.sendRedirect(location);
-            return;
-        }
-        if (!isAndroid && !isIOS) {
-            String location = request.getScheme() + "://" + request.getServerName() + ":"
-                    + request.getServerPort() + "/code.jsp";
-            response.sendRedirect(location + "?code_url=" + "http://www.baidu.com");
             return;
         }
 

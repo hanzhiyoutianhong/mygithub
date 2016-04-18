@@ -14,7 +14,7 @@ import java.sql.Date;
 public class DeepLinkDateCount {
     private int appId;
     private long deeplinkId;
-    private Date date;
+    private String date;
     private Long click;
     private Long open;
     private Long install;
@@ -41,11 +41,11 @@ public class DeepLinkDateCount {
 
     @Basic
     @Column(name = "date")
-    public Date getDate() {
+    public String getDate() {
         return date;
     }
 
-    public void setDate(Date date) {
+    public void setDate(String date) {
         this.date = date;
     }
 

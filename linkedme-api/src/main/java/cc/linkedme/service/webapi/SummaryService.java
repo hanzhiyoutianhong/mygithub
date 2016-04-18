@@ -13,6 +13,8 @@ import java.util.Set;
 
 import javax.annotation.Resource;
 
+import cc.linkedme.dao.webapi.DeepLinkDateCountDao;
+import cc.linkedme.data.model.DeepLinkDateCount;
 import net.sf.json.JSONArray;
 import net.sf.json.JSONObject;
 
@@ -47,8 +49,13 @@ import org.springframework.util.CollectionUtils;
 
 @Service
 public class SummaryService {
+    public static SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd");
+
     @Resource
     DeepLinkDao deepLinkDao;
+
+    @Resource
+    DeepLinkDateCountDao deepLinkDateCountDao;
 
     @Resource
     BtnCountDao btnCountDao;
@@ -66,12 +73,11 @@ public class SummaryService {
         String start_date = summaryDeepLinkParams.startDate;
         String end_date = summaryDeepLinkParams.endDate;
 
-        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
         String onlineTime = "2016-04-01";
         try {
-            Date onlineDate = sdf.parse(onlineTime);
-            Date stDate = sdf.parse(start_date);
-            Date edDate = sdf.parse(end_date);
+            Date onlineDate = simpleDateFormat.parse(onlineTime);
+            Date stDate = simpleDateFormat.parse(start_date);
+            Date edDate = simpleDateFormat.parse(end_date);
             Date currentDate = new Date();
 
             if (stDate.after(currentDate) || edDate.before(onlineDate)) {
@@ -81,7 +87,7 @@ public class SummaryService {
                     start_date = onlineTime;
                 }
                 if (edDate.after(currentDate)) {
-                    end_date = sdf.format(currentDate);
+                    end_date = simpleDateFormat.format(currentDate);
                 }
             }
         } catch (ParseException e) {
@@ -177,6 +183,50 @@ public class SummaryService {
 
         resultJson.put("data", retJson);
 
+        return resultJson.toString();
+    }
+
+    public String getDeepLinkHistoryCount(SummaryDeepLinkParams summaryDeepLinkParams) {
+        String startDate = summaryDeepLinkParams.startDate;
+        String endDate = summaryDeepLinkParams.endDate;
+        summaryDeepLinkParams.startDate = "2016-04-01";
+        summaryDeepLinkParams.endDate = simpleDateFormat.format(new Date());
+        List<DeepLink> deepLinks = getDeepLinks(summaryDeepLinkParams);
+        JSONArray clickArr = new JSONArray();
+        JSONArray openArr = new JSONArray();
+        JSONArray installArr = new JSONArray();
+
+        // long timeStamp = strDateToTimestamps(deepLinkDateCount.getDate());
+        // JSONArray clickJson = new JSONArray();
+        // clickJson.add(0, timeStamp);
+        // clickJson.add(1, deepLinkDateCount.getClick());
+        // clickArr.add(i, clickJson);
+        //
+        // JSONArray openJson = new JSONArray();
+        // openJson.add(0, timeStamp);
+        // openJson.add(1, deepLinkDateCount.getOpen());
+        // openArr.add(i, openJson);
+        //
+        // JSONArray installJson = new JSONArray();
+        // installJson.add(0, timeStamp);
+        // installJson.add(1, deepLinkDateCount.getInstall());
+        // installArr.add(i, installJson);
+        Map<String, Map<String, Long>> allCounts = new HashMap<>();
+
+        for (int i = 0; i < deepLinks.size(); i++) { // TODO 改成批量查询
+            List<DeepLinkDateCount> deepLinkDateCounts = deepLinkDateCountDao.getDeepLinkDateCount(summaryDeepLinkParams.appid,
+                    deepLinks.get(i).getDeeplinkId(), startDate, endDate);
+            for (DeepLinkDateCount deepLinkDateCount : deepLinkDateCounts) {
+                Map<String, Long> count = allCounts.get(deepLinkDateCount.getDate());
+                if(count != null) {
+                    
+                }
+            }
+        }
+        JSONObject resultJson = new JSONObject();
+        resultJson.put("click", clickArr);
+        resultJson.put("open", openArr);
+        resultJson.put("install", installArr);
         return resultJson.toString();
     }
 
@@ -349,7 +399,6 @@ public class SummaryService {
     public String getHistoryIncome(SummaryButtonParams summaryButtonParams) {
         List<ButtonInfo> buttonInfos = btnService.getAllButtonsByAppId(summaryButtonParams.app_id);
         Set<String> consumerAppids = new HashSet<>();
-        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd");
         JSONArray resultJsonArray = new JSONArray();
         for (ButtonInfo buttonInfo : buttonInfos) {
             if (consumerAppids.contains(buttonInfo.getConsumerAppId())) {
@@ -375,7 +424,7 @@ public class SummaryService {
             JSONArray dataJsonArray = new JSONArray();
             for (Map.Entry<String, Float> entry : resultCountMap.entrySet()) {
                 JSONArray dateJson = new JSONArray();
-                dateJson.add(0, strDateToTimestamps(entry.getKey(), simpleDateFormat));
+                dateJson.add(0, strDateToTimestamps(entry.getKey()));
                 dateJson.add(1, entry.getValue());
                 dataJsonArray.add(dateJson); // TODO 要有顺序
             }
@@ -407,7 +456,6 @@ public class SummaryService {
             }
         }
 
-        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd");
         JSONArray viewCountJson = new JSONArray();
         JSONArray clickCountJson = new JSONArray();
         JSONArray orderCountJson = new JSONArray();
@@ -417,7 +465,7 @@ public class SummaryService {
             if (Strings.isNullOrEmpty(entry.getKey()) || (entry.getValue() == null) || (entry.getValue().size() == 0)) {
                 continue;
             }
-            long dateTimestamps = strDateToTimestamps(entry.getKey(), simpleDateFormat);
+            long dateTimestamps = strDateToTimestamps(entry.getKey());
             JSONArray viewJson = new JSONArray();
             viewJson.add(dateTimestamps);
             viewJson.add(entry.getValue().get("view"));
@@ -491,7 +539,7 @@ public class SummaryService {
         return jsonObject.toString();
     }
 
-    private static long strDateToTimestamps(String strDate, SimpleDateFormat simpleDateFormat) {
+    private static long strDateToTimestamps(String strDate) {
         try {
             Date date = simpleDateFormat.parse(strDate);
             return date.getTime();

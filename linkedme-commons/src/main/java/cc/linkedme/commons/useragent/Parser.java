@@ -54,8 +54,19 @@ public class Parser {
         return new Client(ua, os, device);
     }
 
+    public Client parseUA(String agentString) {
+        List<UserAgent> ua = parseUserAgents(agentString);
+        OS os = parseOS(agentString);
+        Device device = parseDevice(agentString);
+        return new Client(ua, os, device);
+    }
+
     public UserAgent parseUserAgent(String agentString) {
         return uaParser.parse(agentString);
+    }
+
+    public List<UserAgent> parseUserAgents(String agentString) {
+        return uaParser.parseUA(agentString);
     }
 
     public Device parseDevice(String agentString) {

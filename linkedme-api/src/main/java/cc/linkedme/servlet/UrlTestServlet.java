@@ -38,11 +38,11 @@ public class UrlTestServlet extends HttpServlet {
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         String userAgent = request.getHeader("user-agent");
         Client client = userAgentParser.parse(userAgent);
-        String userAgentFamily =  client.userAgent.family;
-        String userAgentMajor = client.userAgent.major;
-        String osFamily = client.os.family;
-        String osMajor = client.os.major;
-        String deviceFamily  = client.device.family;
+//        String userAgentFamily =  client.userAgent.family;
+//        String userAgentMajor = client.userAgent.major;
+//        String osFamily = client.os.family;
+//        String osMajor = client.os.major;
+//        String deviceFamily  = client.device.family;
         request.getRequestDispatcher("/index1.jsp").forward(request,response);
     }
 }

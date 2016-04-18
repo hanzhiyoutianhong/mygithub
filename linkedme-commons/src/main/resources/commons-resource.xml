@@ -41,4 +41,12 @@
     <!-- regex yaml-->
     <bean id="userAgentParser" class="cc.linkedme.commons.useragent.Parser" />
 
+    <bean class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">
+        <property name="locations">
+            <list>
+                <value>classpath:regexes.yaml</value>
+            </list>
+        </property>
+    </bean>
+
 </beans>

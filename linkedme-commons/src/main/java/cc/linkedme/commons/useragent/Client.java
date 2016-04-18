@@ -16,17 +16,27 @@
 
 package cc.linkedme.commons.useragent;
 
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+
 /**
  * Collection of parsed data for a given user agent string consisting of UserAgent, OS, Device
  *
  * @author Steve Jiang (@sjiang) <gh at iamsteve com>
  */
 public class Client {
-  public final UserAgent userAgent;
+  public final List<UserAgent> userAgent;
   public final OS os;
   public final Device device;
 
   public Client(UserAgent userAgent, OS os, Device device) {
+    this.userAgent = Collections.singletonList(userAgent);
+    this.os = os;
+    this.device = device;
+  }
+
+  public Client(List<UserAgent> userAgent, OS os, Device device) {
     this.userAgent = userAgent;
     this.os = os;
     this.device = device;
@@ -53,7 +63,10 @@ public class Client {
 
   @Override
   public String toString() {
-    return String.format("{\"user_agent\": %s, \"os\": %s, \"device\": %s}",
-                         userAgent, os, device);
+    return "Client{" +
+            "userAgent=" + userAgent +
+            ", os=" + os +
+            ", device=" + device +
+            '}';
   }
 }

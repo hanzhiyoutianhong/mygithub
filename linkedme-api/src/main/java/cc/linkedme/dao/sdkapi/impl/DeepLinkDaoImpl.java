@@ -92,27 +92,32 @@ public class DeepLinkDaoImpl extends BaseDao implements DeepLinkDao {
         Date date = UuidHelper.getDateFromId(deepLinkId); // 根据deepLinkId获取日期
         DeepLink dp = new DeepLink();
         TableChannel tableChannel = tableContainer.getTableChannel("deeplink", GET_DEEPLINK_INFO, appid, date);
-        tableChannel.getJdbcTemplate().query(tableChannel.getSql(), new Object[] {deepLinkId, appid}, new RowMapper() {
-            public Object mapRow(ResultSet resultSet, int i) throws SQLException {
-                dp.setDeeplinkId(resultSet.getBigDecimal("deeplink_id").longValue());
-                dp.setCreateTime(resultSet.getString("create_time"));
-                dp.setTags(resultSet.getString("tags"));
-                dp.setAlias(resultSet.getString("alias"));
-                dp.setChannel(resultSet.getString("channel"));
-                dp.setFeature(resultSet.getString("feature"));
-                dp.setStage(resultSet.getString("stage"));
-                dp.setCampaign(resultSet.getString("campaign"));
-                dp.setParams(resultSet.getString("params"));
-                dp.setSource(resultSet.getString("source"));
-                dp.setIos_use_default(resultSet.getBoolean("ios_use_default"));
-                dp.setIos_custom_url(resultSet.getString("ios_custom_url"));
-                dp.setAndroid_use_default(resultSet.getBoolean("android_use_default"));
-                dp.setAndroid_custom_url(resultSet.getString("android_custom_url"));
-                dp.setDesktop_use_default(resultSet.getBoolean("desktop_use_default"));
-                dp.setDesktop_custom_url(resultSet.getString("desktop_custom_url"));
-                return null;
-            }
-        });
+        try {
+
+            tableChannel.getJdbcTemplate().query(tableChannel.getSql(), new Object[]{deepLinkId, appid}, new RowMapper() {
+                public Object mapRow(ResultSet resultSet, int i) throws SQLException {
+                    dp.setDeeplinkId(resultSet.getBigDecimal("deeplink_id").longValue());
+                    dp.setCreateTime(resultSet.getString("create_time"));
+                    dp.setTags(resultSet.getString("tags"));
+                    dp.setAlias(resultSet.getString("alias"));
+                    dp.setChannel(resultSet.getString("channel"));
+                    dp.setFeature(resultSet.getString("feature"));
+                    dp.setStage(resultSet.getString("stage"));
+                    dp.setCampaign(resultSet.getString("campaign"));
+                    dp.setParams(resultSet.getString("params"));
+                    dp.setSource(resultSet.getString("source"));
+                    dp.setIos_use_default(resultSet.getBoolean("ios_use_default"));
+                    dp.setIos_custom_url(resultSet.getString("ios_custom_url"));
+                    dp.setAndroid_use_default(resultSet.getBoolean("android_use_default"));
+                    dp.setAndroid_custom_url(resultSet.getString("android_custom_url"));
+                    dp.setDesktop_use_default(resultSet.getBoolean("desktop_use_default"));
+                    dp.setDesktop_custom_url(resultSet.getString("desktop_custom_url"));
+                    return null;
+                }
+            });
+        }catch (Exception e) {
+            ApiLogger.error("db error", e);
+        }
         if (dp.getDeeplinkId() == 0) {
             return null;
         }

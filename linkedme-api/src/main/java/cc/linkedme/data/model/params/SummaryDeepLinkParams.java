@@ -5,7 +5,7 @@ package cc.linkedme.data.model.params;
  */
 public class SummaryDeepLinkParams {
 
-    public long appid;
+    public int appid;
     public int userid;
     public String startDate;
     public String endDate;
@@ -16,6 +16,7 @@ public class SummaryDeepLinkParams {
     public String tags;
     public String source;
     public boolean unique;
+    public int interval;
     public int returnNumber;
     public int skipNumber;
     public String orderby;
@@ -24,7 +25,7 @@ public class SummaryDeepLinkParams {
 
     public SummaryDeepLinkParams() {}
 
-    public SummaryDeepLinkParams(long appid, String startDate, String endDate, String feature, String campaign, String stage,
+    public SummaryDeepLinkParams(int appid, String startDate, String endDate, String feature, String campaign, String stage,
             String channel, String tags, String source, boolean unique, int returnNumber, int skipNumber, String orderby) {
         this.appid = appid;
         this.startDate = startDate;
@@ -38,6 +39,23 @@ public class SummaryDeepLinkParams {
         this.unique = unique;
         this.returnNumber = returnNumber;
         this.skipNumber = skipNumber;
+        this.orderby = orderby;
+    }
+
+
+    public SummaryDeepLinkParams(int appid, String startDate, String endDate, String feature, String campaign, String stage,
+                                 String channel, String tags, String source, boolean unique, int interval, String orderby) {
+        this.appid = appid;
+        this.startDate = startDate;
+        this.endDate = endDate;
+        this.feature = feature;
+        this.campaign = campaign;
+        this.stage = stage;
+        this.channel = channel;
+        this.tags = tags;
+        this.source = source;
+        this.unique = unique;
+        this.interval = interval;
         this.orderby = orderby;
     }
 }

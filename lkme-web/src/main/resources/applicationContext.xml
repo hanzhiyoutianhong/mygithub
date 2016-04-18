@@ -11,7 +11,6 @@
     <bean class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">
         <property name="locations">
             <list>
-                <value>classpath:regexes.yaml</value>
                 <value>classpath:live/jdbc.properties</value>
                 <value>classpath:live/mc.properties</value>
                 <value>classpath:live/redis.properties</value>

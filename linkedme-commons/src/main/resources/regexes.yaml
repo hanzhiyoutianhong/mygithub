@@ -1,6 +1,28 @@
 user_agent_parsers:
   #### SPECIAL CASES TOP ####
 
+  # WeChat
+  - regex: '(MicroMessenger/)(\d+).(\d+).(\d+)'
+    family_replacement: 'WeChat'
+
+  # Weibo
+  - regex: 'Weibo'
+    family_replacement: 'Weibo'
+
+  # QQ Browsers
+  - regex: '(MQQBrowser/Mini)(?:(\d+)(?:\.(\d+)(?:\.(\d+))?)?)?'
+    #family_replacement: 'QQ Browser Mini'
+    family_replacement: 'QQ Browser'
+  - regex: '(MQQBrowser)(?:/(\d+)(?:\.(\d+)(?:\.(\d+))?)?)?'
+    #family_replacement: 'QQ Browser Mobile'
+    family_replacement: 'QQ Browser'
+  - regex: '(QQBrowser)(?:/(\d+)(?:\.(\d+)\.(\d+)(?:\.(\d+))?)?)?'
+    family_replacement: 'QQ Browser'
+
+  # QQ inner
+  - regex: '(QQ)/(\d+)\.(\d+)\.(\d+)'
+    family_replacement: 'QQInner'
+
   # Firefox
   - regex: '(Pale[Mm]oon)/(\d+)\.(\d+)\.?(\d+)?'
     family_replacement: 'Firefox'
@@ -35,30 +57,22 @@ user_agent_parsers:
   - regex: '(chromeframe)/(\d+)\.(\d+)\.(\d+)'
     family_replacement: 'Chrome'
 
-  # WeChat
-  - regex: '(MicroMessenger/)(\d+).(\d+).(\d+)' 
-    family_replacement: 'WeChat'
-
-  # Weibo
-  - regex: 'Weibo' 
-    family_replacement: 'Weibo'
-
   #Mozilla/5.0 (Linux; U; Android 4.3; zh-cn; K-Touch Tou ch3 Build/JLS36C) AppleWebKit/534.30 (KHTML, like Gecko) Version/4.0 Mobile Safari/534.30 TXMicroBlog612
   - regex: 'TXMicroBlog'
     family_replacement: 'TencentWeibo'
 
-  # QQ Browsers
-  #- regex: '(MQQBrowser/Mini)(?:(\d+)(?:\.(\d+)(?:\.(\d+))?)?)?'
-  #family_replacement: 'QQ Browser Mini'
-  #- regex: '(MQQBrowser)(?:/(\d+)(?:\.(\d+)(?:\.(\d+))?)?)?'
-  #  family_replacement: 'QQ Browser Mobile'
-  #- regex: '(QQBrowser)(?:/(\d+)(?:\.(\d+)\.(\d+)(?:\.(\d+))?)?)?'
-  #  family_replacement: 'QQ Browser'
+  # UC Browser
+  - regex: '(UCBrowser)[ /](\d+)\.(\d+)\.(\d+)'
+    family_replacement: 'UC Browser'
 
-  # QQ inner
-  - regex: '(QQ)/(\d+)\.(\d+)\.(\d+)'
-    family_replacement: 'QQInner'
+  - regex: '(UC Browser)[ /](\d+)\.(\d+)\.(\d+)'
+    family_replacement: 'UC Browser'
 
+  - regex: '(UCBrowser/)(\d+).(\d+).(\d+)'
+    family_replacement: 'UC Browser'
+
+  - regex: '(UC Browser|UCBrowser|UCWEB)(\d+)\.(\d+)\.(\d+)'
+    family_replacement: 'UC Browser'
 
 os_parsers:
 
@@ -659,4 +673,3 @@ device_parsers:
   ##########
   - regex: '(bingbot|bot|borg|google(^tv)|yahoo|slurp|msnbot|msrbot|openbot|archiver|netresearch|lycos|scooter|altavista|teoma|gigabot|baiduspider|blitzbot|oegp|charlotte|furlbot|http%20client|polybot|htdig|ichiro|mogimogi|larbin|pompos|scrubby|searchsight|seekbot|semanticdiscovery|silk|snappy|speedy|spider|voila|vortex|voyager|zao|zeal|fast\-webcrawler|converacrawler|dataparksearch|findlinks|crawler|Netvibes|Sogou Pic Spider|ICC\-Crawler|Innovazion Crawler|Daumoa|EtaoSpider|A6\-Indexer|YisouSpider|Riddler|DBot|wsr\-agent|Xenu|SeznamBot|PaperLiBot|SputnikBot|CCBot|ProoXiBot|Scrapy|Genieo|Screaming Frog|YahooCacheSystem|CiBra|Nutch)'
     device_replacement: 'Spider'
-

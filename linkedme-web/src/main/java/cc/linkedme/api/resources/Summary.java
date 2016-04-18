@@ -31,7 +31,7 @@ public class Summary {
     @Path("/deeplinks_count")
     @GET
     @Produces(MediaType.APPLICATION_JSON)
-    public String getDeepLinkSummary(@QueryParam("app_id") long appid,
+    public String getDeepLinkSummary(@QueryParam("app_id") int appid,
                                      @QueryParam("start_date") String start_date,
                                      @QueryParam("end_date") String end_date,
                                      @QueryParam("feature") String feature,
@@ -94,7 +94,7 @@ public class Summary {
     @GET
     @Produces({MediaType.APPLICATION_JSON})
     public String getDeepLinkInfo(@QueryParam("deeplink_id") long deeplink_id,
-                                  @QueryParam("app_id") long app_id,
+                                  @QueryParam("app_id") int app_id,
                                   @QueryParam("token") String token) {
         SummaryDeepLinkParams summaryDeepLinkParams = new SummaryDeepLinkParams();
         summaryDeepLinkParams.deepLinkId = deeplink_id;
@@ -127,6 +127,29 @@ public class Summary {
         resultJson.put("install", install);
 
         return resultJson.toString();
+    }
+
+    @Path("/deeplinks_count_history")
+    @GET
+    @Produces(MediaType.APPLICATION_JSON)
+    public String getDeepLinkHistoryCount(@QueryParam("app_id") int appid,
+                                          @QueryParam("start_date") String start_date,
+                                          @QueryParam("end_date") String end_date,
+                                          @QueryParam("feature") String feature,
+                                          @QueryParam("campaign") String campaign,
+                                          @QueryParam("stage") String stage,
+                                          @QueryParam("channel") String channel,
+                                          @QueryParam("tag") String tags,
+                                          @QueryParam("source") String source,
+                                          @QueryParam("unique") boolean unique,
+                                          @QueryParam("interval") int interval,
+                                          @QueryParam("orderby") String orderby,
+                                          @QueryParam("token") String token) {
+
+        SummaryDeepLinkParams summaryDeepLinkParams = new SummaryDeepLinkParams(appid, start_date, end_date, feature, campaign, stage,
+                channel, tags, source, unique, interval, orderby);
+        String result = summaryService.getDeepLinkHistoryCount(summaryDeepLinkParams);
+        return result;
     }
 
     @Path("/get_income_rank")
@@ -187,4 +210,5 @@ public class Summary {
         String result = summaryService.getBtnClickAndOrderCounts(summaryButtonParams);
         return result;
     }
+
 }
