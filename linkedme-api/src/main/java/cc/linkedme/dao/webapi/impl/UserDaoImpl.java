@@ -150,11 +150,11 @@ public class UserDaoImpl extends BaseDao implements UserDao {
     }
 
     @Override
-    public String getToken(String email) {
+    public String getToken(String user_id) {
         TableChannel tableChannel = tableContainer.getTableChannel("userInfo", GET_TOKEN, 0L, 0L);
         JdbcTemplate jdbcTemplate = tableChannel.getJdbcTemplate();
         final List<UserInfo> userInfos = new ArrayList<>();
-        Object[] values = {email};
+        Object[] values = {user_id};
         jdbcTemplate.query(tableChannel.getSql(), values, new RowMapper() {
             @Override
             public Object mapRow(ResultSet resultSet, int i) throws SQLException {
