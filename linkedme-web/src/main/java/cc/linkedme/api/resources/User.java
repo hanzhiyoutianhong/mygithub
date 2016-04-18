@@ -3,6 +3,7 @@ package cc.linkedme.api.resources;
 import cc.linkedme.commons.exception.LMException;
 import cc.linkedme.commons.exception.LMExceptionFactor;
 import cc.linkedme.commons.json.JsonBuilder;
+import cc.linkedme.commons.utils.UUIDUtils;
 import cc.linkedme.data.model.UserInfo;
 import cc.linkedme.data.model.params.UserParams;
 import cc.linkedme.service.webapi.UserService;
@@ -47,7 +48,6 @@ public class User {
     public String login(UserParams userParams, @Context HttpServletRequest request) {
 
         UserInfo userInfo = userService.userLogin(userParams);
-
         if (userInfo != null) {
             JsonBuilder resultJson = new JsonBuilder();
             resultJson.append("user_id", userInfo.getId());
@@ -57,6 +57,7 @@ public class User {
             resultJson.append("role_id", userInfo.getRole_id());
             resultJson.append("register_time", userInfo.getRegister_time());
             resultJson.append("last_login_time", userInfo.getLast_login_time());
+            resultJson.append("token", userInfo.getToken());
             return resultJson.flip().toString();
         } else {
             throw new LMException(LMExceptionFactor.LM_ILLEGAL_PARAM_VALUE);

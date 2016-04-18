@@ -1,7 +1,10 @@
 package cc.linkedme.service.webapi;
 
 import cc.linkedme.data.model.AppInfo;
+import cc.linkedme.data.model.UrlTagsInfo;
 import cc.linkedme.data.model.params.AppParams;
+import cc.linkedme.data.model.params.UrlParams;
+import com.sun.jersey.core.impl.provider.entity.XMLJAXBElementProvider;
 
 import java.util.List;
 
@@ -20,6 +23,10 @@ public interface AppService {
     AppInfo getAppById(long appId);
 
     int updateApp(AppParams appParams);
+
+    List<UrlTagsInfo> getUrlTags(AppParams appParams);
+
+    boolean configUrlTags(UrlParams urlParams);
 
     String uploadImg(AppParams appParams, String imagePath);
 }

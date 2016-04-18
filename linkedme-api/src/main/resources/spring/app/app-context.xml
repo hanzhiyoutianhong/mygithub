@@ -1,9 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <beans xmlns="http://www.springframework.org/schema/beans"
-       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-       xsi:schemaLocation="
-       http://www.springframework.org/schema/beans
-       http://www.springframework.org/schema/beans/spring-beans.xsd ">
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:wfc="http://www.springframework.org/schema/wfc"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
+       http://www.springframework.org/schema/beans/spring-beans.xsd http://www.springframework.org/schema/wfc http://www.springframework.org/schema/wfc.xsd">
 
     <bean id="appDao" class="cc.linkedme.dao.webapi.impl.AppDaoImpl">
         <property name="tableContainer">
@@ -39,6 +38,8 @@
                 <entry key="UPDATE_APP_BY_APPID" value= "update $db$.$tb$ set app_name=?, type=?, ios_uri_scheme=?, ios_not_url=?, ios_search_option=?, ios_store_url=?, ios_custom_url=?, ios_bundle_id=?, ios_app_prefix=?, android_uri_scheme=?, android_not_url=?, android_search_option=?, google_play_url=?, android_custom_url=?, android_package_name=?, android_sha256_fingerprints=?, ios_android_flag=?, use_default_landing_page=?, custom_landing_page=? where id = ?"/>
 
                 <entry key="UPLOAD_IMG" value="update $db$.$tb$ set app_logo = ? where id = ? and user_id = ?"/>
+
+                <entry key="GET_IMG" value="select app_logo from $db$.$tb$ where id = ? and user_id = ?"/>
             </map>
         </property>
         <property name="jdbcTemplates">
@@ -49,7 +50,40 @@
         </property>
     </bean>
 
-    <bean id="appService" class="cc.linkedme.service.webapi.impl.AppServiceImpl" />
+    <bean id="urlTagDao" class="cc.linkedme.dao.webapi.impl.AppDaoImpl">
+        <property name="tableContainer">
+            <bean class="cc.linkedme.data.dao.strategy.TableContainer">
+                <property name="tablesItems">
+                    <map>
+                        <entry key="urlTags" value-ref="urlTags"/>
+                    </map>
+                </property>
+            </bean>
+        </property>
+    </bean>
 
+    <bean id="urlTags" class="cc.linkedme.data.dao.strategy.TableItem">
+        <property name="itemName" value="urlTags"/>
+        <property name="dbNamePrefix" value="url_tags"/>
+        <property name="dbCount" value="1"/>
+
+        <property name="tableNamePrefix" value="url_tags_info"/>
+        <property name="tableCount" value="1"/>
+        <property name="sqls">
+            <map>
+                <entry key="GET_URL_TAGS_BY_APPID" value="select tag_content, tag_type from $db$.$tb$ where app_id = ?"/>
+                <entry key="GET_URL_TAGS_BY_APPID_AND_TYPE" value="select tag_content from $db$.$tb$ where app_id = ? and tag_type = ?"/>
+                <entry key="SET_URL_TAGS_BY_APPID_AND_TYPE" value="insert into $db$.$tb$ (app_id, tag_content, tag_type) values(?, ?, ?)"/>
+            </map>
+        </property>
+        <property name="jdbcTemplates">
+            <list>
+                <ref bean="url_tags_jdbctemplate_0"/>
+                <!--<ref bean="deeplink_jdbctemplate_1"/> -->
+            </list>
+        </property>
+    </bean>
+
+    <bean id="appService" class="cc.linkedme.service.webapi.impl.AppServiceImpl"></bean>
 
 </beans>

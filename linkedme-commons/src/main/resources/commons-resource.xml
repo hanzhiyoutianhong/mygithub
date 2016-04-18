@@ -5,7 +5,7 @@
        xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.0.xsd
     http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-3.0.xsd">
 
-    <context:component-scan base-package="cc.linkedme.commons.auth"/>
+    <context:component-scan base-package="cc.linkedme.common.auth"/>
 
     <bean id="uuidCreator" class="cc.linkedme.commons.uuid.UuidCreator">
         <property name="uuidGenerator">
@@ -36,7 +36,7 @@
         <property name="minEvictableIdleTimeMillis" value="-1"/>
     </bean>
 
-    <bean id="authFilter" class="cc.linkedme.commons.auth.AuthFilter" />
+    <bean id="authFilter" class="cc.linkedme.common.auth.AuthFilter" />
 
     <!-- regex yaml-->
     <bean id="userAgentParser" class="cc.linkedme.commons.useragent.Parser" />

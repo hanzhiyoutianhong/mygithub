@@ -3,6 +3,7 @@ package cc.linkedme.service.webapi.impl;
 import cc.linkedme.commons.exception.LMException;
 import cc.linkedme.commons.exception.LMExceptionFactor;
 import cc.linkedme.commons.mail.MailSender;
+import cc.linkedme.commons.utils.UUIDUtils;
 import cc.linkedme.dao.webapi.UserDao;
 import cc.linkedme.data.model.UserInfo;
 import cc.linkedme.data.model.params.UserParams;
@@ -40,7 +41,10 @@ public class UserServiceImpl implements UserService {
             userParams.current_login_time = current_login_time;
 
             userDao.resetLastLoginTime(userParams);
-
+            String token = UUIDUtils.createUUID();
+            userParams.setToken(token);
+            userDao.updateToken(userParams);
+            userInfo.setToken(token);
             return userInfo;
         } else {
             throw new LMException(LMExceptionFactor.LM_USER_WRONG_PWD);
@@ -59,8 +63,11 @@ public class UserServiceImpl implements UserService {
         {
             throw new LMException(LMExceptionFactor.LM_USER_EMAIL_DOESNOT_EXIST);
         }
-        else
+        else {
+            userParams.setToken(null);
+            userDao.updateToken(userParams);
             return true;
+        }
     }
 
     public boolean resetUserPwd(UserParams userParams) {
