@@ -82,7 +82,8 @@ public class UrlServlet extends HttpServlet {
         long appId = Base62.decode(uriArr[1]);
         long deepLinkId = Base62.decode(uriArr[2]);
         String urlParam = request.getParameter("scan");
-        DeepLink deepLink = deepLinkService.getDeepLinkInfo(deepLinkId, appId); // 根据deepLinkId获取deepLink信息
+        // DeepLink deepLink = deepLinkService.getDeepLinkInfo(deepLinkId, appId); //
+        // 根据deepLinkId获取deepLink信息
         AppInfo appInfo = appService.getAppById(appId); // 根据appId获取app信息 TODO 添加appInfo添加mc
 
         // useAgent
@@ -155,27 +156,20 @@ public class UrlServlet extends HttpServlet {
             // TODO 显示二维码代码 CodeServlet code.jsp
             String location = "https://lkme.cc/code.jsp";
             String codeUrl = "https://lkme.cc" + request.getRequestURI() + "?scan=1";
+
+            clickCount(deepLinkId, countType);
+            ApiLogger.biz(String.format("%s\t%s\t%s\t%s\t%s\t%s", request.getRemoteAddr(), "click", appId, deepLinkId, countType, userAgent));
+
             response.sendRedirect(location + "?code_url=" + codeUrl);
             return;
         }
 
         // iPad
 
-        final String type = countType;
-        // TODO 如果短链的访问量急剧增长,线程池扛不住,后续考虑推消息队列
-        deepLinkCountThreadPool.submit(new Callable<Void>() {
-            @Override
-            public Void call() throws Exception {
-                try {
-                    // TODO 对deeplink_id的有效性做判断
-                    JedisPort countClient = deepLinkCountShardingSupport.getClient(deepLinkId);
-                    countClient.hincrBy(String.valueOf(deepLinkId), countType, 1);
-                } catch (Exception e) {
-                    ApiLogger.warn("UrlServlet deepLinkCountThreadPool count failed", e);
-                }
-                return null;
-            }
-        });
+        //点击计数
+        clickCount(deepLinkId, countType);
+        //记录日志
+        ApiLogger.biz(String.format("%s\t%s\t%s\t%s\t%s\t%s", request.getRemoteAddr(), "click", appId, deepLinkId, countType, userAgent));
 
         boolean isWechat = false;
         boolean isWeibo = false;
@@ -267,7 +261,8 @@ public class UrlServlet extends HttpServlet {
             String location = "intent://linkedme?click_id=" + uriArr[2] + "#Intent;scheme=" + scheme + ";package="
                     + appInfo.getAndroid_package_name() + ";S.browser_fallback_url=" + url + ";end";
             response.setStatus(307);
-            response.sendRedirect(location);
+//            response.sendRedirect(location);
+            response.setHeader("Location", location);
             return;
         }
 
@@ -282,6 +277,23 @@ public class UrlServlet extends HttpServlet {
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         // TODO Auto-generated method stub
         doGet(request, response);
+    }
+
+    private void clickCount(long deepLinkId, String countType) {
+        // TODO 如果短链的访问量急剧增长,线程池扛不住,后续考虑推消息队列
+        deepLinkCountThreadPool.submit(new Callable<Void>() {
+            @Override
+            public Void call() throws Exception {
+                try {
+                    // TODO 对deeplink_id的有效性做判断
+                    JedisPort countClient = deepLinkCountShardingSupport.getClient(deepLinkId);
+                    countClient.hincrBy(String.valueOf(deepLinkId), countType, 1);
+                } catch (Exception e) {
+                    ApiLogger.warn("UrlServlet deepLinkCountThreadPool count failed", e);
+                }
+                return null;
+            }
+        });
     }
 
 }

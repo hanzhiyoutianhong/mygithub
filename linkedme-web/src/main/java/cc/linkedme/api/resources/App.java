@@ -111,6 +111,7 @@ public class App {
             throw new LMException(LMExceptionFactor.LM_ILLEGAL_PARAM_VALUE);
         }
 
+
         AppParams appParams = new AppParams();
         appParams.app_id = app_id;
         appParams.type = type;

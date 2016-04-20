@@ -19,7 +19,7 @@ public class DeepLinkDateCountDaoImpl extends BaseDao implements DeepLinkDateCou
 
     @Override
     public List<DeepLinkDateCount> getDeepLinkDateCount(int appId, long deepLinkId, String startDate, String endDate) {
-        TableChannel tableChannel = tableContainer.getTableChannel("deeplink", GET_DEEPLINK_DATE_COUNT, deepLinkId, deepLinkId);
+        TableChannel tableChannel = tableContainer.getTableChannel("deepLinkDateCount", GET_DEEPLINK_DATE_COUNT, deepLinkId, deepLinkId);
         String sql = tableChannel.getSql();
         List<String> paramList = new ArrayList<String>();
         paramList.add(String.valueOf(deepLinkId));
