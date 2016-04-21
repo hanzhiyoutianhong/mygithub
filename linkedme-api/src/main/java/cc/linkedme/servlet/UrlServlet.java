@@ -158,7 +158,7 @@ public class UrlServlet extends HttpServlet {
             String codeUrl = "https://lkme.cc" + request.getRequestURI() + "?scan=1";
 
             clickCount(deepLinkId, countType);
-            ApiLogger.biz(String.format("%s\t%s\t%s\t%s\t%s\t%s", request.getRemoteAddr(), "click", appId, deepLinkId, countType, userAgent));
+            ApiLogger.biz(String.format("%s\t%s\t%s\t%s\t%s\t%s", request.getHeader("x-forwarded-for"), "click", appId, deepLinkId, countType, userAgent));
 
             response.sendRedirect(location + "?code_url=" + codeUrl);
             return;
@@ -169,7 +169,7 @@ public class UrlServlet extends HttpServlet {
         //点击计数
         clickCount(deepLinkId, countType);
         //记录日志
-        ApiLogger.biz(String.format("%s\t%s\t%s\t%s\t%s\t%s", request.getRemoteAddr(), "click", appId, deepLinkId, countType, userAgent));
+        ApiLogger.biz(String.format("%s\t%s\t%s\t%s\t%s\t%s", request.getHeader("x-forwarded-for"), "click", appId, deepLinkId, countType, userAgent));
 
         boolean isWechat = false;
         boolean isWeibo = false;
