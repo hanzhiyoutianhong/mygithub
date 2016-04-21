@@ -79,7 +79,8 @@ public class DeepLinkDaoImpl extends BaseDao implements DeepLinkDao {
         } catch (DataAccessException e) {
             if (DaoUtil.isDuplicateInsert(e)) {
                 ApiLogger.info(new StringBuilder(128).append("Duplicate insert deepLink, id=").append(deeplink_id));
-                throw new LMException(LMExceptionFactor.LM_FAILURE_DB_OP, "duplicate insert deepLink table, id=" + deepLink.getDeeplinkId());
+                throw new LMException(LMExceptionFactor.LM_FAILURE_DB_OP,
+                        "duplicate insert deepLink table, id=" + deepLink.getDeeplinkId());
             } else {
                 throw new LMException(LMExceptionFactor.LM_FAILURE_DB_OP);
             }
@@ -88,40 +89,43 @@ public class DeepLinkDaoImpl extends BaseDao implements DeepLinkDao {
     }
 
     public DeepLink getDeepLinkInfo(long deepLinkId, long appid) {
-        Date date = UuidHelper.getDateFromId(deepLinkId);   //根据deepLinkId获取日期
-        final List<DeepLink> deepLinks = new ArrayList<DeepLink>();
+        Date date = UuidHelper.getDateFromId(deepLinkId); // 根据deepLinkId获取日期
+        DeepLink dp = new DeepLink();
         TableChannel tableChannel = tableContainer.getTableChannel("deeplink", GET_DEEPLINK_INFO, appid, date);
-        tableChannel.getJdbcTemplate().query(tableChannel.getSql(), new Object[] {deepLinkId, appid}, new RowMapper() {
-            public Object mapRow(ResultSet resultSet, int i) throws SQLException {
-                DeepLink dp = new DeepLink();
-                dp.setDeeplinkId(resultSet.getBigDecimal("deeplink_id").longValue());
-                dp.setCreateTime(resultSet.getString("create_time"));
-                dp.setTags(resultSet.getString("tags"));
-                dp.setAlias(resultSet.getString("alias"));
-                dp.setChannel(resultSet.getString("channel"));
-                dp.setFeature(resultSet.getString("feature"));
-                dp.setStage(resultSet.getString("stage"));
-                dp.setCampaign(resultSet.getString("campaign"));
-                dp.setParams(resultSet.getString("params"));
-                dp.setSource(resultSet.getString("source"));
-                dp.setIos_use_default(resultSet.getBoolean("ios_use_default"));
-                dp.setIos_custom_url(resultSet.getString("ios_custom_url"));
-                dp.setAndroid_use_default(resultSet.getBoolean("android_use_default"));
-                dp.setAndroid_custom_url(resultSet.getString("android_custom_url"));
-                dp.setDesktop_use_default(resultSet.getBoolean("desktop_use_default"));
-                dp.setDesktop_custom_url(resultSet.getString("desktop_custom_url"));
-                deepLinks.add(dp);
-                return null;
-            }
-        });
-        if(deepLinks.size() > 0) {
-            return deepLinks.get(0);
+        try {
+
+            tableChannel.getJdbcTemplate().query(tableChannel.getSql(), new Object[]{deepLinkId, appid}, new RowMapper() {
+                public Object mapRow(ResultSet resultSet, int i) throws SQLException {
+                    dp.setDeeplinkId(resultSet.getBigDecimal("deeplink_id").longValue());
+                    dp.setCreateTime(resultSet.getString("create_time"));
+                    dp.setTags(resultSet.getString("tags"));
+                    dp.setAlias(resultSet.getString("alias"));
+                    dp.setChannel(resultSet.getString("channel"));
+                    dp.setFeature(resultSet.getString("feature"));
+                    dp.setStage(resultSet.getString("stage"));
+                    dp.setCampaign(resultSet.getString("campaign"));
+                    dp.setParams(resultSet.getString("params"));
+                    dp.setSource(resultSet.getString("source"));
+                    dp.setIos_use_default(resultSet.getBoolean("ios_use_default"));
+                    dp.setIos_custom_url(resultSet.getString("ios_custom_url"));
+                    dp.setAndroid_use_default(resultSet.getBoolean("android_use_default"));
+                    dp.setAndroid_custom_url(resultSet.getString("android_custom_url"));
+                    dp.setDesktop_use_default(resultSet.getBoolean("desktop_use_default"));
+                    dp.setDesktop_custom_url(resultSet.getString("desktop_custom_url"));
+                    return null;
+                }
+            });
+        }catch (Exception e) {
+            ApiLogger.error("db error", e);
         }
-        return null;
+        if (dp.getDeeplinkId() == 0) {
+            return null;
+        }
+        return dp;
     }
 
-    public DeepLink getUrlInfo( long deepLinkId, long appid ) {
-        Date date = UuidHelper.getDateFromId(deepLinkId);   //根据deepLinkId获取日期
+    public DeepLink getUrlInfo(long deepLinkId, long appid) {
+        Date date = UuidHelper.getDateFromId(deepLinkId); // 根据deepLinkId获取日期
 
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
         try {
@@ -129,7 +133,7 @@ public class DeepLinkDaoImpl extends BaseDao implements DeepLinkDao {
             Date currentDate = new Date();
 
             if (date.after(currentDate) || date.before(onlineDate)) {
-                throw new LMException(LMExceptionFactor.LM_ILLEGAL_REQUEST,"deep link id does not exist!");
+                throw new LMException(LMExceptionFactor.LM_ILLEGAL_REQUEST, "deep link id does not exist!");
             }
         } catch (ParseException e) {
             ApiLogger.warn("SummaryService.getDeepLinks parse date failed", e);
@@ -142,13 +146,13 @@ public class DeepLinkDaoImpl extends BaseDao implements DeepLinkDao {
         tableChannel.getJdbcTemplate().query(tableChannel.getSql(), new Object[] {deepLinkId, appid}, new RowMapper() {
             public Object mapRow(ResultSet resultSet, int i) throws SQLException {
                 DeepLink dp = new DeepLink();
-                dp.setLink_label( resultSet.getString("link_label") );
-                dp.setIos_use_default( resultSet.getBoolean("ios_use_default") );
-                dp.setIos_custom_url( resultSet.getString("ios_custom_url") );
-                dp.setAndroid_use_default( resultSet.getBoolean("android_use_default") );
-                dp.setAndroid_custom_url( resultSet.getString("android_custom_url") );
-                dp.setDesktop_use_default( resultSet.getBoolean("desktop_use_default") );
-                dp.setDesktop_custom_url( resultSet.getString("desktop_custom_url") );
+                dp.setLink_label(resultSet.getString("link_label"));
+                dp.setIos_use_default(resultSet.getBoolean("ios_use_default"));
+                dp.setIos_custom_url(resultSet.getString("ios_custom_url"));
+                dp.setAndroid_use_default(resultSet.getBoolean("android_use_default"));
+                dp.setAndroid_custom_url(resultSet.getString("android_custom_url"));
+                dp.setDesktop_use_default(resultSet.getBoolean("desktop_use_default"));
+                dp.setDesktop_custom_url(resultSet.getString("desktop_custom_url"));
                 dp.setFeature(resultSet.getString("feature"));
                 dp.setCampaign(resultSet.getString("campaign"));
                 dp.setStage(resultSet.getString("stage"));
@@ -161,7 +165,7 @@ public class DeepLinkDaoImpl extends BaseDao implements DeepLinkDao {
                 return null;
             }
         });
-        if(deepLinks.size() > 0) {
+        if (deepLinks.size() > 0) {
             return deepLinks.get(0);
         }
         return null;
@@ -242,7 +246,7 @@ public class DeepLinkDaoImpl extends BaseDao implements DeepLinkDao {
         return result > 0;
     }
 
-    public boolean updateUrlInfo( UrlParams urlParams ) {
+    public boolean updateUrlInfo(UrlParams urlParams) {
         long deepLinkId = urlParams.deeplink_id;
         long appId = urlParams.app_id;
         Date date = UuidHelper.getDateFromId(deepLinkId);
@@ -257,37 +261,41 @@ public class DeepLinkDaoImpl extends BaseDao implements DeepLinkDao {
         boolean desktop_use_default = urlParams.desktop_use_default;
         String desktop_custom_url = urlParams.desktop_custom_url;
         String feature = "";
-        for( int i = 0; i < urlParams.feature.length - 1; i++ )
+        for (int i = 0; i < urlParams.feature.length - 1; i++)
             feature = feature + urlParams.feature[i] + ",";
-        feature = feature + urlParams.feature[urlParams.feature.length-1];
+        feature = feature + urlParams.feature[urlParams.feature.length - 1];
 
         String campaign = "";
-        for( int i = 0; i < urlParams.campaign.length - 1; i++ )
+        for (int i = 0; i < urlParams.campaign.length - 1; i++)
             campaign = campaign + urlParams.campaign[i] + ",";
-        campaign = campaign + urlParams.campaign[urlParams.campaign.length-1];
+        campaign = campaign + urlParams.campaign[urlParams.campaign.length - 1];
 
         String stage = "";
-        for( int i = 0; i < urlParams.stage.length - 1; i++ )
+        for (int i = 0; i < urlParams.stage.length - 1; i++)
             stage = stage + urlParams.stage[i] + ",";
-        stage = stage + urlParams.stage[urlParams.stage.length-1];
+        stage = stage + urlParams.stage[urlParams.stage.length - 1];
 
         String channel = "";
-        for( int i = 0; i < urlParams.channel.length - 1; i++ )
+        for (int i = 0; i < urlParams.channel.length - 1; i++)
             channel = channel + urlParams.channel[i] + ",";
-        channel = channel + urlParams.channel[urlParams.channel.length-1];
+        channel = channel + urlParams.channel[urlParams.channel.length - 1];
 
         String tags = "";
-        for( int i = 0; i < urlParams.tags.length - 1; i++ )
+        for (int i = 0; i < urlParams.tags.length - 1; i++)
             tags = tags + urlParams.tags[i] + ",";
-        tags = tags + urlParams.tags[urlParams.tags.length-1];
+        tags = tags + urlParams.tags[urlParams.tags.length - 1];
 
         String source = urlParams.source;
         String params = urlParams.params.toString();
 
 
-        result += tableChannel.getJdbcTemplate().update(tableChannel.getSql(), new Object[]{appId, ios_use_default, ios_custom_url, android_use_default, android_custom_url, desktop_use_default, desktop_custom_url, feature, campaign, stage, channel, tags, source, params, deepLinkId, appId});
-        if( result == 1 )
-            return true;
+        result +=
+                tableChannel.getJdbcTemplate()
+                        .update(tableChannel.getSql(),
+                                new Object[] {appId, ios_use_default, ios_custom_url, android_use_default, android_custom_url,
+                                        desktop_use_default, desktop_custom_url, feature, campaign, stage, channel, tags, source, params,
+                                        deepLinkId, appId});
+        if (result == 1) return true;
         return false;
     }
 }

@@ -4,6 +4,7 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Comparator;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -13,6 +14,8 @@ import java.util.Set;
 
 import javax.annotation.Resource;
 
+import cc.linkedme.dao.webapi.DeepLinkDateCountDao;
+import cc.linkedme.data.model.DeepLinkDateCount;
 import net.sf.json.JSONArray;
 import net.sf.json.JSONObject;
 
@@ -47,8 +50,12 @@ import org.springframework.util.CollectionUtils;
 
 @Service
 public class SummaryService {
+
     @Resource
     DeepLinkDao deepLinkDao;
+
+    @Resource
+    DeepLinkDateCountDao deepLinkDateCountDao;
 
     @Resource
     BtnCountDao btnCountDao;
@@ -66,12 +73,12 @@ public class SummaryService {
         String start_date = summaryDeepLinkParams.startDate;
         String end_date = summaryDeepLinkParams.endDate;
 
-        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
         String onlineTime = "2016-04-01";
         try {
-            Date onlineDate = sdf.parse(onlineTime);
-            Date stDate = sdf.parse(start_date);
-            Date edDate = sdf.parse(end_date);
+            SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd");
+            Date onlineDate = simpleDateFormat.parse(onlineTime);
+            Date stDate = simpleDateFormat.parse(start_date);
+            Date edDate = simpleDateFormat.parse(end_date);
             Date currentDate = new Date();
 
             if (stDate.after(currentDate) || edDate.before(onlineDate)) {
@@ -81,7 +88,7 @@ public class SummaryService {
                     start_date = onlineTime;
                 }
                 if (edDate.after(currentDate)) {
-                    end_date = sdf.format(currentDate);
+                    end_date = simpleDateFormat.format(currentDate);
                 }
             }
         } catch (ParseException e) {
@@ -180,6 +187,85 @@ public class SummaryService {
         return resultJson.toString();
     }
 
+    public String getDeepLinkHistoryCount(SummaryDeepLinkParams summaryDeepLinkParams) {
+        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd");
+        String startDate = summaryDeepLinkParams.startDate;
+        String endDate = summaryDeepLinkParams.endDate;
+        summaryDeepLinkParams.startDate = "2016-04-01";
+        summaryDeepLinkParams.endDate = simpleDateFormat.format(new Date());
+
+        List<DeepLink> deepLinks = getDeepLinks(summaryDeepLinkParams);
+
+        Map<String, Map<String, Long>> allCounts = new HashMap<>();
+
+        for (int i = 0; i < deepLinks.size(); i++) { // TODO 改成批量查询
+            List<DeepLinkDateCount> deepLinkDateCounts = deepLinkDateCountDao.getDeepLinkDateCount(summaryDeepLinkParams.appid,
+                    deepLinks.get(i).getDeeplinkId(), startDate, endDate);
+            for (DeepLinkDateCount deepLinkDateCount : deepLinkDateCounts) {
+                Map<String, Long> count = allCounts.get(deepLinkDateCount.getDate());
+                if (count != null) {
+                    count.put("click", count.get("click") + deepLinkDateCount.getClick());
+                    count.put("open", count.get("open") + deepLinkDateCount.getOpen());
+                    count.put("install", count.get("install") + deepLinkDateCount.getInstall());
+                } else {
+                    count = new HashMap<>();
+                    count.put("click", deepLinkDateCount.getClick());
+                    count.put("open", deepLinkDateCount.getOpen());
+                    count.put("install", deepLinkDateCount.getInstall());
+                    allCounts.put(deepLinkDateCount.getDate(), count);
+                }
+            }
+        }
+
+        JSONArray clickArr = new JSONArray();
+        JSONArray openArr = new JSONArray();
+        JSONArray installArr = new JSONArray();
+
+        int i = 0;
+        for (Map.Entry<String, Map<String, Long>> entry : allCounts.entrySet()) {
+            String date = entry.getKey();
+            Map<String, Long> countMap = entry.getValue();
+            long timeStamp = strDateToTimestamps(date, simpleDateFormat);
+            JSONArray clickJson = new JSONArray();
+            clickJson.add(0, timeStamp);
+            clickJson.add(1, countMap.get("click"));
+            clickArr.add(i, clickJson);
+
+            JSONArray openJson = new JSONArray();
+            openJson.add(0, timeStamp);
+            openJson.add(1, countMap.get("open"));
+            openArr.add(i, openJson);
+
+            JSONArray installJson = new JSONArray();
+            installJson.add(0, timeStamp);
+            installJson.add(1, countMap.get("install"));
+            installArr.add(i, installJson);
+
+            i++;
+        }
+
+        Comparator comparator = new Comparator<JSONArray>() {
+            @Override
+            public int compare(JSONArray o1, JSONArray o2) {
+                long date1 = o1.getLong(0);
+                long date2 = o2.getLong(0);
+
+                return date1 > date2 ? 1 : (date1 == date2 ? 0 : -1);
+            }
+        };
+
+        clickArr.sort(comparator);
+        openArr.sort(comparator);
+        installArr.sort(comparator);
+
+        JSONObject resultJson = new JSONObject();
+        resultJson.put("click", clickArr);
+        resultJson.put("open", openArr);
+        resultJson.put("install", installArr);
+        return resultJson.toString();
+    }
+
+
     public JSONObject getCountJson(int iosClick, int iosInstall, int iosOpen, int adrClick, int adrInstall, int adrOpen, int pcClick,
             int pcIosScan, int pcAdrScan) {
         JSONObject iosJson = new JSONObject();
@@ -204,9 +290,7 @@ public class SummaryService {
         return retJson;
     }
 
-    public int[] getDeepLikCounts(long deepLinkId) {
-        int[] res = new int[3];
-
+    public DeepLinkCount getDeepLinkCounts(long deepLinkId) {
         Map<String, String> count = getCount(deepLinkId);
 
         DeepLinkCount deepLinkCount = new DeepLinkCount(deepLinkId);
@@ -215,13 +299,7 @@ public class SummaryService {
             setDeepLinkCount(deepLinkCount, count);
         }
 
-        res[0] = deepLinkCount.getPc_click() + deepLinkCount.getIos_click() + deepLinkCount.getAdr_click();
-        res[1] = deepLinkCount.getIos_open() + deepLinkCount.getAdr_open() + deepLinkCount.getPc_adr_open()
-                + deepLinkCount.getPc_ios_open();
-        res[2] = deepLinkCount.getPc_ios_install() + deepLinkCount.getAdr_install() + deepLinkCount.getIos_install()
-                + deepLinkCount.getPc_adr_install();
-
-        return res;
+        return deepLinkCount;
     }
 
     public Map<Long, DeepLinkCount> getDeepLinkSummary(SummaryDeepLinkParams summaryDeepLinkParams) {
@@ -272,7 +350,7 @@ public class SummaryService {
         return deepLinkCountMap;
     }
 
-    private void setDeepLinkCount(DeepLinkCount dplc, Map<String, String> dplCountMap) {
+    public void setDeepLinkCount(DeepLinkCount dplc, Map<String, String> dplCountMap) {
         int iosClick = 0, iosInstall = 0, iosOpen = 0, adrClick = 0;
         if (dplCountMap.get(DeepLinkCount.CountType.ios_click.toString()) != null) {
             iosClick = Integer.parseInt(dplCountMap.get(DeepLinkCount.CountType.ios_click.toString()));
@@ -349,8 +427,8 @@ public class SummaryService {
     public String getHistoryIncome(SummaryButtonParams summaryButtonParams) {
         List<ButtonInfo> buttonInfos = btnService.getAllButtonsByAppId(summaryButtonParams.app_id);
         Set<String> consumerAppids = new HashSet<>();
-        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd");
         JSONArray resultJsonArray = new JSONArray();
+        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd");
         for (ButtonInfo buttonInfo : buttonInfos) {
             if (consumerAppids.contains(buttonInfo.getConsumerAppId())) {
                 continue;
@@ -373,6 +451,7 @@ public class SummaryService {
             consumerIncomeJson.put("app_id", buttonInfo.getConsumerAppId());
             consumerIncomeJson.put("app_name", buttonInfo.getConsumerAppInfo().getAppName());
             JSONArray dataJsonArray = new JSONArray();
+
             for (Map.Entry<String, Float> entry : resultCountMap.entrySet()) {
                 JSONArray dateJson = new JSONArray();
                 dateJson.add(0, strDateToTimestamps(entry.getKey(), simpleDateFormat));
@@ -407,12 +486,12 @@ public class SummaryService {
             }
         }
 
-        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd");
         JSONArray viewCountJson = new JSONArray();
         JSONArray clickCountJson = new JSONArray();
         JSONArray orderCountJson = new JSONArray();
         JSONArray incomeCountJson = new JSONArray();
         JSONArray installCountJson = new JSONArray();
+        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd");
         for (Map.Entry<String, Map<String, Float>> entry : resultCountMap.entrySet()) {
             if (Strings.isNullOrEmpty(entry.getKey()) || (entry.getValue() == null) || (entry.getValue().size() == 0)) {
                 continue;

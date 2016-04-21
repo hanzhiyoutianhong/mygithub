@@ -26,9 +26,8 @@ public class UrlTestServlet extends HttpServlet {
     public void init(ServletConfig config) throws ServletException {
         super.init(config);
 
-        ApplicationContext context = WebApplicationContextUtils
-                .getRequiredWebApplicationContext(config.getServletContext());
-        userAgentParser = (Parser)context.getBean("userAgentParser");
+        ApplicationContext context = WebApplicationContextUtils.getRequiredWebApplicationContext(config.getServletContext());
+        userAgentParser = (Parser) context.getBean("userAgentParser");
     }
 
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
@@ -38,11 +37,19 @@ public class UrlTestServlet extends HttpServlet {
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         String userAgent = request.getHeader("user-agent");
         Client client = userAgentParser.parse(userAgent);
-        String userAgentFamily =  client.userAgent.family;
-        String userAgentMajor = client.userAgent.major;
-        String osFamily = client.os.family;
-        String osMajor = client.os.major;
-        String deviceFamily  = client.device.family;
-        request.getRequestDispatcher("/index1.jsp").forward(request,response);
+        // String userAgentFamily = client.userAgent.family;
+        // String userAgentMajor = client.userAgent.major;
+        // String osFamily = client.os.family;
+        // String osMajor = client.os.major;
+        // String deviceFamily = client.device.family;
+
+        // String location = "intent://linkedme?click_id=" + uriArr[2] + "#Intent;scheme=" + scheme
+        // + ";package=" + appInfo.getAndroid_package_name() + ";S.browser_fallback_url=" + url +
+        // ";end";
+        String location = "http://www.baidu.com";
+        response.setStatus(307);
+        response.setHeader("Location", location);
+        // response.sendRedirect(location);
+        // request.getRequestDispatcher("/index1.jsp").forward(request,response);
     }
 }

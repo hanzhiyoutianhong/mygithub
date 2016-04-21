@@ -9,6 +9,7 @@
         http://www.springframework.org/schema/context/spring-context.xsd">
 
     <import resource="classpath:spring/deeplink/deeplink-context.xml" />
+    <import resource="classpath:spring/deeplink/deeplink-datecount-context.xml" />
     <import resource="classpath:spring/app/app-context.xml" />
     <import resource="classpath:spring/user/user-content.xml"/>
     <import resource="classpath:spring/client/client-context.xml" />

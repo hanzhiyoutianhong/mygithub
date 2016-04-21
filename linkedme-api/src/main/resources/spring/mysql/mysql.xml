@@ -149,7 +149,7 @@
     </bean>
 
     <bean id="consumerJdbcTemplate" class="org.springframework.jdbc.core.JdbcTemplate">
-        <property name = "dataSource" ref="datasources_consumer_0_s" />
+        <property name="dataSource" ref="datasources_consumer_0_s"/>
     </bean>
 
     <wfc:mysql id="datasources_consumer_0_m" parent="dataSource"
@@ -212,6 +212,27 @@
         <property name="dataSourceSlaves">
             <list>
                 <ref bean="datasources_btncount_0_s"/>
+            </list>
+        </property>
+    </bean>
+
+    <!-- ############## deeplink date count mysql ################# -->
+    <wfc:mysql id="datasources_deeplink_datecount_0_m" parent="dataSource"
+               strategy="master">
+        <property name="jdbcUrl" value="${deeplink.datecount.datasource.master_0.jdbcUrl}"/>
+    </wfc:mysql>
+    <wfc:mysql id="datasources_deeplink_datecount_0_s" parent="dataSource"
+               strategy="slave">
+        <property name="jdbcUrl" value="${deeplink.datecount.datasource.slave_0.jdbcUrl}"/>
+    </wfc:mysql>
+
+    <bean id="deeplink_datecount_jdbctemplate_0" class="cc.linkedme.data.dao.util.JdbcTemplate">
+        <property name="dataSource">
+            <ref bean="datasources_deeplink_datecount_0_m"/>
+        </property>
+        <property name="dataSourceSlaves">
+            <list>
+                <ref bean="datasources_deeplink_datecount_0_s"/>
             </list>
         </property>
     </bean>

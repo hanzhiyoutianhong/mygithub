@@ -11,8 +11,8 @@ import javax.xml.bind.annotation.XmlRootElement;
 @XmlRootElement
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class OpenParams {
-
-
+    public long deeplink_id;
+    public String deeplink_url;
     public String device_fingerprint_id;
     public long identity_id;
     public String linkedme_key;

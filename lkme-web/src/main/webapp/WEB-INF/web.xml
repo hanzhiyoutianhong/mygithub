@@ -55,6 +55,60 @@
         <load-on-startup>3</load-on-startup> <!--tomcat启动后执行-->
     </servlet>
 
+    <!-- demo start  -->
+    <!--summary-->
+    <servlet>
+        <servlet-name>LMSummary</servlet-name>
+        <servlet-class>cc.linkedme.servlet.demoh5.LMSummaryServlet</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>LMSummary</servlet-name>
+        <url-pattern>/h5/summary</url-pattern>
+    </servlet-mapping>
+    <!--features-->
+    <servlet>
+        <servlet-name>LMFeature</servlet-name>
+        <servlet-class>cc.linkedme.servlet.demoh5.LMFeatureServlet</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>LMFeature</servlet-name>
+        <url-pattern>/h5/feature</url-pattern>
+    </servlet-mapping>
+    <!--partner-->
+    <servlet>
+        <servlet-name>LMApps</servlet-name>
+        <servlet-class>cc.linkedme.servlet.demoh5.LMAppsServlet</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>LMApps</servlet-name>
+        <url-pattern>/h5/partner</url-pattern>
+    </servlet-mapping>
+    <!--home-->
+    <servlet>
+        <servlet-name>LMHome</servlet-name>
+        <servlet-class>cc.linkedme.servlet.demoh5.LMHomeServlet</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>LMHome</servlet-name>
+        <url-pattern>/h5/home</url-pattern>
+    </servlet-mapping>
+
+    <servlet-mapping>
+        <servlet-name>default</servlet-name>
+        <url-pattern>/demoh5/*</url-pattern>
+    </servlet-mapping>
+
+
+    <servlet>
+        <servlet-name>testServlet</servlet-name>
+        <servlet-class>cc.linkedme.servlet.UrlTestServlet</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>testServlet</servlet-name>
+        <url-pattern>/testServlet</url-pattern>
+    </servlet-mapping>
+    <!-- demo end  -->
+
     <servlet>
         <servlet-name>lkmeServlet</servlet-name>
         <servlet-class>com.sun.jersey.spi.spring.container.servlet.SpringServlet</servlet-class>
@@ -125,7 +179,6 @@
         <servlet-name>urlServlet</servlet-name>
         <url-pattern>/</url-pattern>
     </servlet-mapping>
-
 
 
     <welcome-file-list>

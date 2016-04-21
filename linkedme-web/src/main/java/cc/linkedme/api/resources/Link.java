@@ -69,7 +69,7 @@ public class Link {
     @Path("/list")
     @GET
     @Produces({MediaType.APPLICATION_JSON})
-    public String getUrlList(@QueryParam("app_id") long appid,
+    public String getUrlList(@QueryParam("app_id") int appid,
                              @QueryParam("start_date") String start_date,
                              @QueryParam("end_date") String end_date,
                              @QueryParam("feature") String feature,

@@ -24,16 +24,16 @@ public class ParserTest {
         String AndroidUserAgent = "Mozilla/5.0 (Linux; Android 5.0; SM-G900P Build/LRX21T) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/48.0.2564.23 Mobile Safari/537.36";
         Parser parser = new Parser();
         Client client = parser.parse(AndroidUserAgent);
-        String userAgentFamily =  client.userAgent.family;
-        String userAgentMajor =  client.userAgent.major;
+        //String userAgentFamily =  client.userAgent.family;
+        //String userAgentMajor =  client.userAgent.major;
         String osFamily = client.os.family;
         String osMajor = client.os.major;
 
         System.out.println(client.device);
         System.out.println(client.device.family);
 
-        System.out.println(userAgentFamily);
-        System.out.println(userAgentMajor);
+//        System.out.println(userAgentFamily);
+//        System.out.println(userAgentMajor);
         System.out.println(osFamily);
         System.out.println(osMajor);
     }

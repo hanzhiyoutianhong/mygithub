@@ -3,6 +3,7 @@ package cc.linkedme.api.resources;
 import cc.linkedme.commons.exception.LMException;
 import cc.linkedme.commons.exception.LMExceptionFactor;
 import cc.linkedme.commons.json.JsonBuilder;
+import cc.linkedme.commons.log.ApiLogger;
 import cc.linkedme.data.model.AppInfo;
 import cc.linkedme.data.model.UrlTagsInfo;
 import cc.linkedme.data.model.params.AppParams;
@@ -61,6 +62,7 @@ public class App {
     public String getApps(@QueryParam("user_id") long user_id,
                           @QueryParam("token") String token,
                           @Context HttpServletRequest request) {
+        ApiLogger.biz(user_id + "biz test");
         if (user_id <= 0) {
             throw new LMException(LMExceptionFactor.LM_ILLEGAL_PARAM_VALUE);
         }
@@ -108,6 +110,7 @@ public class App {
         if (app_id <= 0) {
             throw new LMException(LMExceptionFactor.LM_ILLEGAL_PARAM_VALUE);
         }
+
 
         AppParams appParams = new AppParams();
         appParams.app_id = app_id;
