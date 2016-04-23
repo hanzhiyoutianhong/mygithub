@@ -90,6 +90,9 @@ public class UrlServlet extends HttpServlet {
         // 使用yaml解析user agent,测试匹配优先级,速度,打日志统计时间,优化正则表达式(单个正则表达式,优先级);
         String userAgent = request.getHeader("user-agent");
         Client client = userAgentParser.parseUA(userAgent);
+
+        //old:userAgent只会匹配一个family, eg,ua里既带wechat信息,又带chrome信息,返回结果只有chrome,导致后边分支判断不准
+        //new:把userAgent匹配结果变成List
         List<UserAgent> userAgentList = client.userAgent;
         Map<String, UserAgent> uaMap = new HashMap<String, UserAgent>(userAgentList.size());
         for (UserAgent ua : userAgentList) {
@@ -184,7 +187,6 @@ public class UrlServlet extends HttpServlet {
 
 
         int userAgentMajor = 0;
-        // 计数
         if (uaMap.containsKey("Chrome")) {
             isChrome = true;
             UserAgent ua = uaMap.get("Chrome");
@@ -217,7 +219,7 @@ public class UrlServlet extends HttpServlet {
         request.setAttribute("Pkg", appInfo.getAndroid_package_name());
         request.setAttribute("BundleID", appInfo.getIos_bundle_id());
         request.setAttribute("AppID", appId);
-        request.setAttribute("IconUrl", "http://ww2.sinaimg.cn/crop.0.0.1152.1152.1024/005Y9c72jw8epp0o2ogxjj30w00w0abq.jpg"); // TODO
+        request.setAttribute("IconUrl", ""); // TODO
         request.setAttribute("Url", url);
         request.setAttribute("Match_id", uriArr[2]);
 

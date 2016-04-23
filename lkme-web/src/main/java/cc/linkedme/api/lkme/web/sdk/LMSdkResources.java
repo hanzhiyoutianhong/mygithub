@@ -58,7 +58,7 @@ public class LMSdkResources {
         JSONObject responseJson = JSONObject.fromObject(result);
         log.put("request", requestJson);
         log.put("response", responseJson);
-        ApiLogger.biz(String.format("%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s", request.getHeader("x-forwarded-for"), "install", responseJson.get("identity_id"),
+        ApiLogger.biz(String.format("%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s", request.getHeader("x-forwarded-for"), "install", responseJson.get("identity_id"),
                 installParams.linkedme_key, responseJson.get("deeplink_id"), responseJson.get("session_id"), installParams.retry_times,
                 installParams.is_debug, installParams.sdk_version, log.toString()));
 
@@ -125,7 +125,7 @@ public class LMSdkResources {
         JSONObject requestJson = JSONObject.fromObject(closeParams);
         log.put("request", requestJson);
         log.put("response", "{}");
-        ApiLogger.biz(String.format("%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s", request.getHeader("x-forwarded-for"), "close", closeParams.identity_id, closeParams.linkedme_key,
+        ApiLogger.biz(String.format("%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s", request.getHeader("x-forwarded-for"), "close", closeParams.identity_id, closeParams.linkedme_key,
                 closeParams.session_id, closeParams.retry_times, closeParams.is_debug, closeParams.sdk_version, log.toString()));
 
         return "{}";
