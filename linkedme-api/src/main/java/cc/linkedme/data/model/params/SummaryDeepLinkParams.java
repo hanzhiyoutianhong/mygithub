@@ -58,4 +58,11 @@ public class SummaryDeepLinkParams {
         this.interval = interval;
         this.orderby = orderby;
     }
+
+    public SummaryDeepLinkParams(int appid, long deepLinkId, String startDate, String endDate) {
+        this.appid = appid;
+        this.deepLinkId = deepLinkId;
+        this.startDate = startDate;
+        this.endDate = endDate;
+    }
 }

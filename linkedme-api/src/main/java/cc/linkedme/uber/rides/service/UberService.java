@@ -138,7 +138,6 @@ public class UberService {
         String hashKey = String.valueOf(buttonInfo.getAppId()) + buttonInfo.getConsumerAppId();
         clickCount(hashKey, clickSuffix, incomeSuffix, 0);  //TODO 后续金额改成实际值
 
-        ApiLogger.info("");
     }
 
     private void clickCount(String hashKey, String clickSuffix, String incomeSuffix, float price) {

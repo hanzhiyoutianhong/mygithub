@@ -146,10 +146,24 @@ public class Summary {
         return resultJson.toString();
     }
 
-    @Path("/deeplinks_count_history")
+    @Path("/deeplink_count_history")
     @GET
     @Produces(MediaType.APPLICATION_JSON)
     public String getDeepLinkHistoryCount(@QueryParam("app_id") int appid,
+                                          @QueryParam("deeplink_id") long deeplink_id,
+                                          @QueryParam("start_date") String start_date,
+                                          @QueryParam("end_date") String end_date,
+                                          @QueryParam("token") String token) {
+
+        SummaryDeepLinkParams summaryDeepLinkParams = new SummaryDeepLinkParams(appid, deeplink_id, start_date, end_date);
+        String result = summaryService.getDeepLinkHistoryCount(summaryDeepLinkParams);
+        return result;
+    }
+
+    @Path("/deeplinks_count_history")
+    @GET
+    @Produces(MediaType.APPLICATION_JSON)
+    public String getDeepLinksHistoryCount(@QueryParam("app_id") int appid,
                                           @QueryParam("start_date") String start_date,
                                           @QueryParam("end_date") String end_date,
                                           @QueryParam("feature") String feature,
@@ -165,7 +179,7 @@ public class Summary {
 
         SummaryDeepLinkParams summaryDeepLinkParams = new SummaryDeepLinkParams(appid, start_date, end_date, feature, campaign, stage,
                 channel, tags, source, unique, interval, orderby);
-        String result = summaryService.getDeepLinkHistoryCount(summaryDeepLinkParams);
+        String result = summaryService.getDeepLinksHistoryCount(summaryDeepLinkParams);
         return result;
     }
 

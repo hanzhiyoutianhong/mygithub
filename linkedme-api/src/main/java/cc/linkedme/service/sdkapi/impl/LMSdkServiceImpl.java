@@ -219,7 +219,7 @@ public class LMSdkServiceImpl implements LMSdkService {
     }
 
     public String open(OpenParams openParams) {
-        String deepLinkUrl = null;
+        String deepLinkUrl = "";
         if ("Android".equals(openParams.os)) {
             deepLinkUrl = openParams.external_intent_uri;
         } else if ("iOS".equals(openParams.os)) {
