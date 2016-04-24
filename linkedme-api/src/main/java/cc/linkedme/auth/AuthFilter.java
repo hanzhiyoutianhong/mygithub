@@ -1,11 +1,16 @@
-package cc.linkedme.common.auth;
+package cc.linkedme.auth;
+
+import java.io.IOException;
 
 import javax.annotation.Resource;
-import javax.servlet.*;
+import javax.servlet.Filter;
+import javax.servlet.FilterChain;
+import javax.servlet.FilterConfig;
+import javax.servlet.ServletException;
+import javax.servlet.ServletOutputStream;
+import javax.servlet.ServletRequest;
+import javax.servlet.ServletResponse;
 import javax.servlet.http.HttpServletRequest;
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
 
 public class AuthFilter implements Filter {
     @Resource

@@ -88,6 +88,9 @@ public class UberService {
                 JSONObject priceJson = jsonArray.getJSONObject(0);
                 productId = priceJson.getString("product_id");
                 price = priceJson.getString("estimate");
+                if(Strings.isNullOrEmpty(price)) {
+                    price = "";
+                }
                 distance = priceJson.getDouble("distance");
             }
         }

@@ -25,4 +25,7 @@
     <context:component-scan base-package="cc.linkedme.service"/>
     <context:component-scan base-package="cc.linkedme.dao"/>
     <context:component-scan base-package="cc.linkedme.uber.rides.service"/>
+    <context:component-scan base-package="cc.linkedme.auth"/>
+
+    <bean id="authFilter" class="cc.linkedme.auth.AuthFilter" />
 </beans>

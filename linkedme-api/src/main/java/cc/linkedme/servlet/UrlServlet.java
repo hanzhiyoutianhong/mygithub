@@ -27,6 +27,7 @@ import cc.linkedme.data.model.AppInfo;
 import cc.linkedme.data.model.DeepLink;
 import cc.linkedme.service.DeepLinkService;
 import cc.linkedme.service.webapi.AppService;
+import com.google.api.client.repackaged.com.google.common.base.Strings;
 import org.springframework.context.ApplicationContext;
 import org.springframework.web.context.support.WebApplicationContextUtils;
 
@@ -91,8 +92,8 @@ public class UrlServlet extends HttpServlet {
         String userAgent = request.getHeader("user-agent");
         Client client = userAgentParser.parseUA(userAgent);
 
-        //old:userAgent只会匹配一个family, eg,ua里既带wechat信息,又带chrome信息,返回结果只有chrome,导致后边分支判断不准
-        //new:把userAgent匹配结果变成List
+        // old:userAgent只会匹配一个family, eg,ua里既带wechat信息,又带chrome信息,返回结果只有chrome,导致后边分支判断不准
+        // new:把userAgent匹配结果变成List
         List<UserAgent> userAgentList = client.userAgent;
         Map<String, UserAgent> uaMap = new HashMap<String, UserAgent>(userAgentList.size());
         for (UserAgent ua : userAgentList) {
@@ -161,7 +162,8 @@ public class UrlServlet extends HttpServlet {
             String codeUrl = "https://lkme.cc" + request.getRequestURI() + "?scan=1";
 
             clickCount(deepLinkId, countType);
-            ApiLogger.biz(String.format("%s\t%s\t%s\t%s\t%s\t%s", request.getHeader("x-forwarded-for"), "click", appId, deepLinkId, countType, userAgent));
+            ApiLogger.biz(String.format("%s\t%s\t%s\t%s\t%s\t%s", request.getHeader("x-forwarded-for"), "click", appId, deepLinkId,
+                    countType, userAgent));
 
             response.sendRedirect(location + "?code_url=" + codeUrl);
             return;
@@ -169,10 +171,15 @@ public class UrlServlet extends HttpServlet {
 
         // iPad
 
-        //点击计数
-        clickCount(deepLinkId, countType);
-        //记录日志
-        ApiLogger.biz(String.format("%s\t%s\t%s\t%s\t%s\t%s", request.getHeader("x-forwarded-for"), "click", appId, deepLinkId, countType, userAgent));
+        //如果连接里包含"ds_tag",说明之前已经记录过一次计数和日志 TODO 把ds_tag改成lkme_tag(或者click_tag)
+        String dsTag = request.getParameter("ds_tag");
+        if (dsTag == null) {
+            // 点击计数
+            clickCount(deepLinkId, countType);
+            // 记录日志
+            ApiLogger.biz(String.format("%s\t%s\t%s\t%s\t%s\t%s", request.getHeader("x-forwarded-for"), "click", appId, deepLinkId,
+                    countType, userAgent));
+        }
 
         boolean isWechat = false;
         boolean isWeibo = false;
@@ -263,8 +270,8 @@ public class UrlServlet extends HttpServlet {
             String location = "intent://linkedme?click_id=" + uriArr[2] + "#Intent;scheme=" + scheme + ";package="
                     + appInfo.getAndroid_package_name() + ";S.browser_fallback_url=" + url + ";end";
             response.setStatus(307);
-//            response.sendRedirect(location);
             response.setHeader("Location", location);
+            // response.sendRedirect(location);
             return;
         }
 

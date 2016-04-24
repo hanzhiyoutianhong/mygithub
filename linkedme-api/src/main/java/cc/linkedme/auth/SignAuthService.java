@@ -1,16 +1,20 @@
-package cc.linkedme.common.auth;
+package cc.linkedme.auth;
 
-import cc.linkedme.commons.util.MD5Utils;
-import com.google.common.base.Joiner;
-import org.apache.commons.lang.StringUtils;
-import org.springframework.stereotype.Service;
-
-import javax.servlet.ServletRequest;
-import javax.servlet.ServletResponse;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Enumeration;
 import java.util.List;
+
+import javax.servlet.ServletRequest;
+import javax.servlet.ServletResponse;
+
+import cc.linkedme.commons.util.ArrayUtil;
+import org.apache.commons.lang.StringUtils;
+import org.springframework.stereotype.Service;
+
+import cc.linkedme.commons.util.MD5Utils;
+
+import com.google.common.base.Joiner;
 
 @Service
 public class SignAuthService {
@@ -36,5 +40,22 @@ public class SignAuthService {
         String signParamsStr = joiner.join(signParams);
         String token = MD5Utils.md5(signParamsStr + "key");
         return token.equals(sign);
+    }
+
+    public boolean doAuth(String... params) {
+        if(params == null || params.length <= 1) {
+            return false;
+        }
+        String sign = params[0];
+        List<String> paramsArr = new ArrayList<>(params.length);
+        for(int i = 1; i < params.length; i++) {
+            paramsArr.add(params[i]);
+        }
+        Collections.sort(paramsArr);
+        Joiner joiner = Joiner.on("&").skipNulls();
+        String signParamsStr = joiner.join(paramsArr);
+        String token = MD5Utils.md5(signParamsStr); //TODO 打md5值是否考虑用secret字段
+        return token.equals(sign);
+
     }
 }
