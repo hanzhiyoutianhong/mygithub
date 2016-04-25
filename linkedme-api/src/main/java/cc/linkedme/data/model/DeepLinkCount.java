@@ -97,7 +97,7 @@ public class DeepLinkCount implements Serializable{
         String countType = deviceType + actionType;
         if (!DeepLinkCount.isValidCountType(countType)) {
             // TODO 对deviceType做判断
-            countType = "other_" + "_open";
+            countType = "other_" + actionType;
         }
         return countType;
     }

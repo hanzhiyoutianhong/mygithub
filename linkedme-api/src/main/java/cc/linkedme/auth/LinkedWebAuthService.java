@@ -1,11 +1,12 @@
-package cc.linkedme.common.auth;
-
-import cc.linkedme.dao.webapi.UserDao;
-import org.springframework.stereotype.Service;
+package cc.linkedme.auth;
 
 import javax.annotation.Resource;
 import javax.servlet.ServletRequest;
 import javax.servlet.http.HttpServletRequest;
+
+import org.springframework.stereotype.Service;
+
+import cc.linkedme.dao.webapi.UserDao;
 
 /**
  * Created by puyangsky on 2016/4/17.

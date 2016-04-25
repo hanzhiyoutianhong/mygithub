@@ -1,5 +1,6 @@
 package cc.linkedme.api.lkme.web.sdk;
 
+import cc.linkedme.auth.SignAuthService;
 import cc.linkedme.commons.exception.LMException;
 import cc.linkedme.commons.exception.LMExceptionFactor;
 import cc.linkedme.commons.json.JsonBuilder;
@@ -40,6 +41,9 @@ public class LMSdkResources {
     @Resource
     private AppListService appListService;
 
+    @Resource
+    private SignAuthService signAuthService;
+
     @Path("/install")
     @POST
     @Produces(MediaType.APPLICATION_JSON)
@@ -55,9 +59,10 @@ public class LMSdkResources {
         JSONObject responseJson = JSONObject.fromObject(result);
         log.put("request", requestJson);
         log.put("response", responseJson);
-        ApiLogger.biz(String.format("%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s", request.getHeader("x-forwarded-for"), "install", responseJson.get("identity_id"),
-                installParams.linkedme_key, responseJson.get("deeplink_id"), responseJson.get("session_id"), installParams.retry_times,
-                installParams.is_debug, installParams.sdk_version, log.toString()));
+        ApiLogger.biz(String.format("%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s", request.getHeader("x-forwarded-for"), "install",
+                responseJson.get("identity_id"), installParams.linkedme_key, responseJson.get("deeplink_id"),
+                responseJson.get("session_id"), installParams.retry_times, installParams.is_debug, installParams.sdk_version,
+                log.toString()));
 
         return result;
     }
@@ -67,6 +72,10 @@ public class LMSdkResources {
     @Produces({MediaType.APPLICATION_JSON})
     public String open(OpenParams openParams, @Context HttpServletRequest request) {
         // auth
+        if (!signAuthService.doAuth(openParams.linkedme_key, openParams.app_version, openParams.os, openParams.os_version,
+                openParams.sdk_version, String.valueOf(openParams.retry_times))) {
+            throw new LMException(LMExceptionFactor.LM_AUTH_FAILED);
+        }
 
         String response = lmSdkService.open(openParams);
         JSONObject responseJson = JSONObject.fromObject(response);
@@ -76,8 +85,9 @@ public class LMSdkResources {
         JSONObject requestJson = JSONObject.fromObject(openParams);
         log.put("request", requestJson);
         log.put("response", responseJson);
-        ApiLogger.biz(String.format("%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s", request.getHeader("x-forwarded-for"), "open", openParams.identity_id, openParams.linkedme_key,
-                deepLinkId, sessionId, openParams.retry_times, openParams.is_debug, openParams.sdk_version, log.toString()));
+        ApiLogger.biz(String.format("%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s", request.getHeader("x-forwarded-for"), "open",
+                openParams.identity_id, openParams.linkedme_key, deepLinkId, sessionId, openParams.retry_times, openParams.is_debug,
+                openParams.sdk_version, log.toString()));
 
         return response;
     }
@@ -93,18 +103,19 @@ public class LMSdkResources {
         if (urlArr.length == 5) {
             deepLinkId = Base62.decode(urlArr[4]);
         }
-        JsonBuilder resultJson = new JsonBuilder();
-        resultJson.append("url", url);
+        JSONObject resultJson = new JSONObject();
+        resultJson.put("url", url);
 
         JSONObject log = new JSONObject();
         JSONObject requestJson = JSONObject.fromObject(urlParams);
         log.put("request", requestJson);
         log.put("response", resultJson);
 
-        ApiLogger.biz(String.format("%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s", request.getHeader("x-forwarded-for"), "url", urlParams.identity_id, urlParams.linkedme_key, deepLinkId,
-                urlParams.session_id, urlParams.retry_times, urlParams.is_debug, urlParams.sdk_version, log.toString()));
+        ApiLogger.biz(String.format("%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s", request.getHeader("x-forwarded-for"), "url",
+                urlParams.identity_id, urlParams.linkedme_key, deepLinkId, urlParams.session_id, urlParams.retry_times, urlParams.is_debug,
+                urlParams.sdk_version, log.toString()));
 
-        return resultJson.flip().toString();
+        return resultJson.toString();
     }
 
     @Path("/close")
@@ -122,8 +133,9 @@ public class LMSdkResources {
         JSONObject requestJson = JSONObject.fromObject(closeParams);
         log.put("request", requestJson);
         log.put("response", "{}");
-        ApiLogger.biz(String.format("%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s", request.getHeader("x-forwarded-for"), "close", closeParams.identity_id, closeParams.linkedme_key,
-                closeParams.session_id, closeParams.retry_times, closeParams.is_debug, closeParams.sdk_version, log.toString()));
+        ApiLogger.biz(String.format("%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s", request.getHeader("x-forwarded-for"), "close",
+                closeParams.identity_id, closeParams.linkedme_key, closeParams.session_id, closeParams.retry_times, closeParams.is_debug,
+                closeParams.sdk_version, log.toString()));
 
         return "{}";
     }

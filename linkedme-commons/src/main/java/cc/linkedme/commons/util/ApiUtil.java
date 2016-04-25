@@ -331,7 +331,9 @@ public class ApiUtil {
 
     public static void main(String[] args) {
         int hash = getHash4split(10506, 256);
-        System.out.println(hash);
+        int hash2 = getHash4split(10506, 512);
+        System.out.println(hash/1);
+        System.out.println(hash2/1);
         Date date1 = parseDateTime("2011-12-23 11:57:48", null);
         Date date2 = parseDateTime("2011-12-22 11:57:48", null);
         System.out.println("date1 timeMillis:" + date1.getTime());
