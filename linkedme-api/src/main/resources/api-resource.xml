@@ -16,6 +16,7 @@
     <import resource="classpath:spring/button/btn-context.xml" />
     <import resource="classpath:spring/button/btn-count-context.xml" />
     <import resource="classpath:spring/consumer/consumer-context.xml" />
+    <import resource="classpath:spring/applist/applist-context.xml"/>
 
     <import resource="spring/redis/redis.xml"/>
     <import resource="spring/mysql/mysql.xml"/>
