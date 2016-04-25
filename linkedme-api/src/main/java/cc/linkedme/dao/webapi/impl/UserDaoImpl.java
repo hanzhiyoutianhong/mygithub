@@ -32,6 +32,7 @@ public class UserDaoImpl extends BaseDao implements UserDao {
     public static final String LAST_LOGIN_TIME_RESET = "LAST_LOGIN_TIME_RESET";
     public static final String UPDATE_TOKEN = "UPDATE_TOKEN";
     public static final String GET_TOKEN = "GET_TOKEN";
+
     public int updateUserInfo(UserParams userParams) {
         int res = 0;
         TableChannel tableChannel = tableContainer.getTableChannel("userInfo", REGISTER, 0L, 0L);
@@ -140,9 +141,7 @@ public class UserDaoImpl extends BaseDao implements UserDao {
         TableChannel tableChannel = tableContainer.getTableChannel("userInfo", UPDATE_TOKEN, 0L, 0L);
         JdbcTemplate jdbcTemplate = tableChannel.getJdbcTemplate();
         try {
-            res +=
-                    jdbcTemplate.update(tableChannel.getSql(), new Object[] {userParams.token,
-                    userParams.email});
+            res += jdbcTemplate.update(tableChannel.getSql(), new Object[] {userParams.token, userParams.email});
         } catch (DataAccessException e) {
             throw new LMException(LMExceptionFactor.LM_FAILURE_DB_OP);
         }

@@ -79,7 +79,7 @@ var winWidth = $(window).width(),
     deeplinkLocation = "",
     dstLocation = "",
     dsAction = {
-        trackingUrl: "/v2/dsactions/",
+        trackingUrl: "/i/v2/dsactions/",
         actionJSDeepLink: "js/deeplink",
         actionJSDst: "js/dst",
         actionJSUserClick: "js/userclick",
@@ -133,7 +133,7 @@ var winWidth = $(window).width(),
         Unclear: 2
     },
 
-    weixinTipTemplate = '<div class="image-tip" width="100%" height="100%" style="position:relative;">    <div style="background-color:#ffffff;width:100%;height:100%;position:absolute; top:0;">        {img_tip}    </div>    <div style="text-align:center; width:100%; position:absolute; top:67%">         <img id="appIcon" src={Icon_Url} style="height:10%;"/>    </div></div>',
+    weixinTipTemplate = '<div class="image-tip" width="100%" height="100%" style="position:relative;">    <div style="background-color:#ffffff;width:100%;height:100%;position:absolute; top:0;">        {img_tip}    </div>    <div style="text-align:center; width:100%; position:absolute; top:67%">         <img id="appIcon" src="{Icon_Url}" style="height:10%;"/>    </div></div>',
     imgInfo = "<img src=" + ResPathLang + 'openbrowser_{mobile-os}.png align="center" style="height: 100%;"/>',
     div_goto_landingpage = '<div style="background-image:url({Bg_Url});background-size: 100% 100%;width:100%;height:100%;">    <div style = "position:absolute; top:20%; width:100%; ">        <div style="text-align:center; width:100%; ">            <img id="appIcon" src={Icon_Url} style="width:22%;"/>        </div>        <div style="text-align:center; width:100%; margin-top:10px;">            <span id="appName" style="font-size: 1.5em; color: #959595; padding: 15px 10px;">                {App_Name}            </span>        </div>    </div>    <div style="text-align:center; width:100%; position:absolute; top:56%;">        <span id="downloadTitle" style="font-size: 1em; color: #959595; padding: 15px 10px;">            {Download_title}        </span>    </div>    <div style="text-align:center; width:100%; position:absolute; top:59%;">        <span id="downloadMsg" style="font-size: 1em; border-bottom: 1px solid #959595; color: #959595; padding: 6px 10px;">            {Download_msg}        </span>    </div>    <div style="text-align:center; width:100%; position:absolute; top:70%;">        <{Element_type} id="btnGotoLandingPage" style="background-color:#FFFFFF; border: {Border_width}px solid #959595; color: #959595; padding: 6px 20px; -webkit-border-radius: 30px; -moz-border-radius: 30px; border-radius: 30px;">{Btn_landingpage_text}</{Element_type}>    </div></div>',
     div_goto_cannot_deeplink_with_market_btn = '<div style="background-image:url(' + ResPathLang + 'oops.png);background-size: 100% 100%;width:100%;height:100%;">    <div style="text-align:center; width:100%; position:absolute; top:80%;">        <button id="btnGotoAndroidMarket" style="font-size: 1em; background-color:#FFFFFF; border: 3px solid #959595; color: #959595; padding: 6px 20px; -webkit-border-radius: 30px; -moz-border-radius: 30px; border-radius: 30px;">' + ResGotoAppStore + "</button>    </div></div>",

@@ -55,6 +55,7 @@ public class LMSdkResources {
             throw new LMException(LMExceptionFactor.LM_MISSING_PARAM, installParams.linkedme_key);
         }
 
+        installParams.clientIP = request.getHeader("x-forwarded-for");
         String result = lmSdkService.install(installParams);
 
         JSONObject log = new JSONObject();
@@ -75,11 +76,11 @@ public class LMSdkResources {
     @Produces({MediaType.APPLICATION_JSON})
     public String open(OpenParams openParams, @Context HttpServletRequest request) {
         // auth
-        if (!signAuthService.doAuth(openParams.linkedme_key, openParams.app_version, openParams.os, openParams.os_version,
-                openParams.sdk_version, String.valueOf(openParams.retry_times))) {
-            throw new LMException(LMExceptionFactor.LM_AUTH_FAILED);
-        }
-
+//        if (!signAuthService.doAuth(openParams.linkedme_key, openParams.app_version, openParams.os, openParams.os_version,
+//                openParams.sdk_version, String.valueOf(openParams.retry_times))) {
+//            throw new LMException(LMExceptionFactor.LM_AUTH_FAILED);
+//        }
+        openParams.clientIP = request.getHeader("x-forwarded-for");
         String response = lmSdkService.open(openParams);
         JSONObject responseJson = JSONObject.fromObject(response);
         long deepLinkId = responseJson.getLong("deeplink_id");
@@ -130,7 +131,7 @@ public class LMSdkResources {
             throw new LMException(LMExceptionFactor.LM_MISSING_PARAM, closeParams.linkedme_key);
         }
 
-        lmSdkService.close(closeParams);
+        //lmSdkService.close(closeParams);
 
         JSONObject log = new JSONObject();
         JSONObject requestJson = JSONObject.fromObject(closeParams);
@@ -147,7 +148,7 @@ public class LMSdkResources {
     @POST
     @Produces({MediaType.APPLICATION_JSON})
     public String preInstall(PreInstallParams preInstallParams, @Context HttpServletRequest request) {
-
+        preInstallParams.clientIP = request.getHeader("x-forwarded-for");
         String identityId = lmSdkService.preInstall(preInstallParams);
         String result = "{\"identity_id\":" + identityId + "}";
         return result;

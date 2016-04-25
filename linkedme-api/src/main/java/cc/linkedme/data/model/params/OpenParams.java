@@ -30,8 +30,8 @@ public class OpenParams {
     public String last_source;
     public int retry_times;
     public boolean is_debug;
+    public String clientIP;
     public String sign;
-
 
     public String getDevice_fingerprint_id() {
         return device_fingerprint_id;
@@ -175,6 +175,30 @@ public class OpenParams {
 
     public void setSpotlight_identifier(String spotlight_identifier) {
         this.spotlight_identifier = spotlight_identifier;
+    }
+
+    public long getDeeplink_id() {
+        return deeplink_id;
+    }
+
+    public void setDeeplink_id(long deeplink_id) {
+        this.deeplink_id = deeplink_id;
+    }
+
+    public String getDeeplink_url() {
+        return deeplink_url;
+    }
+
+    public void setDeeplink_url(String deeplink_url) {
+        this.deeplink_url = deeplink_url;
+    }
+
+    public String getClientIP() {
+        return clientIP;
+    }
+
+    public void setClientIP(String clientIP) {
+        this.clientIP = clientIP;
     }
 
 }

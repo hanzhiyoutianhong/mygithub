@@ -226,7 +226,7 @@ public class UrlServlet extends HttpServlet {
         request.setAttribute("Pkg", appInfo.getAndroid_package_name());
         request.setAttribute("BundleID", appInfo.getIos_bundle_id());
         request.setAttribute("AppID", appId);
-        request.setAttribute("IconUrl", ""); // TODO
+        request.setAttribute("IconUrl", "../img/icon.png"); // TODO
         request.setAttribute("Url", url);
         request.setAttribute("Match_id", uriArr[2]);
 

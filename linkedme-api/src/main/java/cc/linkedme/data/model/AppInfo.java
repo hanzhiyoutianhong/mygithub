@@ -4,11 +4,13 @@ import cc.linkedme.commons.json.JsonBuilder;
 import net.sf.json.JSONObject;
 import net.sf.json.util.JSONBuilder;
 
+import java.io.Serializable;
+
 
 /**
  * Created by LinkedME01 on 16/3/18.
  */
-public class AppInfo {
+public class AppInfo implements Serializable {
     private long app_id;
     private long user_id;
     private String app_name;

@@ -42,6 +42,7 @@ public class InstallParams {
     public String ios_bundle_id;
     public int retry_times;
     public boolean is_debug;
+    public String clientIP;
 
     public String getLinkedme_key() {
         return linkedme_key;
@@ -282,6 +283,19 @@ public class InstallParams {
 
     public void setUniversal_link_url(String universal_link_url) {
         this.universal_link_url = universal_link_url;
+    }
+
+
+    public boolean isLat_val() {
+        return lat_val;
+    }
+
+    public String getClientIP() {
+        return clientIP;
+    }
+
+    public void setClientIP(String clientIP) {
+        this.clientIP = clientIP;
     }
 
 }

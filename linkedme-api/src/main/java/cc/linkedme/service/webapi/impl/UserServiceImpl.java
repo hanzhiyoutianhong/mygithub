@@ -22,11 +22,10 @@ public class UserServiceImpl implements UserService {
     private UserDao userDao;
 
     public boolean userRegister(UserParams userParams) {
-        if(userDao.queryEmail(userParams.email) == true)
+        if (userDao.queryEmail(userParams.email))
             throw new LMException(LMExceptionFactor.LM_USER_EMAIL_ALREADY_REGISTERED);
-        else
-        {
-            userDao.updateUserInfo( userParams );
+        else {
+            userDao.updateUserInfo(userParams);
             return true;
         }
     }
@@ -34,8 +33,7 @@ public class UserServiceImpl implements UserService {
     public UserInfo userLogin(UserParams userParams) {
         UserInfo userInfo = userDao.getUserInfo(userParams.email);
 
-        if (userInfo == null)
-            throw new LMException(LMExceptionFactor.LM_USER_EMAIL_DOESNOT_EXIST);
+        if (userInfo == null) throw new LMException(LMExceptionFactor.LM_USER_EMAIL_DOESNOT_EXIST);
         if (userParams.pwd.equals(userInfo.getPwd())) {
             String current_login_time = DateFormat.getDateTimeInstance().format(new Date());
             userParams.current_login_time = current_login_time;
@@ -59,11 +57,9 @@ public class UserServiceImpl implements UserService {
     }
 
     public boolean userLogout(UserParams userParams) {
-        if(!userDao.queryEmail(userParams.email))
-        {
+        if (!userDao.queryEmail(userParams.email)) {
             throw new LMException(LMExceptionFactor.LM_USER_EMAIL_DOESNOT_EXIST);
-        }
-        else {
+        } else {
             userParams.setToken(null);
             userDao.updateToken(userParams);
             return true;
@@ -84,9 +80,7 @@ public class UserServiceImpl implements UserService {
         if (userDao.queryEmail(userParams.email)) {
             MailSender.sendTextMail(userParams.email, "Change you PWD", "this is a test mail from java program");
             return true;
-        }
-        else
-        {
+        } else {
             throw new LMException(LMExceptionFactor.LM_USER_EMAIL_DOESNOT_EXIST);
         }
     }

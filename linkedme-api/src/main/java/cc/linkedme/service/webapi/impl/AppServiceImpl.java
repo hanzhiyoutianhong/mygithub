@@ -2,7 +2,9 @@ package cc.linkedme.service.webapi.impl;
 
 import cc.linkedme.commons.exception.LMException;
 import cc.linkedme.commons.exception.LMExceptionFactor;
+import cc.linkedme.commons.memcache.MemCacheTemplate;
 import cc.linkedme.commons.redis.JedisPort;
+import cc.linkedme.commons.serialization.KryoSerializationUtil;
 import cc.linkedme.commons.shard.ShardingSupportHash;
 import cc.linkedme.commons.util.MD5Utils;
 import cc.linkedme.commons.uuid.UuidCreator;
@@ -34,27 +36,39 @@ public class AppServiceImpl implements AppService {
     private AppDao urlTagDao;
 
     @Resource
+    private MemCacheTemplate<byte[]> appInfoMemCache;
+
+    @Resource
     private ShardingSupportHash<JedisPort> clientShardingSupport;
 
     public long createApp(AppParams appParams) {
-        //long appId = uuidCreator.nextId(2); // 2表示发号器的app业务,后续再调整appid的生成规则
-        AppInfo app_live_Info = new AppInfo();
+        AppInfo appInfo = new AppInfo();
         Random random = new Random(appParams.user_id);
         String live_md5_key = MD5Utils.md5(appParams.app_name + "live" + appParams.user_id + random.nextInt());
         String live_md5_secret = MD5Utils.md5(appParams.user_id + "live" + appParams.app_name + random.nextInt());
 
-        app_live_Info.setApp_key(live_md5_key);
-        app_live_Info.setApp_secret(live_md5_secret);
-        app_live_Info.setType("live");
-        app_live_Info.setUser_id(appParams.user_id);
-        app_live_Info.setApp_name(appParams.app_name);
-        long appId = appDao.insertApp(app_live_Info);
+        appInfo.setApp_key(live_md5_key);
+        appInfo.setApp_secret(live_md5_secret);
+        appInfo.setType("live");
+        appInfo.setUser_id(appParams.user_id);
+        appInfo.setApp_name(appParams.app_name);
+        long appId = appDao.insertApp(appInfo);
         if (appId > 0) {
-            JedisPort liveClient = clientShardingSupport.getClient(live_md5_key);
+            JedisPort liveClient = clientShardingSupport.getClient(live_md5_key);   //TODO 改成map,不要用逗号分隔
             liveClient.set(live_md5_key, appId + "," + live_md5_secret);
+
+            // 把appInfo写入mc,点击短链时需要查询appInfo
+            setAppInfoToCache(appInfo);
             return appId;
         }
         throw new LMException(LMExceptionFactor.LM_SYS_ERROR, "Create appInfo failed");
+    }
+
+    @Override
+    public boolean setAppInfoToCache(AppInfo appInfo) {
+        byte[] b = KryoSerializationUtil.serializeObj(appInfo);
+        boolean res = appInfoMemCache.set(String.valueOf(appInfo.getApp_id()), b);
+        return res;
     }
 
     public List<AppInfo> getAppsByUserId(AppParams appParams) {
@@ -75,20 +89,34 @@ public class AppServiceImpl implements AppService {
     }
 
     public AppInfo getAppById(long appId) {
-        AppInfo appInfo = appDao.getAppsByAppId(appId);
-        return appInfo;
+        AppInfo appInfo;
+        // 先从mc取,没有命中再从DB取
+        byte[] appInfoByteArr = appInfoMemCache.get(String.valueOf(appId));
+        if (appInfoByteArr != null && appInfoByteArr.length > 0) {
+            appInfo = KryoSerializationUtil.deserializeObj(appInfoByteArr, AppInfo.class);
+            if (appInfo != null) {
+                return appInfo;
+            }
+        }
+
+        appInfo = appDao.getAppsByAppId(appId);
+        if (appInfo != null && appInfo.getApp_id() > 0) {
+            appInfoMemCache.set(String.valueOf(appId), KryoSerializationUtil.serializeObj(appInfo));
+            return appInfo;
+        }
+        return null;
     }
 
     public int updateApp(AppParams appParams) {
         return appDao.updateApp(appParams);
     }
 
-    public List<UrlTagsInfo> getUrlTags( AppParams appParams ) {
-        return urlTagDao.getUrlTagsByAppId( appParams );
+    public List<UrlTagsInfo> getUrlTags(AppParams appParams) {
+        return urlTagDao.getUrlTagsByAppId(appParams);
     }
 
     public boolean configUrlTags(UrlParams urlParams) {
-        return urlTagDao.configUrlTags( urlParams );
+        return urlTagDao.configUrlTags(urlParams);
     }
 
     @Override

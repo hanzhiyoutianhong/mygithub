@@ -11,6 +11,7 @@ import org.codehaus.jackson.annotate.JsonIgnoreProperties;
 @XmlRootElement
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class PreInstallParams {
+    public int app_id;
     public long identity_id;
     public long deeplink_id;
     public String os;
@@ -18,6 +19,7 @@ public class PreInstallParams {
     public int screen_dpi;
     public int screen_height;
     public int screen_width;
+    public String clientIP;
 
     public long getIdentity_id() {
         return identity_id;
@@ -74,6 +76,23 @@ public class PreInstallParams {
 
     public void setDeeplink_id(long deeplink_id) {
         this.deeplink_id = deeplink_id;
+    }
+
+
+    public String getClientIP() {
+        return clientIP;
+    }
+
+    public void setClientIP(String clientIP) {
+        this.clientIP = clientIP;
+    }
+
+    public int getApp_id() {
+        return app_id;
+    }
+
+    public void setApp_id(int app_id) {
+        this.app_id = app_id;
     }
 
 }

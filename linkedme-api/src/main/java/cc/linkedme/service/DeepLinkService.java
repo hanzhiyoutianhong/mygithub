@@ -23,7 +23,7 @@ public class DeepLinkService {
     private DeepLinkDao deepLinkDao;
 
     @Resource
-    private MemCacheTemplate<byte[]> deepLinkParamMemCache;
+    private MemCacheTemplate<byte[]> deepLinkMemCache;
 
     public int addDeepLink(DeepLink deepLink) {
         int result = 0;
@@ -34,7 +34,7 @@ public class DeepLinkService {
 
     public boolean addDeepLinkToCache(DeepLink deepLink) {
         byte[] b = KryoSerializationUtil.serializeObj(deepLink);
-        boolean res = deepLinkParamMemCache.set(String.valueOf(deepLink.getDeeplinkId()), b);
+        boolean res = deepLinkMemCache.set(String.valueOf(deepLink.getDeeplinkId()), b);
         return res;
     }
 
@@ -45,15 +45,17 @@ public class DeepLinkService {
         // 先从mc里取,如果没有取到,则从mysql里取
         // 从mysql里取到后,回中到mc
         DeepLink deepLink;
-        byte[] deepLinkByteArr = deepLinkParamMemCache.get(String.valueOf(deepLinkId));
+        byte[] deepLinkByteArr = deepLinkMemCache.get(String.valueOf(deepLinkId));
         if (deepLinkByteArr != null && deepLinkByteArr.length > 0) {
             deepLink = KryoSerializationUtil.deserializeObj(deepLinkByteArr, DeepLink.class);
-            return deepLink;
+            if (deepLink != null) {
+                return deepLink;
+            }
         }
 
         deepLink = deepLinkDao.getDeepLinkInfo(deepLinkId, appId);
         if (deepLink != null && deepLink.getDeeplinkId() > 0) {
-            deepLinkParamMemCache.set(String.valueOf(deepLinkId), KryoSerializationUtil.serializeObj(deepLink));
+            deepLinkMemCache.set(String.valueOf(deepLinkId), KryoSerializationUtil.serializeObj(deepLink));
             return deepLink;
         }
         return null;
@@ -61,8 +63,8 @@ public class DeepLinkService {
 
     public boolean deleteDeepLink(long[] deepLinkIds, long appId) {
         boolean result = true;
-        for( int i = 0; i < deepLinkIds.length; i++ ) {
-            if( !deepLinkDao.deleteDeepLink(deepLinkIds[i], appId) ) {
+        for (int i = 0; i < deepLinkIds.length; i++) {
+            if (!deepLinkDao.deleteDeepLink(deepLinkIds[i], appId)) {
                 result = false;
                 break;
             }
@@ -73,8 +75,7 @@ public class DeepLinkService {
     public String getUrlInfo(UrlParams urlParams) {
         DeepLink deepLinkInfo = deepLinkDao.getUrlInfo(urlParams.deeplink_id, urlParams.app_id);
 
-        if( deepLinkInfo == null )
-            throw new LMException(LMExceptionFactor.LM_ILLEGAL_REQUEST, "deep link id does not exist!");
+        if (deepLinkInfo == null) throw new LMException(LMExceptionFactor.LM_ILLEGAL_REQUEST, "deep link id does not exist!");
 
         JSONObject resultJson = new JSONObject();
 
