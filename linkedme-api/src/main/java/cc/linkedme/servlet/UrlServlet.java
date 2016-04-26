@@ -187,11 +187,10 @@ public class UrlServlet extends HttpServlet {
         boolean isQQBrowser = false;
         boolean isFirefox = false;
         boolean isChrome = false;
-        boolean isUC = false; // TODO
+        boolean isUC = false;
 
         // DEBUG MODE
         boolean DEBUG = false;
-
 
         int userAgentMajor = 0;
         if (uaMap.containsKey("Chrome")) {

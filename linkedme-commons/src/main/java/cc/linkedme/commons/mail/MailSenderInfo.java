@@ -18,7 +18,7 @@ public class MailSenderInfo {
     private String[] attachFileNames;
 
     static {
-        mailServerHost = "mxbiz2.qq.com";
+        mailServerHost = "smtp.exmail.qq.com";
         mailServerPort = "25";
         fromAddress = "public@linkedme.cc";
         userName = "public@linkedme.cc";

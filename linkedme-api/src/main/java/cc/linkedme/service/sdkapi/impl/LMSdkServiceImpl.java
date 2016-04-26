@@ -60,6 +60,9 @@ public class LMSdkServiceImpl implements LMSdkService {
     private ShardingSupportHash<JedisPort> clientShardingSupport;
 
     @Resource
+    private ShardingSupportHash<JedisPort> linkedmeKeyShardingSupport;
+
+    @Resource
     public ClientDao clientDao;
 
     @Resource
@@ -94,15 +97,12 @@ public class LMSdkServiceImpl implements LMSdkService {
         clientInfo.setIosTeamId(installParams.ios_team_id);
         clientInfo.setIosBundleId(installParams.ios_bundle_id);
 
-        // 根据linkedme_key获取appid和secret
-        JedisPort appKeyClient = clientShardingSupport.getClient(installParams.linkedme_key);
-        String appIdAndSecret = appKeyClient.get(installParams.linkedme_key);
+        // 根据linkedme_key获取appid
+        JedisPort linkedmeKeyClient = linkedmeKeyShardingSupport.getClient(installParams.linkedme_key);
+        String appIdStr = linkedmeKeyClient.hget(installParams.linkedme_key, "appid");
         long appId = 0;
-        String secret = null;
-        if (!Strings.isNullOrEmpty(appIdAndSecret)) {
-            String[] tmp = appIdAndSecret.split(",");
-            appId = Long.parseLong(tmp[0]);
-            secret = tmp[1];
+        if(appIdStr != null) {
+            appId = Long.parseLong(appIdStr);
         }
 
         String deviceId = installParams.device_id;
@@ -142,7 +142,7 @@ public class LMSdkServiceImpl implements LMSdkService {
                     long rightIdentityId = Long.parseLong(identityIdAndDeepLinkId[0]);
                     long dlId = Long.parseLong(identityIdAndDeepLinkId[1]);
                     deepLink = deepLinkService.getDeepLinkInfo(deepLinkId, appId);
-                    clientRedisClient.set(deviceId + ".old", identityId);
+                    clientRedisClient.set(deviceId + ".old", identityId);   //TODO 有问题,会有多个old吗?
                     clientRedisClient.set(deviceId, rightIdentityId);
                 }
             } else { // 之前存在identityId, 并有identityId与deepLink的键值对
@@ -175,7 +175,6 @@ public class LMSdkServiceImpl implements LMSdkService {
 
     private String[] matchDfpIdAndBfpId(InstallParams installParams, String appId) {
         Joiner joiner = Joiner.on("&").skipNulls();
-        // TODO 生成指纹的时候加上appkey信息,去掉屏幕的三个信息
         String deviceFingerprintId =
                 createFingerprintId(appId, installParams.os, installParams.os_version, installParams.clientIP);
         JedisPort clientRedisClient = clientShardingSupport.getClient(deviceFingerprintId);
@@ -245,15 +244,12 @@ public class LMSdkServiceImpl implements LMSdkService {
         String params = "";
         boolean clicked_linkedme_link = false;
         if (!Strings.isNullOrEmpty(deepLinkUrl)) {
-            // 根据linkedme_key获取appid和secret
-            JedisPort appKeyClient = clientShardingSupport.getClient(openParams.linkedme_key);
-            String appIdAndSecret = appKeyClient.get(openParams.linkedme_key);
+            // 根据linkedme_key获取appid
             long appId = 0;
-            String secret = null;
-            if (!Strings.isNullOrEmpty(appIdAndSecret)) {
-                String[] tmp = appIdAndSecret.split(",");
-                appId = Long.parseLong(tmp[0]);
-                secret = tmp[1];
+            JedisPort linkedmeKeyClient = linkedmeKeyShardingSupport.getClient(openParams.linkedme_key);
+            String appIdStr = linkedmeKeyClient.hget(openParams.linkedme_key, "appid");
+            if(appIdStr != null) {
+                appId = Long.parseLong(appIdStr);
             }
 
             String clickId = getClickIdFromUri(deepLinkUrl);
@@ -374,9 +370,10 @@ public class LMSdkServiceImpl implements LMSdkService {
 
         long appId = urlParams.app_id; // web创建url传appid, sdk创建url不传appid
         if (appId <= 0) {
-            String value = clientShardingSupport.getClient(urlParams.linkedme_key).get(urlParams.linkedme_key);
-            if (!Strings.isNullOrEmpty(value)) {
-                appId = Long.parseLong(value.split(",")[0]); // 根据linkedme_key去库里查询
+            JedisPort linkedmeKeyClient = linkedmeKeyShardingSupport.getClient(urlParams.linkedme_key);
+            String appIdStr = linkedmeKeyClient.hget(urlParams.linkedme_key, "appid");
+            if(appIdStr != null) {
+                appId = Long.parseLong(appIdStr);
             }
         }
         if (id != null) {
@@ -428,7 +425,7 @@ public class LMSdkServiceImpl implements LMSdkService {
             String identityIdAndDeepLinkId = identityId + "," + preInstallParams.deeplink_id;
             JedisPort browseFingerprintIdRedisClient = clientShardingSupport.getClient(browseFingerprintId);
             browseFingerprintIdRedisClient.set(browseFingerprintId, identityIdAndDeepLinkId);
-
+            browseFingerprintIdRedisClient.expire(browseFingerprintId, 2 * 60 * 60);    //设置过期时间
             return String.valueOf(identityId);
         } else {
             // 浏览器里有identityId,不需要重新生成,从库里查找
@@ -441,6 +438,7 @@ public class LMSdkServiceImpl implements LMSdkService {
                 String identityIdAndDeepLinkId = preInstallParams.identity_id + "," + preInstallParams.deeplink_id;
                 JedisPort browseFingerprintIdRedisClient = clientShardingSupport.getClient(browseFingerprintId);
                 browseFingerprintIdRedisClient.set(browseFingerprintId, identityIdAndDeepLinkId);
+                browseFingerprintIdRedisClient.expire(browseFingerprintId, 2 * 60 * 60);    //设置过期时间
             } else {
                 boolean res = identityRedisClient.set(String.valueOf(identityId), preInstallParams.deeplink_id);
                 if (res) {
