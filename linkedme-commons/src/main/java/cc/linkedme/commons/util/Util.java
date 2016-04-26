@@ -43,6 +43,9 @@ public class Util {
     private static int MAX_DIGS_LEN = 70;
     private static int[] digs = new int[MAX_DIGS_LEN];
 
+    private static final long minDeepLinkId = 3344763785052162L;
+    private static final long maxDeepLinkId = 4503599627370495L;
+
     static {
         digs['0'] = 0;
         digs['1'] = 1;
@@ -854,6 +857,10 @@ public class Util {
             result.add(end_date_duration);
         }
         return result;
+    }
+
+    public boolean validateDeepLinkId( long deepLinkId ) {
+        return deepLinkId <= maxDeepLinkId && deepLinkId >= minDeepLinkId;
     }
 
     public static void main( String args[] ) {
