@@ -856,13 +856,62 @@ public class Util {
         return result;
     }
 
-    public static void main( String args[] ) {
-        String start_month = "2016-07-20";
-        String end_month = "2016-07-20";
-        List<DateDuration> months = getBetweenMonths( start_month, end_month );
+    public static ArrayList<String> getDays(String minDate, String maxDate) {
+        ArrayList<String> result = new ArrayList<String>();
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
 
-        for (int i = 0; i < months.size(); i++) {
-            System.out.println(months.get(i).getMin_date() + "-->" + months.get(i).getMax_date());
+        Calendar start_date = Calendar.getInstance();
+        Calendar end_date = Calendar.getInstance();
+
+        try {
+            start_date.setTime( sdf.parse( minDate ) );
+            end_date.setTime( sdf.parse( maxDate ) );
+
+            while( start_date.before(end_date) || start_date.equals(end_date) ) {
+                result.add( sdf.format(start_date.getTime() ) );
+                start_date.add( start_date.DATE, 1 );
+            }
+
+        } catch (ParseException e ) {
+            ApiLogger.error("Util.getBetweenMonths parse time failed", e );
+            throw new LMException(LMExceptionFactor.LM_ILLEGAL_PARAM_VALUE, "Util.getBetweenMonths parse time failed" );
+        }
+        return result;
+    }
+
+    public static ArrayList<String> getIntervalDays(String minDate, String maxDate, int duration) {
+        ArrayList<String> result = new ArrayList<String>();
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+
+        Calendar start_date = Calendar.getInstance();
+        Calendar end_date = Calendar.getInstance();
+
+        try {
+            start_date.setTime( sdf.parse( minDate ) );
+            end_date.setTime( sdf.parse( maxDate ) );
+
+            while( start_date.before(end_date) || start_date.equals(end_date) ) {
+                result.add( sdf.format(start_date.getTime() ) );
+                start_date.add( start_date.DATE, duration );
+            }
+
+        } catch (ParseException e ) {
+            ApiLogger.error("Util.getBetweenMonths parse time failed", e );
+            throw new LMException(LMExceptionFactor.LM_ILLEGAL_PARAM_VALUE, "Util.getBetweenMonths parse time failed" );
+        }
+        return result;
+    }
+
+    public static void main( String args[] ) {
+        String start_month = "2016-06-20";
+        String end_month = "2016-08-20";
+        int duration = 3;
+        List<String> months = getDays( start_month, end_month );
+        List<String> interval_days = getIntervalDays( start_month, end_month, duration );
+
+        for (int i = 0; i < interval_days.size(); i++) {
+            if( !months.isEmpty() )
+                System.out.println(interval_days.get(i) );
         }
     }
 

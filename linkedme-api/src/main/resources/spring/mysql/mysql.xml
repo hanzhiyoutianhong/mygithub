@@ -257,4 +257,25 @@
             </list>
         </property>
     </bean>
+
+    <!-- ############## app list mysql ###############-->
+    <wfc:mysql id="app_list_0_m" parent="dataSource"
+               strategy="master">
+        <property name="jdbcUrl" value="${app_list.datasource.master_0.jdbcUrl}"/>
+    </wfc:mysql>
+    <wfc:mysql id="app_list_0_s" parent="dataSource"
+               strategy="slave">
+        <property name="jdbcUrl" value="${app_list.datasource.slave_0.jdbcUrl}"/>
+    </wfc:mysql>
+
+    <bean id="app_list_jdbctemplate_0" class="cc.linkedme.data.dao.util.JdbcTemplate">
+        <property name="dataSource">
+            <ref bean="app_list_0_m"/>
+        </property>
+        <property name="dataSourceSlaves">
+            <list>
+                <ref bean="app_list_0_s"/>
+            </list>
+        </property>
+    </bean>
 </beans>

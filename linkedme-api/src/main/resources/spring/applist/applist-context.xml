@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd">
+
+    <bean id="appListDao" class="cc.linkedme.dao.sdkapi.impl.AppListDaoImpl">
+        <property name="tableContainer">
+            <bean class="cc.linkedme.data.dao.strategy.TableContainer">
+                <property name="tablesItems">
+                    <map>
+                        <entry key="appListInfo" value-ref="appListInfo"/>
+                    </map>
+                </property>
+            </bean>
+        </property>
+    </bean>
+
+    <bean id="appListInfo" class="cc.linkedme.data.dao.strategy.TableItem">
+        <property name="itemName" value="appInfo"/>
+        <property name="dbNamePrefix" value="app_list"/>
+        <property name="dbCount" value="1"/>
+
+        <property name="tableNamePrefix" value="applist_info"/>
+        <property name="tableCount" value="1"/>
+        <property name="sqls">
+            <map>
+                <entry key="INSERT_APP_LIST" value="insert into $db$.$tb$ (identity_id, device_fingerprint_id, app_name, app_identifier, uri_scheme, public_source_dir, source_dir, install_date, last_update_date, version_code, version_name, os, sdk_version, retry_times, linkedme_key, sign) values(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)"/>
+                <entry key="QUERY_APP_LIST" value="select identity_id, linkedme_key, device_fingerprint_id, app_name, app_identifier, uri_scheme, public_source_dir, source_dir, install_date, last_update_date, version_code, version_name, os, sdk_version, retry_times, sign from $db$.$tb$ where identity_id = ?"/>
+            </map>
+        </property>
+        <property name="jdbcTemplates">
+            <list>
+                <ref bean="app_list_jdbctemplate_0"/>
+            </list>
+        </property>
+    </bean>
+    <bean id="appListService" class="cc.linkedme.service.sdkapi.impl.AppListServiceImpl"></bean>
+</beans>
+

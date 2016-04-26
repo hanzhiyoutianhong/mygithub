@@ -7,16 +7,10 @@ import cc.linkedme.commons.json.JsonBuilder;
 import cc.linkedme.commons.log.ApiLogger;
 import cc.linkedme.commons.util.Base62;
 import cc.linkedme.commons.util.Constants;
-import cc.linkedme.data.model.params.CloseParams;
-import cc.linkedme.data.model.params.InstallParams;
-import cc.linkedme.data.model.params.LMInstallParams;
-import cc.linkedme.data.model.params.LMOpenParams;
-import cc.linkedme.data.model.params.LMUrlParams;
+import cc.linkedme.data.model.AppListInfo;
+import cc.linkedme.data.model.params.*;
 
-import cc.linkedme.data.model.params.OpenParams;
-import cc.linkedme.data.model.params.PreInstallParams;
-import cc.linkedme.data.model.params.PreOpenParams;
-import cc.linkedme.data.model.params.UrlParams;
+import cc.linkedme.service.sdkapi.AppListService;
 import cc.linkedme.service.sdkapi.LMSdkService;
 import com.google.common.base.Strings;
 import net.sf.json.JSONObject;
@@ -36,6 +30,7 @@ import javax.ws.rs.core.MediaType;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.util.ArrayList;
 
 @Path("sdk")
 @Component
@@ -43,6 +38,8 @@ public class LMSdkResources {
 
     @Resource
     private LMSdkService lmSdkService;
+    @Resource
+    private AppListService appListService;
 
     @Resource
     private SignAuthService signAuthService;
@@ -161,6 +158,42 @@ public class LMSdkResources {
         ApiLogger.info("sdk/preOpen,deepLinkId:" + Base62.decode(preOpenParams.click_id) + ",destination:" + preOpenParams.destination
                 + ",lkme_tag:" + preOpenParams.lkme_tag);
         return "{}";
+    }
+
+    @Path("/applist")
+    @POST
+    @Produces({MediaType.APPLICATION_JSON})
+    public String storeAppList(AppListParams appListParams, @Context HttpServletRequest request ) {
+
+        ArrayList<AppListInfo> appListInfos = new ArrayList<AppListInfo>();
+        for( int i = 0; i < appListParams.apps_data.size(); i++ ) {
+            AppListInfo appListInfo = new AppListInfo();
+            JSONObject jsonObject = appListParams.apps_data.getJSONObject( i );
+            appListInfo.setIdentityId(appListParams.identity_id);
+            appListInfo.setDeviceFingerprintId(appListParams.device_fingerprint_id);
+            appListInfo.setAppName( jsonObject.get( "name" ).toString() );
+            appListInfo.setAppIdentifier(jsonObject.get( "app_identifier" ).toString());
+            appListInfo.setUriScheme(jsonObject.get( "uri_scheme" ).toString());
+            appListInfo.setPublicSourceDir(jsonObject.get( "public_source_dir" ).toString());
+            appListInfo.setSourceDir(jsonObject.get( "source_dir" ).toString());
+            appListInfo.setInstallDate(jsonObject.get( "install_date" ).toString() );
+            appListInfo.setLastUpdateDate(jsonObject.get( "last_update_date" ).toString());
+            appListInfo.setVersionCode(jsonObject.get( "version_code" ).toString());
+            appListInfo.setVersionName(jsonObject.get( "version_name" ).toString());
+            appListInfo.setOs(jsonObject.get( "os" ).toString());
+            appListInfo.setSdkVersion(appListParams.sdk_version);
+            appListInfo.setRetryTimes(appListParams.retry_times);
+            appListInfo.setLinkedmeKey(appListParams.linkedme_key);
+            appListInfo.setSign(appListParams.sign);
+
+            appListInfos.add( appListInfo );
+        }
+
+        int result = appListService.addAppList( appListInfos );
+        if( result > 0 )
+            return "{\"ret\":\"true\"}";
+        else
+            return "{\"ret\":\"error\"}";
     }
 
     @Deprecated
