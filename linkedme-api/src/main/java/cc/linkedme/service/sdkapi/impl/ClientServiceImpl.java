@@ -31,7 +31,7 @@ public class ClientServiceImpl implements ClientService {
     private ShardingSupportHash<JedisPort> deepLinkCountShardingSupport;
 
     @Resource
-    private ShardingSupportHash<JedisPort> clientShardingSupport;
+    private ShardingSupportHash<JedisPort> linkedmeKeyShardingSupport;
 
     public static ThreadPoolExecutor deepLinkCountThreadPool = new ThreadPoolExecutor(20, 20, 60L, TimeUnit.SECONDS,
             new LinkedBlockingQueue<Runnable>(300), new ThreadPoolExecutor.DiscardOldestPolicy());
@@ -40,12 +40,15 @@ public class ClientServiceImpl implements ClientService {
         int result = clientDao.addClient(clientInfo);
 
         if (result > 0 && deepLinkId > 0) {
-            long appId = 0; // 根据deepLinkId查找appId
-            String value = clientShardingSupport.getClient(clientInfo.getLinkedmeKey()).get(clientInfo.getLinkedmeKey());
-            if (!Strings.isNullOrEmpty(value)) {
-                appId = Long.parseLong(value.split(",")[0]);
-            }
-            DeepLink deepLink = deepLinkService.getDeepLinkInfo(deepLinkId, appId);
+            // long appId = 0; // 根据linkedmeKey查找appId
+            // JedisPort linkedmeKeyClient =
+            // linkedmeKeyShardingSupport.getClient(clientInfo.getLinkedmeKey());
+            // String appIdStr = linkedmeKeyClient.hget(clientInfo.getLinkedmeKey(), "appid");
+            // if(appIdStr != null) {
+            // appId = Long.parseLong(appIdStr);
+            // }
+            // DeepLink deepLink = deepLinkService.getDeepLinkInfo(deepLinkId, appId);
+
             // count
             final String type = DeepLinkCount.getCountTypeFromOs(clientInfo.getOs(), "_install");
             deepLinkCountThreadPool.submit(new Callable<Void>() {
@@ -63,6 +66,6 @@ public class ClientServiceImpl implements ClientService {
             });
 
         }
-        return 0;
+        return result;
     }
 }

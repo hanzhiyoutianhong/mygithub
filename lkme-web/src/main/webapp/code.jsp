@@ -8,9 +8,21 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <html>
 <head>
-    <title>二维码页面</title>
+    <script type="text/javascript" src="jsserver/lib/jquery-2.1.4.min.js"></script>
+    <script type="text/javascript" src="jsserver/lib/jquery.qrcode.min.js"></script>
+    <title>linkedme</title>
 </head>
 <body>
-<img  style="height:400px;width:400px" src="code.jsp" />
+<center>
+    <div id="code"></div>
+</center>
+<script>
+    $("#code").qrcode({
+        render: "table",
+        width: 400,
+        height:400,
+        text: '<%=request.getParameter("code_url")%>'
+    });
+</script>
 </body>
 </html>

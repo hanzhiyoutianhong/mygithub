@@ -126,15 +126,6 @@
         <load-on-startup>1</load-on-startup>
     </servlet>
 
-    <servlet>
-        <servlet-name>codeServlet</servlet-name>
-        <servlet-class>cc.linkedme.servlet.CodeServlet</servlet-class>
-    </servlet>
-    <servlet-mapping>
-        <servlet-name>codeServlet</servlet-name>
-        <url-pattern>/code.jsp</url-pattern>
-    </servlet-mapping>
-
     <servlet-mapping>
         <servlet-name>lkmeServlet</servlet-name>
         <url-pattern>/i/*</url-pattern>

@@ -39,23 +39,24 @@ public class AppServiceImpl implements AppService {
     private MemCacheTemplate<byte[]> appInfoMemCache;
 
     @Resource
-    private ShardingSupportHash<JedisPort> clientShardingSupport;
+    private ShardingSupportHash<JedisPort> linkedmeKeyShardingSupport;
 
     public long createApp(AppParams appParams) {
         AppInfo appInfo = new AppInfo();
         Random random = new Random(appParams.user_id);
-        String live_md5_key = MD5Utils.md5(appParams.app_name + "live" + appParams.user_id + random.nextInt());
-        String live_md5_secret = MD5Utils.md5(appParams.user_id + "live" + appParams.app_name + random.nextInt());
+        String linkedmeKey = MD5Utils.md5(appParams.app_name + "live" + appParams.user_id + random.nextInt());
+        String secret = MD5Utils.md5(appParams.user_id + "live" + appParams.app_name + random.nextInt());
 
-        appInfo.setApp_key(live_md5_key);
-        appInfo.setApp_secret(live_md5_secret);
+        appInfo.setApp_key(linkedmeKey);
+        appInfo.setApp_secret(secret);
         appInfo.setType("live");
         appInfo.setUser_id(appParams.user_id);
         appInfo.setApp_name(appParams.app_name);
         long appId = appDao.insertApp(appInfo);
         if (appId > 0) {
-            JedisPort liveClient = clientShardingSupport.getClient(live_md5_key);   //TODO 改成map,不要用逗号分隔
-            liveClient.set(live_md5_key, appId + "," + live_md5_secret);
+            JedisPort linkedmeKeyClient = linkedmeKeyShardingSupport.getClient(linkedmeKey);
+            linkedmeKeyClient.hset(linkedmeKey, "appid", appId);
+            linkedmeKeyClient.hset(linkedmeKey, "secret", secret);
 
             // 把appInfo写入mc,点击短链时需要查询appInfo
             setAppInfoToCache(appInfo);
