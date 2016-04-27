@@ -236,24 +236,24 @@ public class AppDaoImpl extends BaseDao implements AppDao {
             return null;
     }
 
-    public boolean configUrlTags(UrlParams urlParams) {
+    public boolean configUrlTags(AppParams appParams) {
 
-        String[] values = urlParams.value.split(",");
-        String type = urlParams.type;
+        String[] values = appParams.value.split(",");
+        String type = appParams.type;
 
         TableChannel tableChannel = tableContainer.getTableChannel("urlTags", GET_URL_TAGS_BY_APPID_AND_TYPE, 0L, 0L );
         JdbcTemplate jdbcTemplate = tableChannel.getJdbcTemplate();
 
         final List<UrlTagsInfo> urlTagsInfos = new ArrayList<UrlTagsInfo>();
 
-        jdbcTemplate.query(tableChannel.getSql(), new Object[]{urlParams.app_id, urlParams.type}, new RowMapper() {
+        jdbcTemplate.query(tableChannel.getSql(), new Object[]{appParams.app_id, appParams.type}, new RowMapper() {
 
             public Object mapRow(ResultSet resultSet, int i) throws SQLException {
                 do {
                     UrlTagsInfo urlTagsInfo = new UrlTagsInfo();
-                    urlTagsInfo.setAppId( urlParams.app_id );
+                    urlTagsInfo.setAppId( appParams.app_id );
                     urlTagsInfo.setTag_content( resultSet.getString("tag_content") );
-                    urlTagsInfo.setTag_type( urlParams.type );
+                    urlTagsInfo.setTag_type( appParams.type );
 
                     urlTagsInfos.add( urlTagsInfo );
                 } while( resultSet.next() );
@@ -278,7 +278,7 @@ public class AppDaoImpl extends BaseDao implements AppDao {
                 TableChannel tableChannel_set = tableContainer.getTableChannel("urlTags", SET_URL_TAGS_BY_APPID_AND_TYPE, 0L, 0L );
                 JdbcTemplate jdbcTemplate_set = tableChannel_set.getJdbcTemplate();
 
-                result += jdbcTemplate_set.update( tableChannel_set.getSql(), new Object[]{urlParams.app_id, values[i], type} );
+                result += jdbcTemplate_set.update( tableChannel_set.getSql(), new Object[]{appParams.app_id, values[i], type} );
             }
         }
         if( result > 0 )

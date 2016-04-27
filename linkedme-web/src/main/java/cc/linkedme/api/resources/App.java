@@ -223,9 +223,9 @@ public class App {
     @Path("/config")
     @POST
     @Produces(MediaType.APPLICATION_JSON)
-    public String urlTagsConfig(UrlParams urlParams, @Context HttpServletRequest request ) {
+    public String urlTagsConfig(AppParams appParams, @Context HttpServletRequest request ) {
 
-        boolean result = appService.configUrlTags( urlParams );
+        boolean result = appService.configUrlTags( appParams );
 
         JSONObject resultJson = new JSONObject();
         resultJson.put( "ret", result );

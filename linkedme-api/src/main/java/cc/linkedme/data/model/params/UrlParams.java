@@ -15,10 +15,7 @@ public class UrlParams {
 
     public long deeplink_id;
     public long[] deeplink_ids;
-    public long user_id;
     public long app_id;
-    public String value;
-    public String type;
     public String alias;
     public String[] tags;
     public String[] channel;

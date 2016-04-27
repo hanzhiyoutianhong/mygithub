@@ -116,8 +116,8 @@ public class AppServiceImpl implements AppService {
         return urlTagDao.getUrlTagsByAppId(appParams);
     }
 
-    public boolean configUrlTags(UrlParams urlParams) {
-        return urlTagDao.configUrlTags(urlParams);
+    public boolean configUrlTags(AppParams appParams) {
+        return urlTagDao.configUrlTags(appParams);
     }
 
     @Override

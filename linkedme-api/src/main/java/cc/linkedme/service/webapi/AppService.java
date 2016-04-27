@@ -28,7 +28,7 @@ public interface AppService {
 
     List<UrlTagsInfo> getUrlTags(AppParams appParams);
 
-    boolean configUrlTags(UrlParams urlParams);
+    boolean configUrlTags(AppParams appParams);
 
     String uploadImg(AppParams appParams, String imagePath);
 }
