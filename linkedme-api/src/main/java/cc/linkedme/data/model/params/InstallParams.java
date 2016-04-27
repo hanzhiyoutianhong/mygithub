@@ -43,6 +43,8 @@ public class InstallParams {
     public int retry_times;
     public boolean is_debug;
     public String clientIP;
+    public long timestamp;
+    public String sign;
 
     public String getLinkedme_key() {
         return linkedme_key;
@@ -296,6 +298,22 @@ public class InstallParams {
 
     public void setClientIP(String clientIP) {
         this.clientIP = clientIP;
+    }
+
+    public long getTimestamp() {
+        return timestamp;
+    }
+
+    public void setTimestamp(long timestamp) {
+        this.timestamp = timestamp;
+    }
+
+    public String getSign() {
+        return sign;
+    }
+
+    public void setSign(String sign) {
+        this.sign = sign;
     }
 
 }

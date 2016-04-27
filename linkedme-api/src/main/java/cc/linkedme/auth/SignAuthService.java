@@ -43,18 +43,20 @@ public class SignAuthService {
     }
 
     public boolean doAuth(String... params) {
-        if(params == null || params.length <= 1) {
+        if(params == null || params.length <= 2) {
             return false;
         }
-        String sign = params[0];
+        String apiName = params[0];
+        String sign = params[1];
         List<String> paramsArr = new ArrayList<>(params.length);
-        for(int i = 1; i < params.length; i++) {
+        for(int i = 2; i < params.length; i++) {
             paramsArr.add(params[i]);
         }
         Collections.sort(paramsArr);
         Joiner joiner = Joiner.on("&").skipNulls();
         String signParamsStr = joiner.join(paramsArr);
-        String token = MD5Utils.md5(signParamsStr); //TODO 打md5值是否考虑用secret字段
+        signParamsStr = apiName + ":" + signParamsStr;
+        String token = MD5Utils.md5(signParamsStr); //TODO 打md5值是否考虑用secret字段,现在sign里带了时间戳,每次调接口sign都不一样
         return token.equals(sign);
 
     }

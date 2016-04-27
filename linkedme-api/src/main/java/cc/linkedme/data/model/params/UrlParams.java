@@ -17,8 +17,8 @@ public class UrlParams {
     public long[] deeplink_ids;
     public long user_id;
     public long app_id;
-    public String type;
     public String value;
+    public String type;
     public String alias;
     public String[] tags;
     public String[] channel;
@@ -43,6 +43,8 @@ public class UrlParams {
     public String sdk_version;
     public int retry_times;
     public boolean is_debug;
+    public long timestamp;
+    public String sign;
 
     public long getApp_id() {
         return app_id;
@@ -242,5 +244,21 @@ public class UrlParams {
 
     public void setDeeplink_ids(long[] deeplink_ids) {
         this.deeplink_ids = deeplink_ids;
+    }
+
+    public String getSign() {
+        return sign;
+    }
+
+    public void setSign(String sign) {
+        this.sign = sign;
+    }
+
+    public long getTimestamp() {
+        return timestamp;
+    }
+
+    public void setTimestamp(long timestamp) {
+        this.timestamp = timestamp;
     }
 }

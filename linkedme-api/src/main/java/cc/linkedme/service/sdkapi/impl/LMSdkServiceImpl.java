@@ -230,7 +230,7 @@ public class LMSdkServiceImpl implements LMSdkService {
             String osMajorVersion = osVersionArr[0];
             if (Integer.parseInt(osMajorVersion) >= UNIVERSE_LINK_IOS_VERSION) {
                 deepLinkUrl = openParams.universal_link_url;
-                if ((!Strings.isNullOrEmpty(deepLinkUrl)) && deepLinkUrl.startsWith("http")) {
+                if ((!Strings.isNullOrEmpty(deepLinkUrl)) && deepLinkUrl.startsWith("http") && (!deepLinkUrl.contains("ds_tag"))) { //TODO ds_tag改成lkme_tag
                     isDirectForward = true;
                 }
             }
@@ -265,9 +265,9 @@ public class LMSdkServiceImpl implements LMSdkService {
             params = getParamsFromDeepLink(deepLink);
 
             // count
-            final String openType = DeepLinkCount.getCountTypeFromOs(openParams.os, "_open");
+            final String openType = DeepLinkCount.getCountTypeFromOs(openParams.os, "_open");   //TODO 如果是pc扫描过来的,需要在openType前边加上 "pc_",eg: pc_ios_open
             final String clickType = DeepLinkCount.getCountTypeFromOs(openParams.os, "_click");
-            boolean isClickCount = isDirectForward;
+            boolean isUpdateClickCount = isDirectForward;
             long dpId = deepLinkId;
             deepLinkCountThreadPool.submit(new Callable<Void>() {
                 @Override
@@ -277,7 +277,7 @@ public class LMSdkServiceImpl implements LMSdkService {
                         JedisPort countClient = deepLinkCountShardingSupport.getClient(dpId);
                         countClient.hincrBy(String.valueOf(dpId), openType, 1);
                         // 如果是universe link 或者是app links,要记录click计数
-                        if (isClickCount) {
+                        if (isUpdateClickCount) {
                             countClient.hincrBy(String.valueOf(dpId), clickType, 1);
                         }
                     } catch (Exception e) {

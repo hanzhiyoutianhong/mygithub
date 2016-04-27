@@ -25,6 +25,8 @@ public class InitUberButtonParams {
     public float dropoff_lat;
     public float dropoff_lng;
     public String dropoff_label;
+    public long timestamp;
+    public String sign;
 
     public long getIdentity_id() {
         return identity_id;
@@ -128,5 +130,21 @@ public class InitUberButtonParams {
 
     public void setDropoff_label(String dropoff_label) {
         this.dropoff_label = dropoff_label;
+    }
+
+    public long getTimestamp() {
+        return timestamp;
+    }
+
+    public void setTimestamp(long timestamp) {
+        this.timestamp = timestamp;
+    }
+
+    public String getSign() {
+        return sign;
+    }
+
+    public void setSign(String sign) {
+        this.sign = sign;
     }
 }

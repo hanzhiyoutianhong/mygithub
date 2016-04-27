@@ -21,6 +21,7 @@ public class AppListParams {
     public String sdk_version;
     public int retry_times;
     public String linkedme_key;
+    public long timestamp;
     public String sign;
 
     public long getIdentity_id() {
@@ -85,5 +86,13 @@ public class AppListParams {
 
     public void setSign(String sign) {
         this.sign = sign;
+    }
+
+    public long getTimestamp() {
+        return timestamp;
+    }
+
+    public void setTimestamp(long timestamp) {
+        this.timestamp = timestamp;
     }
 }
