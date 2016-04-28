@@ -82,7 +82,7 @@ public class UrlServlet extends HttpServlet {
         }
         long appId = Base62.decode(uriArr[1]);
         long deepLinkId = Base62.decode(uriArr[2]);
-        String urlParam = request.getParameter("scan");
+        String urlScanParam = request.getParameter("scan");
         // DeepLink deepLink = deepLinkService.getDeepLinkInfo(deepLinkId, appId); //
         // 根据deepLinkId获取deepLink信息
         AppInfo appInfo = appService.getAppById(appId); // 根据appId获取app信息 TODO 添加appInfo添加mc
@@ -133,7 +133,7 @@ public class UrlServlet extends HttpServlet {
                 isUniversallink = true;
             }
 
-            if ("1".equals(urlParam)) {
+            if ("1".equals(urlScanParam)) {
                 countType = "pc_ios_scan";
             } else {
                 countType = "ios_click";
@@ -148,7 +148,7 @@ public class UrlServlet extends HttpServlet {
             scheme = appInfo.getAndroid_uri_scheme();
             isAndroid = true;
 
-            if ("1".equals(urlParam)) {
+            if ("1".equals(urlScanParam)) {
                 countType = "pc_ios_scan";
             } else {
                 countType = "adr_click";

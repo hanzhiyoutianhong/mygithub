@@ -52,6 +52,12 @@ public class LMSdkResources {
             throw new LMException(LMExceptionFactor.LM_MISSING_PARAM, installParams.linkedme_key);
         }
 
+//        String apiName = "/i/sdk/install";
+//        if (!signAuthService.doAuth(apiName, installParams.sign, installParams.device_id, String.valueOf(installParams.device_type), installParams.os,
+//                installParams.os_version, String.valueOf(installParams.timestamp))) {
+//            throw new LMException(LMExceptionFactor.LM_AUTH_FAILED);
+//        }
+
         installParams.clientIP = request.getHeader("x-forwarded-for");
         String result = lmSdkService.install(installParams);
 
@@ -73,8 +79,9 @@ public class LMSdkResources {
     @Produces({MediaType.APPLICATION_JSON})
     public String open(OpenParams openParams, @Context HttpServletRequest request) {
         // auth
-//        if (!signAuthService.doAuth(openParams.linkedme_key, openParams.app_version, openParams.os, openParams.os_version,
-//                openParams.sdk_version, String.valueOf(openParams.retry_times))) {
+//        String apiName = "/i/sdk/open";
+//        if (!signAuthService.doAuth(apiName, openParams.sign, String.valueOf(openParams.identity_id), openParams.linkedme_key, openParams.os,
+//                openParams.os_version, String.valueOf(openParams.timestamp))) {
 //            throw new LMException(LMExceptionFactor.LM_AUTH_FAILED);
 //        }
         openParams.clientIP = request.getHeader("x-forwarded-for");
@@ -97,6 +104,10 @@ public class LMSdkResources {
     @POST
     @Produces({MediaType.APPLICATION_JSON})
     public String url(UrlParams urlParams, @Context HttpServletRequest request) {
+//        String apiName = "/i/sdk/url";
+//        if (!signAuthService.doAuth(apiName, urlParams.sign, String.valueOf(urlParams.identity_id), urlParams.linkedme_key, String.valueOf(urlParams.session_id), String.valueOf(urlParams.timestamp))) {
+//            throw new LMException(LMExceptionFactor.LM_AUTH_FAILED);
+//        }
 
         String url = lmSdkService.url(urlParams);
         String[] urlArr = url.split("/");
@@ -123,12 +134,16 @@ public class LMSdkResources {
     @POST
     @Produces({MediaType.APPLICATION_JSON})
     public String close(CloseParams closeParams, @Context HttpServletRequest request) {
-
         if (Strings.isNullOrEmpty(closeParams.linkedme_key)) {
             throw new LMException(LMExceptionFactor.LM_MISSING_PARAM, closeParams.linkedme_key);
         }
 
-        //lmSdkService.close(closeParams);
+//        String apiName = "/i/sdk/close";
+//        if (!signAuthService.doAuth(apiName, closeParams.sign, String.valueOf(closeParams.identity_id), closeParams.linkedme_key, String.valueOf(closeParams.session_id), String.valueOf(closeParams.timestamp))) {
+//            throw new LMException(LMExceptionFactor.LM_AUTH_FAILED);
+//        }
+
+        // lmSdkService.close(closeParams);
 
         JSONObject log = new JSONObject();
         JSONObject requestJson = JSONObject.fromObject(closeParams);
@@ -163,34 +178,38 @@ public class LMSdkResources {
     @Path("/applist")
     @POST
     @Produces({MediaType.APPLICATION_JSON})
-    public String storeAppList(AppListParams appListParams, @Context HttpServletRequest request ) {
+    public String storeAppList(AppListParams appListParams, @Context HttpServletRequest request) {
+//        String apiName = "/i/sdk/applist";
+//        if (!signAuthService.doAuth(apiName, appListParams.sign, String.valueOf(appListParams.identity_id), appListParams.linkedme_key, appListParams.os, String.valueOf(appListParams.timestamp))) {
+//            throw new LMException(LMExceptionFactor.LM_AUTH_FAILED);
+//        }
 
         ArrayList<AppListInfo> appListInfos = new ArrayList<AppListInfo>();
-        for( int i = 0; i < appListParams.apps_data.size(); i++ ) {
+        for (int i = 0; i < appListParams.apps_data.size(); i++) {
             AppListInfo appListInfo = new AppListInfo();
-            JSONObject jsonObject = appListParams.apps_data.getJSONObject( i );
+            JSONObject jsonObject = appListParams.apps_data.getJSONObject(i);
             appListInfo.setIdentityId(appListParams.identity_id);
             appListInfo.setDeviceFingerprintId(appListParams.device_fingerprint_id);
-            appListInfo.setAppName( jsonObject.get( "name" ).toString() );
-            appListInfo.setAppIdentifier(jsonObject.get( "app_identifier" ).toString());
-            appListInfo.setUriScheme(jsonObject.get( "uri_scheme" ).toString());
-            appListInfo.setPublicSourceDir(jsonObject.get( "public_source_dir" ).toString());
-            appListInfo.setSourceDir(jsonObject.get( "source_dir" ).toString());
-            appListInfo.setInstallDate(jsonObject.get( "install_date" ).toString() );
-            appListInfo.setLastUpdateDate(jsonObject.get( "last_update_date" ).toString());
-            appListInfo.setVersionCode(jsonObject.get( "version_code" ).toString());
-            appListInfo.setVersionName(jsonObject.get( "version_name" ).toString());
-            appListInfo.setOs(jsonObject.get( "os" ).toString());
+            appListInfo.setAppName(jsonObject.get("name").toString());
+            appListInfo.setAppIdentifier(jsonObject.get("app_identifier").toString());
+            appListInfo.setUriScheme(jsonObject.get("uri_scheme").toString());
+            appListInfo.setPublicSourceDir(jsonObject.get("public_source_dir").toString());
+            appListInfo.setSourceDir(jsonObject.get("source_dir").toString());
+            appListInfo.setInstallDate(jsonObject.get("install_date").toString());
+            appListInfo.setLastUpdateDate(jsonObject.get("last_update_date").toString());
+            appListInfo.setVersionCode(jsonObject.get("version_code").toString());
+            appListInfo.setVersionName(jsonObject.get("version_name").toString());
+            appListInfo.setOs(jsonObject.get("os").toString());
             appListInfo.setSdkVersion(appListParams.sdk_version);
             appListInfo.setRetryTimes(appListParams.retry_times);
             appListInfo.setLinkedmeKey(appListParams.linkedme_key);
             appListInfo.setSign(appListParams.sign);
 
-            appListInfos.add( appListInfo );
+            appListInfos.add(appListInfo);
         }
 
-        int result = appListService.addAppList( appListInfos );
-        if( result > 0 )
+        int result = appListService.addAppList(appListInfos);
+        if (result > 0)
             return "{\"ret\":\"true\"}";
         else
             return "{\"ret\":\"error\"}";

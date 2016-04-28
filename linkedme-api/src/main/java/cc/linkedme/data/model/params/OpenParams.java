@@ -31,6 +31,7 @@ public class OpenParams {
     public int retry_times;
     public boolean is_debug;
     public String clientIP;
+    public long timestamp;
     public String sign;
 
     public String getDevice_fingerprint_id() {
@@ -199,6 +200,14 @@ public class OpenParams {
 
     public void setClientIP(String clientIP) {
         this.clientIP = clientIP;
+    }
+
+    public long getTimestamp() {
+        return timestamp;
+    }
+
+    public void setTimestamp(long timestamp) {
+        this.timestamp = timestamp;
     }
 
 }

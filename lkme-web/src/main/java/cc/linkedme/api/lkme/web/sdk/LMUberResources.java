@@ -10,6 +10,9 @@ import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 
+import cc.linkedme.auth.SignAuthService;
+import cc.linkedme.commons.exception.LMException;
+import cc.linkedme.commons.exception.LMExceptionFactor;
 import cc.linkedme.commons.log.ApiLogger;
 import cc.linkedme.data.model.params.ClickBtnParams;
 import cc.linkedme.data.model.params.InitUberButtonParams;
@@ -25,10 +28,18 @@ public class LMUberResources {
     @Resource
     UberService uberService;
 
+    @Resource
+    private SignAuthService signAuthService;
+
     @Path("/init_button")
     @POST
     @Produces({MediaType.APPLICATION_JSON})
     public String initButton(InitUberButtonParams initUberButtonParams, @Context HttpServletRequest request) {
+//        String apiName = "/i/uber/init_button";
+//        if (!signAuthService.doAuth(apiName, initUberButtonParams.sign, String.valueOf(initUberButtonParams.identity_id), initUberButtonParams.linkedme_key, String.valueOf(initUberButtonParams.session_id), String.valueOf(initUberButtonParams.timestamp))) {
+//            throw new LMException(LMExceptionFactor.LM_AUTH_FAILED);
+//        }
+
         String result = uberService.initButton(initUberButtonParams);
 
         JSONObject log = new JSONObject();
@@ -47,6 +58,11 @@ public class LMUberResources {
     @POST
     @Produces(MediaType.APPLICATION_JSON)
     public String clickBtn(ClickBtnParams clickBtnParams, @Context HttpServletRequest request) {
+//        String apiName = "/i/uber/click_btn";
+//        if (!signAuthService.doAuth(apiName, clickBtnParams.sign, String.valueOf(clickBtnParams.identity_id), clickBtnParams.linkedme_key, String.valueOf(clickBtnParams.session_id), String.valueOf(clickBtnParams.timestamp))) {
+//            throw new LMException(LMExceptionFactor.LM_AUTH_FAILED);
+//        }
+
         uberService.clickBtn(clickBtnParams);
 
         JSONObject log = new JSONObject();

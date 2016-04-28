@@ -22,6 +22,8 @@ public class ClickBtnParams {
     public String open_type;
     public String price;
     public String click_time;
+    public long timestamp;
+    public String sign;
 
     public long getIdentity_id() {
         return identity_id;
@@ -101,6 +103,22 @@ public class ClickBtnParams {
 
     public void setClick_time(String click_time) {
         this.click_time = click_time;
+    }
+
+    public long getTimestamp() {
+        return timestamp;
+    }
+
+    public void setTimestamp(long timestamp) {
+        this.timestamp = timestamp;
+    }
+
+    public String getSign() {
+        return sign;
+    }
+
+    public void setSign(String sign) {
+        this.sign = sign;
     }
 
 }

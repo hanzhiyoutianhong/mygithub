@@ -21,12 +21,12 @@ public class DeepLinkCount implements Serializable{
     private int pc_click;
     private int pc_ios_scan;
     private int pc_adr_scan;
+    private int pc_ios_open;
+    private int pc_adr_open;
 
     //先忽略
     private int pc_ios_install;
-    private int pc_ios_open;
     private int pc_adr_install;
-    private int pc_adr_open;
 
     public static enum CountType {
         ios_click("ic"),

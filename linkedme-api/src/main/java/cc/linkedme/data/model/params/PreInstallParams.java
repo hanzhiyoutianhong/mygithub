@@ -20,6 +20,8 @@ public class PreInstallParams {
     public int screen_height;
     public int screen_width;
     public String clientIP;
+    public long timestamp;
+    public String sign;
 
     public long getIdentity_id() {
         return identity_id;
@@ -93,6 +95,22 @@ public class PreInstallParams {
 
     public void setApp_id(int app_id) {
         this.app_id = app_id;
+    }
+
+    public String getSign() {
+        return sign;
+    }
+
+    public void setSign(String sign) {
+        this.sign = sign;
+    }
+
+    public long getTimestamp() {
+        return timestamp;
+    }
+
+    public void setTimestamp(long timestamp) {
+        this.timestamp = timestamp;
     }
 
 }
