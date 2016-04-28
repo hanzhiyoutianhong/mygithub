@@ -44,12 +44,12 @@ public class User {
     @Produces({MediaType.APPLICATION_JSON})
 
     public String login(UserParams userParams, @Context HttpServletRequest request) {
-
+        String email = userParams.email;
         UserInfo userInfo = userService.userLogin(userParams);
         if (userInfo != null) {
             JsonBuilder resultJson = new JsonBuilder();
             resultJson.append("user_id", userInfo.getId());
-            resultJson.append("email", userInfo.getEmail());
+            resultJson.append("email", email);
             resultJson.append("name", userInfo.getName());
             resultJson.append("company", userInfo.getCompany());
             resultJson.append("role_id", userInfo.getRole_id());
