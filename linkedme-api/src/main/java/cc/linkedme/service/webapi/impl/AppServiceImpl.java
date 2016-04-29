@@ -52,6 +52,12 @@ public class AppServiceImpl implements AppService {
         appInfo.setType("live");
         appInfo.setUser_id(appParams.user_id);
         appInfo.setApp_name(appParams.app_name);
+
+        //appName不能重复
+        AppInfo app = appDao.getAppByName(appParams.user_id, appParams.app_name);
+        if (app != null && app.getApp_name() != null) {
+            throw new LMException(LMExceptionFactor.LM_ILLEGAL_PARAM_VALUE, "app_name already exists:" + appParams.app_name);
+        }
         long appId = appDao.insertApp(appInfo);
         if (appId > 0) {
             JedisPort linkedmeKeyClient = linkedmeKeyShardingSupport.getClient(linkedmeKey);
@@ -85,7 +91,7 @@ public class AppServiceImpl implements AppService {
     }
 
     public AppInfo queryApp(AppParams appParams) {
-        AppInfo appInfo = appDao.getAppsByAppId(appParams.app_id);
+        AppInfo appInfo = appDao.getAppByAppId(appParams.app_id);
         return appInfo;
     }
 
@@ -100,7 +106,7 @@ public class AppServiceImpl implements AppService {
             }
         }
 
-        appInfo = appDao.getAppsByAppId(appId);
+        appInfo = appDao.getAppByAppId(appId);
         if (appInfo != null && appInfo.getApp_id() > 0) {
             appInfoMemCache.set(String.valueOf(appId), KryoSerializationUtil.serializeObj(appInfo));
             return appInfo;
@@ -109,6 +115,8 @@ public class AppServiceImpl implements AppService {
     }
 
     public int updateApp(AppParams appParams) {
+        //TODO 删除mc里的app信息
+        //TODO 判断更新的app_name不能重复
         return appDao.updateApp(appParams);
     }
 

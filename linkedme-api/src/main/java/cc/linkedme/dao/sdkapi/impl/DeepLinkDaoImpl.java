@@ -253,7 +253,6 @@ public class DeepLinkDaoImpl extends BaseDao implements DeepLinkDao {
         TableChannel tableChannel = tableContainer.getTableChannel("deeplink", UPDATE_URL_INFO, appId, date);
         int result = 0;
 
-        long userid = urlParams.user_id;
         boolean ios_use_default = urlParams.ios_use_default;
         String ios_custom_url = urlParams.ios_custom_url;
         boolean android_use_default = urlParams.android_use_default;

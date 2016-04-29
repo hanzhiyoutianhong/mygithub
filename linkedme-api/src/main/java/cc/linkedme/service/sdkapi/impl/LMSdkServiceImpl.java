@@ -101,7 +101,7 @@ public class LMSdkServiceImpl implements LMSdkService {
         JedisPort linkedmeKeyClient = linkedmeKeyShardingSupport.getClient(installParams.linkedme_key);
         String appIdStr = linkedmeKeyClient.hget(installParams.linkedme_key, "appid");
         long appId = 0;
-        if(appIdStr != null) {
+        if (appIdStr != null) {
             appId = Long.parseLong(appIdStr);
         }
 
@@ -142,7 +142,7 @@ public class LMSdkServiceImpl implements LMSdkService {
                     long rightIdentityId = Long.parseLong(identityIdAndDeepLinkId[0]);
                     long dlId = Long.parseLong(identityIdAndDeepLinkId[1]);
                     deepLink = deepLinkService.getDeepLinkInfo(deepLinkId, appId);
-                    clientRedisClient.set(deviceId + ".old", identityId);   //TODO 有问题,会有多个old吗?
+                    clientRedisClient.set(deviceId + ".old", identityId); // TODO 有问题,会有多个old吗?
                     clientRedisClient.set(deviceId, rightIdentityId);
                 }
             } else { // 之前存在identityId, 并有identityId与deepLink的键值对
@@ -175,8 +175,7 @@ public class LMSdkServiceImpl implements LMSdkService {
 
     private String[] matchDfpIdAndBfpId(InstallParams installParams, String appId) {
         Joiner joiner = Joiner.on("&").skipNulls();
-        String deviceFingerprintId =
-                createFingerprintId(appId, installParams.os, installParams.os_version, installParams.clientIP);
+        String deviceFingerprintId = createFingerprintId(appId, installParams.os, installParams.os_version, installParams.clientIP);
         JedisPort clientRedisClient = clientShardingSupport.getClient(deviceFingerprintId);
         String identityIdAndDeepLinkId = clientRedisClient.get(deviceFingerprintId);
         if (Strings.isNullOrEmpty(identityIdAndDeepLinkId)) {
@@ -230,7 +229,8 @@ public class LMSdkServiceImpl implements LMSdkService {
             String osMajorVersion = osVersionArr[0];
             if (Integer.parseInt(osMajorVersion) >= UNIVERSE_LINK_IOS_VERSION) {
                 deepLinkUrl = openParams.universal_link_url;
-                if ((!Strings.isNullOrEmpty(deepLinkUrl)) && deepLinkUrl.startsWith("http") && (!deepLinkUrl.contains("ds_tag"))) { //TODO ds_tag改成lkme_tag
+                if ((!Strings.isNullOrEmpty(deepLinkUrl)) && deepLinkUrl.startsWith("http") && (!deepLinkUrl.contains("ds_tag"))) { // TODO
+                                                                                                                                    // ds_tag改成lkme_tag
                     isDirectForward = true;
                 }
             }
@@ -248,7 +248,7 @@ public class LMSdkServiceImpl implements LMSdkService {
             long appId = 0;
             JedisPort linkedmeKeyClient = linkedmeKeyShardingSupport.getClient(openParams.linkedme_key);
             String appIdStr = linkedmeKeyClient.hget(openParams.linkedme_key, "appid");
-            if(appIdStr != null) {
+            if (appIdStr != null) {
                 appId = Long.parseLong(appIdStr);
             }
 
@@ -258,39 +258,38 @@ public class LMSdkServiceImpl implements LMSdkService {
                 clicked_linkedme_link = true;
             }
             DeepLink deepLink = deepLinkService.getDeepLinkInfo(deepLinkId, appId);
-            if (deepLink == null) {
-                return null;
-            }
+            if (deepLink != null) {
+                params = getParamsFromDeepLink(deepLink);
 
-            params = getParamsFromDeepLink(deepLink);
-
-            // count
-            final String openType = DeepLinkCount.getCountTypeFromOs(openParams.os, "_open");   //TODO 如果是pc扫描过来的,需要在openType前边加上 "pc_",eg: pc_ios_open
-            final String clickType = DeepLinkCount.getCountTypeFromOs(openParams.os, "_click");
-            boolean isUpdateClickCount = isDirectForward;
-            long dpId = deepLinkId;
-            deepLinkCountThreadPool.submit(new Callable<Void>() {
-                @Override
-                public Void call() throws Exception {
-                    try {
-                        // TODO 对deeplink_id的有效性做判断
-                        JedisPort countClient = deepLinkCountShardingSupport.getClient(dpId);
-                        countClient.hincrBy(String.valueOf(dpId), openType, 1);
-                        // 如果是universe link 或者是app links,要记录click计数
-                        if (isUpdateClickCount) {
-                            countClient.hincrBy(String.valueOf(dpId), clickType, 1);
+                // count
+                // TODO 如果是pc扫描过来的,需要在openType前边加上 "pc_",eg: pc_ios_open
+                final String openType = DeepLinkCount.getCountTypeFromOs(openParams.os, "_open");
+                final String clickType = DeepLinkCount.getCountTypeFromOs(openParams.os, "_click");
+                boolean isUpdateClickCount = isDirectForward;
+                long dpId = deepLinkId;
+                deepLinkCountThreadPool.submit(new Callable<Void>() {
+                    @Override
+                    public Void call() throws Exception {
+                        try {
+                            // TODO 对deeplink_id的有效性做判断
+                            JedisPort countClient = deepLinkCountShardingSupport.getClient(dpId);
+                            countClient.hincrBy(String.valueOf(dpId), openType, 1);
+                            // 如果是universe link 或者是app links,要记录click计数
+                            if (isUpdateClickCount) {
+                                countClient.hincrBy(String.valueOf(dpId), clickType, 1);
+                            }
+                        } catch (Exception e) {
+                            ApiLogger.warn("LMSdkServiceImpl.open deepLinkCountThreadPool count failed", e);
                         }
-                    } catch (Exception e) {
-                        ApiLogger.warn("LMSdkServiceImpl.open deepLinkCountThreadPool count failed", e);
+                        return null;
                     }
-                    return null;
-                }
-            });
+                });
 
-            // universe link或者Android直接跳转,没有经过urlServlet,在此处添加点击日志
-            if (isDirectForward) {
-                ApiLogger.biz(String.format("%s\t%s\t%s\t%s\t%s\t%s", openParams.clientIP, "click", appId, deepLinkId, clickType,
-                        "direct forward from:" + openParams.os));
+                // universe link或者Android直接跳转,没有经过urlServlet,在此处添加点击日志
+                if (isDirectForward) {
+                    ApiLogger.biz(String.format("%s\t%s\t%s\t%s\t%s\t%s", openParams.clientIP, "click", appId, deepLinkId, clickType,
+                            "direct forward from:" + openParams.os));
+                }
             }
         }
 
@@ -372,7 +371,7 @@ public class LMSdkServiceImpl implements LMSdkService {
         if (appId <= 0) {
             JedisPort linkedmeKeyClient = linkedmeKeyShardingSupport.getClient(urlParams.linkedme_key);
             String appIdStr = linkedmeKeyClient.hget(urlParams.linkedme_key, "appid");
-            if(appIdStr != null) {
+            if (appIdStr != null) {
                 appId = Long.parseLong(appIdStr);
             }
         }
@@ -425,7 +424,7 @@ public class LMSdkServiceImpl implements LMSdkService {
             String identityIdAndDeepLinkId = identityId + "," + preInstallParams.deeplink_id;
             JedisPort browseFingerprintIdRedisClient = clientShardingSupport.getClient(browseFingerprintId);
             browseFingerprintIdRedisClient.set(browseFingerprintId, identityIdAndDeepLinkId);
-            browseFingerprintIdRedisClient.expire(browseFingerprintId, 2 * 60 * 60);    //设置过期时间
+            browseFingerprintIdRedisClient.expire(browseFingerprintId, 2 * 60 * 60); // 设置过期时间
             return String.valueOf(identityId);
         } else {
             // 浏览器里有identityId,不需要重新生成,从库里查找
@@ -438,7 +437,7 @@ public class LMSdkServiceImpl implements LMSdkService {
                 String identityIdAndDeepLinkId = preInstallParams.identity_id + "," + preInstallParams.deeplink_id;
                 JedisPort browseFingerprintIdRedisClient = clientShardingSupport.getClient(browseFingerprintId);
                 browseFingerprintIdRedisClient.set(browseFingerprintId, identityIdAndDeepLinkId);
-                browseFingerprintIdRedisClient.expire(browseFingerprintId, 2 * 60 * 60);    //设置过期时间
+                browseFingerprintIdRedisClient.expire(browseFingerprintId, 2 * 60 * 60); // 设置过期时间
             } else {
                 boolean res = identityRedisClient.set(String.valueOf(identityId), preInstallParams.deeplink_id);
                 if (res) {

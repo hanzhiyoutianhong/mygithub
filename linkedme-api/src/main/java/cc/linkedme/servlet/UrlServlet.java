@@ -149,7 +149,7 @@ public class UrlServlet extends HttpServlet {
             isAndroid = true;
 
             if ("1".equals(urlScanParam)) {
-                countType = "pc_ios_scan";
+                countType = "pc_adr_scan";
             } else {
                 countType = "adr_click";
             }

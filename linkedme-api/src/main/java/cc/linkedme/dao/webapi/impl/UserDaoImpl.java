@@ -32,6 +32,7 @@ public class UserDaoImpl extends BaseDao implements UserDao {
     public static final String LAST_LOGIN_TIME_RESET = "LAST_LOGIN_TIME_RESET";
     public static final String UPDATE_TOKEN = "UPDATE_TOKEN";
     public static final String GET_TOKEN = "GET_TOKEN";
+    public static final String SET_RANDOM_CODE = "SET_RANDOM_CODE";
 
     public int updateUserInfo(UserParams userParams) {
         int res = 0;
@@ -56,7 +57,7 @@ public class UserDaoImpl extends BaseDao implements UserDao {
         TableChannel tableChannel = tableContainer.getTableChannel("userInfo", PWD_RESET, 0L, 0L);
 
         try {
-            res += tableChannel.getJdbcTemplate().update(tableChannel.getSql(), new Object[] {userParams.new_pwd, userParams.email});
+            res += tableChannel.getJdbcTemplate().update(tableChannel.getSql(), new Object[] {userParams.new_pwd, userParams.token});
         } catch (DataAccessException e) {
             if (DaoUtil.isDuplicateInsert(e)) {
                 ApiLogger.warn(new StringBuffer(128).append("Duplicate insert user, userEmail=").append(userParams.email), e);
@@ -133,6 +134,18 @@ public class UserDaoImpl extends BaseDao implements UserDao {
 
         if (userInfos.isEmpty()) return false;
         return true;
+    }
+
+    @Override
+    public boolean setRandomCode(String randomCode, String email) {
+        int res = 0;
+        TableChannel tableChannel = tableContainer.getTableChannel("userInfo", SET_RANDOM_CODE, 0L, 0L);
+        try {
+            res += tableChannel.getJdbcTemplate().update(tableChannel.getSql(), new Object[] {randomCode, email});
+        } catch (DataAccessException e) {
+            throw new LMException(LMExceptionFactor.LM_FAILURE_DB_OP);
+        }
+        return res > 0;
     }
 
     @Override

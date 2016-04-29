@@ -17,7 +17,9 @@ public interface AppDao {
 
     int delApp(AppParams appParams);
 
-    AppInfo getAppsByAppId(long appId);
+    AppInfo getAppByName(long userId, String appName);
+
+    AppInfo getAppByAppId(long appId);
 
     int updateApp(final AppParams appParams);
 

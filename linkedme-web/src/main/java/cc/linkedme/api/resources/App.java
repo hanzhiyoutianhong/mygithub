@@ -232,9 +232,6 @@ public class App {
         return resultJson.toString();
     }
 
-
-
-
     @Path("/uploadimg")
     @POST
     @Produces(MediaType.APPLICATION_JSON)
@@ -255,12 +252,13 @@ public class App {
         if (Strings.isNullOrEmpty(appParams.img_encoding)) {
             throw new LMException(LMExceptionFactor.LM_ILLEGAL_PARAM_VALUE, "img encoding is null");
         }
-        String basePath = request.getScheme() + "://" + request.getServerName() + ":"
-                + request.getServerPort() + "/app/images/";
+//        String basePath = request.getScheme() + "://" + request.getServerName() + ":"
+//                + request.getServerPort() + "/app/images/";
+        String basePath = "http://www.linkedme.cc:8080/app/images/";
         String imageName = appService.uploadImg(appParams, basePath);
         JsonBuilder resultJson = new JsonBuilder();
         resultJson.append("img_url", basePath + imageName);
-        return resultJson.toString();
+        return resultJson.flip().toString();
     }
 
 

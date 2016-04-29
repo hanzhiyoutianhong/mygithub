@@ -13,6 +13,7 @@ import cc.linkedme.data.model.UrlTagsInfo;
 import cc.linkedme.data.model.UserInfo;
 import cc.linkedme.data.model.params.AppParams;
 import cc.linkedme.data.model.params.UrlParams;
+import com.google.api.client.repackaged.com.google.common.base.Strings;
 import com.sun.jersey.server.probes.UriRuleProbeProvider;
 import org.apache.commons.codec.binary.Base64;
 import org.apache.commons.collections.map.HashedMap;
@@ -44,6 +45,7 @@ public class AppDaoImpl extends BaseDao implements AppDao {
     private static final String GET_APPS_BY_USERID = "GET_APPS_BY_USERID";
     private static final String DEL_APP_BY_USERID_AND_APPID = "DEL_APP_BY_USERID_AND_APPID";
     private static final String GET_APP_BY_APPID = "GET_APP_BY_APPID";
+    private static final String GET_APP_BY_NAME = "GET_APP_BY_NAME";
     private static final String UPDATE_APP_BY_APPID = "UPDATE_APP_BY_APPID";
     private static final String GET_URL_TAGS_BY_APPID = "GET_URL_TAGS_BY_APPID";
     private static final String GET_URL_TAGS_BY_APPID_AND_TYPE = "GET_URL_TAGS_BY_APPID_AND_TYPE";
@@ -60,8 +62,9 @@ public class AppDaoImpl extends BaseDao implements AppDao {
         }
 
         try {
-        TableChannel tableChannel = tableContainer.getTableChannel("appInfo", ADD_APP, 0L, 0L);
-        Object[] values = {appInfo.getApp_name(), appInfo.getUser_id(), appInfo.getApp_key(), appInfo.getApp_secret(), appInfo.getType()};
+            TableChannel tableChannel = tableContainer.getTableChannel("appInfo", ADD_APP, 0L, 0L);
+            Object[] values =
+                    {appInfo.getApp_name(), appInfo.getUser_id(), appInfo.getApp_key(), appInfo.getApp_secret(), appInfo.getType()};
             result += tableChannel.getJdbcTemplate().update(tableChannel.getSql(), values);
         } catch (DataAccessException e) {
             if (DaoUtil.isDuplicateInsert(e)) {
@@ -72,7 +75,7 @@ public class AppDaoImpl extends BaseDao implements AppDao {
         }
 
         AppInfo app = new AppInfo();
-        if(result > 0) {
+        if (result > 0) {
             try {
                 TableChannel tableChannel = tableContainer.getTableChannel("appInfo", GET_APP_ID, 0L, 0L);
                 Object[] values = {appInfo.getUser_id(), appInfo.getApp_name()};
@@ -86,9 +89,8 @@ public class AppDaoImpl extends BaseDao implements AppDao {
                 throw new LMException(LMExceptionFactor.LM_FAILURE_DB_OP);
             }
         }
-        return (int)app.getApp_id();
+        return (int) app.getApp_id();
     }
-
 
     public List<AppInfo> getAppsByUserId(AppParams appParams) {
         TableChannel tableChannel = tableContainer.getTableChannel("appInfo", GET_APPS_BY_USERID, appParams.user_id, appParams.user_id);
@@ -144,7 +146,25 @@ public class AppDaoImpl extends BaseDao implements AppDao {
         return result;
     }
 
-    public AppInfo getAppsByAppId(final long app_id) {
+    public AppInfo getAppByName(long userId, String appName) {
+        TableChannel tableChannel = tableContainer.getTableChannel("appInfo", GET_APP_BY_NAME, 0L, 0L);
+        JdbcTemplate jdbcTemplate = tableChannel.getJdbcTemplate();
+
+        AppInfo appInfo = new AppInfo();
+        jdbcTemplate.query(tableChannel.getSql(), new Object[] {userId, appName}, new RowMapper() {
+            public Object mapRow(ResultSet resultSet, int i) throws SQLException {
+                appInfo.setApp_name(resultSet.getString("app_name"));
+                return null;
+            }
+        });
+
+        if (appInfo.getApp_name() == null) {
+            return null;
+        }
+        return appInfo;
+    }
+
+    public AppInfo getAppByAppId(final long app_id) {
         TableChannel tableChannel = tableContainer.getTableChannel("appInfo", GET_APP_BY_APPID, 0L, 0L);
         JdbcTemplate jdbcTemplate = tableChannel.getJdbcTemplate();
 
@@ -194,17 +214,20 @@ public class AppDaoImpl extends BaseDao implements AppDao {
         TableChannel tableChannel = tableContainer.getTableChannel("appInfo", UPDATE_APP_BY_APPID, appParams.user_id, appParams.user_id);
         JdbcTemplate jdbcTemplate = tableChannel.getJdbcTemplate();
 
-        Object[] values = new Object[]{appParams.app_name, appParams.type, appParams.ios_uri_scheme, appParams.ios_not_url, appParams.ios_search_option, appParams.ios_store_url,
-                appParams.ios_custom_url, appParams.ios_bundle_id, appParams.ios_app_prefix, appParams.android_uri_scheme, appParams.android_not_url,
-                appParams.android_search_option, appParams.google_play_url, appParams.android_custom_url, appParams.android_package_name,
-               appParams.android_sha256_fingerprints,  appParams.ios_android_flag, appParams.use_default_landing_page, appParams.custom_landing_page, appParams.app_id};
+        Object[] values = new Object[] {appParams.app_name, appParams.type, appParams.ios_uri_scheme, appParams.ios_not_url,
+                appParams.ios_search_option, appParams.ios_store_url, appParams.ios_custom_url, appParams.ios_bundle_id,
+                appParams.ios_app_prefix, appParams.android_uri_scheme, appParams.android_not_url, appParams.android_search_option,
+                appParams.google_play_url, appParams.android_custom_url, appParams.android_package_name,
+                appParams.android_sha256_fingerprints, appParams.ios_android_flag, appParams.use_default_landing_page,
+                appParams.custom_landing_page, appParams.app_id};
 
         try {
             res += jdbcTemplate.update(tableChannel.getSql(), values);
         } catch (DataAccessException e) {
             if (DaoUtil.isDuplicateInsert(e)) {
                 ApiLogger.warn(new StringBuilder(128).append("Duplicate insert app table, app_name=").append(appParams.getApp_name()), e);
-                throw new LMException(LMExceptionFactor.LM_FAILURE_DB_OP, "duplicate insert app table, app_name=" + appParams.getApp_name());
+                throw new LMException(LMExceptionFactor.LM_FAILURE_DB_OP,
+                        "duplicate insert app table, app_name=" + appParams.getApp_name());
             }
             throw new LMException(LMExceptionFactor.LM_FAILURE_DB_OP);
         }
@@ -212,25 +235,25 @@ public class AppDaoImpl extends BaseDao implements AppDao {
 
     }
 
-    public List<UrlTagsInfo> getUrlTagsByAppId( AppParams appParams ) {
-        TableChannel tableChannel = tableContainer.getTableChannel("urlTags", GET_URL_TAGS_BY_APPID, 0L, 0L );
+    public List<UrlTagsInfo> getUrlTagsByAppId(AppParams appParams) {
+        TableChannel tableChannel = tableContainer.getTableChannel("urlTags", GET_URL_TAGS_BY_APPID, 0L, 0L);
         JdbcTemplate jdbcTemplate = tableChannel.getJdbcTemplate();
         final List<UrlTagsInfo> urlTagsInfos = new ArrayList<UrlTagsInfo>();
-        jdbcTemplate.query(tableChannel.getSql(), new Object[]{appParams.app_id}, new RowMapper() {
+        jdbcTemplate.query(tableChannel.getSql(), new Object[] {appParams.app_id}, new RowMapper() {
 
             public Object mapRow(ResultSet resultSet, int i) throws SQLException {
                 do {
                     UrlTagsInfo urlTagsInfo = new UrlTagsInfo();
-                    urlTagsInfo.setAppId( appParams.app_id );
-                    urlTagsInfo.setTag_content( resultSet.getString("tag_content") );
-                    urlTagsInfo.setTag_type( resultSet.getString("tag_type") );
+                    urlTagsInfo.setAppId(appParams.app_id);
+                    urlTagsInfo.setTag_content(resultSet.getString("tag_content"));
+                    urlTagsInfo.setTag_type(resultSet.getString("tag_type"));
 
-                    urlTagsInfos.add( urlTagsInfo );
-                } while( resultSet.next() );
+                    urlTagsInfos.add(urlTagsInfo);
+                } while (resultSet.next());
                 return null;
             }
         });
-        if( !urlTagsInfos.isEmpty() )
+        if (!urlTagsInfos.isEmpty())
             return urlTagsInfos;
         else
             return null;
@@ -241,50 +264,47 @@ public class AppDaoImpl extends BaseDao implements AppDao {
         String[] values = appParams.value.split(",");
         String type = appParams.type;
 
-        TableChannel tableChannel = tableContainer.getTableChannel("urlTags", GET_URL_TAGS_BY_APPID_AND_TYPE, 0L, 0L );
+        TableChannel tableChannel = tableContainer.getTableChannel("urlTags", GET_URL_TAGS_BY_APPID_AND_TYPE, 0L, 0L);
         JdbcTemplate jdbcTemplate = tableChannel.getJdbcTemplate();
 
         final List<UrlTagsInfo> urlTagsInfos = new ArrayList<UrlTagsInfo>();
 
-        jdbcTemplate.query(tableChannel.getSql(), new Object[]{appParams.app_id, appParams.type}, new RowMapper() {
+        jdbcTemplate.query(tableChannel.getSql(), new Object[] {appParams.app_id, appParams.type}, new RowMapper() {
 
             public Object mapRow(ResultSet resultSet, int i) throws SQLException {
                 do {
                     UrlTagsInfo urlTagsInfo = new UrlTagsInfo();
-                    urlTagsInfo.setAppId( appParams.app_id );
-                    urlTagsInfo.setTag_content( resultSet.getString("tag_content") );
-                    urlTagsInfo.setTag_type( appParams.type );
+                    urlTagsInfo.setAppId(appParams.app_id);
+                    urlTagsInfo.setTag_content(resultSet.getString("tag_content"));
+                    urlTagsInfo.setTag_type(appParams.type);
 
-                    urlTagsInfos.add( urlTagsInfo );
-                } while( resultSet.next() );
+                    urlTagsInfos.add(urlTagsInfo);
+                } while (resultSet.next());
                 return null;
             }
         });
 
         Map<String, Long> tagMap = new HashedMap();
 
-        for( int i = 0; i < urlTagsInfos.size(); i++ ) {
-            tagMap.put( urlTagsInfos.get( i ).getTag_content(), 1L );
+        for (int i = 0; i < urlTagsInfos.size(); i++) {
+            tagMap.put(urlTagsInfos.get(i).getTag_content(), 1L);
         }
 
         int result = 0;
         int flag = 0;
-        for( int i = 0; i < values.length; i++ ) {
-            if( !tagMap.isEmpty() && tagMap.get( values[i] ) != null && tagMap.get( values[i] ) == 1L ) {
+        for (int i = 0; i < values.length; i++) {
+            if (!tagMap.isEmpty() && tagMap.get(values[i]) != null && tagMap.get(values[i]) == 1L) {
                 flag++;
                 continue;
-            }
-            else {
-                TableChannel tableChannel_set = tableContainer.getTableChannel("urlTags", SET_URL_TAGS_BY_APPID_AND_TYPE, 0L, 0L );
+            } else {
+                TableChannel tableChannel_set = tableContainer.getTableChannel("urlTags", SET_URL_TAGS_BY_APPID_AND_TYPE, 0L, 0L);
                 JdbcTemplate jdbcTemplate_set = tableChannel_set.getJdbcTemplate();
 
-                result += jdbcTemplate_set.update( tableChannel_set.getSql(), new Object[]{appParams.app_id, values[i], type} );
+                result += jdbcTemplate_set.update(tableChannel_set.getSql(), new Object[] {appParams.app_id, values[i], type});
             }
         }
-        if( result > 0 )
-            return true;
-        if( result == 0 && flag == values.length )
-            return true;
+        if (result > 0) return true;
+        if (result == 0 && flag == values.length) return true;
         return false;
     }
 
@@ -306,14 +326,12 @@ public class AppDaoImpl extends BaseDao implements AppDao {
         int res = 0;
         TableChannel tableChannel = tableContainer.getTableChannel("appInfo", UPLOAD_IMG, 0L, 0L);
         JdbcTemplate jdbcTemplate = tableChannel.getJdbcTemplate();
-         try {
-             res +=
-                     jdbcTemplate.update(tableChannel.getSql(),
-                             new Object[] {imagePath + imageName, appParams.app_id, appParams.user_id});
-         } catch (DataAccessException e) {
-             throw new LMException(LMExceptionFactor.LM_FAILURE_DB_OP);
-         }
-         return res > 0 ? imageName : null;
+        try {
+            res += jdbcTemplate.update(tableChannel.getSql(), new Object[] {imagePath + imageName, appParams.app_id, appParams.user_id});
+        } catch (DataAccessException e) {
+            throw new LMException(LMExceptionFactor.LM_FAILURE_DB_OP);
+        }
+        return res > 0 ? imageName : null;
     }
 
     public int deleteOldImg(AppParams appParams) {
@@ -321,32 +339,33 @@ public class AppDaoImpl extends BaseDao implements AppDao {
         JdbcTemplate jdbcTemplate = tableChannel.getJdbcTemplate();
         int res = 0;
         final List<AppInfo> appInfos = new ArrayList<AppInfo>();
-        jdbcTemplate.query(tableChannel.getSql(), new Object[]{appParams.app_id, appParams.user_id},
-                    new RowMapper() {
-                        @Override
-                        public Object mapRow(ResultSet resultSet, int i) throws SQLException {
-                            AppInfo app = new AppInfo();
-                            app.setApp_logo(resultSet.getString("app_logo"));
-                            appInfos.add(app);
-                            return null;
-                        }
-                    });
+        jdbcTemplate.query(tableChannel.getSql(), new Object[] {appParams.app_id, appParams.user_id}, new RowMapper() {
+            @Override
+            public Object mapRow(ResultSet resultSet, int i) throws SQLException {
+                AppInfo app = new AppInfo();
+                app.setApp_logo(resultSet.getString("app_logo"));
+                appInfos.add(app);
+                return null;
+            }
+        });
         AppInfo appInfo = new AppInfo();
         if (!appInfos.isEmpty()) {
             appInfo = appInfos.get(0);
         }
         String path = appInfo.getApp_logo();
+        if(Strings.isNullOrEmpty(path)) {
+            return 0;
+        }
         Pattern pattern = Pattern.compile(".*images/(.*)");
         Matcher matcher = pattern.matcher(path);
         String imagePath = null;
         while (matcher.find()) {
             imagePath = matcher.group(1);
         }
-        //delete img
+        // delete img
         File file = new File(ImgPath + imagePath);
-        if (!file.exists())
-            return -1;
+        if (!file.exists()) return -1;
         boolean flag = file.delete();
         return flag ? 1 : -1;
     }
- }
+}
