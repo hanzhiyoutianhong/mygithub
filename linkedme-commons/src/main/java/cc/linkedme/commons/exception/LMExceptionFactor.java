@@ -111,6 +111,12 @@ public class LMExceptionFactor implements Serializable {
     public static final LMExceptionFactor LM_WRONG_DATE_DURATION = new LMExceptionFactor(HttpStatus.BAD_REQUEST, 40007, "Invalid date duration!", "时间区间不合法!");
 
     /**
+     * 重置密码失败
+     */
+    public static final LMExceptionFactor LM_RESET_PWD_FAILED =
+            new LMExceptionFactor(HttpStatus.BAD_REQUEST, 40008, "reset password failed", "重置密码失败");
+
+    /**
      * 接口不存在
      */
     public static final LMExceptionFactor LM_API_NOT_EXIST = new LMExceptionFactor(HttpStatus.NOT_FOUND, 40400, "Api not found!", "接口不存在!");

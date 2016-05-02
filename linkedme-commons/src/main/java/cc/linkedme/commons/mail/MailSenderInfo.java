@@ -18,11 +18,11 @@ public class MailSenderInfo {
     private String[] attachFileNames;
 
     static {
-        mailServerHost = "smtp.exmail.qq.com";
+        mailServerHost = "smtp.163.com";
         mailServerPort = "25";
-        fromAddress = "public@linkedme.cc";
-        userName = "public@linkedme.cc";
-        password = "linkedME2016";
+        fromAddress = "wrshine@163.com";
+        userName = "wrshine@163.com";
+        password = "wangrenyang@001";
     }
 
     /**

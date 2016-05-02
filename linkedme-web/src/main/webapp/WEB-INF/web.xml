@@ -33,7 +33,7 @@
         <url-pattern>/*</url-pattern>
     </filter-mapping>
 
-    <!--
+<!--
     <filter>
         <filter-name>authFilter</filter-name>
         <filter-class>org.springframework.web.filter.DelegatingFilterProxy</filter-class>
@@ -46,7 +46,7 @@
         <filter-name>authFilter</filter-name>
         <url-pattern>/*</url-pattern>
     </filter-mapping>
-    -->
+-->
 
 <!--跨域访问配置 Start-->
     <filter>
@@ -62,7 +62,7 @@
         </init-param>
         <init-param>
             <param-name>cors.allowed.headers</param-name>
-            <param-value>Content-Type,X-Requested-With,accept,Origin,Access-Control-Request-Method,Access-Control-Request-Headers</param-value>
+            <param-value>Content-Type,X-Requested-With,accept,Origin,Access-Control-Request-Method,Access-Control-Request-Headers,Authorization</param-value>
         </init-param>
         <init-param>
             <param-name>cors.exposed.headers</param-name>

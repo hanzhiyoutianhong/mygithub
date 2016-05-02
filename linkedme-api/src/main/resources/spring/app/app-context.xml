@@ -35,6 +35,8 @@
 
                 <entry key="GET_APP_BY_APPID" value="select user_id, app_name, app_logo, app_key, app_secret, ios_uri_scheme, ios_not_url, ios_search_option, ios_store_url, ios_custom_url, ios_bundle_id, ios_app_prefix, ios_team_id, android_uri_scheme, android_not_url, android_search_option, google_play_url, android_custom_url, android_package_name, android_sha256_fingerprints, ios_android_flag, use_default_landing_page, custom_landing_page, register_time from $db$.$tb$ where id = ? and valid_status = '1' "/>
 
+                <entry key="GET_APP_BY_NAME" value="select app_name from $db$.$tb$ where user_id = ? and app_name = ? and valid_status = '1' "/>
+
                 <entry key="UPDATE_APP_BY_APPID" value= "update $db$.$tb$ set app_name=?, type=?, ios_uri_scheme=?, ios_not_url=?, ios_search_option=?, ios_store_url=?, ios_custom_url=?, ios_bundle_id=?, ios_app_prefix=?, android_uri_scheme=?, android_not_url=?, android_search_option=?, google_play_url=?, android_custom_url=?, android_package_name=?, android_sha256_fingerprints=?, ios_android_flag=?, use_default_landing_page=?, custom_landing_page=? where id = ?"/>
 
                 <entry key="UPLOAD_IMG" value="update $db$.$tb$ set app_logo = ? where id = ? and user_id = ?"/>

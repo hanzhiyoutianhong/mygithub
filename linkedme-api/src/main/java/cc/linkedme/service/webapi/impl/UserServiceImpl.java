@@ -13,6 +13,7 @@ import cc.linkedme.service.webapi.UserService;
 import javax.annotation.Resource;
 import java.text.DateFormat;
 import java.util.Date;
+import java.util.Random;
 
 /**
  * Created by Vontroy on 16/3/19.
@@ -91,8 +92,14 @@ public class UserServiceImpl implements UserService {
     public boolean forgotPwd(UserParams userParams) {
         userParams.email = MD5Utils.md5( userParams.email );
         if (userDao.queryEmail(userParams.email)) {
-            MailSender.sendTextMail(userParams.email, "Change you PWD", "this is a test mail from java program");
-            return true;
+            String randomCode = MD5Utils.md5(new Random().nextInt() + "_" + userParams.email);
+            boolean result = userDao.setRandomCode(randomCode, userParams.email);
+            String resetPwdUrl = "https://www.linkedme.cc/dashboard/index.html#/access/resetpwd/" + randomCode;
+            if (result) {
+                MailSender.sendHtmlMail(userParams.email, "Change you PWD", "点击下面的链接重新设置密码.</br> " + resetPwdUrl);
+                return true;
+            }
+            return false;
         } else {
             throw new LMException(LMExceptionFactor.LM_USER_EMAIL_DOESNOT_EXIST);
         }

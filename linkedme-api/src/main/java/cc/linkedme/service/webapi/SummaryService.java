@@ -3,6 +3,7 @@ package cc.linkedme.service.webapi;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.Date;
@@ -98,7 +99,10 @@ public class SummaryService {
                     start_date = onlineTime;
                 }
                 if (edDate.after(currentDate)) {
-                    end_date = simpleDateFormat.format(currentDate);
+                    //结束日期设置为第二天,这样能保证当前发的短链能被检索出来
+                    Calendar calendar = Calendar.getInstance();
+                    calendar.add(Calendar.DAY_OF_YEAR, 1);
+                    end_date = simpleDateFormat.format(calendar.getTime());
                 }
             }
         } catch (ParseException e) {
