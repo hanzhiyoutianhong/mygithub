@@ -46,6 +46,7 @@ public class AppDaoImpl extends BaseDao implements AppDao {
     private static final String DEL_APP_BY_USERID_AND_APPID = "DEL_APP_BY_USERID_AND_APPID";
     private static final String GET_APP_BY_APPID = "GET_APP_BY_APPID";
     private static final String GET_APP_BY_NAME = "GET_APP_BY_NAME";
+    private static final String VALIDATE_APP_NAME = "VALIDATE_APP_NAME";
     private static final String UPDATE_APP_BY_APPID = "UPDATE_APP_BY_APPID";
     private static final String GET_URL_TAGS_BY_APPID = "GET_URL_TAGS_BY_APPID";
     private static final String GET_URL_TAGS_BY_APPID_AND_TYPE = "GET_URL_TAGS_BY_APPID_AND_TYPE";
@@ -164,6 +165,25 @@ public class AppDaoImpl extends BaseDao implements AppDao {
         return appInfo;
     }
 
+    public boolean validateAppName( AppParams appParams ) {
+        TableChannel tableChannel = tableContainer.getTableChannel("appInfo", VALIDATE_APP_NAME, 0L, 0L );
+        JdbcTemplate jdbcTemplate = tableChannel.getJdbcTemplate();
+
+        List<AppInfo> appInfos = new ArrayList<>();
+
+        jdbcTemplate.query(tableChannel.getSql(), new Object[]{appParams.user_id, appParams.app_name}, new RowMapper() {
+            public Object mapRow(ResultSet resultSet, int i) throws SQLException {
+                AppInfo appInfo = new AppInfo();
+                appInfo.setApp_id( resultSet.getLong("id") );
+                appInfo.setApp_name( appParams.app_name );
+
+                appInfos.add( appInfo );
+                return null;
+            }
+        });
+        return !appInfos.isEmpty();
+    }
+
     public AppInfo getAppByAppId(final long app_id) {
         TableChannel tableChannel = tableContainer.getTableChannel("appInfo", GET_APP_BY_APPID, 0L, 0L);
         JdbcTemplate jdbcTemplate = tableChannel.getJdbcTemplate();
@@ -211,25 +231,29 @@ public class AppDaoImpl extends BaseDao implements AppDao {
 
     public int updateApp(final AppParams appParams) {
         int res = 0;
-        TableChannel tableChannel = tableContainer.getTableChannel("appInfo", UPDATE_APP_BY_APPID, appParams.user_id, appParams.user_id);
-        JdbcTemplate jdbcTemplate = tableChannel.getJdbcTemplate();
+        if( validateAppName( appParams ) )
+            throw new LMException(LMExceptionFactor.LM_ILLEGAL_PARAM_VALUE, "Duplicate app name" );
+        else {
+            TableChannel tableChannel = tableContainer.getTableChannel("appInfo", UPDATE_APP_BY_APPID, appParams.user_id, appParams.user_id);
+            JdbcTemplate jdbcTemplate = tableChannel.getJdbcTemplate();
 
-        Object[] values = new Object[] {appParams.app_name, appParams.type, appParams.ios_uri_scheme, appParams.ios_not_url,
-                appParams.ios_search_option, appParams.ios_store_url, appParams.ios_custom_url, appParams.ios_bundle_id,
-                appParams.ios_app_prefix, appParams.android_uri_scheme, appParams.android_not_url, appParams.android_search_option,
-                appParams.google_play_url, appParams.android_custom_url, appParams.android_package_name,
-                appParams.android_sha256_fingerprints, appParams.ios_android_flag, appParams.use_default_landing_page,
-                appParams.custom_landing_page, appParams.app_id};
+            Object[] values = new Object[]{appParams.app_name, appParams.type, appParams.ios_uri_scheme, appParams.ios_not_url,
+                    appParams.ios_search_option, appParams.ios_store_url, appParams.ios_custom_url, appParams.ios_bundle_id,
+                    appParams.ios_app_prefix, appParams.android_uri_scheme, appParams.android_not_url, appParams.android_search_option,
+                    appParams.google_play_url, appParams.android_custom_url, appParams.android_package_name,
+                    appParams.android_sha256_fingerprints, appParams.ios_android_flag, appParams.use_default_landing_page,
+                    appParams.custom_landing_page, appParams.app_id};
 
-        try {
-            res += jdbcTemplate.update(tableChannel.getSql(), values);
-        } catch (DataAccessException e) {
-            if (DaoUtil.isDuplicateInsert(e)) {
-                ApiLogger.warn(new StringBuilder(128).append("Duplicate insert app table, app_name=").append(appParams.getApp_name()), e);
-                throw new LMException(LMExceptionFactor.LM_FAILURE_DB_OP,
-                        "duplicate insert app table, app_name=" + appParams.getApp_name());
+            try {
+                res += jdbcTemplate.update(tableChannel.getSql(), values);
+            } catch (DataAccessException e) {
+                if (DaoUtil.isDuplicateInsert(e)) {
+                    ApiLogger.warn(new StringBuilder(128).append("Duplicate insert app table, app_name=").append(appParams.getApp_name()), e);
+                    throw new LMException(LMExceptionFactor.LM_FAILURE_DB_OP,
+                            "duplicate insert app table, app_name=" + appParams.getApp_name());
+                }
+                throw new LMException(LMExceptionFactor.LM_FAILURE_DB_OP);
             }
-            throw new LMException(LMExceptionFactor.LM_FAILURE_DB_OP);
         }
         return res;
 

@@ -29,6 +29,8 @@ public class User {
     @POST
     @Produces({MediaType.APPLICATION_JSON})
     public String register(UserParams userParams, @Context HttpServletRequest request) {
+        if( userParams != null )
+            userParams.email = userParams.email.toLowerCase();
         if (userService.userRegister(userParams)) {
             JsonBuilder resultJson = new JsonBuilder();
             resultJson.append("ret", "true");
@@ -44,6 +46,8 @@ public class User {
     @Produces({MediaType.APPLICATION_JSON})
 
     public String login(UserParams userParams, @Context HttpServletRequest request) {
+        if( userParams != null )
+            userParams.email = userParams.email.toLowerCase();
         String email = userParams.email;
         UserInfo userInfo = userService.userLogin(userParams);
         if (userInfo != null) {
@@ -66,6 +70,8 @@ public class User {
     @POST
     @Produces({MediaType.APPLICATION_JSON})
     public String logout(UserParams userParams, @Context HttpServletRequest request) {
+        if( userParams != null )
+            userParams.email = userParams.email.toLowerCase();
 
         if (userService.userLogout(userParams)) {
             JsonBuilder resultJson = new JsonBuilder();
@@ -82,6 +88,8 @@ public class User {
 
     public String validate_email(@QueryParam("email") String email,
                                  @QueryParam("token") String token) {
+        if( email != null )
+            email = email.toLowerCase();
         UserParams userParams = new UserParams();
         userParams.email = email;
         if (!userService.validateEmail(userParams)) {
@@ -97,6 +105,8 @@ public class User {
     @POST
     @Produces({MediaType.APPLICATION_JSON})
     public String change_password(UserParams userParams, @Context HttpServletRequest request) {
+        if( userParams != null )
+            userParams.email = userParams.email.toLowerCase();
 
         if (userService.resetUserPwd(userParams)) {
             JsonBuilder resultJson = new JsonBuilder();
@@ -111,6 +121,8 @@ public class User {
     @POST
     @Produces({MediaType.APPLICATION_JSON})
     public String forgot_password(UserParams userParams, @Context HttpServletRequest request) {
+        if( userParams != null )
+            userParams.email = userParams.email.toLowerCase();
 
         if (userService.forgotPwd(userParams)) {
             JsonBuilder resultJson = new JsonBuilder();
@@ -125,6 +137,9 @@ public class User {
     @POST
     @Produces({MediaType.APPLICATION_JSON})
     public String set_password(UserParams userParams, @Context HttpServletRequest request) {
+        if( userParams != null )
+            userParams.email = userParams.email.toLowerCase();
+
         if (userService.resetForgottenPwd(userParams)) {
             JsonBuilder resultJson = new JsonBuilder();
             resultJson.append("ret", "true");

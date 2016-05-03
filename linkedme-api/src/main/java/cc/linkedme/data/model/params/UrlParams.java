@@ -12,7 +12,6 @@ import javax.xml.bind.annotation.XmlRootElement;
 @XmlRootElement
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class UrlParams {
-    public int user_id;
     public long deeplink_id;
     public long[] deeplink_ids;
     public long app_id;
