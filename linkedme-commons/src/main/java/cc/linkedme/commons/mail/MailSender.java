@@ -108,8 +108,11 @@ public class MailSender {
     }
 
     public static void main(String[] args) {
-        MailSender.sendTextMail("276386627@qq.com", "hello, wrshine", "this is a test mail from java program");
-        MailSender.sendHtmlMail("276386627@qq.com", "hello, wrshine", "this is a test mail </br> from java program");
+//        MailSender.sendTextMail("276386627@qq.com", "hello, wrshine", "this is a test mail from java program");
+//        MailSender.sendHtmlMail("276386627@qq.com", "hello, wrshine", "this is a test mail </br> from java program");
+//        MailSender.sendHtmlMail("wrshine@163.com", "hello, wrshine", "this is a test mail </br> from java program");
+//        MailSender.sendHtmlMail("wrshine@gmail.com", "hello, wrshine", "this is a test mail </br> from java program");
+        MailSender.sendHtmlMail("i@wrshine.com", "hello, wrshine", "this is a test mail </br> from java program");
         System.out.println("success");
     }
 }
