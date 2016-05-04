@@ -7,6 +7,7 @@ import cc.linkedme.commons.util.MD5Utils;
 import cc.linkedme.commons.utils.UUIDUtils;
 import cc.linkedme.dao.webapi.UserDao;
 import cc.linkedme.data.model.UserInfo;
+import cc.linkedme.data.model.params.DemoRequestParams;
 import cc.linkedme.data.model.params.UserParams;
 import cc.linkedme.service.webapi.UserService;
 
@@ -98,6 +99,11 @@ public class UserServiceImpl implements UserService {
             return true;
         else
             return false;
+    }
+
+    public boolean getDemo(DemoRequestParams demoRequestParams) {
+        int result = userDao.getDemo(demoRequestParams);
+        return result > 0;
     }
 
 }

@@ -1,6 +1,7 @@
 package cc.linkedme.service.webapi;
 
 import cc.linkedme.data.model.UserInfo;
+import cc.linkedme.data.model.params.DemoRequestParams;
 import cc.linkedme.data.model.params.UserParams;
 
 /**
@@ -23,4 +24,5 @@ public interface UserService {
 
     boolean resetForgottenPwd(UserParams userParams);
 
+    boolean getDemo(DemoRequestParams demoRequestParams);
 }

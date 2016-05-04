@@ -4,10 +4,9 @@
     "http://www.hibernate.org/dtd/hibernate-configuration-3.0.dtd">
 <hibernate-configuration>
   <session-factory>
-    <property name="connection.url"/>
-    <property name="connection.driver_class"/>
-    <property name="connection.username"/>
-    <property name="connection.password"/>
+    <property name="connection.url">jdbc:mysql://117.114.130.212:3306/user_0</property>
+    <property name="connection.driver_class">com.mysql.jdbc.Driver</property>
+    <mapping class="cc.linkedme.data.model.DemoInfo"/>
     <!-- DB schema will be updated if needed -->
     <!-- <property name="hbm2ddl.auto">update</property> -->
   </session-factory>

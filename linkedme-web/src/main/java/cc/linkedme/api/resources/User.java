@@ -5,6 +5,7 @@ import cc.linkedme.commons.exception.LMExceptionFactor;
 import cc.linkedme.commons.json.JsonBuilder;
 import cc.linkedme.commons.utils.UUIDUtils;
 import cc.linkedme.data.model.UserInfo;
+import cc.linkedme.data.model.params.DemoRequestParams;
 import cc.linkedme.data.model.params.UserParams;
 import cc.linkedme.service.webapi.UserService;
 import org.springframework.stereotype.Component;
@@ -133,4 +134,15 @@ public class User {
             throw new LMException(LMExceptionFactor.LM_FAILURE_DB_OP);
         }
     }
+
+    @Path("/request_demo")
+    @POST
+    @Produces({MediaType.APPLICATION_JSON})
+    public String getDemo(DemoRequestParams demoRequestParams, @Context HttpServletRequest request) {
+        boolean result = userService.getDemo(demoRequestParams);
+        JsonBuilder resultJson = new JsonBuilder();
+        resultJson.append("ret", result);
+        return resultJson.flip().toString();
+    }
+
 }
