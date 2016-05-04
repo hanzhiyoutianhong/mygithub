@@ -146,6 +146,7 @@ public class DeepLinkDaoImpl extends BaseDao implements DeepLinkDao {
         tableChannel.getJdbcTemplate().query(tableChannel.getSql(), new Object[] {deepLinkId, appid}, new RowMapper() {
             public Object mapRow(ResultSet resultSet, int i) throws SQLException {
                 DeepLink dp = new DeepLink();
+                dp.setDeeplinkMd5(resultSet.getString("deeplink_md5"));
                 dp.setLink_label(resultSet.getString("link_label"));
                 dp.setIos_use_default(resultSet.getBoolean("ios_use_default"));
                 dp.setIos_custom_url(resultSet.getString("ios_custom_url"));
@@ -172,7 +173,7 @@ public class DeepLinkDaoImpl extends BaseDao implements DeepLinkDao {
     }
 
     public List<DeepLink> getDeepLinks(long appid, String start_date, String end_date, String feature, String campaign, String stage,
-            String channel, String tag, boolean unique) {
+            String channel, String tag, String source, boolean unique) {
         Date date = Util.timeStrToDate(start_date);
         TableChannel tableChannel = tableContainer.getTableChannel("deeplink", GET_DEEPLINKS, appid, date);
         String sql = tableChannel.getSql();
@@ -207,12 +208,16 @@ public class DeepLinkDaoImpl extends BaseDao implements DeepLinkDao {
             condition += "and tags like '%' ? '%' ";
             paramList.add(tag);
         }
+        if(!Strings.isNullOrEmpty(source)) {
+            condition += "and source = ? ";
+            paramList.add(source);
+        }
         if (condition.length() > 0) {
             sql = sql + condition;
         }
 
         JdbcTemplate jdbcTemplate = tableChannel.getJdbcTemplate();
-        final List<DeepLink> deepLinks = new ArrayList<DeepLink>();
+        final List<DeepLink> deepLinks = new ArrayList<>();
         jdbcTemplate.query(sql, paramList.toArray(), new RowMapper() {
             public Object mapRow(ResultSet resultSet, int i) throws SQLException {
                 DeepLink dp = new DeepLink();

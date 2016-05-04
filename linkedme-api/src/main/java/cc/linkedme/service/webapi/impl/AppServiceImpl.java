@@ -53,7 +53,7 @@ public class AppServiceImpl implements AppService {
         appInfo.setUser_id(appParams.user_id);
         appInfo.setApp_name(appParams.app_name);
 
-        //appName不能重复
+        // appName不能重复
         AppInfo app = appDao.getAppByName(appParams.user_id, appParams.app_name);
         if (app != null && app.getApp_name() != null) {
             throw new LMException(LMExceptionFactor.LM_ILLEGAL_PARAM_VALUE, "app_name already exists:" + appParams.app_name);
@@ -87,7 +87,12 @@ public class AppServiceImpl implements AppService {
     }
 
     public int deleteApp(AppParams appParams) {
-        return appDao.delApp(appParams);
+        int result = appDao.delApp(appParams);
+        if (result > 0) {
+            // 删除mc里的app信息
+            appInfoMemCache.delete(String.valueOf(appParams.app_id));
+        }
+        return result;
     }
 
     public AppInfo queryApp(AppParams appParams) {
@@ -115,9 +120,13 @@ public class AppServiceImpl implements AppService {
     }
 
     public int updateApp(AppParams appParams) {
-        //TODO 删除mc里的app信息
-        //TODO 判断更新的app_name不能重复
-        return appDao.updateApp(appParams);
+        // TODO 判断更新的app_name不能重复
+        int result = appDao.updateApp(appParams);
+        if (result > 0) {
+            // 删除mc里的app信息
+            appInfoMemCache.delete(String.valueOf(appParams.app_id));
+        }
+        return result;
     }
 
     public List<UrlTagsInfo> getUrlTags(AppParams appParams) {

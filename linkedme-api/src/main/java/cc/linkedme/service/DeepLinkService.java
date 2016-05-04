@@ -3,7 +3,9 @@ package cc.linkedme.service;
 import cc.linkedme.commons.exception.LMException;
 import cc.linkedme.commons.exception.LMExceptionFactor;
 import cc.linkedme.commons.memcache.MemCacheTemplate;
+import cc.linkedme.commons.redis.JedisPort;
 import cc.linkedme.commons.serialization.KryoSerializationUtil;
+import cc.linkedme.commons.shard.ShardingSupportHash;
 import cc.linkedme.dao.sdkapi.DeepLinkDao;
 import cc.linkedme.data.model.DeepLink;
 import cc.linkedme.data.model.params.UrlParams;
@@ -24,6 +26,9 @@ public class DeepLinkService {
 
     @Resource
     private MemCacheTemplate<byte[]> deepLinkMemCache;
+
+    @Resource
+    private ShardingSupportHash<JedisPort> deepLinkShardingSupport;
 
     public int addDeepLink(DeepLink deepLink) {
         int result = 0;
@@ -64,7 +69,18 @@ public class DeepLinkService {
     public boolean deleteDeepLink(long[] deepLinkIds, long appId) {
         boolean result = true;
         for (int i = 0; i < deepLinkIds.length; i++) {
-            if (!deepLinkDao.deleteDeepLink(deepLinkIds[i], appId)) {
+            DeepLink deepLink = deepLinkDao.getUrlInfo(deepLinkIds[i], appId);
+            if(deepLink == null) {
+                continue;
+            }
+            if (deepLinkDao.deleteDeepLink(deepLinkIds[i], appId)) {
+                //删除mc里的短链
+                deepLinkMemCache.delete(String.valueOf(deepLinkIds[i]));
+
+                //TODO 删除redis里关于短链的相关信息,md5和deeplink_id的键值对
+                JedisPort redisClient = deepLinkShardingSupport.getClient(deepLink.getDeeplinkMd5());
+                redisClient.del(new String[]{deepLink.getDeeplinkMd5()});
+            } else {
                 result = false;
                 break;
             }
@@ -130,7 +146,11 @@ public class DeepLinkService {
     }
 
     public boolean updateUrl(UrlParams urlParams) {
-        return deepLinkDao.updateUrlInfo(urlParams);
+        boolean result = deepLinkDao.updateUrlInfo(urlParams);
+        if(result) {
+            deepLinkMemCache.delete(String.valueOf(urlParams.deeplink_id));
+        }
+        return result;
     }
 
 }

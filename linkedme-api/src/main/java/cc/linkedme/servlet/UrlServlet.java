@@ -23,6 +23,7 @@ import cc.linkedme.commons.useragent.Client;
 import cc.linkedme.commons.useragent.Parser;
 import cc.linkedme.commons.useragent.UserAgent;
 import cc.linkedme.commons.util.Base62;
+import cc.linkedme.commons.util.UuidHelper;
 import cc.linkedme.data.model.AppInfo;
 import cc.linkedme.data.model.DeepLink;
 import cc.linkedme.service.DeepLinkService;
@@ -82,10 +83,17 @@ public class UrlServlet extends HttpServlet {
         }
         long appId = Base62.decode(uriArr[1]);
         long deepLinkId = Base62.decode(uriArr[2]);
+
+        if(appId < 10000 || appId > 510000 || (!UuidHelper.isValidId(deepLinkId))) {
+            //无效的appId或者无效的短链. TODO app数量超过50w后,修改阀值
+            response.sendRedirect("/index.jsp"); // TODO 重定向为默认配置页面
+            return;
+        }
+
         String urlScanParam = request.getParameter("scan");
         // DeepLink deepLink = deepLinkService.getDeepLinkInfo(deepLinkId, appId); //
         // 根据deepLinkId获取deepLink信息
-        AppInfo appInfo = appService.getAppById(appId); // 根据appId获取app信息 TODO 添加appInfo添加mc
+        AppInfo appInfo = appService.getAppById(appId); // 根据appId获取app信息
 
         // useAgent
         // 使用yaml解析user agent,测试匹配优先级,速度,打日志统计时间,优化正则表达式(单个正则表达式,优先级);

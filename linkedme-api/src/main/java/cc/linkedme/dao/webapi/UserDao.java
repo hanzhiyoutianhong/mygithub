@@ -1,6 +1,7 @@
 package cc.linkedme.dao.webapi;
 
 import cc.linkedme.data.model.UserInfo;
+import cc.linkedme.data.model.params.DemoRequestParams;
 import cc.linkedme.data.model.params.UserParams;
 
 /**
@@ -25,4 +26,6 @@ public interface UserDao {
     int updateToken(UserParams userParams);
 
     String getToken(String email);
+
+    int getDemo(DemoRequestParams demoRequestParams);
 }

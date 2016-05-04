@@ -254,7 +254,7 @@ public class App {
         }
 //        String basePath = request.getScheme() + "://" + request.getServerName() + ":"
 //                + request.getServerPort() + "/app/images/";
-        String basePath = "http://www.linkedme.cc:8080/app/images/";
+        String basePath = "https://www.linkedme.cc/i/app/images/";
         String imageName = appService.uploadImg(appParams, basePath);
         JsonBuilder resultJson = new JsonBuilder();
         resultJson.append("img_url", basePath + imageName);

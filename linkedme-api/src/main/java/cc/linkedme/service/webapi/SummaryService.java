@@ -99,7 +99,7 @@ public class SummaryService {
                     start_date = onlineTime;
                 }
                 if (edDate.after(currentDate)) {
-                    //结束日期设置为第二天,这样能保证当前发的短链能被检索出来
+                    //结束日期设置为第二天,这样能保证当天发的短链能被检索出来
                     Calendar calendar = Calendar.getInstance();
                     calendar.add(Calendar.DAY_OF_YEAR, 1);
                     end_date = simpleDateFormat.format(calendar.getTime());
@@ -111,12 +111,12 @@ public class SummaryService {
         }
 
         List<DateDuration> dateDurations = Util.getBetweenMonths(start_date, end_date);
-        List<DeepLink> deepLinks = new ArrayList<DeepLink>();
+        List<DeepLink> deepLinks = new ArrayList<>();
 
         for (DateDuration dd : dateDurations) {
             deepLinks.addAll(deepLinkDao.getDeepLinks(summaryDeepLinkParams.appid, dd.getMin_date(), dd.getMax_date(),
                     summaryDeepLinkParams.feature, summaryDeepLinkParams.campaign, summaryDeepLinkParams.stage,
-                    summaryDeepLinkParams.channel, summaryDeepLinkParams.tags, summaryDeepLinkParams.unique));
+                    summaryDeepLinkParams.channel, summaryDeepLinkParams.tags, summaryDeepLinkParams.source, summaryDeepLinkParams.unique));
         }
         return deepLinks;
     }

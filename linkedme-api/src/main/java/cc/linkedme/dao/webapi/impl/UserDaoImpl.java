@@ -8,6 +8,7 @@ import java.util.Date;
 import java.util.List;
 
 import cc.linkedme.dao.webapi.UserDao;
+import cc.linkedme.data.model.params.DemoRequestParams;
 import org.springframework.dao.DataAccessException;
 import org.springframework.jdbc.core.RowMapper;
 
@@ -34,6 +35,8 @@ public class UserDaoImpl extends BaseDao implements UserDao {
     public static final String UPDATE_TOKEN = "UPDATE_TOKEN";
     public static final String GET_TOKEN = "GET_TOKEN";
     public static final String SET_RANDOM_CODE = "SET_RANDOM_CODE";
+
+    public static final String REQUEST_DEMO = "REQUEST_DEMO";
 
     public int updateUserInfo(UserParams userParams) {
         int res = 0;
@@ -197,5 +200,21 @@ public class UserDaoImpl extends BaseDao implements UserDao {
             return token;
         }
         return "403Forbidden";
+    }
+
+    @Override
+    public int getDemo(DemoRequestParams demoRequestParams) {
+        int res = 0;
+        TableChannel tableChannel = tableContainer.getTableChannel("demoInfo", REQUEST_DEMO, 0L, 0L);
+        try {
+            res += tableChannel.getJdbcTemplate().update(tableChannel.getSql(), new Object[] {demoRequestParams.name, demoRequestParams.email,
+                    demoRequestParams.mobile_phone, demoRequestParams.company_product_name, demoRequestParams.from_channel});
+        } catch (DataAccessException e) {
+            if (DaoUtil.isDuplicateInsert(e)) {
+                ApiLogger.warn(new StringBuilder(128).append("Duplicate insert DemoInfo, email=").append(demoRequestParams.email), e);
+            }
+            throw new LMException(LMExceptionFactor.LM_FAILURE_DB_OP, "email already exists");
+        }
+        return res;
     }
 }

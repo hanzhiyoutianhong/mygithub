@@ -9,6 +9,7 @@
                 <property name="tablesItems">
                     <map>
                         <entry key="userInfo" value-ref="userInfo"/>
+                        <entry key="demoInfo" value-ref="demoInfo"/>
                     </map>
                 </property>
             </bean>
@@ -40,6 +41,25 @@
             <list>
                 <ref bean="user_jdbctemplate_0"/>
                 <!--<ref bean="deeplink_jdbctemplate_1"/> -->
+            </list>
+        </property>
+    </bean>
+
+    <bean id="demoInfo" class="cc.linkedme.data.dao.strategy.TableItem">
+        <property name="itemName" value="demoInfo"/>
+        <property name="dbNamePrefix" value="user"/>
+        <property name="dbCount" value="1"/>
+
+        <property name="tableNamePrefix" value="demo_info"/>
+        <property name="tableCount" value="1"/>
+        <property name="sqls">
+            <map>
+                <entry key="REQUEST_DEMO" value="insert into $db$.$tb$ (name, email, mobile_phone, company_product_name, from_channel, create_time) values(?, ?, ?, ?, ?, now())"/>
+            </map>
+        </property>
+        <property name="jdbcTemplates">
+            <list>
+                <ref bean="user_jdbctemplate_0"/>
             </list>
         </property>
     </bean>
