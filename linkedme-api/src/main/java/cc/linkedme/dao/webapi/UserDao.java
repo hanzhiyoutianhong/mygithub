@@ -13,6 +13,8 @@ public interface UserDao {
 
     int resetUserPwd(UserParams userParams);
 
+    int changeUserPwd(UserParams userParams);
+
     int resetLastLoginTime(UserParams userParams);
 
     UserInfo getUserInfo(String email);

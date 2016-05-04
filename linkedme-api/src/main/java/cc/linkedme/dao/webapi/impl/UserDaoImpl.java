@@ -30,6 +30,7 @@ public class UserDaoImpl extends BaseDao implements UserDao {
     public static final String USER_INFO_QUERY = "USER_INFO_QUERY";
     public static final String EMAIL_EXISTENCE_QUERY = "EMAIL_EXISTENCE_QUERY";
     public static final String PWD_RESET = "PWD_RESET";
+    public static final String CHANGE_PWD = "CHANGE_PWD";
     public static final String LAST_LOGIN_TIME_RESET = "LAST_LOGIN_TIME_RESET";
     public static final String UPDATE_TOKEN = "UPDATE_TOKEN";
     public static final String GET_TOKEN = "GET_TOKEN";
@@ -49,6 +50,21 @@ public class UserDaoImpl extends BaseDao implements UserDao {
         } catch (DataAccessException e) {
             if (DaoUtil.isDuplicateInsert(e)) {
                 ApiLogger.warn(new StringBuilder(128).append("Duplicate insert user, userEmail=").append(userParams.email), e);
+            }
+            throw new LMException(LMExceptionFactor.LM_FAILURE_DB_OP);
+        }
+        return res;
+    }
+
+    public int changeUserPwd( UserParams userParams ) {
+        int res = 0;
+        TableChannel tableChannel = tableContainer.getTableChannel("userInfo", CHANGE_PWD, 0L, 0L);
+
+        try {
+            res += tableChannel.getJdbcTemplate().update(tableChannel.getSql(), new Object[] {userParams.new_pwd, userParams.email});
+        } catch (DataAccessException e) {
+            if (DaoUtil.isDuplicateInsert(e)) {
+                ApiLogger.warn(new StringBuffer(128).append("Duplicate insert user, userEmail=").append(userParams.email), e);
             }
             throw new LMException(LMExceptionFactor.LM_FAILURE_DB_OP);
         }

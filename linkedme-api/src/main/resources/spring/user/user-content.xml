@@ -30,6 +30,7 @@
                 <entry key="EMAIL_EXISTENCE_QUERY" value="select * from $db$.$tb$ where email= ? and valid_status = '1' "/>
                 <entry key="USER_INFO_QUERY" value="select id, email, pwd, name, company, role_id, register_time, last_login_time from $db$.$tb$ where email= ? and valid_status = '1' "/>
                 <entry key="PWD_RESET" value="update $db$.$tb$ set pwd=? where random_code = ? and valid_status = '1' "/>
+                <entry key="CHANGE_PWD" value="update $db$.$tb$ set pwd=? where email = ? and valid_status = '1' "/>
                 <entry key="LAST_LOGIN_TIME_RESET" value="update $db$.$tb$ set last_login_time=? where email= ? and valid_status = '1' "/>
                 <entry key="UPDATE_TOKEN" value="update $db$.$tb$ set token = ? where email = ? and valid_status = '1'"/>
                 <entry key="SET_RANDOM_CODE" value="update $db$.$tb$ set random_code = ? where email = ? and valid_status = '1'"/>
