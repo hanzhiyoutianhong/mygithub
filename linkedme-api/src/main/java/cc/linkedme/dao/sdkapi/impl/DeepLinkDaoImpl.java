@@ -146,6 +146,7 @@ public class DeepLinkDaoImpl extends BaseDao implements DeepLinkDao {
         tableChannel.getJdbcTemplate().query(tableChannel.getSql(), new Object[] {deepLinkId, appid}, new RowMapper() {
             public Object mapRow(ResultSet resultSet, int i) throws SQLException {
                 DeepLink dp = new DeepLink();
+                dp.setDeeplinkMd5(resultSet.getString("deeplink_md5"));
                 dp.setLink_label(resultSet.getString("link_label"));
                 dp.setIos_use_default(resultSet.getBoolean("ios_use_default"));
                 dp.setIos_custom_url(resultSet.getString("ios_custom_url"));
