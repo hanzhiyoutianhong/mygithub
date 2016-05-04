@@ -32,6 +32,9 @@ public class User {
     public String register(UserParams userParams, @Context HttpServletRequest request) {
         if( userParams != null )
             userParams.email = userParams.email.toLowerCase();
+        else{
+            throw new LMException(LMExceptionFactor.LM_ILLEGAL_PARAM_VALUE, "email should not be null");
+        }
         if (userService.userRegister(userParams)) {
             JsonBuilder resultJson = new JsonBuilder();
             resultJson.append("ret", "true");
@@ -47,8 +50,11 @@ public class User {
     @Produces({MediaType.APPLICATION_JSON})
 
     public String login(UserParams userParams, @Context HttpServletRequest request) {
-        if( userParams != null )
+        if( userParams.email != null )
             userParams.email = userParams.email.toLowerCase();
+        else{
+            throw new LMException(LMExceptionFactor.LM_ILLEGAL_PARAM_VALUE, "email should not be null");
+        }
         String email = userParams.email;
         UserInfo userInfo = userService.userLogin(userParams);
         if (userInfo != null) {
@@ -71,8 +77,11 @@ public class User {
     @POST
     @Produces({MediaType.APPLICATION_JSON})
     public String logout(UserParams userParams, @Context HttpServletRequest request) {
-        if( userParams != null )
+        if( userParams.email != null )
             userParams.email = userParams.email.toLowerCase();
+        else{
+            throw new LMException(LMExceptionFactor.LM_ILLEGAL_PARAM_VALUE, "email should not be null");
+        }
 
         if (userService.userLogout(userParams)) {
             JsonBuilder resultJson = new JsonBuilder();
@@ -91,6 +100,10 @@ public class User {
                                  @QueryParam("token") String token) {
         if( email != null )
             email = email.toLowerCase();
+        else{
+            throw new LMException(LMExceptionFactor.LM_ILLEGAL_PARAM_VALUE, "email should not be null");
+        }
+
         UserParams userParams = new UserParams();
         userParams.email = email;
         if (!userService.validateEmail(userParams)) {
@@ -106,8 +119,11 @@ public class User {
     @POST
     @Produces({MediaType.APPLICATION_JSON})
     public String change_password(UserParams userParams, @Context HttpServletRequest request) {
-        if( userParams != null )
+        if( userParams.email != null )
             userParams.email = userParams.email.toLowerCase();
+        else{
+            throw new LMException(LMExceptionFactor.LM_ILLEGAL_PARAM_VALUE, "email should not be null");
+        }
 
         if (userService.resetUserPwd(userParams)) {
             JsonBuilder resultJson = new JsonBuilder();
@@ -122,8 +138,11 @@ public class User {
     @POST
     @Produces({MediaType.APPLICATION_JSON})
     public String forgot_password(UserParams userParams, @Context HttpServletRequest request) {
-        if( userParams != null )
+        if( userParams.email != null )
             userParams.email = userParams.email.toLowerCase();
+        else{
+            throw new LMException(LMExceptionFactor.LM_ILLEGAL_PARAM_VALUE, "email should not be null");
+        }
 
         if (userService.forgotPwd(userParams)) {
             JsonBuilder resultJson = new JsonBuilder();
@@ -138,8 +157,11 @@ public class User {
     @POST
     @Produces({MediaType.APPLICATION_JSON})
     public String set_password(UserParams userParams, @Context HttpServletRequest request) {
-        if( userParams != null )
+        if( userParams.email != null )
             userParams.email = userParams.email.toLowerCase();
+        else{
+            throw new LMException(LMExceptionFactor.LM_ILLEGAL_PARAM_VALUE, "email should not be null");
+        }
 
         if (userService.resetForgottenPwd(userParams)) {
             JsonBuilder resultJson = new JsonBuilder();
