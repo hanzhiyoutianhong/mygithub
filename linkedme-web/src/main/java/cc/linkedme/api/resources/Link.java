@@ -95,7 +95,7 @@ public class Link {
 
     @Path("delete")
     @POST
-    @Produces()
+    @Produces(MediaType.APPLICATION_JSON)
     public String deleteUrl(UrlParams urlParams, @Context HttpServletRequest request) {
 //        if (urlParams.deeplink_id <= 0) {
 //            throw new LMException(LMExceptionFactor.LM_ILLEGAL_PARAM_VALUE, "deeplink_id <= 0");

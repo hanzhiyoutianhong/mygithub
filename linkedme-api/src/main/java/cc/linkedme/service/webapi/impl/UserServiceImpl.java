@@ -24,7 +24,6 @@ public class UserServiceImpl implements UserService {
     private UserDao userDao;
 
     public boolean userRegister(UserParams userParams) {
-        userParams.email = MD5Utils.md5( userParams.email );
         userParams.pwd = MD5Utils.md5( userParams.pwd );
 
         if (userDao.queryEmail(userParams.email))
@@ -36,7 +35,6 @@ public class UserServiceImpl implements UserService {
     }
 
     public UserInfo userLogin(UserParams userParams) {
-        userParams.email = MD5Utils.md5( userParams.email );
         userParams.pwd = MD5Utils.md5( userParams.pwd );
         UserInfo userInfo = userDao.getUserInfo(userParams.email);
 
@@ -57,7 +55,6 @@ public class UserServiceImpl implements UserService {
     }
 
     public boolean validateEmail(UserParams userParams) {
-        userParams.email = MD5Utils.md5( userParams.email );
         if (userDao.queryEmail(userParams.email))
             return true;
         else
@@ -65,7 +62,6 @@ public class UserServiceImpl implements UserService {
     }
 
     public boolean userLogout(UserParams userParams) {
-        userParams.email = MD5Utils.md5( userParams.email );
         if (!userDao.queryEmail(userParams.email)) {
             throw new LMException(LMExceptionFactor.LM_USER_EMAIL_DOESNOT_EXIST);
         } else {
@@ -76,13 +72,12 @@ public class UserServiceImpl implements UserService {
     }
 
     public boolean resetUserPwd(UserParams userParams) {
-        userParams.email = MD5Utils.md5( userParams.email );
         userParams.old_pwd = MD5Utils.md5( userParams.old_pwd );
         userParams.new_pwd = MD5Utils.md5( userParams.new_pwd );
 
         UserInfo userInfo = userDao.getUserInfo(userParams.email);
         if (userParams.old_pwd.equals(userInfo.getPwd())) {
-            userDao.resetUserPwd(userParams);
+            userDao.changeUserPwd(userParams);
             return true;
         } else {
             throw new LMException(LMExceptionFactor.LM_USER_WRONG_PWD);
@@ -90,7 +85,6 @@ public class UserServiceImpl implements UserService {
     }
 
     public boolean forgotPwd(UserParams userParams) {
-        userParams.email = MD5Utils.md5( userParams.email );
         if (userDao.queryEmail(userParams.email)) {
             String randomCode = MD5Utils.md5(new Random().nextInt() + "_" + userParams.email);
             boolean result = userDao.setRandomCode(randomCode, userParams.email);
@@ -106,7 +100,6 @@ public class UserServiceImpl implements UserService {
     }
 
     public boolean resetForgottenPwd(UserParams userParams) {
-        userParams.email = MD5Utils.md5( userParams.email );
         userParams.new_pwd = MD5Utils.md5( userParams.new_pwd );
         if (userDao.resetUserPwd(userParams) == 1)
             return true;
