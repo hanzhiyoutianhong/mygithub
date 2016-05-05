@@ -18,7 +18,7 @@
 
     <bean id="userInfo" class="cc.linkedme.data.dao.strategy.TableItem">
         <property name="itemName" value="userInfo"/>
-        <property name="dbNamePrefix" value="user"/>
+        <property name="dbNamePrefix" value="dashboard"/>
         <property name="dbCount" value="1"/>
 
         <property name="tableNamePrefix" value="user_info"/>
@@ -47,7 +47,7 @@
 
     <bean id="demoInfo" class="cc.linkedme.data.dao.strategy.TableItem">
         <property name="itemName" value="demoInfo"/>
-        <property name="dbNamePrefix" value="user"/>
+        <property name="dbNamePrefix" value="dashboard"/>
         <property name="dbCount" value="1"/>
 
         <property name="tableNamePrefix" value="demo_info"/>

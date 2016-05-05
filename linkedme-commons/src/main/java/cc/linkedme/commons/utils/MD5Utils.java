@@ -9,6 +9,7 @@ public class MD5Utils {
      * MD5 16
      */
 
+    @Deprecated
     public static String MD5Sixteen(String sourceStr) {
         String result = "";
         try {
@@ -34,6 +35,7 @@ public class MD5Utils {
      * MD5 32
      */
 
+    @Deprecated
     public static String MD5ThirtyTwo(String sourceStr) {
         String result = "";
         try {
