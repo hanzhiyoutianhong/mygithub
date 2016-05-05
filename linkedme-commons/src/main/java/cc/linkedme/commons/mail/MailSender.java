@@ -112,7 +112,10 @@ public class MailSender {
 //        MailSender.sendHtmlMail("276386627@qq.com", "hello, wrshine", "this is a test mail </br> from java program");
 //        MailSender.sendHtmlMail("wrshine@163.com", "hello, wrshine", "this is a test mail </br> from java program");
 //        MailSender.sendHtmlMail("wrshine@gmail.com", "hello, wrshine", "this is a test mail </br> from java program");
-        MailSender.sendHtmlMail("i@wrshine.com", "hello, wrshine", "this is a test mail </br> from java program");
+        String url = "http://www.weibo.com";
+        String resetPwdUrl = "https://www.linkedme.cc/dashboard/index.html#/access/resetpwd/123456";
+        MailSender.sendHtmlMail("support@linkedme.cc", "hello, wrshine", "this is a test mail. <br /> from java program. <br /> <a href="+resetPwdUrl+">W3School</a>");
+        MailSender.sendHtmlMail("wrshine@163.com", "hello, wrshine", "this is a test mail. <br /> from java program. <br /> <a href="+resetPwdUrl+">W3School</a>");
         System.out.println("success");
     }
 }
