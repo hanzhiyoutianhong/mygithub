@@ -28,7 +28,7 @@
     <bean id="deeplink" class="cc.linkedme.data.dao.strategy.TableItem">
         <property name="itemName" value="deeplink"/>
         <property name="dbNamePrefix"  value="deeplink"/>
-        <property name="dbCount"  value="4"/>
+        <property name="dbCount"  value="16"/>
 
         <property name="tableNamePrefix" value="deeplink_info" />
         <property name="tableNamePostFix" value="yymm" />  <!-- 默认是索引 -->
@@ -47,41 +47,6 @@
         <property name="jdbcTemplates">
             <list>
                 <ref bean="deeplink_jdbctemplate_0"/>
-                <!--<ref bean="deeplink_jdbctemplate_1"/> -->
-            </list>
-        </property>
-    </bean>
-
-    <bean id="deepLinkParamDao" class="cc.linkedme.dao.sdkapi.impl.DeepLinkParamDaoImpl">
-        <property name="tableContainer">
-            <bean class="cc.linkedme.data.dao.strategy.TableContainer">
-                <property name="tablesItems">
-                    <map>
-                        <entry key="deepLinkParam" value-ref="deepLinkParam" />
-                    </map>
-                </property>
-            </bean>
-        </property>
-    </bean>
-
-    <bean id="deepLinkParam" class="cc.linkedme.data.dao.strategy.TableItem">
-        <property name="itemName" value="deeplinkParam"/>
-        <property name="dbNamePrefix"  value="deeplink_param"/>
-        <property name="dbCount"  value="4"/>
-
-        <property name="tableNamePrefix" value="deeplink_param_info" />
-        <!-- <property name="tableNamePostFix" value="yymm" /> --> <!-- 默认是索引 -->
-        <property name="tableCount" value="8" />           <!-- 这个参数和tableNamePostFix有关系，如果是日期就不用了。 -->
-        <property name="sqls">
-            <map>
-                <entry key="ADD_DEEPLINK_PARAM" value="insert into $db$.$tb$ (deeplink_id, param) values(?, ?)"/>
-                <entry key="GET_DEEPLINK_PARAM_BY" value="update $db$.$tb$ set vflag = ?, mflag=? where status_id = ? and vflag in (0,6,7) and cmt_id = ?"/>
-                <entry key="GET_DEEPLINK_PARAM" value="select param from $db$.$tb$ where deeplink_id=?"/>
-            </map>
-        </property>
-        <property name="jdbcTemplates">
-            <list>
-                <ref bean="deeplinkparam_jdbctemplate_0"/>
                 <!--<ref bean="deeplink_jdbctemplate_1"/> -->
             </list>
         </property>

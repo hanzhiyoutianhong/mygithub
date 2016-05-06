@@ -16,7 +16,7 @@ public class AppParams {
     public long user_id;
     public String app_name;
     public String type;
-    public String value;
+    public String[] value;
     public String lkme_key;
     public String lkme_secret;
     public JSONObject link_setting;
@@ -286,5 +286,13 @@ public class AppParams {
 
     public void setImg_encoding(String img_encoding) {
         this.img_encoding = img_encoding;
+    }
+
+    public String[] getValue() {
+        return value;
+    }
+
+    public void setValue(String[] value) {
+        this.value = value;
     }
 }

@@ -24,7 +24,7 @@
     <bean id="clientInfo" class="cc.linkedme.data.dao.strategy.TableItem">
         <property name="itemName" value="clientInfo"/>
         <property name="dbNamePrefix" value="client"/>
-        <property name="dbCount" value="2"/>
+        <property name="dbCount" value="4"/>
 
         <property name="tableNamePrefix" value="client_info"/>
         <property name="tableCount" value="8"/>

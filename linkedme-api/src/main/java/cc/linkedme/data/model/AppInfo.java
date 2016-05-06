@@ -257,29 +257,29 @@ public class AppInfo implements Serializable {
         boolean android_enable_applinks = (ios_android_flag & 1) == 1 ? true : false;
 
         JsonBuilder ios = new JsonBuilder();
-        ios.append("has_ios", has_ios);
+        ios.append("has_ios", String.valueOf(has_ios));
         ios.append("ios_not_url", ios_not_url);
         ios.append("ios_uri_scheme", ios_uri_scheme);
         ios.append("ios_search_option", ios_search_option);
         ios.append("ios_store_url", ios_store_url);
         ios.append("ios_custom_url", ios_custom_url);
-        ios.append("ios_enable_ulink", ios_enable_ulink);
+        ios.append("ios_enable_ulink", String.valueOf(ios_enable_ulink));
         ios.append("ios_bundle_id", ios_bundle_id);
         ios.append("ios_app_prefix", ios_app_prefix);
 
         JsonBuilder android = new JsonBuilder();
-        android.append("has_android", has_android);
+        android.append("has_android", String.valueOf(has_android));
         android.append("android_not_url", android_not_url);
         android.append("android_uri_scheme", android_uri_scheme);
         android.append("android_search_option", android_search_option);
         android.append("google_play_url", google_paly_url);
         android.append("android_custom_url", android_custom_url);
         android.append("android_package_name", android_package_name);
-        android.append("android_enable_applinks", android_enable_applinks);
+        android.append("android_enable_applinks", String.valueOf(android_enable_applinks));
         android.append("android_sha256_fingerprints", android_sha256_fingerprints);
 
         JsonBuilder desktop = new JsonBuilder();
-        desktop.append("use_default_landing_page", use_default_landing_page);
+        desktop.append("use_default_landing_page", String.valueOf(use_default_landing_page));
         desktop.append("custom_landing_page", custom_landing_page);
 
         JsonBuilder link_setting = new JsonBuilder();

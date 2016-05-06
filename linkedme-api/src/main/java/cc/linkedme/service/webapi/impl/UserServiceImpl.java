@@ -25,7 +25,7 @@ public class UserServiceImpl implements UserService {
     private UserDao userDao;
 
     public boolean userRegister(UserParams userParams) {
-        userParams.pwd = MD5Utils.md5( userParams.pwd );
+        userParams.pwd = MD5Utils.md5(userParams.pwd);
 
         if (userDao.queryEmail(userParams.email))
             throw new LMException(LMExceptionFactor.LM_USER_EMAIL_ALREADY_REGISTERED);
@@ -36,10 +36,12 @@ public class UserServiceImpl implements UserService {
     }
 
     public UserInfo userLogin(UserParams userParams) {
-        userParams.pwd = MD5Utils.md5( userParams.pwd );
+        userParams.pwd = MD5Utils.md5(userParams.pwd);
         UserInfo userInfo = userDao.getUserInfo(userParams.email);
 
-        if (userInfo == null) throw new LMException(LMExceptionFactor.LM_USER_EMAIL_DOESNOT_EXIST);
+        if (userInfo == null) {
+            throw new LMException(LMExceptionFactor.LM_USER_EMAIL_DOESNOT_EXIST);
+        }
         if (userParams.pwd.equals(userInfo.getPwd())) {
             String current_login_time = DateFormat.getDateTimeInstance().format(new Date());
             userParams.current_login_time = current_login_time;
@@ -73,8 +75,8 @@ public class UserServiceImpl implements UserService {
     }
 
     public boolean resetUserPwd(UserParams userParams) {
-        userParams.old_pwd = MD5Utils.md5( userParams.old_pwd );
-        userParams.new_pwd = MD5Utils.md5( userParams.new_pwd );
+        userParams.old_pwd = MD5Utils.md5(userParams.old_pwd);
+        userParams.new_pwd = MD5Utils.md5(userParams.new_pwd);
 
         UserInfo userInfo = userDao.getUserInfo(userParams.email);
         if (userParams.old_pwd.equals(userInfo.getPwd())) {
@@ -91,7 +93,8 @@ public class UserServiceImpl implements UserService {
             boolean result = userDao.setRandomCode(randomCode, userParams.email);
             String resetPwdUrl = "https://www.linkedme.cc/dashboard/index.html#/access/resetpwd/" + randomCode;
             if (result) {
-                MailSender.sendHtmlMail(userParams.email, "Change you PWD", "点击下面的链接重新设置密码.</br> " + resetPwdUrl);
+                MailSender.sendHtmlMail(userParams.email, "Change Your Password!",
+                        String.format("点击下面的链接重新设置密码. <br /> <a href=%s>点击链接</a>", resetPwdUrl));
                 return true;
             }
             return false;
@@ -101,11 +104,8 @@ public class UserServiceImpl implements UserService {
     }
 
     public boolean resetForgottenPwd(UserParams userParams) {
-        userParams.new_pwd = MD5Utils.md5( userParams.new_pwd );
-        if (userDao.resetUserPwd(userParams) == 1)
-            return true;
-        else
-            return false;
+        userParams.new_pwd = MD5Utils.md5(userParams.new_pwd);
+        return userDao.resetUserPwd(userParams) == 1;
     }
 
     public boolean getDemo(DemoRequestParams demoRequestParams) {

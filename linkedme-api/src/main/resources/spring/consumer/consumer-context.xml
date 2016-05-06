@@ -19,7 +19,7 @@
 
     <bean id="consumerAppInfo" class="cc.linkedme.data.dao.strategy.TableItem">
         <property name="itemName" value="consumerAppInfo"/>
-        <property name="dbNamePrefix" value="consumer"/>
+        <property name="dbNamePrefix" value="dashboard"/>
         <property name="dbCount" value="1"/>
 
         <property name="tableNamePrefix" value="consumer_info"/>

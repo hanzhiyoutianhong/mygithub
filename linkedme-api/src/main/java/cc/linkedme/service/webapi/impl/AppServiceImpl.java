@@ -16,6 +16,7 @@ import cc.linkedme.data.model.params.AppParams;
 import cc.linkedme.data.model.params.UrlParams;
 import cc.linkedme.service.webapi.AppService;
 import org.apache.commons.collections.CollectionUtils;
+import org.apache.commons.lang.ArrayUtils;
 
 import javax.annotation.Resource;
 import java.util.ArrayList;
@@ -135,6 +136,40 @@ public class AppServiceImpl implements AppService {
 
     public boolean configUrlTags(AppParams appParams) {
         return urlTagDao.configUrlTags(appParams);
+    }
+
+    public void addUrlTags(UrlParams urlParams) {
+        AppParams appParams = new AppParams();
+        appParams.app_id = urlParams.app_id;
+        if (ArrayUtils.isNotEmpty(urlParams.feature)) {
+            appParams.value = urlParams.feature;
+            appParams.type = "feature";
+            configUrlTags(appParams);
+        }
+
+        if (ArrayUtils.isNotEmpty(urlParams.campaign)) {
+            appParams.value = urlParams.campaign;
+            appParams.type = "campaign";
+            configUrlTags(appParams);
+        }
+
+        if (ArrayUtils.isNotEmpty(urlParams.stage)) {
+            appParams.value = urlParams.stage;
+            appParams.type = "stage";
+            configUrlTags(appParams);
+        }
+
+        if (ArrayUtils.isNotEmpty(urlParams.channel)) {
+            appParams.value = urlParams.channel;
+            appParams.type = "channel";
+            configUrlTags(appParams);
+        }
+
+        if (ArrayUtils.isNotEmpty(urlParams.tags)) {
+            appParams.value = urlParams.tags;
+            appParams.type = "tag";
+            configUrlTags(appParams);
+        }
     }
 
     @Override

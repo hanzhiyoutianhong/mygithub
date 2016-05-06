@@ -18,7 +18,7 @@
 
     <bean id="appInfo" class="cc.linkedme.data.dao.strategy.TableItem">
         <property name="itemName" value="appInfo"/>
-        <property name="dbNamePrefix" value="app"/>
+        <property name="dbNamePrefix" value="dashboard"/>
         <property name="dbCount" value="1"/>
 
         <property name="tableNamePrefix" value="app_info"/>
@@ -68,7 +68,7 @@
 
     <bean id="urlTags" class="cc.linkedme.data.dao.strategy.TableItem">
         <property name="itemName" value="urlTags"/>
-        <property name="dbNamePrefix" value="url_tags"/>
+        <property name="dbNamePrefix" value="dashboard"/>
         <property name="dbCount" value="1"/>
 
         <property name="tableNamePrefix" value="url_tags_info"/>

@@ -8,6 +8,7 @@ import cc.linkedme.data.model.UserInfo;
 import cc.linkedme.data.model.params.DemoRequestParams;
 import cc.linkedme.data.model.params.UserParams;
 import cc.linkedme.service.webapi.UserService;
+import com.google.api.client.repackaged.com.google.common.base.Strings;
 import org.springframework.stereotype.Component;
 
 import javax.annotation.Resource;
@@ -30,9 +31,9 @@ public class User {
     @POST
     @Produces({MediaType.APPLICATION_JSON})
     public String register(UserParams userParams, @Context HttpServletRequest request) {
-        if( userParams != null )
+        if (userParams != null)
             userParams.email = userParams.email.toLowerCase();
-        else{
+        else {
             throw new LMException(LMExceptionFactor.LM_ILLEGAL_PARAM_VALUE, "email should not be null");
         }
         if (userService.userRegister(userParams)) {
@@ -43,43 +44,38 @@ public class User {
             throw new LMException(LMExceptionFactor.LM_ILLEGAL_PARAM_VALUE);
         }
     }
-
-
+    
     @Path("/login")
     @POST
     @Produces({MediaType.APPLICATION_JSON})
 
     public String login(UserParams userParams, @Context HttpServletRequest request) {
-        if( userParams.email != null )
+        if (userParams.email != null)
             userParams.email = userParams.email.toLowerCase();
-        else{
+        else {
             throw new LMException(LMExceptionFactor.LM_ILLEGAL_PARAM_VALUE, "email should not be null");
         }
         String email = userParams.email;
         UserInfo userInfo = userService.userLogin(userParams);
-        if (userInfo != null) {
-            JsonBuilder resultJson = new JsonBuilder();
-            resultJson.append("user_id", userInfo.getId());
-            resultJson.append("email", email);
-            resultJson.append("name", userInfo.getName());
-            resultJson.append("company", userInfo.getCompany());
-            resultJson.append("role_id", userInfo.getRole_id());
-            resultJson.append("register_time", userInfo.getRegister_time());
-            resultJson.append("last_login_time", userInfo.getLast_login_time());
-            resultJson.append("token", userInfo.getToken());
-            return resultJson.flip().toString();
-        } else {
-            throw new LMException(LMExceptionFactor.LM_ILLEGAL_PARAM_VALUE);
-        }
+        JsonBuilder resultJson = new JsonBuilder();
+        resultJson.append("user_id", userInfo.getId());
+        resultJson.append("email", email);
+        resultJson.append("name", userInfo.getName());
+        resultJson.append("company", userInfo.getCompany());
+        resultJson.append("role_id", userInfo.getRole_id());
+        resultJson.append("register_time", userInfo.getRegister_time());
+        resultJson.append("last_login_time", userInfo.getLast_login_time());
+        resultJson.append("token", userInfo.getToken());
+        return resultJson.flip().toString();
     }
 
     @Path("/logout")
     @POST
     @Produces({MediaType.APPLICATION_JSON})
     public String logout(UserParams userParams, @Context HttpServletRequest request) {
-        if( userParams.email != null )
+        if (userParams.email != null)
             userParams.email = userParams.email.toLowerCase();
-        else{
+        else {
             throw new LMException(LMExceptionFactor.LM_ILLEGAL_PARAM_VALUE, "email should not be null");
         }
 
@@ -98,9 +94,9 @@ public class User {
 
     public String validate_email(@QueryParam("email") String email,
                                  @QueryParam("token") String token) {
-        if( email != null )
+        if (email != null)
             email = email.toLowerCase();
-        else{
+        else {
             throw new LMException(LMExceptionFactor.LM_ILLEGAL_PARAM_VALUE, "email should not be null");
         }
 
@@ -119,9 +115,9 @@ public class User {
     @POST
     @Produces({MediaType.APPLICATION_JSON})
     public String change_password(UserParams userParams, @Context HttpServletRequest request) {
-        if( userParams.email != null )
+        if (userParams.email != null)
             userParams.email = userParams.email.toLowerCase();
-        else{
+        else {
             throw new LMException(LMExceptionFactor.LM_ILLEGAL_PARAM_VALUE, "email should not be null");
         }
 
@@ -138,9 +134,9 @@ public class User {
     @POST
     @Produces({MediaType.APPLICATION_JSON})
     public String forgot_password(UserParams userParams, @Context HttpServletRequest request) {
-        if( userParams.email != null )
+        if (userParams.email != null)
             userParams.email = userParams.email.toLowerCase();
-        else{
+        else {
             throw new LMException(LMExceptionFactor.LM_ILLEGAL_PARAM_VALUE, "email should not be null");
         }
 
@@ -157,10 +153,8 @@ public class User {
     @POST
     @Produces({MediaType.APPLICATION_JSON})
     public String set_password(UserParams userParams, @Context HttpServletRequest request) {
-        if( userParams.email != null )
-            userParams.email = userParams.email.toLowerCase();
-        else{
-            throw new LMException(LMExceptionFactor.LM_ILLEGAL_PARAM_VALUE, "email should not be null");
+        if (Strings.isNullOrEmpty(userParams.new_pwd)) {
+            throw new LMException(LMExceptionFactor.LM_ILLEGAL_PARAM_VALUE, "password is null");
         }
 
         if (userService.resetForgottenPwd(userParams)) {

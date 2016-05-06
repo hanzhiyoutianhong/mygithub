@@ -19,7 +19,7 @@
 
     <bean id="btnInfo" class="cc.linkedme.data.dao.strategy.TableItem">
         <property name="itemName" value="btnInfo"/>
-        <property name="dbNamePrefix" value="button"/>
+        <property name="dbNamePrefix" value="dashboard"/>
         <property name="dbCount" value="1"/>
 
         <property name="tableNamePrefix" value="button_info"/>

@@ -17,7 +17,7 @@
 
     <bean id="appListInfo" class="cc.linkedme.data.dao.strategy.TableItem">
         <property name="itemName" value="appInfo"/>
-        <property name="dbNamePrefix" value="app_list"/>
+        <property name="dbNamePrefix" value="dashboard"/>
         <property name="dbCount" value="1"/>
 
         <property name="tableNamePrefix" value="applist_info"/>

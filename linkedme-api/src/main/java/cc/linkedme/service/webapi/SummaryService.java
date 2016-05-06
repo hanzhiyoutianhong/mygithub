@@ -84,7 +84,7 @@ public class SummaryService {
         String start_date = summaryDeepLinkParams.startDate;
         String end_date = summaryDeepLinkParams.endDate;
 
-        String onlineTime = "2016-04-01";
+        String onlineTime = "2016-05-01";
         try {
             SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd");
             Date onlineDate = simpleDateFormat.parse(onlineTime);
@@ -99,7 +99,7 @@ public class SummaryService {
                     start_date = onlineTime;
                 }
                 if (edDate.after(currentDate)) {
-                    //结束日期设置为第二天,这样能保证当天发的短链能被检索出来
+                    // 结束日期设置为第二天,这样能保证当天发的短链能被检索出来
                     Calendar calendar = Calendar.getInstance();
                     calendar.add(Calendar.DAY_OF_YEAR, 1);
                     end_date = simpleDateFormat.format(calendar.getTime());
@@ -125,6 +125,9 @@ public class SummaryService {
         List<DeepLink> deepLinks = getDeepLinks(summaryDeepLinkParams);
         int deepLinkNum = deepLinks.size();
         int startIndex = summaryDeepLinkParams.skipNumber;
+        if(startIndex < 0) {
+            startIndex = 0;
+        }
         int endIndex = (summaryDeepLinkParams.returnNumber + startIndex) > deepLinkNum
                 ? deepLinkNum
                 : (summaryDeepLinkParams.returnNumber + startIndex);
@@ -151,7 +154,7 @@ public class SummaryService {
                 setDeepLinkCount(deepLinkCountObject, countMap);
             }
             deepLinks.get(i).setDeepLinkCount(deepLinkCountObject);
-            deepLinkJsonArr.add(i, deepLinks.get(i).toJsonObject());
+            deepLinkJsonArr.add(i - startIndex, deepLinks.get(i).toJsonObject());
         }
         resultJson.put("ret", deepLinkJsonArr);
         return resultJson.toString();

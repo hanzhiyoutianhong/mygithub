@@ -10,6 +10,7 @@ import java.io.ObjectOutputStream;
  */
 public class SerializationUtil {
 
+    @Deprecated
     public static byte[] serialize(Object object) {
         ObjectOutputStream objectOutputStream;
         ByteArrayOutputStream byteArrayOutputStream;
@@ -25,6 +26,7 @@ public class SerializationUtil {
         return null;
     }
 
+    @Deprecated
     public static Object deSerialize(byte[] bytes) {
         ByteArrayInputStream byteArrayInputStream;
         try {

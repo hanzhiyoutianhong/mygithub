@@ -30,5 +30,7 @@ public interface AppService {
 
     boolean configUrlTags(AppParams appParams);
 
+    void addUrlTags(UrlParams urlParams);
+
     String uploadImg(AppParams appParams, String imagePath);
 }
