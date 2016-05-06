@@ -165,7 +165,7 @@ public class AppDaoImpl extends BaseDao implements AppDao {
         return appInfo;
     }
 
-    public boolean validateAppName(AppParams appParams) {
+    public boolean isAppNameValidate(AppParams appParams) {
         TableChannel tableChannel = tableContainer.getTableChannel("appInfo", VALIDATE_APP_NAME, 0L, 0L);
         JdbcTemplate jdbcTemplate = tableChannel.getJdbcTemplate();
 
@@ -181,7 +181,14 @@ public class AppDaoImpl extends BaseDao implements AppDao {
                 return null;
             }
         });
-        return !appInfos.isEmpty();
+
+        if (appInfos.size() == 0) {
+            return true;
+        }
+        if (appInfos.size() == 1 && appInfos.get(0).getApp_id() == appParams.app_id) {
+            return true;
+        }
+        return false;
     }
 
     public AppInfo getAppByAppId(final long app_id) {
@@ -231,7 +238,7 @@ public class AppDaoImpl extends BaseDao implements AppDao {
 
     public int updateApp(final AppParams appParams) {
         int res = 0;
-        if (validateAppName(appParams))
+        if (!isAppNameValidate(appParams))
             throw new LMException(LMExceptionFactor.LM_ILLEGAL_PARAM_VALUE, "Duplicate app name");
         else {
             TableChannel tableChannel =
