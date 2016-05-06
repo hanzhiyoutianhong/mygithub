@@ -207,6 +207,24 @@ public class UserDaoImpl extends BaseDao implements UserDao {
         int res = 0;
         TableChannel tableChannel = tableContainer.getTableChannel("demoInfo", REQUEST_DEMO, 0L, 0L);
         try {
+            long channelTag = 0L;
+
+            String[] channels = demoRequestParams.from_channel.split(",");
+
+            for( int i = 0; i < channels.length; i++ ) {
+                switch (channels[i]) {
+                    case "朋友推荐": channelTag += 1;
+                        break;
+                    case "搜索引擎": channelTag += 1 << 1;
+                        break;
+                    case "体验过LinkedME产品": channelTag += 1 << 2;
+                        break;
+                    case "媒体报道": channelTag += 1 << 3;
+                        break;
+                    case "其他": channelTag += 1 << 4;
+                }
+            }
+
             res += tableChannel.getJdbcTemplate().update(tableChannel.getSql(), new Object[] {demoRequestParams.name, demoRequestParams.email,
                     demoRequestParams.mobile_phone, demoRequestParams.company_product_name, demoRequestParams.from_channel});
         } catch (DataAccessException e) {

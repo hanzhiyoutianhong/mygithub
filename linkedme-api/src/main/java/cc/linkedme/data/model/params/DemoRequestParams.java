@@ -16,6 +16,7 @@ public class DemoRequestParams {
     public String mobile_phone;
     public String company_product_name;
     public String from_channel;
+    public Long channel_tag;
     public String token;
 
     public String getName() {
@@ -56,6 +57,14 @@ public class DemoRequestParams {
 
     public void setFrom_channel(String from_channel) {
         this.from_channel = from_channel;
+    }
+
+    public Long getChannel_tag() {
+        return channel_tag;
+    }
+
+    public void setChannel_tag(Long channel_tag) {
+        this.channel_tag = channel_tag;
     }
 
     public String getToken() {
