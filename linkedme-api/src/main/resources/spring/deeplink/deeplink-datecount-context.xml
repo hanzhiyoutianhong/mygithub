@@ -19,7 +19,7 @@
 
     <bean id="deepLinkDateCount" class="cc.linkedme.data.dao.strategy.TableItem">
         <property name="itemName" value="deepLinkDateCount"/>
-        <property name="dbNamePrefix"  value="dashboard"/>
+        <property name="dbNamePrefix"  value="count"/>
         <property name="dbCount"  value="1"/>
 
         <property name="tableNamePrefix" value="url_count" />

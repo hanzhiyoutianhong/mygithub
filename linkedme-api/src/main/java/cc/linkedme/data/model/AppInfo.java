@@ -251,10 +251,10 @@ public class AppInfo implements Serializable {
     }
 
     public String toJson() {
-        boolean has_ios = (ios_android_flag & 8) >> 3 == 1 ? true : false;
-        boolean ios_enable_ulink = (ios_android_flag & 4) >> 2 == 1 ? true : false;
-        boolean has_android = (ios_android_flag & 2) >> 1 == 1 ? true : false;
-        boolean android_enable_applinks = (ios_android_flag & 1) == 1 ? true : false;
+        boolean has_ios = ((ios_android_flag & 8) >> 3) == 1;
+        boolean ios_enable_ulink = ((ios_android_flag & 4) >> 2) == 1;
+        boolean has_android = ((ios_android_flag & 2) >> 1) == 1;
+        boolean android_enable_applinks = (ios_android_flag & 1) == 1;
 
         JsonBuilder ios = new JsonBuilder();
         ios.append("has_ios", String.valueOf(has_ios));

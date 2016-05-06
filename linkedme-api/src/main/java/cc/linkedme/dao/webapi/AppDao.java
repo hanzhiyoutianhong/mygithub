@@ -3,7 +3,6 @@ package cc.linkedme.dao.webapi;
 import cc.linkedme.data.model.AppInfo;
 import cc.linkedme.data.model.UrlTagsInfo;
 import cc.linkedme.data.model.params.AppParams;
-import cc.linkedme.data.model.params.UrlParams;
 
 import java.util.List;
 

@@ -921,6 +921,21 @@ public class Util {
             if( !months.isEmpty() )
                 System.out.println(interval_days.get(i) );
         }
+
+        int a = ((true ? 1 : 0) << 3);
+        int b = (true ? 1 : 0) << 2;
+        int c = (true ? 1 : 0);
+
+        int ios_android_flag =
+                ((true ? 1 : 0) << 3) + ((true ? 1 : 0) << 2) + ((true ? 1 : 0) << 1)
+                        + (true ? 1 : 0);
+
+        int d = a + b + c;
+        System.out.println(ios_android_flag);
+        System.out.println(a);
+        System.out.println(b);
+        System.out.println(c);
+        System.out.println(d);
     }
 
 }

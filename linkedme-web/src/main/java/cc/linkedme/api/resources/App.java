@@ -110,7 +110,6 @@ public class App {
             throw new LMException(LMExceptionFactor.LM_ILLEGAL_PARAM_VALUE);
         }
 
-
         AppParams appParams = new AppParams();
         appParams.app_id = app_id;
         appParams.type = type;
@@ -156,9 +155,8 @@ public class App {
         appParams.use_default_landing_page = desktopJson.getBoolean("use_default_landing_page");
         appParams.custom_landing_page = desktopJson.getString("custom_landing_page");
 
-        int ios_android_flag =
-                ((appParams.has_ios ? 1 : 0) << 3) + (appParams.ios_enable_ulink ? 1 : 0) << 2 + (appParams.has_android ? 1 : 0) << 1
-                        + (appParams.android_enable_applinks ? 1 : 0);
+        int ios_android_flag = ((appParams.has_ios ? 1 : 0) << 3) + ((appParams.ios_enable_ulink ? 1 : 0) << 2)
+                + ((appParams.has_android ? 1 : 0) << 1) + (appParams.android_enable_applinks ? 1 : 0);
 
         appParams.ios_android_flag = ios_android_flag;
 
