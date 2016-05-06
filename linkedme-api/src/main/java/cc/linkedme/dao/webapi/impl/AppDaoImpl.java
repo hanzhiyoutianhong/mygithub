@@ -165,19 +165,19 @@ public class AppDaoImpl extends BaseDao implements AppDao {
         return appInfo;
     }
 
-    public boolean validateAppName( AppParams appParams ) {
-        TableChannel tableChannel = tableContainer.getTableChannel("appInfo", VALIDATE_APP_NAME, 0L, 0L );
+    public boolean validateAppName(AppParams appParams) {
+        TableChannel tableChannel = tableContainer.getTableChannel("appInfo", VALIDATE_APP_NAME, 0L, 0L);
         JdbcTemplate jdbcTemplate = tableChannel.getJdbcTemplate();
 
         List<AppInfo> appInfos = new ArrayList<>();
 
-        jdbcTemplate.query(tableChannel.getSql(), new Object[]{appParams.user_id, appParams.app_name}, new RowMapper() {
+        jdbcTemplate.query(tableChannel.getSql(), new Object[] {appParams.user_id, appParams.app_name}, new RowMapper() {
             public Object mapRow(ResultSet resultSet, int i) throws SQLException {
                 AppInfo appInfo = new AppInfo();
-                appInfo.setApp_id( resultSet.getLong("id") );
-                appInfo.setApp_name( appParams.app_name );
+                appInfo.setApp_id(resultSet.getLong("id"));
+                appInfo.setApp_name(appParams.app_name);
 
-                appInfos.add( appInfo );
+                appInfos.add(appInfo);
                 return null;
             }
         });
@@ -231,13 +231,14 @@ public class AppDaoImpl extends BaseDao implements AppDao {
 
     public int updateApp(final AppParams appParams) {
         int res = 0;
-        if( validateAppName( appParams ) )
-            throw new LMException(LMExceptionFactor.LM_ILLEGAL_PARAM_VALUE, "Duplicate app name" );
+        if (validateAppName(appParams))
+            throw new LMException(LMExceptionFactor.LM_ILLEGAL_PARAM_VALUE, "Duplicate app name");
         else {
-            TableChannel tableChannel = tableContainer.getTableChannel("appInfo", UPDATE_APP_BY_APPID, appParams.user_id, appParams.user_id);
+            TableChannel tableChannel =
+                    tableContainer.getTableChannel("appInfo", UPDATE_APP_BY_APPID, appParams.user_id, appParams.user_id);
             JdbcTemplate jdbcTemplate = tableChannel.getJdbcTemplate();
 
-            Object[] values = new Object[]{appParams.app_name, appParams.type, appParams.ios_uri_scheme, appParams.ios_not_url,
+            Object[] values = new Object[] {appParams.app_name, appParams.type, appParams.ios_uri_scheme, appParams.ios_not_url,
                     appParams.ios_search_option, appParams.ios_store_url, appParams.ios_custom_url, appParams.ios_bundle_id,
                     appParams.ios_app_prefix, appParams.android_uri_scheme, appParams.android_not_url, appParams.android_search_option,
                     appParams.google_play_url, appParams.android_custom_url, appParams.android_package_name,
@@ -248,7 +249,8 @@ public class AppDaoImpl extends BaseDao implements AppDao {
                 res += jdbcTemplate.update(tableChannel.getSql(), values);
             } catch (DataAccessException e) {
                 if (DaoUtil.isDuplicateInsert(e)) {
-                    ApiLogger.warn(new StringBuilder(128).append("Duplicate insert app table, app_name=").append(appParams.getApp_name()), e);
+                    ApiLogger.warn(new StringBuilder(128).append("Duplicate insert app table, app_name=").append(appParams.getApp_name()),
+                            e);
                     throw new LMException(LMExceptionFactor.LM_FAILURE_DB_OP,
                             "duplicate insert app table, app_name=" + appParams.getApp_name());
                 }
@@ -285,7 +287,7 @@ public class AppDaoImpl extends BaseDao implements AppDao {
 
     public boolean configUrlTags(AppParams appParams) {
 
-        String[] values = appParams.value.split(",");
+        String[] values = appParams.value;
         String type = appParams.type;
 
         TableChannel tableChannel = tableContainer.getTableChannel("urlTags", GET_URL_TAGS_BY_APPID_AND_TYPE, 0L, 0L);
@@ -377,7 +379,7 @@ public class AppDaoImpl extends BaseDao implements AppDao {
             appInfo = appInfos.get(0);
         }
         String path = appInfo.getApp_logo();
-        if(Strings.isNullOrEmpty(path)) {
+        if (Strings.isNullOrEmpty(path)) {
             return 0;
         }
         Pattern pattern = Pattern.compile(".*images/(.*)");

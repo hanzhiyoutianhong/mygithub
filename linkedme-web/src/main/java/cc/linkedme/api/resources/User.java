@@ -44,8 +44,7 @@ public class User {
             throw new LMException(LMExceptionFactor.LM_ILLEGAL_PARAM_VALUE);
         }
     }
-
-
+    
     @Path("/login")
     @POST
     @Produces({MediaType.APPLICATION_JSON})
@@ -58,20 +57,16 @@ public class User {
         }
         String email = userParams.email;
         UserInfo userInfo = userService.userLogin(userParams);
-        if (userInfo != null) {
-            JsonBuilder resultJson = new JsonBuilder();
-            resultJson.append("user_id", userInfo.getId());
-            resultJson.append("email", email);
-            resultJson.append("name", userInfo.getName());
-            resultJson.append("company", userInfo.getCompany());
-            resultJson.append("role_id", userInfo.getRole_id());
-            resultJson.append("register_time", userInfo.getRegister_time());
-            resultJson.append("last_login_time", userInfo.getLast_login_time());
-            resultJson.append("token", userInfo.getToken());
-            return resultJson.flip().toString();
-        } else {
-            throw new LMException(LMExceptionFactor.LM_ILLEGAL_PARAM_VALUE);
-        }
+        JsonBuilder resultJson = new JsonBuilder();
+        resultJson.append("user_id", userInfo.getId());
+        resultJson.append("email", email);
+        resultJson.append("name", userInfo.getName());
+        resultJson.append("company", userInfo.getCompany());
+        resultJson.append("role_id", userInfo.getRole_id());
+        resultJson.append("register_time", userInfo.getRegister_time());
+        resultJson.append("last_login_time", userInfo.getLast_login_time());
+        resultJson.append("token", userInfo.getToken());
+        return resultJson.flip().toString();
     }
 
     @Path("/logout")
@@ -158,7 +153,7 @@ public class User {
     @POST
     @Produces({MediaType.APPLICATION_JSON})
     public String set_password(UserParams userParams, @Context HttpServletRequest request) {
-        if (Strings.isNullOrEmpty(userParams.pwd)) {
+        if (Strings.isNullOrEmpty(userParams.new_pwd)) {
             throw new LMException(LMExceptionFactor.LM_ILLEGAL_PARAM_VALUE, "password is null");
         }
 

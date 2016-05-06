@@ -2,9 +2,12 @@ package cc.linkedme.api.resources;
 
 import cc.linkedme.commons.exception.LMException;
 import cc.linkedme.commons.exception.LMExceptionFactor;
+import cc.linkedme.commons.util.ArrayUtil;
+import cc.linkedme.data.model.params.AppParams;
 import cc.linkedme.data.model.params.SummaryDeepLinkParams;
 import cc.linkedme.data.model.params.UrlParams;
 import cc.linkedme.service.DeepLinkService;
+import cc.linkedme.service.webapi.AppService;
 import cc.linkedme.service.webapi.SummaryService;
 import com.google.api.client.repackaged.com.google.common.base.Strings;
 import net.sf.json.JSONObject;
@@ -13,6 +16,7 @@ import org.apache.commons.httpclient.HttpException;
 import org.apache.commons.httpclient.methods.PostMethod;
 import org.apache.commons.httpclient.methods.RequestEntity;
 import org.apache.commons.httpclient.methods.StringRequestEntity;
+import org.apache.commons.lang.ArrayUtils;
 import org.springframework.stereotype.Component;
 
 import javax.annotation.Resource;
@@ -39,6 +43,9 @@ public class Link {
     @Resource
     private DeepLinkService deepLinkService;
 
+    @Resource
+    private AppService appService;
+
     private static final String CREATE_URL_API = "https://lkme.cc/i/sdk/url";
     //private static final String CREATE_URL_API = "192.168.0.109/i/sdk/url";
 
@@ -63,6 +70,10 @@ public class Link {
         if(Strings.isNullOrEmpty(result)) {
             throw new LMException(LMExceptionFactor.LM_SYS_ERROR, "create deeplink failed!");
         }
+
+        // 把短链的tags添加到库里
+        appService.addUrlTags(urlParams);
+
         return result;
     }
 
@@ -135,17 +146,22 @@ public class Link {
     @Path("update")
     @POST
     @Produces(MediaType.APPLICATION_JSON)
-    public String urlUpdate( UrlParams urlParams, @Context HttpServletRequest request) {//忽略type和link_label
+    public String urlUpdate(UrlParams urlParams, @Context HttpServletRequest request) {// 忽略type和link_label
         if (urlParams.deeplink_id <= 0) {
             throw new LMException(LMExceptionFactor.LM_ILLEGAL_PARAM_VALUE, "deeplink_id <= 0");
         }
         if (urlParams.app_id <= 0) {
             throw new LMException(LMExceptionFactor.LM_ILLEGAL_PARAM_VALUE, "app_id <= 0");
         }
-        Boolean res = deepLinkService.updateUrl( urlParams );
 
+        boolean res = deepLinkService.updateUrl(urlParams);
+
+        if (res) {
+            // 把短链的tags添加到库里
+            appService.addUrlTags(urlParams);
+        }
         JSONObject jsonObject = new JSONObject();
-        jsonObject.put( "ret", res );
+        jsonObject.put("ret", res);
 
         return jsonObject.toString();
     }

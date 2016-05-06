@@ -36,7 +36,7 @@ public class App {
     @Resource
     private AppService appService;
 
-    public static final String ImgPath = "./";  //TODO 改路径
+    public static final String ImgPath = "./"; // TODO 改路径
 
     @Path("/create_app")
     @POST
@@ -103,9 +103,8 @@ public class App {
     @GET
     @Produces(MediaType.APPLICATION_JSON)
     public String queryApp(@QueryParam("app_id") long app_id,
-                           @QueryParam("type") String type,
-                           @QueryParam("token") String token,
-                           @Context HttpServletRequest request) {
+                           @QueryParam("type") String type, @QueryParam("token") String token,
+            @Context HttpServletRequest request) {
 
         if (app_id <= 0) {
             throw new LMException(LMExceptionFactor.LM_ILLEGAL_PARAM_VALUE);
@@ -117,7 +116,7 @@ public class App {
         appParams.type = type;
 
         AppInfo appInfo = appService.queryApp(appParams);
-        if(appInfo == null) {
+        if (appInfo == null) {
             return "{}";
         }
 
@@ -173,9 +172,7 @@ public class App {
     @Path("/url_tags")
     @GET
     @Produces(MediaType.APPLICATION_JSON)
-    public String urlTags( @QueryParam("user_id") long user_id,
-                           @QueryParam("app_id") long app_id,
-                           @QueryParam("token") String token ) {
+    public String urlTags(@QueryParam("user_id") long user_id, @QueryParam("app_id") long app_id, @QueryParam("token") String token) {
         AppParams appParams = new AppParams();
         appParams.user_id = user_id;
         appParams.app_id = app_id;
@@ -188,7 +185,7 @@ public class App {
             throw new LMException(LMExceptionFactor.LM_ILLEGAL_PARAM_VALUE);
         }
 
-        List<UrlTagsInfo> result = appService.getUrlTags( appParams );
+        List<UrlTagsInfo> result = appService.getUrlTags(appParams);
 
         JSONObject resultJson = new JSONObject();
         JSONArray feature = new JSONArray();
@@ -197,25 +194,24 @@ public class App {
         JSONArray channel = new JSONArray();
         JSONArray tag = new JSONArray();
 
-        for( int i = 0; result != null && i < result.size(); i++ ) {
-            UrlTagsInfo tmp = result.get( i );
-            if( tmp.getTag_type().equals( "feature" ) )
-                feature.add( tmp.getTag_content() );
-            else if( tmp.getTag_type().equals( "campaign" ) )
-                campaign.add( tmp.getTag_content() );
-            else if( tmp.getTag_type().equals( "stage" ) )
-                stage.add( tmp.getTag_content() );
-            else if( tmp.getTag_type().equals( "channel" ) )
-                channel.add( tmp.getTag_content() );
-            else if( tmp.getTag_type().equals( "tag" ) )
-                tag.add( tmp.getTag_content() );
+        for (int i = 0; result != null && i < result.size(); i++) {
+            UrlTagsInfo tmp = result.get(i);
+            if (tmp.getTag_type().equals("feature"))
+                feature.add(tmp.getTag_content());
+            else if (tmp.getTag_type().equals("campaign"))
+                campaign.add(tmp.getTag_content());
+            else if (tmp.getTag_type().equals("stage"))
+                stage.add(tmp.getTag_content());
+            else if (tmp.getTag_type().equals("channel"))
+                channel.add(tmp.getTag_content());
+            else if (tmp.getTag_type().equals("tag")) tag.add(tmp.getTag_content());
         }
 
-        resultJson.put( "feature", feature );
-        resultJson.put( "campaign", campaign );
-        resultJson.put( "stage", stage );
-        resultJson.put( "channel", channel );
-        resultJson.put( "tag", tag );
+        resultJson.put("feature", feature);
+        resultJson.put("campaign", campaign);
+        resultJson.put("stage", stage);
+        resultJson.put("channel", channel);
+        resultJson.put("tag", tag);
 
         return resultJson.toString();
     }
@@ -223,12 +219,12 @@ public class App {
     @Path("/config")
     @POST
     @Produces(MediaType.APPLICATION_JSON)
-    public String urlTagsConfig(AppParams appParams, @Context HttpServletRequest request ) {
+    public String urlTagsConfig(AppParams appParams, @Context HttpServletRequest request) {
 
-        boolean result = appService.configUrlTags( appParams );
+        boolean result = appService.configUrlTags(appParams);
 
         JSONObject resultJson = new JSONObject();
-        resultJson.put( "ret", result );
+        resultJson.put("ret", result);
         return resultJson.toString();
     }
 
@@ -252,8 +248,8 @@ public class App {
         if (Strings.isNullOrEmpty(appParams.img_encoding)) {
             throw new LMException(LMExceptionFactor.LM_ILLEGAL_PARAM_VALUE, "img encoding is null");
         }
-//        String basePath = request.getScheme() + "://" + request.getServerName() + ":"
-//                + request.getServerPort() + "/app/images/";
+        // String basePath = request.getScheme() + "://" + request.getServerName() + ":"
+        // + request.getServerPort() + "/app/images/";
         String basePath = "https://www.linkedme.cc/i/app/images/";
         String imageName = appService.uploadImg(appParams, basePath);
         JsonBuilder resultJson = new JsonBuilder();
@@ -264,9 +260,7 @@ public class App {
 
     @Path("/images/{name}.{type}")
     @GET
-    public void showImg(@PathParam("name") String imageName,
-                        @PathParam("type") String type,
-                        @Context HttpServletResponse response)
+    public void showImg(@PathParam("name") String imageName, @PathParam("type") String type, @Context HttpServletResponse response)
             throws IOException {
         InputStream inputStream = null;
         OutputStream out = null;
@@ -283,10 +277,8 @@ public class App {
         } catch (Exception e) {
             e.printStackTrace();
         } finally {
-            if (out != null)
-                out.close();
-            if (inputStream != null)
-                inputStream.close();
+            if (out != null) out.close();
+            if (inputStream != null) inputStream.close();
         }
     }
 

@@ -97,7 +97,7 @@ public class LMExceptionFactor implements Serializable {
      * Email不存在
      */
     public static final LMExceptionFactor LM_USER_EMAIL_DOESNOT_EXIST =
-            new LMExceptionFactor(HttpStatus.BAD_REQUEST, 40005, "email does not exist", "邮箱不存在");
+            new LMExceptionFactor(HttpStatus.BAD_REQUEST, 40005, "email does not exist", "账号不存在");
 
     /**
      * 密码错误

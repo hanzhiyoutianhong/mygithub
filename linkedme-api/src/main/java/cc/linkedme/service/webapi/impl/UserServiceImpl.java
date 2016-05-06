@@ -39,7 +39,9 @@ public class UserServiceImpl implements UserService {
         userParams.pwd = MD5Utils.md5(userParams.pwd);
         UserInfo userInfo = userDao.getUserInfo(userParams.email);
 
-        if (userInfo == null) throw new LMException(LMExceptionFactor.LM_USER_EMAIL_DOESNOT_EXIST);
+        if (userInfo == null) {
+            throw new LMException(LMExceptionFactor.LM_USER_EMAIL_DOESNOT_EXIST);
+        }
         if (userParams.pwd.equals(userInfo.getPwd())) {
             String current_login_time = DateFormat.getDateTimeInstance().format(new Date());
             userParams.current_login_time = current_login_time;
@@ -91,7 +93,8 @@ public class UserServiceImpl implements UserService {
             boolean result = userDao.setRandomCode(randomCode, userParams.email);
             String resetPwdUrl = "https://www.linkedme.cc/dashboard/index.html#/access/resetpwd/" + randomCode;
             if (result) {
-                MailSender.sendHtmlMail(userParams.email, "Change Your Password!", String.format("点击下面的链接重新设置密码. <br /> <a href=%s>点击链接</a>",resetPwdUrl));
+                MailSender.sendHtmlMail(userParams.email, "Change Your Password!",
+                        String.format("点击下面的链接重新设置密码. <br /> <a href=%s>点击链接</a>", resetPwdUrl));
                 return true;
             }
             return false;

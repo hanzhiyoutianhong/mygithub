@@ -98,11 +98,11 @@ public class DeepLinkService {
         resultJson.put("userid", urlParams.user_id);
         resultJson.put("app_id", urlParams.app_id);
         resultJson.put("link_label", deepLinkInfo.getLink_label());
-        resultJson.put("ios_use_default", deepLinkInfo.isIos_use_default());
+        resultJson.put("ios_use_default", String.valueOf(deepLinkInfo.isIos_use_default()));
         resultJson.put("ios_custom_url", deepLinkInfo.getIos_custom_url());
-        resultJson.put("android_use_default", deepLinkInfo.isAndroid_use_default());
+        resultJson.put("android_use_default", String.valueOf(deepLinkInfo.isAndroid_use_default()));
         resultJson.put("android_custom_url", deepLinkInfo.getAndroid_custom_url());
-        resultJson.put("desktop_use_default", deepLinkInfo.isDesktop_use_default());
+        resultJson.put("desktop_use_default", String.valueOf(deepLinkInfo.isDesktop_use_default()));
         resultJson.put("desktop_custom_url", deepLinkInfo.getDesktop_custom_url());
 
         String[] features = deepLinkInfo.getFeature().split(",");
