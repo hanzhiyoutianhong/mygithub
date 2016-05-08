@@ -31,7 +31,7 @@ public class User {
     @POST
     @Produces({MediaType.APPLICATION_JSON})
     public String register(UserParams userParams, @Context HttpServletRequest request) {
-        if (userParams != null)
+        if (userParams.email != null)
             userParams.email = userParams.email.toLowerCase();
         else {
             throw new LMException(LMExceptionFactor.LM_ILLEGAL_PARAM_VALUE, "email should not be null");
