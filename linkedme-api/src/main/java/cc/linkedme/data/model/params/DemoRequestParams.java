@@ -16,6 +16,7 @@ public class DemoRequestParams {
     public String mobile_phone;
     public String company_product_name;
     public String from_channel;
+    public String other_channel;
     public String token;
 
     public String getName() {
@@ -64,6 +65,14 @@ public class DemoRequestParams {
 
     public void setToken(String token) {
         this.token = token;
+    }
+
+    public String getOther_channel() {
+        return other_channel;
+    }
+
+    public void setOther_channel(String other_channel) {
+        this.other_channel = other_channel;
     }
 
 }

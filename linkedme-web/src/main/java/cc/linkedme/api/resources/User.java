@@ -169,8 +169,8 @@ public class User {
     @Path("/request_demo")
     @POST
     @Produces({MediaType.APPLICATION_JSON})
-    public String getDemo(DemoRequestParams demoRequestParams, @Context HttpServletRequest request) {
-        boolean result = userService.getDemo(demoRequestParams);
+    public String requestDemo(DemoRequestParams demoRequestParams, @Context HttpServletRequest request) {
+        boolean result = userService.requestDemo(demoRequestParams);
         JsonBuilder resultJson = new JsonBuilder();
         resultJson.append("ret", result);
         return resultJson.flip().toString();

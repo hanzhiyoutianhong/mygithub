@@ -108,8 +108,8 @@ public class UserServiceImpl implements UserService {
         return userDao.resetUserPwd(userParams) == 1;
     }
 
-    public boolean getDemo(DemoRequestParams demoRequestParams) {
-        int result = userDao.getDemo(demoRequestParams);
+    public boolean requestDemo(DemoRequestParams demoRequestParams) {
+        int result = userDao.requestDemo(demoRequestParams);
         return result > 0;
     }
 

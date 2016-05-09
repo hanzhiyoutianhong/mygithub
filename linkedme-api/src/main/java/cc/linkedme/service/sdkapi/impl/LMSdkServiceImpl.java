@@ -219,6 +219,7 @@ public class LMSdkServiceImpl implements LMSdkService {
     public String open(OpenParams openParams) {
         String deepLinkUrl = "";
         boolean isDirectForward = false;
+        boolean isScan = false;
         if ("Android".equals(openParams.os)) {
             deepLinkUrl = openParams.external_intent_uri;
             if ((!Strings.isNullOrEmpty(deepLinkUrl)) && deepLinkUrl.startsWith("http")) {
@@ -263,8 +264,15 @@ public class LMSdkServiceImpl implements LMSdkService {
 
                 // count
                 // TODO 如果是pc扫描过来的,需要在openType前边加上 "pc_",eg: pc_ios_open
-                final String openType = DeepLinkCount.getCountTypeFromOs(openParams.os, "_open");
-                final String clickType = DeepLinkCount.getCountTypeFromOs(openParams.os, "_click");
+                if (deepLinkUrl.startsWith("http") && deepLinkUrl.contains("scan=1")) {
+                    isScan = true;
+                }
+                String scanPrefix = "";
+                if(isScan) {
+                    scanPrefix = "pc_";
+                }
+                final String openType = scanPrefix + DeepLinkCount.getCountTypeFromOs(openParams.os, "open");
+                final String clickType = DeepLinkCount.getCountTypeFromOs(openParams.os, "click");
                 boolean isUpdateClickCount = isDirectForward;
                 long dpId = deepLinkId;
                 deepLinkCountThreadPool.submit(new Callable<Void>() {

@@ -54,7 +54,7 @@
         <property name="tableCount" value="1"/>
         <property name="sqls">
             <map>
-                <entry key="REQUEST_DEMO" value="insert into $db$.$tb$ (name, email, mobile_phone, company_product_name, from_channel, create_time) values(?, ?, ?, ?, ?, now())"/>
+                <entry key="REQUEST_DEMO" value="insert into $db$.$tb$ (name, email, mobile_phone, company_product_name, from_channel, other_channel, create_time) values(?, ?, ?, ?, ?, ?, now())"/>
             </map>
         </property>
         <property name="jdbcTemplates">

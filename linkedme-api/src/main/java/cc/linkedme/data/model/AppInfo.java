@@ -1,6 +1,7 @@
 package cc.linkedme.data.model;
 
 import cc.linkedme.commons.json.JsonBuilder;
+import cc.linkedme.commons.util.Base62;
 import net.sf.json.JSONObject;
 import net.sf.json.util.JSONBuilder;
 
@@ -289,6 +290,7 @@ public class AppInfo implements Serializable {
 
         JsonBuilder resultJson = new JsonBuilder();
         resultJson.append("app_id", app_id);
+        resultJson.append("app_identifier", Base62.encode(app_id));
         resultJson.append("app_name", app_name);
         resultJson.append("app_logo", app_logo);
         resultJson.append("lkme_key", app_key);
