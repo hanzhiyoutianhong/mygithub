@@ -3,6 +3,7 @@ package cc.linkedme.dao.webapi.impl;
 import cc.linkedme.commons.exception.LMException;
 import cc.linkedme.commons.exception.LMExceptionFactor;
 import cc.linkedme.commons.log.ApiLogger;
+import cc.linkedme.commons.util.Constants;
 import cc.linkedme.dao.BaseDao;
 import cc.linkedme.dao.webapi.AppDao;
 import cc.linkedme.data.dao.strategy.TableChannel;
@@ -53,7 +54,6 @@ public class AppDaoImpl extends BaseDao implements AppDao {
     private static final String SET_URL_TAGS_BY_APPID_AND_TYPE = "SET_URL_TAGS_BY_APPID_AND_TYPE";
     private static final String UPLOAD_IMG = "UPLOAD_IMG";
     private static final String GET_IMG = "GET_IMG";
-    public static final String ImgPath = "./";
 
     public int insertApp(AppInfo appInfo) {
         int result = 0;
@@ -345,7 +345,7 @@ public class AppDaoImpl extends BaseDao implements AppDao {
     public String uploadImg(AppParams appParams, String imagePath) {
         deleteOldImg(appParams);
         String imageName = Calendar.getInstance().getTimeInMillis() + ".png";
-        String imageLocalPath = ImgPath + imageName;
+        String imageLocalPath = Constants.ImgPath + imageName;
         Base64 base64 = new Base64();
         try {
             byte[] bytes = base64.decode(appParams.img_data.substring(22));
@@ -396,7 +396,7 @@ public class AppDaoImpl extends BaseDao implements AppDao {
             imagePath = matcher.group(1);
         }
         // delete img
-        File file = new File(ImgPath + imagePath);
+        File file = new File(Constants.ImgPath + imagePath);
         if (!file.exists()) return -1;
         boolean flag = file.delete();
         return flag ? 1 : -1;
