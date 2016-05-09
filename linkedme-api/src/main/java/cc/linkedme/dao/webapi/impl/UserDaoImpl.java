@@ -221,7 +221,6 @@ public class UserDaoImpl extends BaseDao implements UserDao {
                         break;
                     case "媒体报道": channelTag += 1 << 3;
                         break;
-                    case "其他": channelTag += 1 << 4;
                 }
             }
 
