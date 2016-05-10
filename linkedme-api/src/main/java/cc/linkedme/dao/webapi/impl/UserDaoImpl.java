@@ -211,12 +211,14 @@ public class UserDaoImpl extends BaseDao implements UserDao {
             channelArr = demoRequestParams.from_channel.split(",");
         }
         long channels = 0;
-        // TODO 应该要去重
-        for (String str : channelArr) {
-            if (Integer.parseInt(str) > 60 || Integer.parseInt(str) < 0) {
-                continue;
+        if (channelArr != null) {
+            // TODO 应该要去重
+            for (String str : channelArr) {
+                if (Integer.parseInt(str) > 60 || Integer.parseInt(str) < 0) {
+                    continue;
+                }
+                channels = channels + (1 << Integer.parseInt(str));
             }
-            channels = channels + (1 << Integer.parseInt(str));
         }
         TableChannel tableChannel = tableContainer.getTableChannel("demoInfo", REQUEST_DEMO, 0L, 0L);
         try {

@@ -81,7 +81,7 @@ public class Base62 {
 
         decoding = Base62.decode(encoding);
         long decoding1 = Base62.decode("sdk");
-        long decoding2 = Base62.decode("uber");
+        long decoding2 = Base62.decode("test");
         
         
         System.out.println("Base62 Decoding: " + decoding);
