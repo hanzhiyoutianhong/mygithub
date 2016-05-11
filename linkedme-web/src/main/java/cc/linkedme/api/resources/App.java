@@ -112,7 +112,7 @@ public class App {
         appParams.app_id = app_id;
         appParams.type = type;
 
-        AppInfo appInfo = appService.queryApp(appParams);
+        AppInfo appInfo = appService.getAppById(appParams.app_id);
         if (appInfo == null) {
             return "{}";
         }

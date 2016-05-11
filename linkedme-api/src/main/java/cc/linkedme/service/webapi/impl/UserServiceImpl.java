@@ -1,5 +1,11 @@
 package cc.linkedme.service.webapi.impl;
 
+import java.text.DateFormat;
+import java.util.Date;
+import java.util.Random;
+
+import javax.annotation.Resource;
+
 import cc.linkedme.commons.exception.LMException;
 import cc.linkedme.commons.exception.LMExceptionFactor;
 import cc.linkedme.commons.mail.MailSender;
@@ -10,11 +16,6 @@ import cc.linkedme.data.model.UserInfo;
 import cc.linkedme.data.model.params.DemoRequestParams;
 import cc.linkedme.data.model.params.UserParams;
 import cc.linkedme.service.webapi.UserService;
-
-import javax.annotation.Resource;
-import java.text.DateFormat;
-import java.util.Date;
-import java.util.Random;
 
 /**
  * Created by Vontroy on 16/3/19.
@@ -75,6 +76,11 @@ public class UserServiceImpl implements UserService {
     }
 
     public boolean resetUserPwd(UserParams userParams) {
+        if (userParams.old_pwd == null) {
+            throw new LMException(LMExceptionFactor.LM_ILLEGAL_PARAM_VALUE, "Please input old password");
+        } else if (userParams.new_pwd == null) {
+            throw new LMException(LMExceptionFactor.LM_ILLEGAL_PARAM_VALUE, "Please input new password");
+        }
         userParams.old_pwd = MD5Utils.md5(userParams.old_pwd);
         userParams.new_pwd = MD5Utils.md5(userParams.new_pwd);
 
@@ -104,6 +110,9 @@ public class UserServiceImpl implements UserService {
     }
 
     public boolean resetForgottenPwd(UserParams userParams) {
+        if (userParams.new_pwd == null) {
+            throw new LMException(LMExceptionFactor.LM_ILLEGAL_PARAM_VALUE, "new password should not be empty");
+        }
         userParams.new_pwd = MD5Utils.md5(userParams.new_pwd);
         return userDao.resetUserPwd(userParams) == 1;
     }
