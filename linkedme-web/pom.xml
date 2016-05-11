@@ -94,11 +94,6 @@
         </dependency>
 
         <dependency>
-            <groupId>cc.linkedme</groupId>
-            <artifactId>linkedme-commons</artifactId>
-            <version>0.0.1-SNAPSHOT</version>
-        </dependency>
-        <dependency>
             <groupId>commons-codec</groupId>
             <artifactId>commons-codec</artifactId>
             <version>1.10</version>

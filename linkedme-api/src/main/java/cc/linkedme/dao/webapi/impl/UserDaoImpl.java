@@ -9,6 +9,7 @@ import java.util.List;
 
 import cc.linkedme.dao.webapi.UserDao;
 import cc.linkedme.data.model.params.DemoRequestParams;
+import com.google.api.client.repackaged.com.google.common.base.Strings;
 import org.springframework.dao.DataAccessException;
 import org.springframework.jdbc.core.RowMapper;
 
@@ -56,7 +57,7 @@ public class UserDaoImpl extends BaseDao implements UserDao {
         return res;
     }
 
-    public int changeUserPwd( UserParams userParams ) {
+    public int changeUserPwd(UserParams userParams) {
         int res = 0;
         TableChannel tableChannel = tableContainer.getTableChannel("userInfo", CHANGE_PWD, 0L, 0L);
 
@@ -203,29 +204,25 @@ public class UserDaoImpl extends BaseDao implements UserDao {
     }
 
     @Override
-    public int getDemo(DemoRequestParams demoRequestParams) {
+    public int requestDemo(DemoRequestParams demoRequestParams) {
         int res = 0;
+        String[] channelArr = null;
+        if (!Strings.isNullOrEmpty(demoRequestParams.from_channel)) {
+            channelArr = demoRequestParams.from_channel.split(",");
+        }
+        long channels = 0;
+        // TODO 应该要去重
+        for (String str : channelArr) {
+            if (Integer.parseInt(str) > 60 || Integer.parseInt(str) < 0) {
+                continue;
+            }
+            channels = channels + (1 << Integer.parseInt(str));
+        }
         TableChannel tableChannel = tableContainer.getTableChannel("demoInfo", REQUEST_DEMO, 0L, 0L);
         try {
-            long channelTag = 0L;
-
-            String[] channels = demoRequestParams.from_channel.split(",");
-
-            for( int i = 0; i < channels.length; i++ ) {
-                switch (channels[i]) {
-                    case "朋友推荐": channelTag += 1;
-                        break;
-                    case "搜索引擎": channelTag += 1 << 1;
-                        break;
-                    case "体验过LinkedME产品": channelTag += 1 << 2;
-                        break;
-                    case "媒体报道": channelTag += 1 << 3;
-                        break;
-                }
-            }
-
-            res += tableChannel.getJdbcTemplate().update(tableChannel.getSql(), new Object[] {demoRequestParams.name, demoRequestParams.email,
-                    demoRequestParams.mobile_phone, demoRequestParams.company_product_name, demoRequestParams.from_channel});
+            res += tableChannel.getJdbcTemplate().update(tableChannel.getSql(),
+                    new Object[] {demoRequestParams.name, demoRequestParams.email, demoRequestParams.mobile_phone,
+                            demoRequestParams.company_product_name, channels, demoRequestParams.other_channel});
         } catch (DataAccessException e) {
             if (DaoUtil.isDuplicateInsert(e)) {
                 ApiLogger.warn(new StringBuilder(128).append("Duplicate insert DemoInfo, email=").append(demoRequestParams.email), e);

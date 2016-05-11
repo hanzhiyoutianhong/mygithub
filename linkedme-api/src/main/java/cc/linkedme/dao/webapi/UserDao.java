@@ -27,5 +27,5 @@ public interface UserDao {
 
     String getToken(String email);
 
-    int getDemo(DemoRequestParams demoRequestParams);
+    int requestDemo(DemoRequestParams demoRequestParams);
 }

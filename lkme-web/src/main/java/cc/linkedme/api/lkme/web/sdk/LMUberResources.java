@@ -39,11 +39,11 @@ public class LMUberResources {
 //        if (!signAuthService.doAuth(apiName, initUberButtonParams.sign, String.valueOf(initUberButtonParams.identity_id), initUberButtonParams.linkedme_key, String.valueOf(initUberButtonParams.session_id), String.valueOf(initUberButtonParams.timestamp))) {
 //            throw new LMException(LMExceptionFactor.LM_AUTH_FAILED);
 //        }
+        JSONObject requestJson = JSONObject.fromObject(initUberButtonParams);
 
         String result = uberService.initButton(initUberButtonParams);
 
         JSONObject log = new JSONObject();
-        JSONObject requestJson = JSONObject.fromObject(initUberButtonParams);
         JSONObject responseJson = JSONObject.fromObject(result);
         log.put("request", requestJson);
         log.put("response", responseJson);
@@ -62,11 +62,11 @@ public class LMUberResources {
 //        if (!signAuthService.doAuth(apiName, clickBtnParams.sign, String.valueOf(clickBtnParams.identity_id), clickBtnParams.linkedme_key, String.valueOf(clickBtnParams.session_id), String.valueOf(clickBtnParams.timestamp))) {
 //            throw new LMException(LMExceptionFactor.LM_AUTH_FAILED);
 //        }
+        JSONObject requestJson = JSONObject.fromObject(clickBtnParams);
 
         uberService.clickBtn(clickBtnParams);
 
         JSONObject log = new JSONObject();
-        JSONObject requestJson = JSONObject.fromObject(clickBtnParams);
         log.put("request", requestJson);
         log.put("response", "{}");
         ApiLogger.biz(String.format("%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s", request.getHeader("x-forwarded-for"), "click_uber_btn", clickBtnParams.identity_id,

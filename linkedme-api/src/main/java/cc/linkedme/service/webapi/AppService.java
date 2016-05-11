@@ -20,8 +20,6 @@ public interface AppService {
 
     int deleteApp(AppParams appParams);
 
-    AppInfo queryApp(AppParams appParams);
-
     AppInfo getAppById(long appId);
 
     int updateApp(AppParams appParams);

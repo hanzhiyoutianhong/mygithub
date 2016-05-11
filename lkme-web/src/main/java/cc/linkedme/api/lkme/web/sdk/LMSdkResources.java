@@ -58,11 +58,12 @@ public class LMSdkResources {
 //            throw new LMException(LMExceptionFactor.LM_AUTH_FAILED);
 //        }
 
+        JSONObject requestJson = JSONObject.fromObject(installParams);
+
         installParams.clientIP = request.getHeader("x-forwarded-for");
         String result = lmSdkService.install(installParams);
 
         JSONObject log = new JSONObject();
-        JSONObject requestJson = JSONObject.fromObject(installParams);
         JSONObject responseJson = JSONObject.fromObject(result);
         log.put("request", requestJson);
         log.put("response", responseJson);
@@ -85,12 +86,13 @@ public class LMSdkResources {
 //            throw new LMException(LMExceptionFactor.LM_AUTH_FAILED);
 //        }
         openParams.clientIP = request.getHeader("x-forwarded-for");
+        JSONObject requestJson = JSONObject.fromObject(openParams);
+
         String response = lmSdkService.open(openParams);
         JSONObject responseJson = JSONObject.fromObject(response);
         long deepLinkId = responseJson.getLong("deeplink_id");
         long sessionId = responseJson.getLong("session_id");
         JSONObject log = new JSONObject();
-        JSONObject requestJson = JSONObject.fromObject(openParams);
         log.put("request", requestJson);
         log.put("response", responseJson);
         ApiLogger.biz(String.format("%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s", request.getHeader("x-forwarded-for"), "open",
@@ -109,6 +111,8 @@ public class LMSdkResources {
 //            throw new LMException(LMExceptionFactor.LM_AUTH_FAILED);
 //        }
 
+        JSONObject requestJson = JSONObject.fromObject(urlParams);
+
         String url = lmSdkService.url(urlParams);
         String[] urlArr = url.split("/");
         long deepLinkId = 0;
@@ -119,7 +123,6 @@ public class LMSdkResources {
         resultJson.put("url", url);
 
         JSONObject log = new JSONObject();
-        JSONObject requestJson = JSONObject.fromObject(urlParams);
         log.put("request", requestJson);
         log.put("response", resultJson);
 
@@ -144,9 +147,9 @@ public class LMSdkResources {
 //        }
 
         // lmSdkService.close(closeParams);
+        JSONObject requestJson = JSONObject.fromObject(closeParams);
 
         JSONObject log = new JSONObject();
-        JSONObject requestJson = JSONObject.fromObject(closeParams);
         log.put("request", requestJson);
         log.put("response", "{}");
         ApiLogger.biz(String.format("%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s", request.getHeader("x-forwarded-for"), "close",

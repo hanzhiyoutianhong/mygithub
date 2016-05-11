@@ -7,7 +7,6 @@ import cc.linkedme.commons.log.ApiLogger;
 import cc.linkedme.data.model.AppInfo;
 import cc.linkedme.data.model.UrlTagsInfo;
 import cc.linkedme.data.model.params.AppParams;
-import cc.linkedme.data.model.params.UrlParams;
 import cc.linkedme.service.webapi.AppService;
 import com.google.api.client.repackaged.com.google.common.base.Strings;
 import net.sf.json.JSONArray;
@@ -114,7 +113,7 @@ public class App {
         appParams.app_id = app_id;
         appParams.type = type;
 
-        AppInfo appInfo = appService.queryApp(appParams);
+        AppInfo appInfo = appService.getAppById(appParams.app_id);
         if (appInfo == null) {
             return "{}";
         }
