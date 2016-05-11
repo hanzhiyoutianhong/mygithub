@@ -69,7 +69,7 @@ public class Base62 {
     }
 
     public static void main(String[] args) {
-        long num = 10066;
+        long num = 10036;
         System.out.println("Number: " + num);
 
         String encoding = null;

@@ -175,7 +175,7 @@ public class SummaryService {
         resultJson.put("deeplink_id", summaryDeepLinkParams.deepLinkId);
 
         String deeplink_url =
-                Constants.DEEPLINK_HTTPS_PREFIX + Base62.encode(deepLinkInfo.getAppId()) + Base62.encode(summaryDeepLinkParams.deepLinkId);
+                Constants.DEEPLINK_HTTPS_PREFIX + "/" + Base62.encode(deepLinkInfo.getAppId()) + "/" + Base62.encode(summaryDeepLinkParams.deepLinkId);
         resultJson.put("deeplink_url", deeplink_url);
 
         int click = deepLinkCount.getAdr_click() + deepLinkCount.getIos_click() + deepLinkCount.getPc_click();
