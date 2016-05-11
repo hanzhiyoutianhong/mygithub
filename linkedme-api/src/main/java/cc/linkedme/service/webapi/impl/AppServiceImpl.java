@@ -96,11 +96,6 @@ public class AppServiceImpl implements AppService {
         return result;
     }
 
-    public AppInfo queryApp(AppParams appParams) {
-        AppInfo appInfo = appDao.getAppByAppId(appParams.app_id);
-        return appInfo;
-    }
-
     public AppInfo getAppById(long appId) {
         AppInfo appInfo;
         // 先从mc取,没有命中再从DB取
@@ -124,8 +119,37 @@ public class AppServiceImpl implements AppService {
         // TODO 判断更新的app_name不能重复
         int result = appDao.updateApp(appParams);
         if (result > 0) {
+            AppInfo appInfo = new AppInfo();
+            appInfo.setApp_id( appParams.app_id );
+            appInfo.setUser_id( appParams.user_id );
+            appInfo.setApp_name( appParams.app_name );
+            appInfo.setApp_key( appParams.lkme_key );
+            appInfo.setApp_secret( appParams.lkme_secret );
+
+            appInfo.setIos_android_flag( appParams.ios_android_flag );
+            appInfo.setIos_not_url( appParams.ios_not_url );
+            appInfo.setIos_uri_scheme( appParams.ios_uri_scheme );
+            appInfo.setIos_search_option( appParams.ios_search_option );
+            appInfo.setIos_store_url( appParams.ios_store_url );
+            appInfo.setIos_custom_url( appParams.ios_custom_url );
+            appInfo.setIos_bundle_id( appParams.ios_bundle_id );
+            appInfo.setIos_app_prefix( appParams.ios_app_prefix );
+
+            appInfo.setAndroid_not_url( appParams.android_not_url );
+            appInfo.setAndroid_uri_scheme( appParams.android_uri_scheme );
+            appInfo.setAndroid_search_option( appParams.android_search_option );
+            appInfo.setGoogle_paly_url( appParams.google_play_url );
+            appInfo.setAndroid_custom_url( appParams.android_custom_url );
+            appInfo.setAndroid_package_name( appParams.android_package_name );
+            appInfo.setAndroid_sha256_fingerprints( appParams.android_sha256_fingerprints );
+
+            appInfo.setUse_default_landing_page( appParams.use_default_landing_page );
+            appInfo.setCustom_landing_page( appParams.custom_landing_page );
+
             // 删除mc里的app信息
             appInfoMemCache.delete(String.valueOf(appParams.app_id));
+            // 向mc中写入最新app信息
+            setAppInfoToCache( appInfo );
         }
         return result;
     }
