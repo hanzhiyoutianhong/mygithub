@@ -4,6 +4,7 @@ import cc.linkedme.commons.exception.LMException;
 import cc.linkedme.commons.exception.LMExceptionFactor;
 import cc.linkedme.commons.json.JsonBuilder;
 import cc.linkedme.commons.log.ApiLogger;
+import cc.linkedme.commons.util.Constants;
 import cc.linkedme.data.model.AppInfo;
 import cc.linkedme.data.model.UrlTagsInfo;
 import cc.linkedme.data.model.params.AppParams;
@@ -34,8 +35,6 @@ import java.util.List;
 public class App {
     @Resource
     private AppService appService;
-
-    public static final String ImgPath = "./"; // TODO 改路径
 
     @Path("/create_app")
     @POST
@@ -262,7 +261,7 @@ public class App {
         InputStream inputStream = null;
         OutputStream out = null;
         try {
-            File file = new File(ImgPath + imageName + "." + type);
+            File file = new File(Constants.ImgPath + imageName + "." + type);
             inputStream = new FileInputStream(file);
             out = response.getOutputStream();
             // pic size = 1M
