@@ -32,6 +32,7 @@
                 <entry key="PWD_RESET" value="update $db$.$tb$ set pwd=? where random_code = ? and valid_status = '1' "/>
                 <entry key="CHANGE_PWD" value="update $db$.$tb$ set pwd=? where email = ? and valid_status = '1' "/>
                 <entry key="LAST_LOGIN_TIME_RESET" value="update $db$.$tb$ set last_login_time=? where email= ? and valid_status = '1' "/>
+                <entry key="SET_LOGIN_TIME_AND_TOKEN" value="update $db$.$tb$ set last_login_time=?, token=? where email= ? and valid_status = '1'"/>
                 <entry key="UPDATE_TOKEN" value="update $db$.$tb$ set token = ? where email = ? and valid_status = '1'"/>
                 <entry key="SET_RANDOM_CODE" value="update $db$.$tb$ set random_code = ? where email = ? and valid_status = '1'"/>
                 <entry key="GET_TOKEN" value="select token from $db$.$tb$ where id = ? and valid_status = '1'"/>
