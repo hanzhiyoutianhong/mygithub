@@ -219,7 +219,7 @@ public class AppServiceImpl implements AppService {
 
             // 更新assetlinks.json文件(Android app link)
             if (appParams.android_package_name != null && appParams.android_sha256_fingerprints != null) {
-              //  updateAppLinksFile(appParams.android_package_name, appParams.android_sha256_fingerprints);
+                updateAppLinksFile(Long.toString(appParams.app_id), appParams.android_package_name, appParams.android_sha256_fingerprints);
             }
         }
         return result;
@@ -274,7 +274,8 @@ public class AppServiceImpl implements AppService {
 
     private void updateAppLinksFile(String appID, String packageName, String sha256CertFingerprints) {
         BufferedReader br = null;
-        String fileName = "/Users/Vontroy/LinkedME/java-platform/lkme-web/src/main/webapp/.well-known/assetlinks.json";
+       // String fileName = "/Users/Vontroy/LinkedME/java-platform/lkme-web/src/main/webapp/.well-known/assetlinks.json";
+        String fileName = "/data1/tomcat8080/webapps/ROOT/webapp/.well-known/assetlinks.json";
         JSONArray json = new JSONArray();
         try {
             br = new BufferedReader(new FileReader(fileName));
@@ -282,53 +283,38 @@ public class AppServiceImpl implements AppService {
             while ((temp = br.readLine()) != null) {
 
                 json = JSONArray.fromObject(temp);
+                boolean hasRecord = false;
                 for( int i = 0; i < json.size(); i++ ) {
                     JSONObject appItem = json.getJSONObject( i );
-                    String appIdJson = appItem.getJSONObject("appID").toString();
-                    JSONArray relation = appItem.getJSONArray( "relation" );
-                    JSONObject target = appItem.getJSONObject("target");
-                    JSONObject package_name = appItem.getJSONObject("package_name");
-
-                    JSONArray sha256_cer_fingerprints = appItem.getJSONArray( "sha256_cert_fingerprints");
+                    String appIdJson = appItem.getString("appID");
                     if( appIdJson.equals(appID) ) {
-                        //packageName
+                        hasRecord = true;
+                        JSONArray sha256Json = new JSONArray();
+                        sha256Json.add( sha256CertFingerprints );
+                        json.getJSONObject( i ).getJSONObject("target").put("package_name", packageName );
+                        json.getJSONObject( i ).getJSONObject("target").put("sha256_cert_fingerprints", sha256Json );
+                        break;
                     }
-
                 }
 
-                boolean hasRecord = false;
-//                for (int i = 0; i < details.size(); i++) {
-//                    JSONObject appJson = details.getJSONObject(i);
-//                    String pathsStr = appJson.get("paths").toString();
-//                    if (pathsStr.equals(pathsItem)) {
-//                        hasRecord = true;
-//                        appJson.put("appID", appID);
-//
-//                        details.set(i, appJson);
-//                        appLinkJson.put("details", details);
-//                        json.put("applinks", appLinkJson);
-//                        break;
-//                    }
-//                }
-//                if( !hasRecord ) {
-//                    JSONObject addJson = new JSONObject();
-//                    addJson.put( "appID", appID);
-//                    addJson.put( "paths", pathsItem);
-//                    details.add( addJson );
-//                }
+                if( !hasRecord ) {
+                    JSONArray relation = new JSONArray();
+                    relation.add( "delegate_permission/common.handle_all_urls" );
+                    JSONObject target = new JSONObject();
+                    JSONArray sha256_cer_fingerprints = new JSONArray();
+                    sha256_cer_fingerprints.add( sha256CertFingerprints );
+                    target.put( "namespace", "android_app");
+                    target.put( "package_name", packageName );
+                    target.put( "sha256_cert_fingerprints", sha256_cer_fingerprints );
 
+                    JSONObject appJson = new JSONObject();
+                    appJson.put( "appID", appID );
+                    appJson.put( "relation", relation );
+                    appJson.put( "target", target );
 
-//                json = JSONArray.fromObject(temp);
-//                JSONObject appItem = new JSONObject();
-//                appItem.put("relation", "delegate_permission/common.handle_all_urls");
-//                JSONObject target = new JSONObject();
-//                target.put("namespace", "android_app");
-//                target.put("package_name", packageName);
-//                JSONArray jsonArray = new JSONArray();
-//                jsonArray.add(sha256CertFingerprints);
-//                target.put("sha256_cert_fingerprints", jsonArray);
-//                appItem.put("target", target);
-//                json.add(appItem);
+                    json.add( appJson );
+
+                }
             }
         } catch (FileNotFoundException e) {
             ApiLogger.error(String.format("AppServiceImpl.updateAppleAssociationFile error, file: %s is not found", fileName), e);
@@ -346,6 +332,10 @@ public class AppServiceImpl implements AppService {
         writeFile(fileName, json.toString());
     }
 
+//    public static void main( String args[] ) {
+//        updateAppLinksFile("2345", "package1", "SDHGE#@#EFSDFA");
+//        updateAppLinksFile("2345", "package2", "skdjflkwer232342");
+//    }
     private void writeFile(String fileName, String fileContent) {
         BufferedWriter bw = null;
         try {
