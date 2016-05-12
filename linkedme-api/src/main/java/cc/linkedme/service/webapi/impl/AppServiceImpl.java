@@ -48,7 +48,7 @@ public class AppServiceImpl implements AppService {
     @Resource
     private ShardingSupportHash<JedisPort> linkedmeKeyShardingSupport;
 
-    private static void updateAppleAssociationFile(String appIdentifier, String appID) {
+    private void updateAppleAssociationFile(String appIdentifier, String appID) {
         BufferedReader br = null;
         String fileName = "/data1/tomcat8080/webapps/ROOT/apple-app-site-association";
        // String fileName = "/Users/Vontroy/LinkedME/java-platform/lkme-web/src/main/webapp/apple-app-site-association";
@@ -95,15 +95,15 @@ public class AppServiceImpl implements AppService {
             }
         }
 
-        System.out.println( json.toString());
+        //System.out.println( json.toString());
 
-        //writeFile(fileName, json.toString());
+        writeFile(fileName, json.toString());
     }
 
-    public static void main(String args[]) {
-        updateAppleAssociationFile("cccC", "GVU64N9P9M.io.oooooo");
-        updateAppleAssociationFile("cccC", "hahahah");
-    }
+//    public static void main(String args[]) {
+//        updateAppleAssociationFile("cccC", "GVU64N9P9M.io.oooooo");
+//        updateAppleAssociationFile("cccC", "hahahah");
+//    }
 
     public long createApp(AppParams appParams) {
         AppInfo appInfo = new AppInfo();
