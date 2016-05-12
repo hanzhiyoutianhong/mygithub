@@ -22,12 +22,12 @@ function start() {
         var a = Params.Scheme + "://";
         if (Params.Match_id && Params.Match_id.length > 0 && (a += "?click_id=" + Params.Match_id), DEBUG && alert(a), Params.Ios_major < 9) DEBUG && alert("IOS Major below 9:" + Params.Ios_major),
             iframeDeeplinkLaunch(a, 2e3,
-                function() {
+                function () {
                     gotoUrl(Params.Url)
                 });
         else if (DEBUG && alert("IOS Major upper 9:" + Params.Ios_major), Params.isChrome()) DEBUG && alert("isChrome"),
             chiosDeeplinkLaunch(a,
-                function() {
+                function () {
                     gotoUrl(Params.Url)
                 });
         else if (Params.isUniversallink()) if (DEBUG && alert("isUniversallink = true"), env.cookieEnabled()) switch (DEBUG && alert("cookie Enabled; AppInsStatus:" + Params.AppInsStatus), parseInt(Params.AppInsStatus, 10)) {
@@ -43,35 +43,35 @@ function start() {
             gotoIOSLandingPage();
         else DEBUG && alert("is safari"),
                 deeplinkLaunch(a, 2500,
-                    function() {
+                    function () {
                         gotoUrl(Params.Url)
                     })
     } else if (Params.isAndroid())
         if (DEBUG && alert("isAndroid"), a = Params.Scheme + "://" + Params.Host, Params.Match_id && Params.Match_id.length > 0 && (a += "?click_id=" + Params.Match_id),
             DEBUG && alert(a), Params.isCannotDeeplink()) iframeDeeplinkLaunch(a, 10e3,
-        function() {
-            gotoCannotDeeplink()
-        });
-    else if (Params.isQQBrowser()) DEBUG && alert("QQ browser"),
-        shouldGotoYYB() ? (DEBUG && alert(Params.YYB_url), gotoUrl(Params.YYB_url)) : gotoCannotDeeplink();
-    else if (Params.isUC()) DEBUG && alert("UC browser"),
-        gotoUC(a);
-    else if (Params.isChrome() && Params.Chrome_major >= 25 && !Params.isForceUseScheme()) {
-        DEBUG && alert("Chrome_major:" + Params.Chrome_major);
-        var b = Params.Host;
-        Params.Match_id && Params.Match_id.length > 0 && (b += "?click_id=" + Params.Match_id);
-        var c = Params.Pkg,
-            d = "intent://" + b + "#Intent;scheme=" + Params.Scheme + ";package=" + c + ";S.browser_fallback_url=" + Params.Url + ";end";
+            function () {
+                gotoCannotDeeplink()
+            });
+        else if (Params.isQQBrowser()) DEBUG && alert("QQ browser"),
+            shouldGotoYYB() ? (DEBUG && alert(Params.YYB_url), gotoUrl(Params.YYB_url)) : gotoCannotDeeplink();
+        else if (Params.isUC()) DEBUG && alert("UC browser"),
+            gotoUC(a);
+        else if (Params.isChrome() && Params.Chrome_major >= 25 && !Params.isForceUseScheme()) {
+            DEBUG && alert("Chrome_major:" + Params.Chrome_major);
+            var b = Params.Host;
+            Params.Match_id && Params.Match_id.length > 0 && (b += "?click_id=" + Params.Match_id);
+            var c = Params.Pkg,
+                d = "intent://" + b + "#Intent;scheme=" + Params.Scheme + ";package=" + c + ";S.browser_fallback_url=" + Params.Url + ";end";
             alert("d=" + d);
-        deeplinkLaunch(d, 2e3,
-            function() {
-                gotoAndroidNewInstall()
-            })
-    } else DEBUG && alert("default browser"),
-        iframeDeeplinkLaunch(a, 2e3,
-            function() {
-                gotoAndroidNewInstall()
-            })
+            deeplinkLaunch(d, 2e3,
+                function () {
+                    gotoAndroidNewInstall()
+                })
+        } else DEBUG && alert("default browser"),
+            iframeDeeplinkLaunch(a, 2e3,
+                function () {
+                    gotoAndroidNewInstall()
+                })
 }
 var winWidth = $(window).width(),
     winHeight = $(window).height(),
@@ -99,7 +99,7 @@ var winWidth = $(window).width(),
             dstplatformNA: "dst-{Platform}-not-available"
         },
         <!--a = js/dst, b = dst-ios-not-available-->
-        reportDSJSEvent: function(a, b) {
+        reportDSJSEvent: function (a, b) {
             var c = {
                     action: a,
                     kvs: {
@@ -110,9 +110,11 @@ var winWidth = $(window).width(),
                 },
                 d = JSON.stringify(c);
             $.post(this.trackingUrl + Params.AppID, d,
-                function(a) {}).error(function() {})
+                function (a) {
+                }).error(function () {
+            })
         },
-        reportDSJSUserClickEvent: function(a, b, c) {
+        reportDSJSUserClickEvent: function (a, b, c) {
             var d = {
                     action: a,
                     kvs: {
@@ -124,7 +126,9 @@ var winWidth = $(window).width(),
                 },
                 e = JSON.stringify(d);
             $.post(this.trackingUrl + Params.AppID, e,
-                function(a) {}).error(function() {})
+                function (a) {
+                }).error(function () {
+            })
         }
     },
     CONST_APP_INS_STATUS = {
@@ -143,80 +147,84 @@ var winWidth = $(window).width(),
     div_platform_not_available = '<div style="background-image:url(' + ResPathLang + '{Platform}_not_avail.png);background-size: 100% 100%;width:100%;height:100%;"></div>',
 
     env = {
-        windowLocation: function(a) {
+        windowLocation: function (a) {
             window.location = a
         },
-        windowOpen: function(a) {
+        windowOpen: function (a) {
             window.open(a)
         },
-        windowClose: function() {
+        windowClose: function () {
             window.close()
         },
-        windowChangeHistory: function() {
+        windowChangeHistory: function () {
             window.history.replaceState("Object", "Title", "0")
         },
-        windowAddEventListener: function(a, b) {
+        windowAddEventListener: function (a, b) {
             window.addEventListener(a, b)
         },
-        windowUrlAddTag: function() {
+        windowUrlAddTag: function () {
             if (window.location.search.indexOf(CONST_DS_TAG) < 0) {
                 var a = Math.floor(1e6 * Math.random()),
-                    b = "?" + CONST_DS_TAG + "=" + a;
-                window.location.search = b,
+                    b = CONST_DS_TAG + "=" + a;
+                if (window.location.search == undefined || window.location.search != "") {
+                    window.location.search += "&" + b;
+                } else {
+                    window.location.search = "?" + b;
+                }
                 DEBUG && alert("Url Add Tag:" + b)
             }
         },
-        cookieEnabled: function() {
+        cookieEnabled: function () {
             var a = !1;
             try {
                 localStorage.test = 2
-            } catch(b) {
+            } catch (b) {
                 DEBUG && alert("private mode"),
                     a = !0
             }
             return navigator.cookieEnabled && !a
         }
     },
-    clearTimeoutOnPageUnload = function(a) {
+    clearTimeoutOnPageUnload = function (a) {
         env.windowAddEventListener("pagehide",
-            function() {
+            function () {
                 DEBUG && alert("window event pagehide"),
                     clearTimeout(a),
                     env.windowChangeHistory()
             }),
             env.windowAddEventListener("blur",
-                function() {
+                function () {
                     DEBUG && alert("window event blur"),
                         clearTimeout(a),
                         env.windowChangeHistory()
                 }),
             env.windowAddEventListener("unload",
-                function() {
+                function () {
                     DEBUG && alert("window event unload"),
                         clearTimeout(a),
                         env.windowChangeHistory()
                 }),
             document.addEventListener("webkitvisibilitychange",
-                function() {
+                function () {
                     DEBUG && alert("window event webkitvisibilitychange"),
                     document.webkitHidden && (clearTimeout(a), env.windowChangeHistory())
                 }),
             env.windowAddEventListener("beforeunload",
-                function() {
+                function () {
                     DEBUG && alert("window event beforeunload")
                 }),
             env.windowAddEventListener("focus",
-                function() {
+                function () {
                     DEBUG && alert("window event focus")
                 }),
             env.windowAddEventListener("focusout",
-                function() {
+                function () {
                     DEBUG && alert("window event focusout"),
                         clearTimeout(a),
                         env.windowChangeHistory()
                 })
     },
-    gotoTip = function(a, b) {
+    gotoTip = function (a, b) {
         weixin_tip = weixinTipTemplate.replace(/{img_tip}/g, imgInfo).replace(/{Icon_Url}/g, Params.IconUrl).replace(/{mobile-os}/g, a),
             $("body").append(weixin_tip),
             $(".image-tip").show(),
@@ -224,109 +232,109 @@ var winWidth = $(window).width(),
             dstLocation = b,
             dsAction.reportDSJSEvent(dsAction.actionJSDst, dstLocation)
     },
-    gotoCannotDeeplink = function() {
+    gotoCannotDeeplink = function () {
         DEBUG && alert("cannot deeplink"),
-            Params.isDownloadDirectly() ? ($("body").append(div_goto_cannot_deeplink_with_download_btn), $("#btnGotoAndroidDownload").click(function() {
+            Params.isDownloadDirectly() ? ($("body").append(div_goto_cannot_deeplink_with_download_btn), $("#btnGotoAndroidDownload").click(function () {
                 dsAction.reportDSJSUserClickEvent(dsAction.actionJSUserClick, "gotoAndroidDirectDownload", "yes"),
                     gotoUrl(Params.Url)
-            })) : ($("body").append(div_goto_cannot_deeplink_with_market_btn), $("#btnGotoAndroidMarket").click(function() {
+            })) : ($("body").append(div_goto_cannot_deeplink_with_market_btn), $("#btnGotoAndroidMarket").click(function () {
                 dsAction.reportDSJSUserClickEvent(dsAction.actionJSUserClick, "gotoAndroidMarket", "yes"),
                     gotoAndroidMarket()
             })),
             dstLocation = dsAction.destination.dstcannotdeeplink,
             dsAction.reportDSJSEvent(dsAction.actionJSDst, dstLocation)
     },
-    gotoAndroidNewInstall = function() {
+    gotoAndroidNewInstall = function () {
         Params.isDownloadDirectly() ? gotoAndroidDownloadLandingPage() : Params.isCannotGoMarket() ? gotoAndroidCannotGoMarketLandingPage() : Params.isCannotGetWinEvent() || Params.isUC() ? gotoAndroidMarketLandingPage() : gotoAndroidMarket()
     },
-    gotoIOSLandingPage = function() {
+    gotoIOSLandingPage = function () {
         dstLocation = dsAction.destination.dstios9UniversalLinkLandPage,
         DEBUG && alert(dstLocation),
             div_goto_landingpage = div_goto_landingpage.replace(/{Bg_Url}/g, ResPathLang + "bg_ul.png").replace(/{App_Name}/g, Params.AppName).replace(/{Icon_Url}/g, Params.IconUrl).replace(/{Download_title}/g, Params.Download_title).replace(/{Download_msg}/g, Params.Download_msg).replace(/{Btn_landingpage_text}/g, ResGotoAppStoreDownload).replace(/{Border_width}/g, "3").replace(/{Element_type}/g, "button"),
             $("body").append(div_goto_landingpage),
             dsAction.reportDSJSEvent(dsAction.actionJSDst, dstLocation),
-            $("#btnGotoLandingPage").click(function() {
+            $("#btnGotoLandingPage").click(function () {
                 dsAction.reportDSJSUserClickEvent(dsAction.actionJSUserClick, "gotoIosAppStore", "yes"),
                     gotoUrl(Params.Url)
             })
     },
-    gotoAndroidMarketLandingPage = function() {
+    gotoAndroidMarketLandingPage = function () {
         dstLocation = dsAction.destination.dstandroidMarketLandPage,
         DEBUG && alert(dstLocation),
             div_goto_landingpage = div_goto_landingpage.replace(/{Bg_Url}/g, ResPath + "bg1.png").replace(/{App_Name}/g, Params.AppName).replace(/{Icon_Url}/g, Params.IconUrl).replace(/{Download_title}/g, Params.Download_title).replace(/{Download_msg}/g, Params.Download_msg).replace(/{Btn_landingpage_text}/g, ResGotoAppStoreDownload).replace(/{Border_width}/g, "3").replace(/{Element_type}/g, "button"),
             $("body").append(div_goto_landingpage),
             dsAction.reportDSJSEvent(dsAction.actionJSDst, dstLocation),
-            $("#btnGotoLandingPage").click(function() {
+            $("#btnGotoLandingPage").click(function () {
                 dsAction.reportDSJSUserClickEvent(dsAction.actionJSUserClick, "gotoAndroidMarket", "yes"),
                     gotoAndroidMarket()
             })
     },
-    gotoAndroidCannotGoMarketLandingPage = function() {
+    gotoAndroidCannotGoMarketLandingPage = function () {
         dstLocation = dsAction.destination.dstandroidCannotGoMarketLandPage,
         DEBUG && alert(dstLocation),
             div_goto_landingpage = div_goto_landingpage.replace(/{Bg_Url}/g, ResPath + "bg1.png").replace(/{App_Name}/g, Params.AppName).replace(/{Icon_Url}/g, Params.IconUrl).replace(/{Download_title}/g, Params.Download_title).replace(/{Download_msg}/g, Params.Download_msg).replace(/{Btn_landingpage_text}/g, ResPleaseOpenAppStore).replace(/{Border_width}/g, "0").replace(/{Element_type}/g, "p"),
             $("body").append(div_goto_landingpage),
             dsAction.reportDSJSEvent(dsAction.actionJSDst, dstLocation)
     },
-    gotoAndroidDownloadLandingPage = function() {
+    gotoAndroidDownloadLandingPage = function () {
         dstLocation = dsAction.destination.dstandroidDirectDownloadLandPage,
         DEBUG && alert(dstLocation),
             div_goto_landingpage = div_goto_landingpage.replace(/{Bg_Url}/g, ResPath + "bg1.png").replace(/{App_Name}/g, Params.AppName).replace(/{Icon_Url}/g, Params.IconUrl).replace(/{Download_title}/g, Params.Download_title).replace(/{Download_msg}/g, Params.Download_msg).replace(/{Btn_landingpage_text}/g, ResDownloadAPK).replace(/{Border_width}/g, "3").replace(/{Element_type}/g, "button"),
             $("body").append(div_goto_landingpage),
             dsAction.reportDSJSEvent(dsAction.actionJSDst, dstLocation),
-            $("#btnGotoLandingPage").click(function() {
+            $("#btnGotoLandingPage").click(function () {
                 dsAction.reportDSJSUserClickEvent(dsAction.actionJSUserClick, "gotoAndroidDirectDownload", "yes"),
                     gotoUrl(Params.Url)
             })
     },
-    gotoUC = function(a) {
+    gotoUC = function (a) {
         dstLocation = dsAction.destination.dstucbrowser;
         var b = $("body").html();
         $("body").append(div_allow_me_deeplink);
         var c = 6,
-            d = function() {
+            d = function () {
                 c--,
                     $("#textCountDown").html(c),
                     0 === c ? ($("#textCountDown").html(""), iframeDeeplinkLaunch(a, 10e3,
-                        function() {
+                        function () {
                             $("body").html(b),
                                 gotoAndroidNewInstall()
                         })) : setTimeout(d, 1e3)
             };
         d()
     },
-    gotoAndroidMarket = function() {
+    gotoAndroidMarket = function () {
         env.windowChangeHistory(),
             dstLocation = "market://details?id=" + Params.Pkg,
         DEBUG && alert(dstLocation),
             dsAction.reportDSJSEvent(dsAction.actionJSDst, dstLocation),
             env.windowLocation(dstLocation)
     },
-    gotoUrl = function(a) {
+    gotoUrl = function (a) {
         env.windowChangeHistory(),
             dstLocation = a,
             dsAction.reportDSJSEvent(dsAction.actionJSDst, a),
             env.windowLocation(a)
     },
-    gotoDivPlatformNotAvail = function(a) {
-            div_platform_NA = div_platform_not_available.replace(/{Platform}/g, a),
+    gotoDivPlatformNotAvail = function (a) {
+        div_platform_NA = div_platform_not_available.replace(/{Platform}/g, a),
             $("body").append(div_platform_NA),
             dstLocation = dsAction.destination.dstplatformNA.replace(/{Platform}/g, a),
             dsAction.reportDSJSEvent(dsAction.actionJSDst, dstLocation)
     },
-    deeplinkLaunch = function(a, b, c) {
+    deeplinkLaunch = function (a, b, c) {
         deeplinkLocation = a,
         DEBUG && alert(deeplinkLocation),
             dsAction.reportDSJSEvent(dsAction.actionJSDeepLink, a),
-           // a = "intent://linkedme?click_id=sWpK2qR01#Intent;scheme=linkedmedemo;package=com.microquation.linkedme.android;S.browser_fallback_url=https://www.baidu.com;end";
+            // a = "intent://linkedme?click_id=sWpK2qR01#Intent;scheme=linkedmedemo;package=com.microquation.linkedme.android;S.browser_fallback_url=https://www.baidu.com;end";
             env.windowLocation(a);
-        var d = setTimeout(function() {
+        var d = setTimeout(function () {
                 c()
             },
             b);
         clearTimeoutOnPageUnload(d)
     },
-    chiosDeeplinkLaunch = function(a, b) {
+    chiosDeeplinkLaunch = function (a, b) {
         deeplinkLocation = a;
         var c = null;
         try {
@@ -334,12 +342,12 @@ var winWidth = $(window).width(),
                 c = env.windowOpen(a),
             DEBUG && alert("pass"),
                 env.windowChangeHistory()
-        } catch(d) {
+        } catch (d) {
             DEBUG && alert("exception")
         }
         c ? env.windowClose() : b()
     },
-    iframeDeeplinkLaunch = function(a, b, c) {
+    iframeDeeplinkLaunch = function (a, b, c) {
         var d = document.createElement("iframe");
         d.style.width = "1px",
             d.style.height = "1px",
@@ -349,19 +357,19 @@ var winWidth = $(window).width(),
             document.body.appendChild(d),
             deeplinkLocation = a,
             dsAction.reportDSJSEvent(dsAction.actionJSDeepLink, a);
-        var e = setTimeout(function() {
+        var e = setTimeout(function () {
                 c()
             },
             b);
         clearTimeoutOnPageUnload(e)
     },
-    isIosNotAvailable = function() {
+    isIosNotAvailable = function () {
         <!--void 0 和undefined-->
         return Params.isIOS() && (void 0 === Params.BundleID || "" === Params.BundleID)
     },
-    isAndroidNotAvailable = function() {
+    isAndroidNotAvailable = function () {
         return Params.isAndroid() && (void 0 === Params.Pkg || "" === Params.Pkg)
     },
-    shouldGotoYYB = function() {
+    shouldGotoYYB = function () {
         return void 0 !== Params.YYB_url && "" !== Params.YYB_url && !Params.isIOS()
     };
