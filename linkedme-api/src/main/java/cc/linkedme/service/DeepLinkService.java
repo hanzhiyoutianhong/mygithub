@@ -1,5 +1,9 @@
 package cc.linkedme.service;
 
+import javax.annotation.Resource;
+
+import org.springframework.stereotype.Service;
+
 import cc.linkedme.commons.exception.LMException;
 import cc.linkedme.commons.exception.LMExceptionFactor;
 import cc.linkedme.commons.memcache.MemCacheTemplate;
@@ -11,9 +15,6 @@ import cc.linkedme.data.model.DeepLink;
 import cc.linkedme.data.model.params.UrlParams;
 import net.sf.json.JSONArray;
 import net.sf.json.JSONObject;
-import org.springframework.stereotype.Service;
-
-import javax.annotation.Resource;
 
 /**
  * Created by LinkedME01 on 16/3/10.
@@ -115,7 +116,7 @@ public class DeepLinkService {
         String[] campaigns = deepLinkInfo.getCampaign().split(",");
         JSONArray campaignArray = new JSONArray();
         for (int i = 0; i < campaigns.length; i++) {
-            campaignArray.add(features[i]);
+            campaignArray.add(campaigns[i]);
         }
         resultJson.put("campaign", campaignArray);
 
