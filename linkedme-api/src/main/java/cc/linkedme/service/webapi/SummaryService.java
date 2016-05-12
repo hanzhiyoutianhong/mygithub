@@ -195,9 +195,9 @@ public class SummaryService {
         resultJson.put("creation_time", deepLinkInfo.getCreateTime());
         resultJson.put("creation_type", deepLinkInfo.getSource());
 
-        JSONObject retJson = getCountJson(deepLinkCount.getIos_click(), deepLinkCount.getIos_install(), deepLinkCount.getIos_open(),
-                deepLinkCount.getAdr_click(), deepLinkCount.getAdr_install(), deepLinkCount.getAdr_open(), deepLinkCount.getPc_click(),
-                deepLinkCount.getPc_ios_scan(), deepLinkCount.getPc_adr_scan());
+        JSONObject retJson = getCountJson(deepLinkCount.getIos_click(), deepLinkCount.getIos_open(), deepLinkCount.getIos_install(),
+                deepLinkCount.getAdr_click(), deepLinkCount.getAdr_open(), deepLinkCount.getAdr_install(), deepLinkCount.getPc_click(),
+                deepLinkCount.getPc_ios_scan(), deepLinkCount.getPc_ios_open(), deepLinkCount.getPc_ios_install(), deepLinkCount.getPc_adr_scan(), deepLinkCount.getPc_adr_open(), deepLinkCount.getPc_adr_install());
 
         resultJson.put("data", retJson);
 
@@ -314,22 +314,26 @@ public class SummaryService {
         return resultJson.toString();
     }
 
-    public JSONObject getCountJson(int iosClick, int iosInstall, int iosOpen, int adrClick, int adrInstall, int adrOpen, int pcClick,
-            int pcIosScan, int pcAdrScan) {
+    public JSONObject getCountJson(int iosClick, int iosOpen, int iosInstall, int adrClick, int adrOpen, int adrInstall, int pcClick,
+            int pcIosScan, int pcIosOpen, int pcIosInstall, int pcAdrScan, int pcAdrOpen, int pcAdrInstall) {
         JSONObject iosJson = new JSONObject();
         iosJson.put("click", iosClick);
-        iosJson.put("install", iosInstall);
         iosJson.put("open", iosOpen);
+        iosJson.put("install", iosInstall);
 
         JSONObject adrJson = new JSONObject();
         adrJson.put("click", adrClick);
-        adrJson.put("install", adrInstall);
         adrJson.put("open", adrOpen);
+        adrJson.put("install", adrInstall);
 
         JSONObject pcJson = new JSONObject();
         pcJson.put("click", pcClick);
         pcJson.put("pc_ios_scan", pcIosScan);
+        pcJson.put("pc_ios_open", pcIosOpen);
+        pcJson.put("pc_ios_install", pcIosInstall);
         pcJson.put("pc_adr_scan", pcAdrScan);
+        pcJson.put("pc_adr_open", pcAdrOpen);
+        pcJson.put("pc_adr_install", pcAdrInstall);
 
         JSONObject retJson = new JSONObject();
         retJson.put("ios", iosJson);
