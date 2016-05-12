@@ -125,7 +125,7 @@ public class SummaryService {
         List<DeepLink> deepLinks = getDeepLinks(summaryDeepLinkParams);
         int deepLinkNum = deepLinks.size();
         int startIndex = summaryDeepLinkParams.skipNumber;
-        if(startIndex < 0) {
+        if (startIndex < 0) {
             startIndex = 0;
         }
         int endIndex = (summaryDeepLinkParams.returnNumber + startIndex) > deepLinkNum
@@ -174,8 +174,8 @@ public class SummaryService {
         JSONObject resultJson = new JSONObject();
         resultJson.put("deeplink_id", summaryDeepLinkParams.deepLinkId);
 
-        String deeplink_url =
-                Constants.DEEPLINK_HTTPS_PREFIX + "/" + Base62.encode(deepLinkInfo.getAppId()) + "/" + Base62.encode(summaryDeepLinkParams.deepLinkId);
+        String deeplink_url = Constants.DEEPLINK_HTTPS_PREFIX + "/" + Base62.encode(deepLinkInfo.getAppId()) + "/"
+                + Base62.encode(summaryDeepLinkParams.deepLinkId);
         resultJson.put("deeplink_url", deeplink_url);
 
         int click = deepLinkCount.getAdr_click() + deepLinkCount.getIos_click() + deepLinkCount.getPc_click();
@@ -427,22 +427,22 @@ public class SummaryService {
         }
 
         if (dplCountMap.get(DeepLinkCount.CountType.pc_click.toString()) != null) {
-
             dplc.setPc_click(Integer.parseInt(dplCountMap.get(DeepLinkCount.CountType.pc_click.toString())));
         }
         if (dplCountMap.get(DeepLinkCount.CountType.pc_ios_scan.toString()) != null) {
-
             dplc.setPc_ios_scan(Integer.parseInt(dplCountMap.get(DeepLinkCount.CountType.pc_ios_scan.toString())));
         }
         if (dplCountMap.get(DeepLinkCount.CountType.pc_adr_scan.toString()) != null) {
-
             dplc.setPc_adr_scan(Integer.parseInt(dplCountMap.get(DeepLinkCount.CountType.pc_adr_scan.toString())));
         }
-
+        if (dplCountMap.get(DeepLinkCount.CountType.pc_ios_open.toString()) != null) {
+            dplc.setPc_ios_open(Integer.parseInt(dplCountMap.get(DeepLinkCount.CountType.pc_ios_open.toString())));
+        }
+        if (dplCountMap.get(DeepLinkCount.CountType.pc_adr_open.toString()) != null) {
+            dplc.setPc_adr_open(Integer.parseInt(dplCountMap.get(DeepLinkCount.CountType.pc_adr_open.toString())));
+        }
         // dplc.setPc_ios_install(dplCountMap.get(DeepLinkCount.CountType.pc_ios_install));
-        // dplc.setPc_ios_open(dplCountMap.get(DeepLinkCount.CountType.pc_ios_open));
         // dplc.setPc_adr_install(dplCountMap.get(DeepLinkCount.CountType.pc_adr_install));
-        // dplc.setPc_adr_open(dplCountMap.get(DeepLinkCount.CountType.pc_adr_open));
     }
 
     public String getButtonsIncome(SummaryButtonParams summaryButtonParams) {
