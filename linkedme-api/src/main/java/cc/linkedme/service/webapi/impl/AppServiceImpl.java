@@ -1,11 +1,21 @@
 package cc.linkedme.service.webapi.impl;
 
+import java.io.BufferedReader;
+import java.io.BufferedWriter;
+import java.io.FileNotFoundException;
+import java.io.FileReader;
+import java.io.FileWriter;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
 import javax.annotation.Resource;
 
+import cc.linkedme.commons.log.ApiLogger;
+import cc.linkedme.commons.util.Base62;
+import net.sf.json.JSONArray;
+import net.sf.json.JSONObject;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang.ArrayUtils;
 
@@ -65,9 +75,6 @@ public class AppServiceImpl implements AppService {
             JedisPort linkedmeKeyClient = linkedmeKeyShardingSupport.getClient(linkedmeKey);
             linkedmeKeyClient.hset(linkedmeKey, "appid", appId);
             linkedmeKeyClient.hset(linkedmeKey, "secret", secret);
-
-            // 把appInfo写入mc,点击短链时需要查询appInfo
-            setAppInfoToCache(appInfo);
             return appId;
         }
         throw new LMException(LMExceptionFactor.LM_SYS_ERROR, "Create appInfo failed");
@@ -149,6 +156,19 @@ public class AppServiceImpl implements AppService {
 
             // 向mc中写入最新app信息
             setAppInfoToCache(appInfo);
+
+            //TODO 去重,要区分第一次更新和后续更新
+            // 更新apple-app-site-association(ios universe link)
+            if (appParams.ios_app_prefix != null && appParams.ios_bundle_id != null) {
+                String appID = appParams.ios_app_prefix + "." + appParams.ios_bundle_id;
+                String appIdentifier = Base62.encode(appParams.app_id);
+                updateAppleAssociationFile(appIdentifier, appID);
+            }
+
+            //更新assetlinks.json文件(Android app link)
+            if (appParams.android_package_name != null && appParams.android_sha256_fingerprints != null) {
+                updateAppLinksFile(appParams.android_package_name, appParams.android_sha256_fingerprints);
+            }
         }
         return result;
     }
@@ -198,6 +218,101 @@ public class AppServiceImpl implements AppService {
     @Override
     public String uploadImg(AppParams appParams, String imagePath) {
         return appDao.uploadImg(appParams, imagePath);
+    }
+
+    private void updateAppleAssociationFile(String appIdentifier, String appID) {
+        BufferedReader br = null;
+        String fileName = "/data1/tomcat8080/webapps/ROOT/apple-app-site-association";
+        JSONObject json = new JSONObject();
+        try {
+            br = new BufferedReader(new FileReader(fileName));
+            String temp;
+            while ((temp = br.readLine()) != null) {
+                json = JSONObject.fromObject(temp);
+                JSONObject appLinksJson = json.getJSONObject("applinks");
+                JSONArray details = appLinksJson.getJSONArray("details");
+                JSONObject appItem = new JSONObject();
+                JSONArray pathsJson = new JSONArray();
+                String item = "/" + appIdentifier + "/*";
+                pathsJson.add(item);
+                appItem.put("appID", appID);
+                appItem.put("paths", pathsJson);
+                details.add(appItem);
+                appLinksJson.put("details", details);
+                json.put("applinks", appLinksJson);
+            }
+        } catch (FileNotFoundException e) {
+            ApiLogger.error(String.format("AppServiceImpl.updateAppleAssociationFile error, file: %s is not found", fileName), e);
+        } catch (IOException e) {
+            ApiLogger.error("readline failed");
+        } finally {
+            if (br != null) {
+                try {
+                    br.close();
+                } catch (IOException e) {
+                    ApiLogger.error("close file failed");
+                }
+            }
+        }
+
+        writeFile(fileName, json.toString());
+    }
+
+    private void updateAppLinksFile(String packageName, String sha256CertFingerprints) {
+        BufferedReader br = null;
+        String fileName = "/data1/tomcat8080/webapps/ROOT/.well-known/assetlinks.json";
+        JSONArray json = new JSONArray();
+        try {
+            br = new BufferedReader(new FileReader(fileName));
+            String temp;
+            while ((temp = br.readLine()) != null) {
+                json = JSONArray.fromObject(temp);
+                JSONObject appItem = new JSONObject();
+                appItem.put("relation", "delegate_permission/common.handle_all_urls");
+                JSONObject target = new JSONObject();
+                target.put("namespace", "android_app");
+                target.put("package_name", packageName);
+                JSONArray jsonArray = new JSONArray();
+                jsonArray.add(sha256CertFingerprints);
+                target.put("sha256_cert_fingerprints", jsonArray);
+                appItem.put("target", target);
+                json.add(appItem);
+            }
+        } catch (FileNotFoundException e) {
+            ApiLogger.error(String.format("AppServiceImpl.updateAppleAssociationFile error, file: %s is not found", fileName), e);
+        } catch (IOException e) {
+            ApiLogger.error("readline failed");
+        } finally {
+            if (br != null) {
+                try {
+                    br.close();
+                } catch (IOException e) {
+                    ApiLogger.error("close file failed");
+                }
+            }
+        }
+        writeFile(fileName, json.toString());
+    }
+
+    private void writeFile(String fileName, String fileContent) {
+        BufferedWriter bw = null;
+        try {
+            bw = new BufferedWriter(new FileWriter(fileName));
+            bw.write(fileContent);
+            bw.flush();
+        } catch (FileNotFoundException e) {
+            ApiLogger.error(String.format("AppServiceImpl.updateAppleAssociationFile error, file: %s is not found", fileName), e);
+        } catch (IOException e) {
+            ApiLogger.error("write file failed");
+        } finally {
+            if (bw != null) {
+                try {
+                    bw.close();
+                } catch (IOException e) {
+                    ApiLogger.error("close file failed");
+                }
+            }
+        }
     }
 
 }
