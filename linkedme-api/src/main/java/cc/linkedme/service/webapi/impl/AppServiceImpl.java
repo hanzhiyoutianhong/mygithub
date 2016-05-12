@@ -48,9 +48,10 @@ public class AppServiceImpl implements AppService {
     @Resource
     private ShardingSupportHash<JedisPort> linkedmeKeyShardingSupport;
 
-    private void updateAppleAssociationFile(String appIdentifier, String appID) {
+    private static void updateAppleAssociationFile(String appIdentifier, String appID) {
         BufferedReader br = null;
         String fileName = "/data1/tomcat8080/webapps/ROOT/apple-app-site-association";
+       // String fileName = "/Users/Vontroy/LinkedME/java-platform/lkme-web/src/main/webapp/apple-app-site-association";
         JSONObject json = new JSONObject();
         try {
             br = new BufferedReader(new FileReader(fileName));
@@ -67,7 +68,7 @@ public class AppServiceImpl implements AppService {
                     String pathsStr = appJson.getJSONArray("paths").get(0).toString();
                     if (pathsStr.equals(pathsItem)) {
                         hasRecord = true;
-                        appJson.put("appID", appID);
+                        json.getJSONObject("applinks").getJSONArray("details").getJSONObject(i).put("appID", appID);
                         break;
                     }
                 }
@@ -94,13 +95,15 @@ public class AppServiceImpl implements AppService {
             }
         }
 
-        writeFile(fileName, json.toString());
+        System.out.println( json.toString());
+
+        //writeFile(fileName, json.toString());
     }
 
-//    public static void main(String args[]) {
-//        updateAppleAssociationFile("cccC", "GVU64N9P9M.io.oooooo");
-//        updateAppleAssociationFile("cccC", "hahahah");
-//    }
+    public static void main(String args[]) {
+        updateAppleAssociationFile("cccC", "GVU64N9P9M.io.oooooo");
+        updateAppleAssociationFile("cccC", "hahahah");
+    }
 
     public long createApp(AppParams appParams) {
         AppInfo appInfo = new AppInfo();
@@ -216,7 +219,7 @@ public class AppServiceImpl implements AppService {
 
             // 更新assetlinks.json文件(Android app link)
             if (appParams.android_package_name != null && appParams.android_sha256_fingerprints != null) {
-                updateAppLinksFile(appParams.android_package_name, appParams.android_sha256_fingerprints);
+              //  updateAppLinksFile(appParams.android_package_name, appParams.android_sha256_fingerprints);
             }
         }
         return result;
@@ -269,7 +272,7 @@ public class AppServiceImpl implements AppService {
         return appDao.uploadImg(appParams, imagePath);
     }
 
-    private void updateAppLinksFile(String packageName, String sha256CertFingerprints) {
+    private void updateAppLinksFile(String appID, String packageName, String sha256CertFingerprints) {
         BufferedReader br = null;
         String fileName = "/Users/Vontroy/LinkedME/java-platform/lkme-web/src/main/webapp/.well-known/assetlinks.json";
         JSONArray json = new JSONArray();
@@ -279,14 +282,19 @@ public class AppServiceImpl implements AppService {
             while ((temp = br.readLine()) != null) {
 
                 json = JSONArray.fromObject(temp);
-//                for( int i = 0; i < json.size(); i++ ) {
-//                    JSONObject appID = json.getJSONObject("appID");
-//                    JSONObject appItem = json.getJSONObject( i );
-//                    JSONArray relation = appItem.getJSONArray( "relation" );
-//                    JSONObject target = appItem.getJSONObject("target");
-//                    JSONArray sha256_cer_fingerprints = appItem.getJSONArray( "sha256_cert_fingerprints");
-//
-//                }
+                for( int i = 0; i < json.size(); i++ ) {
+                    JSONObject appItem = json.getJSONObject( i );
+                    String appIdJson = appItem.getJSONObject("appID").toString();
+                    JSONArray relation = appItem.getJSONArray( "relation" );
+                    JSONObject target = appItem.getJSONObject("target");
+                    JSONObject package_name = appItem.getJSONObject("package_name");
+
+                    JSONArray sha256_cer_fingerprints = appItem.getJSONArray( "sha256_cert_fingerprints");
+                    if( appIdJson.equals(appID) ) {
+                        //packageName
+                    }
+
+                }
 
                 boolean hasRecord = false;
 //                for (int i = 0; i < details.size(); i++) {
