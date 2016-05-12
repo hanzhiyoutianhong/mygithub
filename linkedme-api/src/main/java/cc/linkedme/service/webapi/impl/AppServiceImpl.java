@@ -50,8 +50,7 @@ public class AppServiceImpl implements AppService {
 
     private void updateAppleAssociationFile(String appIdentifier, String appID) {
         BufferedReader br = null;
-        // String fileName = "/data1/tomcat8080/webapps/ROOT/apple-app-site-association";
-        String fileName = "/Users/Vontroy/LinkedME/java-platform/lkme-web/src/main/webapp/apple-app-site-association";
+        String fileName = "/data1/tomcat8080/webapps/ROOT/apple-app-site-association";
         JSONObject json = new JSONObject();
         try {
             br = new BufferedReader(new FileReader(fileName));
@@ -69,10 +68,6 @@ public class AppServiceImpl implements AppService {
                     if (pathsStr.equals(pathsItem)) {
                         hasRecord = true;
                         appJson.put("appID", appID);
-
-                        details.set(i, appJson);
-                        appLinkJson.put("details", details);
-                        json.put("applinks", appLinkJson);
                         break;
                     }
                 }
@@ -284,13 +279,14 @@ public class AppServiceImpl implements AppService {
             while ((temp = br.readLine()) != null) {
 
                 json = JSONArray.fromObject(temp);
-                for( int i = 0; i < json.size(); i++ ) {
-                    JSONObject appItem = json.getJSONObject( i );
-                    JSONArray relation = appItem.getJSONArray( "relation" );
-                    JSONObject target = appItem.getJSONObject("target");
-                    JSONArray sha256_cer_fingerprints = appItem.getJSONArray( "sha256_cert_fingerprints");
-
-                }
+//                for( int i = 0; i < json.size(); i++ ) {
+//                    JSONObject appID = json.getJSONObject("appID");
+//                    JSONObject appItem = json.getJSONObject( i );
+//                    JSONArray relation = appItem.getJSONArray( "relation" );
+//                    JSONObject target = appItem.getJSONObject("target");
+//                    JSONArray sha256_cer_fingerprints = appItem.getJSONArray( "sha256_cert_fingerprints");
+//
+//                }
 
                 boolean hasRecord = false;
 //                for (int i = 0; i < details.size(); i++) {
