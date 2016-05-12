@@ -366,6 +366,11 @@ public class LMSdkServiceImpl implements LMSdkService {
         // linkedme_key & tags & alias & channel & feature & stage & params
         String urlParamsStr = joiner.join(urlParams.linkedme_key, joiner2.join(urlParams.tags), urlParams.alias,
                 joiner2.join(urlParams.channel), joiner2.join(urlParams.feature), joiner2.join(urlParams.stage), urlParams.params);
+
+        //dashboard创建的短链,添加时间戳信息,保证每次都不一样
+        if("Dashboard".equals(urlParams.source)) {
+            urlParamsStr = urlParamsStr + "&" + System.currentTimeMillis();
+        }
         String deepLinkMd5 = MD5Utils.md5(urlParamsStr);
         // 从redis里查找md5是否存在
         // 如果存在,找出对应的deeplink_id,base62进行编码,
