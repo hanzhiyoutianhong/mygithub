@@ -347,7 +347,7 @@ public class DeepLink implements Serializable{
     public JSONObject toJsonObject() {
         JSONObject jsonObject = new JSONObject();
         jsonObject.put("deeplink_id", deeplinkId);
-        jsonObject.put("deeplink_url", Constants.DEEPLINK_HTTPS_PREFIX + Base62.encode(appId) + "/" + Base62.encode(deeplinkId));
+        jsonObject.put("deeplink_url", Constants.DEEPLINK_HTTPS_PREFIX + "/" + Base62.encode(appId) + "/" + Base62.encode(deeplinkId));
         if (!Strings.isNullOrEmpty(feature)) {
             JSONArray featureJson = JSONArray.fromObject(getFeature().split(","));
             jsonObject.put("feature", featureJson);

@@ -9,7 +9,7 @@ public class Constants {
     // 3. sort time, 4. cat content cache time
     public static final String DEEPLINK_HTTP_PREFIX = "http://lkme.cc/";
 //    public static final String DEEPLINK_HTTPS_PREFIX = "http://192.168.0.104:8888/";
-    public static final String DEEPLINK_HTTPS_PREFIX = "https://lkme.cc/";
+    public static final String DEEPLINK_HTTPS_PREFIX = "https://lkme.cc";
     public final static float UNIVERSE_LINK_IOS_VERSION = 8;
     public static final boolean enableProfiling = true;
     public static boolean enablePageCache = false;

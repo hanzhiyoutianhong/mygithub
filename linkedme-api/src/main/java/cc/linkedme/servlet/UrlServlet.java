@@ -23,6 +23,7 @@ import cc.linkedme.commons.useragent.Client;
 import cc.linkedme.commons.useragent.Parser;
 import cc.linkedme.commons.useragent.UserAgent;
 import cc.linkedme.commons.util.Base62;
+import cc.linkedme.commons.util.Constants;
 import cc.linkedme.commons.util.UuidHelper;
 import cc.linkedme.data.model.AppInfo;
 import cc.linkedme.data.model.DeepLink;
@@ -95,6 +96,11 @@ public class UrlServlet extends HttpServlet {
         // 根据deepLinkId获取deepLink信息
         AppInfo appInfo = appService.getAppById(appId); // 根据appId获取app信息
 
+        if(appInfo == null) {
+            response.sendRedirect("/index.jsp"); // TODO 重定向为默认配置页面
+            return;
+        }
+
         // useAgent
         // 使用yaml解析user agent,测试匹配优先级,速度,打日志统计时间,优化正则表达式(单个正则表达式,优先级);
         String userAgent = request.getHeader("user-agent");
@@ -124,14 +130,14 @@ public class UrlServlet extends HttpServlet {
         boolean isAndroid = false;
         String countType;
         if (osFamily.equals("iOS")) {
-            if (appInfo.getIos_search_option().equals("apple_store")) {
+            if ("apple_store".equals(appInfo.getIos_search_option())) {
                 url = appInfo.getIos_store_url();
                 isDownloadDirectly = true;
-            } else if (appInfo.getIos_search_option().equals("custom_url")) {
+            } else if ("custom_url".equals(appInfo.getIos_search_option())) {
                 url = appInfo.getIos_custom_url();
                 isCannotGoMarket = true;
                 isDownloadDirectly = true;
-            } else if (appInfo.getIos_search_option().equals("not_url")) {
+            } else if ("not_url".equals(appInfo.getIos_search_option())) {
                 isCannotGoMarket = true;
             }
 
@@ -148,9 +154,9 @@ public class UrlServlet extends HttpServlet {
             }
 
         } else if (osFamily.equals("Android")) {
-            if (appInfo.getAndroid_search_option().equals("google_play")) {
+            if ("google_play".equals(appInfo.getAndroid_search_option())) {
                 url = appInfo.getGoogle_paly_url();
-            } else if (appInfo.getAndroid_search_option().equals("custom_url")) {
+            } else if ("custom_url".equals(appInfo.getAndroid_search_option())) {
                 url = appInfo.getAndroid_custom_url();
             }
             scheme = appInfo.getAndroid_uri_scheme();
@@ -167,7 +173,7 @@ public class UrlServlet extends HttpServlet {
 
             // TODO 显示二维码代码 CodeServlet code.jsp
             String location = "https://lkme.cc/code.jsp";
-            String codeUrl = "https://lkme.cc" + request.getRequestURI() + "?scan=1";
+            String codeUrl = Constants.DEEPLINK_HTTPS_PREFIX + request.getRequestURI() + "?scan=1";
 
             clickCount(deepLinkId, countType);
             ApiLogger.biz(String.format("%s\t%s\t%s\t%s\t%s\t%s", request.getHeader("x-forwarded-for"), "click", appId, deepLinkId,

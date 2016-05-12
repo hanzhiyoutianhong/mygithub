@@ -12,15 +12,15 @@
     <script type="text/javascript" src="jsserver/lib/jquery.qrcode.min.js"></script>
     <title>linkedme</title>
 </head>
-<body>
+<body style="background:url(img/background.jpg);background-size:100%;">
 <center>
-    <div id="code"></div>
+    <div id="code" style="position:absolute;left:50%;top:50%;margin-left:-80px;margin-top:-80px"></div>
 </center>
 <script>
     $("#code").qrcode({
         render: "table",
-        width: 400,
-        height:400,
+        width: 160,
+        height:160,
         text: '<%=request.getParameter("code_url")%>'
     });
 </script>
