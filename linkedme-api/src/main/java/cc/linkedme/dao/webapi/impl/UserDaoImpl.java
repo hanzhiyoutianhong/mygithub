@@ -7,20 +7,21 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
-import cc.linkedme.dao.webapi.UserDao;
-import cc.linkedme.data.model.params.DemoRequestParams;
-import com.google.api.client.repackaged.com.google.common.base.Strings;
 import org.springframework.dao.DataAccessException;
 import org.springframework.jdbc.core.RowMapper;
+
+import com.google.api.client.repackaged.com.google.common.base.Strings;
 
 import cc.linkedme.commons.exception.LMException;
 import cc.linkedme.commons.exception.LMExceptionFactor;
 import cc.linkedme.commons.log.ApiLogger;
 import cc.linkedme.dao.BaseDao;
+import cc.linkedme.dao.webapi.UserDao;
 import cc.linkedme.data.dao.strategy.TableChannel;
 import cc.linkedme.data.dao.util.DaoUtil;
 import cc.linkedme.data.dao.util.JdbcTemplate;
 import cc.linkedme.data.model.UserInfo;
+import cc.linkedme.data.model.params.DemoRequestParams;
 import cc.linkedme.data.model.params.UserParams;
 
 /**
@@ -32,10 +33,10 @@ public class UserDaoImpl extends BaseDao implements UserDao {
     public static final String EMAIL_EXISTENCE_QUERY = "EMAIL_EXISTENCE_QUERY";
     public static final String PWD_RESET = "PWD_RESET";
     public static final String CHANGE_PWD = "CHANGE_PWD";
-    public static final String LAST_LOGIN_TIME_RESET = "LAST_LOGIN_TIME_RESET";
     public static final String UPDATE_TOKEN = "UPDATE_TOKEN";
     public static final String GET_TOKEN = "GET_TOKEN";
     public static final String SET_RANDOM_CODE = "SET_RANDOM_CODE";
+    public static final String SET_LOGIN_TIME_AND_TOKEN = "SET_LOGIN_TIME_AND_TOKEN";
 
     public static final String REQUEST_DEMO = "REQUEST_DEMO";
 
@@ -87,12 +88,12 @@ public class UserDaoImpl extends BaseDao implements UserDao {
         return res;
     }
 
-    public int resetLastLoginTime(UserParams userParams) {
+    public int setLoginInfos(UserParams userParams) {
         int res = 0;
-        TableChannel tableChannel = tableContainer.getTableChannel("userInfo", LAST_LOGIN_TIME_RESET, 0L, 0L);
+        TableChannel tableChannel = tableContainer.getTableChannel("userInfo", SET_LOGIN_TIME_AND_TOKEN, 0L, 0L);
         try {
             res += tableChannel.getJdbcTemplate().update(tableChannel.getSql(),
-                    new Object[] {userParams.last_logout_time, userParams.email});
+                    new Object[] {userParams.last_logout_time, userParams.token, userParams.email});
         } catch (DataAccessException e) {
             if (DaoUtil.isDuplicateInsert(e)) {
                 ApiLogger.warn(new StringBuffer(128).append("Duplicate insert user, userEmail=").append(userParams.email), e);
