@@ -47,11 +47,12 @@ public class UserServiceImpl implements UserService {
             String current_login_time = DateFormat.getDateTimeInstance().format(new Date());
             userParams.current_login_time = current_login_time;
 
-            userDao.resetLastLoginTime(userParams);
             String token = UUIDUtils.createUUID();
             userParams.setToken(token);
-            userDao.updateToken(userParams);
             userInfo.setToken(token);
+            // 更新lastLoginTime和token
+            userDao.setLoginInfos(userParams);
+
             return userInfo;
         } else {
             throw new LMException(LMExceptionFactor.LM_USER_WRONG_PWD);

@@ -1,32 +1,30 @@
 package cc.linkedme.dao.sdkapi.impl;
 
-import cc.linkedme.commons.exception.LMException;
-import cc.linkedme.commons.exception.LMExceptionFactor;
-import cc.linkedme.commons.util.Util;
-import cc.linkedme.commons.util.UuidHelper;
-import cc.linkedme.dao.sdkapi.DeepLinkDao;
-import cc.linkedme.data.dao.util.JdbcTemplate;
-import cc.linkedme.data.model.AppInfo;
-import cc.linkedme.data.model.params.SummaryDeepLinkParams;
-import cc.linkedme.data.model.params.UrlParams;
-import com.google.api.client.repackaged.com.google.common.base.Strings;
-import org.springframework.dao.DataAccessException;
-
-import cc.linkedme.commons.log.ApiLogger;
-import cc.linkedme.dao.BaseDao;
-import cc.linkedme.data.dao.strategy.TableChannel;
-import cc.linkedme.data.dao.util.DaoUtil;
-import cc.linkedme.data.model.DeepLink;
-import org.springframework.jdbc.core.RowMapper;
-
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.sql.Timestamp;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+
+import org.springframework.dao.DataAccessException;
+import org.springframework.jdbc.core.RowMapper;
+
+import com.google.api.client.repackaged.com.google.common.base.Strings;
+
+import cc.linkedme.commons.exception.LMException;
+import cc.linkedme.commons.exception.LMExceptionFactor;
+import cc.linkedme.commons.log.ApiLogger;
+import cc.linkedme.commons.util.Util;
+import cc.linkedme.commons.util.UuidHelper;
+import cc.linkedme.dao.BaseDao;
+import cc.linkedme.dao.sdkapi.DeepLinkDao;
+import cc.linkedme.data.dao.strategy.TableChannel;
+import cc.linkedme.data.dao.util.DaoUtil;
+import cc.linkedme.data.dao.util.JdbcTemplate;
+import cc.linkedme.data.model.DeepLink;
+import cc.linkedme.data.model.params.UrlParams;
 
 /**
  * Created by LinkedME01 on 16/3/8.
@@ -94,7 +92,7 @@ public class DeepLinkDaoImpl extends BaseDao implements DeepLinkDao {
         TableChannel tableChannel = tableContainer.getTableChannel("deeplink", GET_DEEPLINK_INFO, appid, date);
         try {
 
-            tableChannel.getJdbcTemplate().query(tableChannel.getSql(), new Object[]{deepLinkId, appid}, new RowMapper() {
+            tableChannel.getJdbcTemplate().query(tableChannel.getSql(), new Object[] {deepLinkId, appid}, new RowMapper() {
                 public Object mapRow(ResultSet resultSet, int i) throws SQLException {
                     dp.setDeeplinkId(resultSet.getBigDecimal("deeplink_id").longValue());
                     dp.setCreateTime(resultSet.getString("create_time"));
@@ -115,7 +113,7 @@ public class DeepLinkDaoImpl extends BaseDao implements DeepLinkDao {
                     return null;
                 }
             });
-        }catch (Exception e) {
+        } catch (Exception e) {
             ApiLogger.error("db error", e);
         }
         if (dp.getDeeplinkId() == 0) {
@@ -208,7 +206,7 @@ public class DeepLinkDaoImpl extends BaseDao implements DeepLinkDao {
             condition += "and tags like '%' ? '%' ";
             paramList.add(tag);
         }
-        if(!Strings.isNullOrEmpty(source)) {
+        if (!Strings.isNullOrEmpty(source)) {
             condition += "and source = ? ";
             paramList.add(source);
         }
