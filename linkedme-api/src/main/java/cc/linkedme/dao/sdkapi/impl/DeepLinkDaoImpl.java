@@ -8,6 +8,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+import com.google.api.client.repackaged.com.google.common.base.Joiner;
 import org.springframework.dao.DataAccessException;
 import org.springframework.jdbc.core.RowMapper;
 
@@ -254,6 +255,7 @@ public class DeepLinkDaoImpl extends BaseDao implements DeepLinkDao {
         long appId = urlParams.app_id;
         Date date = UuidHelper.getDateFromId(deepLinkId);
         TableChannel tableChannel = tableContainer.getTableChannel("deeplink", UPDATE_URL_INFO, appId, date);
+        JdbcTemplate jdbcTemplate = tableChannel.getJdbcTemplate();
         int result = 0;
 
         boolean ios_use_default = urlParams.ios_use_default;
@@ -262,41 +264,30 @@ public class DeepLinkDaoImpl extends BaseDao implements DeepLinkDao {
         String android_custom_url = urlParams.android_custom_url;
         boolean desktop_use_default = urlParams.desktop_use_default;
         String desktop_custom_url = urlParams.desktop_custom_url;
-        String feature = "";
-        for (int i = 0; i < urlParams.feature.length - 1; i++)
-            feature = feature + urlParams.feature[i] + ",";
-        feature = feature + urlParams.feature[urlParams.feature.length - 1];
 
-        String campaign = "";
-        for (int i = 0; i < urlParams.campaign.length - 1; i++)
-            campaign = campaign + urlParams.campaign[i] + ",";
-        campaign = campaign + urlParams.campaign[urlParams.campaign.length - 1];
+        Joiner joiner = Joiner.on(",");
+        String feature = joiner.join( urlParams.feature );
 
-        String stage = "";
-        for (int i = 0; i < urlParams.stage.length - 1; i++)
-            stage = stage + urlParams.stage[i] + ",";
-        stage = stage + urlParams.stage[urlParams.stage.length - 1];
+        String campaign = joiner.join( urlParams.campaign);
 
-        String channel = "";
-        for (int i = 0; i < urlParams.channel.length - 1; i++)
-            channel = channel + urlParams.channel[i] + ",";
-        channel = channel + urlParams.channel[urlParams.channel.length - 1];
+        String stage = joiner.join(urlParams.stage);
 
-        String tags = "";
-        for (int i = 0; i < urlParams.tags.length - 1; i++)
-            tags = tags + urlParams.tags[i] + ",";
-        tags = tags + urlParams.tags[urlParams.tags.length - 1];
+        String channel = joiner.join(urlParams.channel);
+
+        String tags = joiner.join( urlParams.tags);
 
         String source = urlParams.source;
         String params = urlParams.params.toString();
 
+        Object[] values = new Object[] {appId, ios_use_default, ios_custom_url, android_use_default, android_custom_url,
+                desktop_use_default, desktop_custom_url, feature, campaign, stage, channel, tags, source, params, deepLinkId, appId};
 
-        result +=
-                tableChannel.getJdbcTemplate()
-                        .update(tableChannel.getSql(),
-                                new Object[] {appId, ios_use_default, ios_custom_url, android_use_default, android_custom_url,
-                                        desktop_use_default, desktop_custom_url, feature, campaign, stage, channel, tags, source, params,
-                                        deepLinkId, appId});
+        try {
+            result += jdbcTemplate.update(tableChannel.getSql(), values);
+        } catch (DataAccessException e) {
+            e.printStackTrace();
+        }
+
         if (result == 1) return true;
         return false;
     }

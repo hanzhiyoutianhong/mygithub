@@ -1,30 +1,23 @@
 package cc.linkedme.service.webapi.impl;
 
-import java.io.BufferedReader;
-import java.io.BufferedWriter;
-import java.io.FileNotFoundException;
-import java.io.FileReader;
-import java.io.FileWriter;
-import java.io.IOException;
+import java.io.*;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
 import javax.annotation.Resource;
 
-import cc.linkedme.commons.log.ApiLogger;
-import cc.linkedme.commons.util.Base62;
-import net.sf.json.JSONArray;
-import net.sf.json.JSONObject;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang.ArrayUtils;
 
 import cc.linkedme.commons.exception.LMException;
 import cc.linkedme.commons.exception.LMExceptionFactor;
+import cc.linkedme.commons.log.ApiLogger;
 import cc.linkedme.commons.memcache.MemCacheTemplate;
 import cc.linkedme.commons.redis.JedisPort;
 import cc.linkedme.commons.serialization.KryoSerializationUtil;
 import cc.linkedme.commons.shard.ShardingSupportHash;
+import cc.linkedme.commons.util.Base62;
 import cc.linkedme.commons.util.MD5Utils;
 import cc.linkedme.commons.uuid.UuidCreator;
 import cc.linkedme.dao.webapi.AppDao;
@@ -33,6 +26,8 @@ import cc.linkedme.data.model.UrlTagsInfo;
 import cc.linkedme.data.model.params.AppParams;
 import cc.linkedme.data.model.params.UrlParams;
 import cc.linkedme.service.webapi.AppService;
+import net.sf.json.JSONArray;
+import net.sf.json.JSONObject;
 
 /**
  * Created by LinkedME01 on 16/3/18.
@@ -52,6 +47,65 @@ public class AppServiceImpl implements AppService {
 
     @Resource
     private ShardingSupportHash<JedisPort> linkedmeKeyShardingSupport;
+
+    private void updateAppleAssociationFile(String appIdentifier, String appID) {
+        BufferedReader br = null;
+        // String fileName = "/data1/tomcat8080/webapps/ROOT/apple-app-site-association";
+        String fileName = "/Users/Vontroy/LinkedME/java-platform/lkme-web/src/main/webapp/apple-app-site-association";
+        JSONObject json = new JSONObject();
+        try {
+            br = new BufferedReader(new FileReader(fileName));
+            String temp;
+            while ((temp = br.readLine()) != null) {
+                json = JSONObject.fromObject(temp);
+                JSONObject appLinkJson = json.getJSONObject("applinks");
+                JSONArray details = appLinkJson.getJSONArray("details");
+                String pathsItem = "/" + appIdentifier + "/*";
+
+                boolean hasRecord = false;
+                for (int i = 0; i < details.size(); i++) {
+                    JSONObject appJson = details.getJSONObject(i);
+                    String pathsStr = appJson.getJSONArray("paths").get(0).toString();
+                    if (pathsStr.equals(pathsItem)) {
+                        hasRecord = true;
+                        appJson.put("appID", appID);
+
+                        details.set(i, appJson);
+                        appLinkJson.put("details", details);
+                        json.put("applinks", appLinkJson);
+                        break;
+                    }
+                }
+                if( !hasRecord ) {
+                    JSONObject addJson = new JSONObject();
+                    addJson.put( "appID", appID);
+                    JSONArray pathsJson = new JSONArray();
+                    pathsJson.add( pathsItem );
+                    addJson.put( "paths", pathsJson);
+                    details.add( addJson );
+                }
+            }
+        } catch (FileNotFoundException e) {
+            ApiLogger.error(String.format("AppServiceImpl.updateAppleAssociationFile error, file: %s is not found", fileName), e);
+        } catch (IOException e) {
+            ApiLogger.error("readline failed");
+        } finally {
+            if (br != null) {
+                try {
+                    br.close();
+                } catch (IOException e) {
+                    ApiLogger.error("close file failed");
+                }
+            }
+        }
+
+        writeFile(fileName, json.toString());
+    }
+
+//    public static void main(String args[]) {
+//        updateAppleAssociationFile("cccC", "GVU64N9P9M.io.oooooo");
+//        updateAppleAssociationFile("cccC", "hahahah");
+//    }
 
     public long createApp(AppParams appParams) {
         AppInfo appInfo = new AppInfo();
@@ -157,7 +211,7 @@ public class AppServiceImpl implements AppService {
             // 向mc中写入最新app信息
             setAppInfoToCache(appInfo);
 
-            //TODO 去重,要区分第一次更新和后续更新
+            // TODO 去重,要区分第一次更新和后续更新
             // 更新apple-app-site-association(ios universe link)
             if (appParams.ios_app_prefix != null && appParams.ios_bundle_id != null) {
                 String appID = appParams.ios_app_prefix + "." + appParams.ios_bundle_id;
@@ -165,7 +219,7 @@ public class AppServiceImpl implements AppService {
                 updateAppleAssociationFile(appIdentifier, appID);
             }
 
-            //更新assetlinks.json文件(Android app link)
+            // 更新assetlinks.json文件(Android app link)
             if (appParams.android_package_name != null && appParams.android_sha256_fingerprints != null) {
                 updateAppLinksFile(appParams.android_package_name, appParams.android_sha256_fingerprints);
             }
@@ -220,63 +274,57 @@ public class AppServiceImpl implements AppService {
         return appDao.uploadImg(appParams, imagePath);
     }
 
-    private void updateAppleAssociationFile(String appIdentifier, String appID) {
-        BufferedReader br = null;
-        String fileName = "/data1/tomcat8080/webapps/ROOT/apple-app-site-association";
-        JSONObject json = new JSONObject();
-        try {
-            br = new BufferedReader(new FileReader(fileName));
-            String temp;
-            while ((temp = br.readLine()) != null) {
-                json = JSONObject.fromObject(temp);
-                JSONObject appLinksJson = json.getJSONObject("applinks");
-                JSONArray details = appLinksJson.getJSONArray("details");
-                JSONObject appItem = new JSONObject();
-                JSONArray pathsJson = new JSONArray();
-                String item = "/" + appIdentifier + "/*";
-                pathsJson.add(item);
-                appItem.put("appID", appID);
-                appItem.put("paths", pathsJson);
-                details.add(appItem);
-                appLinksJson.put("details", details);
-                json.put("applinks", appLinksJson);
-            }
-        } catch (FileNotFoundException e) {
-            ApiLogger.error(String.format("AppServiceImpl.updateAppleAssociationFile error, file: %s is not found", fileName), e);
-        } catch (IOException e) {
-            ApiLogger.error("readline failed");
-        } finally {
-            if (br != null) {
-                try {
-                    br.close();
-                } catch (IOException e) {
-                    ApiLogger.error("close file failed");
-                }
-            }
-        }
-
-        writeFile(fileName, json.toString());
-    }
-
     private void updateAppLinksFile(String packageName, String sha256CertFingerprints) {
         BufferedReader br = null;
-        String fileName = "/data1/tomcat8080/webapps/ROOT/.well-known/assetlinks.json";
+        String fileName = "/Users/Vontroy/LinkedME/java-platform/lkme-web/src/main/webapp/.well-known/assetlinks.json";
         JSONArray json = new JSONArray();
         try {
             br = new BufferedReader(new FileReader(fileName));
             String temp;
             while ((temp = br.readLine()) != null) {
+
                 json = JSONArray.fromObject(temp);
-                JSONObject appItem = new JSONObject();
-                appItem.put("relation", "delegate_permission/common.handle_all_urls");
-                JSONObject target = new JSONObject();
-                target.put("namespace", "android_app");
-                target.put("package_name", packageName);
-                JSONArray jsonArray = new JSONArray();
-                jsonArray.add(sha256CertFingerprints);
-                target.put("sha256_cert_fingerprints", jsonArray);
-                appItem.put("target", target);
-                json.add(appItem);
+                for( int i = 0; i < json.size(); i++ ) {
+                    JSONObject appItem = json.getJSONObject( i );
+                    JSONArray relation = appItem.getJSONArray( "relation" );
+                    JSONObject target = appItem.getJSONObject("target");
+                    JSONArray sha256_cer_fingerprints = appItem.getJSONArray( "sha256_cert_fingerprints");
+
+                }
+
+                boolean hasRecord = false;
+//                for (int i = 0; i < details.size(); i++) {
+//                    JSONObject appJson = details.getJSONObject(i);
+//                    String pathsStr = appJson.get("paths").toString();
+//                    if (pathsStr.equals(pathsItem)) {
+//                        hasRecord = true;
+//                        appJson.put("appID", appID);
+//
+//                        details.set(i, appJson);
+//                        appLinkJson.put("details", details);
+//                        json.put("applinks", appLinkJson);
+//                        break;
+//                    }
+//                }
+//                if( !hasRecord ) {
+//                    JSONObject addJson = new JSONObject();
+//                    addJson.put( "appID", appID);
+//                    addJson.put( "paths", pathsItem);
+//                    details.add( addJson );
+//                }
+
+
+//                json = JSONArray.fromObject(temp);
+//                JSONObject appItem = new JSONObject();
+//                appItem.put("relation", "delegate_permission/common.handle_all_urls");
+//                JSONObject target = new JSONObject();
+//                target.put("namespace", "android_app");
+//                target.put("package_name", packageName);
+//                JSONArray jsonArray = new JSONArray();
+//                jsonArray.add(sha256CertFingerprints);
+//                target.put("sha256_cert_fingerprints", jsonArray);
+//                appItem.put("target", target);
+//                json.add(appItem);
             }
         } catch (FileNotFoundException e) {
             ApiLogger.error(String.format("AppServiceImpl.updateAppleAssociationFile error, file: %s is not found", fileName), e);
