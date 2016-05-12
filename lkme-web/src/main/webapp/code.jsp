@@ -13,14 +13,12 @@
     <title>linkedme</title>
 </head>
 <body style="background:url(img/background.jpg);background-size:100%;">
-<center>
-    <div id="code" style="position:absolute;left:50%;top:50%;margin-left:-80px;margin-top:-80px"></div>
-</center>
+<div id="code" style="position:absolute;left:50%;top:50%;margin-left:-200px;margin-top:-200px"></div>
 <script>
     $("#code").qrcode({
         render: "table",
-        width: 160,
-        height:160,
+        width: 300,
+        height: 300,
         text: '<%=request.getParameter("code_url")%>'
     });
 </script>
