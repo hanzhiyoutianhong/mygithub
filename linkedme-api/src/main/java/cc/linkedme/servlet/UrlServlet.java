@@ -76,6 +76,8 @@ public class UrlServlet extends HttpServlet {
         // TODO Auto-generated method stub
         // eg, https://lkme.cc/hafzh/fhza80af?scan=0; appId, deeplinkId;
         String uri = request.getRequestURI();
+        String urlScanParam = request.getParameter("scan");
+
         String[] uriArr = uri.split("/");
         if (uriArr.length < 3) {
             response.sendRedirect("/index.jsp"); // TODO 重定向为默认配置页面
@@ -85,18 +87,17 @@ public class UrlServlet extends HttpServlet {
         long appId = Base62.decode(uriArr[1]);
         long deepLinkId = Base62.decode(uriArr[2]);
 
-        if(appId < 10000 || appId > 510000 || (!UuidHelper.isValidId(deepLinkId))) {
-            //无效的appId或者无效的短链. TODO app数量超过50w后,修改阀值
+        if (appId < 10000 || appId > 510000 || (!UuidHelper.isValidId(deepLinkId))) {
+            // 无效的appId或者无效的短链. TODO app数量超过50w后,修改阀值
             response.sendRedirect("/index.jsp"); // TODO 重定向为默认配置页面
             return;
         }
 
-        String urlScanParam = request.getParameter("scan");
-        // DeepLink deepLink = deepLinkService.getDeepLinkInfo(deepLinkId, appId); //
         // 根据deepLinkId获取deepLink信息
+        DeepLink deepLink = deepLinkService.getDeepLinkInfo(deepLinkId, appId);
         AppInfo appInfo = appService.getAppById(appId); // 根据appId获取app信息
 
-        if(appInfo == null) {
+        if (appInfo == null) {
             response.sendRedirect("/index.jsp"); // TODO 重定向为默认配置页面
             return;
         }
@@ -143,7 +144,8 @@ public class UrlServlet extends HttpServlet {
 
             scheme = appInfo.getIos_uri_scheme();
             isIOS = true;
-            if (appInfo.getIos_bundle_id() != null && appInfo.getIos_team_id() != null && Integer.parseInt(osMajor) >= 9) {
+            //universe link是否需要team_id, appInfo.getIos_team_id() != null
+            if (appInfo.getIos_bundle_id() != null && Integer.parseInt(osMajor) >= 9) {
                 isUniversallink = true;
             }
 
@@ -151,6 +153,15 @@ public class UrlServlet extends HttpServlet {
                 countType = "pc_ios_scan";
             } else {
                 countType = "ios_click";
+            }
+
+            if (deepLink.getSource() != null && deepLink.getSource().trim().toLowerCase().equals("dashboard")
+                    && deepLink.getIos_custom_url() != null) {
+                clickCount(deepLinkId, countType);
+                ApiLogger.biz(String.format("%s\t%s\t%s\t%s\t%s\t%s", request.getHeader("x-forwarded-for"), "click", appId, deepLinkId,
+                        countType, userAgent));
+                response.sendRedirect(formatCustomUrl(deepLink.getIos_custom_url()));
+                return;
             }
 
         } else if (osFamily.equals("Android")) {
@@ -167,9 +178,28 @@ public class UrlServlet extends HttpServlet {
             } else {
                 countType = "adr_click";
             }
+
+            if (deepLink.getSource() != null && deepLink.getSource().trim().toLowerCase().equals("dashboard")
+                    && deepLink.getAndroid_custom_url() != null) {
+                clickCount(deepLinkId, countType);
+                ApiLogger.biz(String.format("%s\t%s\t%s\t%s\t%s\t%s", request.getHeader("x-forwarded-for"), "click", appId, deepLinkId,
+                        countType, userAgent));
+                response.sendRedirect(formatCustomUrl(deepLink.getAndroid_custom_url()));
+                return;
+            }
+
         } else {
             // 点击计数else,暂时都计pc
             countType = "pc_click";
+
+            if (deepLink.getSource() != null && deepLink.getSource().trim().toLowerCase().equals("dashboard")
+                    && deepLink.getDesktop_custom_url() != null) {
+                clickCount(deepLinkId, countType);
+                ApiLogger.biz(String.format("%s\t%s\t%s\t%s\t%s\t%s", request.getHeader("x-forwarded-for"), "click", appId, deepLinkId,
+                        countType, userAgent));
+                response.sendRedirect(formatCustomUrl(deepLink.getDesktop_custom_url()));
+                return;
+            }
 
             // TODO 显示二维码代码 CodeServlet code.jsp
             String location = "https://lkme.cc/code.jsp";
@@ -185,7 +215,7 @@ public class UrlServlet extends HttpServlet {
 
         // iPad
 
-        //如果连接里包含"ds_tag",说明之前已经记录过一次计数和日志 TODO 把ds_tag改成lkme_tag(或者click_tag)
+        // 如果连接里包含"ds_tag",说明之前已经记录过一次计数和日志 TODO 把ds_tag改成lkme_tag(或者click_tag)
         String dsTag = request.getParameter("ds_tag");
         if (dsTag == null) {
             // 点击计数
@@ -318,4 +348,10 @@ public class UrlServlet extends HttpServlet {
         });
     }
 
+    private String formatCustomUrl(String url) {
+        if (Strings.isNullOrEmpty(url) || url.startsWith("http")) {
+            return url;
+        }
+        return "http://" + url;
+    }
 }
