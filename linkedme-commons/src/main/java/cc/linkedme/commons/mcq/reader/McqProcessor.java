@@ -109,7 +109,7 @@ public abstract class McqProcessor implements StartReadingAble {
                         if (readKey != null) {
                             long end = System.currentTimeMillis();
                             long cost = end - start;
-                            ProfileUtil.accessStatistic(ProfileType.API.value(), readKey, end, cost);
+                            ProfileUtil.accessStatistic(ProfileType.MCQ.value(), readKey, end, cost);
                         }
                     }
                 }
