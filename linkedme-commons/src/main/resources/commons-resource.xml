@@ -8,12 +8,13 @@
 
     <bean id="uuidCreator" class="cc.linkedme.commons.uuid.UuidCreator">
         <property name="uuidGenerator">
-            <bean id="uuidGenerator" lazy-init="true" class="cc.linkedme.commons.memcache.VikaCacheClient" init-method="init">
-                <property name="minSpareConnections" value= "2" />
-                <property name="maxSpareConnections" value= "15" />
-                <property name="failover" value= "true" />
-                <property name="primitiveAsString" value= "true" />
-                <property name="serverPort" value= "${linkedme.common.uuid}" />
+            <bean id="uuidGenerator" lazy-init="true" class="cc.linkedme.commons.memcache.VikaCacheClient"
+                  init-method="init">
+                <property name="minSpareConnections" value="2"/>
+                <property name="maxSpareConnections" value="15"/>
+                <property name="failover" value="true"/>
+                <property name="primitiveAsString" value="true"/>
+                <property name="serverPort" value="${linkedme.common.uuid}"/>
             </bean>
         </property>
     </bean>
@@ -36,7 +37,7 @@
     </bean>
 
     <!-- regex yaml-->
-    <bean id="userAgentParser" class="cc.linkedme.commons.useragent.Parser" />
+    <bean id="userAgentParser" class="cc.linkedme.commons.useragent.Parser"/>
 
     <bean class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">
         <property name="locations">
@@ -47,8 +48,6 @@
     </bean>
 
     <!--apilogger -->
-    <bean class="org.springframework.aop.aspectj.annotation.AnnotationAwareAspectJAutoProxyCreator" />
-    <!--<aop:aspectj-autoproxy/>-->
-    <bean id="apiinvokerProfile" class="cc.linkedme.commons.profile.ApiInvokeProfile" />
-
+    <bean class="org.springframework.aop.aspectj.annotation.AnnotationAwareAspectJAutoProxyCreator"/>
+    <bean id="apiinvokerprofile" class="cc.linkedme.commons.profile.ApiInvokeProfile"/>
 </beans>
