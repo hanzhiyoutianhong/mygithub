@@ -51,6 +51,11 @@ public enum ProfileType {
         public String value() {
             return "APIFAILFAST";
         }
+    },
+    MCQ {
+        public String value() {
+            return "MCQ";
+        }
     };
 
     public abstract String value();
