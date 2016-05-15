@@ -49,5 +49,5 @@
 
     <!--apilogger -->
     <bean class="org.springframework.aop.aspectj.annotation.AnnotationAwareAspectJAutoProxyCreator"/>
-    <bean id="apiinvokerprofile" class="cc.linkedme.commons.profile.ApiInvokeProfile"/>
+    <context:component-scan base-package="cc.linkedme.commons"/>
 </beans>
