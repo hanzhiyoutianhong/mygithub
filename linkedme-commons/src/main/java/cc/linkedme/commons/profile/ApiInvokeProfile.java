@@ -12,7 +12,7 @@ import javax.ws.rs.Path;
  */
 @Component
 @Aspect
-class ApiInvokeProfile {
+public class ApiInvokeProfile {
     // public * cc.linkedme.api.*(..)
     //第一个*代表返回值为任意, .*代表api包下的所有子包,(..)代表包下的各种方法
     @Around("(execution(public * cc.linkedme.api.resources.*.*(..)) " +

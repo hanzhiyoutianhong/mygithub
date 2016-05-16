@@ -56,5 +56,5 @@ public class Constants {
 
 
     // APP LOGO 图片存放地址
-    public static final String ImgPath = "./";
+    public static final String ImgPath = "/data1/logo_pic/";
 }
