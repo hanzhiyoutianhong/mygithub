@@ -1,11 +1,6 @@
-<%@ page language="java" import="java.util.*" pageEncoding="UTF-8" %>
+<%@ page language="java" pageEncoding="UTF-8" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 <%
-//    String url = request.getAttribute("url").toString();
-//    boolean isAndroid = (boolean)request.getAttribute("isAndroid");
-
-    String path = request.getContextPath();
-    //String basePath = request.getScheme() + "://" + request.getServerName() + ":" + request.getServerPort() + path;
     String basePath = "https://lkme.cc";
 %>
 
@@ -14,11 +9,10 @@
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
 
-    <!--CDN,阿里云托管-->
     <script src="<%=basePath %>/jsserver/lib/jquery-2.1.4.min.js"></script>
     <script type="text/javascript">
         var Params = {
-            AppName: '${AppName}',
+            app_name: '${AppName}',
             Pkg: '${Pkg}',
             BundleID: '${BundleID}',
             AppID: '${AppID}',
@@ -26,7 +20,6 @@
             Url: '${Url}',
             <!--click_id replace deeplink_id_base62-->
             Match_id: '${Match_id}',
-            <!--开腔自己设置下载链接,设置应用宝下载地址-->
             Download_msg: '${Download_msg}',
             Download_btn_text: '${Download_btn_text}',
             Download_title: '${Download_title}',
@@ -39,7 +32,7 @@
             AppInsStatus: '${AppInsStatus}',
             TimeStamp: '${TimeStamp}',
             <!--—tracking-->
-            DsTag: '${DsTag}',
+            visitId: '${visitId}',
             isAndroid: function () {
                 return 'true' == '${isAndroid}';
             },
@@ -87,7 +80,6 @@
             }
         };
         var DEBUG = ${DEBUG};
-        <!--测试数据,live and test-->
         var MOCK_DATA = false;
         var lang = navigator.language;
         var isEng = /^en/.test(lang);

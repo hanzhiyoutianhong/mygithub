@@ -196,6 +196,9 @@ public class LMSdkServiceImpl implements LMSdkService {
 
     private static String getClickIdFromUri(String deepLinkUrl) {
         String clickId = "";
+        if(Strings.isNullOrEmpty(deepLinkUrl)) {
+            return "0";
+        }
         if (deepLinkUrl.startsWith("http") || deepLinkUrl.startsWith("https")) {
             clickId = DeepLinkUtil.getDeepLinkFromUrl(deepLinkUrl);
         } else {
@@ -230,8 +233,7 @@ public class LMSdkServiceImpl implements LMSdkService {
             String osMajorVersion = osVersionArr[0];
             if (Integer.parseInt(osMajorVersion) >= UNIVERSE_LINK_IOS_VERSION) {
                 deepLinkUrl = openParams.universal_link_url;
-                if ((!Strings.isNullOrEmpty(deepLinkUrl)) && deepLinkUrl.startsWith("http") && (!deepLinkUrl.contains("ds_tag"))) { // TODO
-                                                                                                                                    // ds_tag改成lkme_tag
+                if ((!Strings.isNullOrEmpty(deepLinkUrl)) && deepLinkUrl.startsWith("http") && (!deepLinkUrl.contains("visit_id"))) {
                     isDirectForward = true;
                 }
             }

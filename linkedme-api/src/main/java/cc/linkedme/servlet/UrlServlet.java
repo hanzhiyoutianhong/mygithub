@@ -97,7 +97,7 @@ public class UrlServlet extends HttpServlet {
         DeepLink deepLink = deepLinkService.getDeepLinkInfo(deepLinkId, appId);
         AppInfo appInfo = appService.getAppById(appId); // 根据appId获取app信息
 
-        if (appInfo == null) {
+        if (deepLink == null || appInfo == null) {
             response.sendRedirect("/index.jsp"); // TODO 重定向为默认配置页面
             return;
         }
@@ -131,22 +131,25 @@ public class UrlServlet extends HttpServlet {
         boolean isAndroid = false;
         String countType;
         if (osFamily.equals("iOS")) {
-            if ("apple_store".equals(appInfo.getIos_search_option())) {
-                url = appInfo.getIos_store_url();
-                isDownloadDirectly = true;
-            } else if ("custom_url".equals(appInfo.getIos_search_option())) {
-                url = appInfo.getIos_custom_url();
-                isCannotGoMarket = true;
-                isDownloadDirectly = true;
-            } else if ("not_url".equals(appInfo.getIos_search_option())) {
-                isCannotGoMarket = true;
-            }
-
-            scheme = appInfo.getIos_uri_scheme();
             isIOS = true;
-            //universe link是否需要team_id, appInfo.getIos_team_id() != null
-            if (appInfo.getIos_bundle_id() != null && Integer.parseInt(osMajor) >= 9) {
-                isUniversallink = true;
+
+            if (appInfo.hasIos()) {
+                if ("apple_store".equals(appInfo.getIos_search_option())) {
+                    url = appInfo.getIos_store_url();
+                    isDownloadDirectly = true;
+                } else if ("custom_url".equals(appInfo.getIos_search_option())) {
+                    url = appInfo.getIos_custom_url();
+                    isCannotGoMarket = true;
+                    isDownloadDirectly = true;
+                }
+                scheme = appInfo.getIos_uri_scheme();
+                // universe link是否需要team_id, appInfo.getIos_team_id() != null
+                if (appInfo.getIos_bundle_id() != null && Integer.parseInt(osMajor) >= 9) {
+                    isUniversallink = true;
+                }
+            } else {
+                url = appInfo.getIos_not_url();
+                isCannotGoMarket = true;
             }
 
             if ("1".equals(urlScanParam)) {
@@ -165,13 +168,20 @@ public class UrlServlet extends HttpServlet {
             }
 
         } else if (osFamily.equals("Android")) {
-            if ("google_play".equals(appInfo.getAndroid_search_option())) {
-                url = appInfo.getGoogle_paly_url();
-            } else if ("custom_url".equals(appInfo.getAndroid_search_option())) {
-                url = appInfo.getAndroid_custom_url();
-            }
-            scheme = appInfo.getAndroid_uri_scheme();
             isAndroid = true;
+            if (appInfo.hasAndroid()) {
+                if ("google_play".equals(appInfo.getAndroid_search_option())) {
+                    url = appInfo.getGoogle_paly_url();
+                    isDownloadDirectly = false;
+                } else if ("custom_url".equals(appInfo.getAndroid_search_option())) {
+                    url = appInfo.getAndroid_custom_url();
+                    isDownloadDirectly = true;
+                }
+                scheme = appInfo.getAndroid_uri_scheme();
+            } else {
+                url = appInfo.getAndroid_not_url();
+                
+            }
 
             if ("1".equals(urlScanParam)) {
                 countType = "pc_adr_scan";
@@ -215,9 +225,9 @@ public class UrlServlet extends HttpServlet {
 
         // iPad
 
-        // 如果连接里包含"ds_tag",说明之前已经记录过一次计数和日志 TODO 把ds_tag改成lkme_tag(或者click_tag)
-        String dsTag = request.getParameter("ds_tag");
-        if (dsTag == null) {
+        // 如果连接里包含"visit_id",说明之前已经记录过一次计数和日志
+        String visitId = request.getParameter("visit_id");
+        if (visitId == null) {
             // 点击计数
             clickCount(deepLinkId, countType);
             // 记录日志
@@ -265,29 +275,34 @@ public class UrlServlet extends HttpServlet {
             isUC = true;
         }
 
+        String appLogo = "../img/icon.png";
+        if(appInfo.getApp_logo() != null && appInfo.getApp_logo().startsWith("http")) {
+            appLogo = appInfo.getApp_logo();
+        }
+
         request.setAttribute("AppName", appInfo.getApp_name());
         request.setAttribute("Pkg", appInfo.getAndroid_package_name());
         request.setAttribute("BundleID", appInfo.getIos_bundle_id());
         request.setAttribute("AppID", appId);
-        request.setAttribute("IconUrl", "../img/icon.png"); // TODO
+        request.setAttribute("IconUrl", appLogo);
         request.setAttribute("Url", url);
         request.setAttribute("Match_id", uriArr[2]);
 
-        request.setAttribute("Download_msg", "Download_msg"); // TODO
-        request.setAttribute("Download_btn_text", "Download_btn_text"); // TODO
-        request.setAttribute("Download_title", "Download_title"); // TODO
+        request.setAttribute("Download_msg", ""); // TODO
+        request.setAttribute("Download_btn_text", ""); // TODO
+        request.setAttribute("Download_title", ""); // TODO
 
 
         request.setAttribute("Chrome_major", userAgentMajor);
         request.setAttribute("Ios_major", osMajor);
-        request.setAttribute("Redirect_url", "http://www.baidu.com"); // TODO
+        request.setAttribute("Redirect_url", "http://www.linkedme.cc"); // TODO
 
         request.setAttribute("YYB_url", "http://a.app.qq.com/o/simple.jsp?pkgname=" + appInfo.getAndroid_package_name());
         request.setAttribute("Scheme", scheme);
         request.setAttribute("Host", "linkedme"); // TODO
         request.setAttribute("AppInsStatus", 0); // TODO
         request.setAttribute("TimeStamp", System.currentTimeMillis()); // deepLink 创建时间?
-        request.setAttribute("DsTag", "DsTag"); // TODO
+        request.setAttribute("visitId", "visitId"); // TODO
 
         request.setAttribute("isIOS", isIOS);
         request.setAttribute("isAndroid", isAndroid);

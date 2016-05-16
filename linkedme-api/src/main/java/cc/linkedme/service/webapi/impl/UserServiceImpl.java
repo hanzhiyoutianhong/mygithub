@@ -101,7 +101,7 @@ public class UserServiceImpl implements UserService {
             String resetPwdUrl = "https://www.linkedme.cc/dashboard/index.html#/access/resetpwd/" + randomCode;
             if (result) {
                 MailSender.sendHtmlMail(userParams.email, "Change Your Password!",
-                        String.format("点击下面的链接重新设置密码. <br /> <a href=%s>点击链接</a>", resetPwdUrl));
+                        String.format("亲爱的用户:<br /><br />LinkedME重置密码的链接为:  <a href=%s>点击链接</a>. <br /> 有任何问题可以咨询我们,Email:support@linkedme.cc.<br /><br />谢谢!<br /><br />LinkedME团队", resetPwdUrl));
                 return true;
             }
             return false;
