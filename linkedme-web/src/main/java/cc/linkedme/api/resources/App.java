@@ -253,8 +253,8 @@ public class App {
         if (Strings.isNullOrEmpty(appParams.img_encoding)) {
             throw new LMException(LMExceptionFactor.LM_ILLEGAL_PARAM_VALUE, "img encoding is null");
         }
-        // String basePath = request.getScheme() + "://" + request.getServerName() + ":"
-        // + request.getServerPort() + "/app/images/";
+//         String basePath = request.getScheme() + "://" + request.getServerName() + ":"
+//         + request.getServerPort() + "/i/app/images/";
         String basePath = "https://www.linkedme.cc/i/app/images/";
         String imageName = appService.uploadImg(appParams, basePath);
         JsonBuilder resultJson = new JsonBuilder();

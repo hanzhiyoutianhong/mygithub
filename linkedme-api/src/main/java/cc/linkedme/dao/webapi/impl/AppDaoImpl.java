@@ -343,7 +343,7 @@ public class AppDaoImpl extends BaseDao implements AppDao {
     @Override
     public String uploadImg(AppParams appParams, String imagePath) {
         deleteOldImg(appParams);
-        String imageName = Calendar.getInstance().getTimeInMillis() + ".png";
+        String imageName = appParams.getApp_id() + ".png";
         String imageLocalPath = Constants.ImgPath + imageName;
         Base64 base64 = new Base64();
         try {
