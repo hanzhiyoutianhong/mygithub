@@ -52,7 +52,8 @@ public class Summary {
                 channel, tag, source, unique, return_number, skip_number, orderby);
         Map<Long, DeepLinkCount> countMap = summaryService.getDeepLinkSummary(summaryDeepLinkParams);
         int deepLinkCounts = countMap.size();
-        long ios_click = 0, ios_install = 0, ios_open = 0, adr_click = 0, adr_install = 0, adr_open = 0, pc_click = 0, pc_ios_scan = 0, pc_adr_scan = 0;
+        long ios_click = 0, ios_install = 0, ios_open = 0, adr_click = 0, adr_install = 0, adr_open = 0;
+        long pc_click = 0, pc_ios_scan = 0, pc_adr_scan = 0, pc_ios_open = 0, pc_adr_open = 0, pc_ios_install = 0, pc_adr_install = 0;
         for (Map.Entry<Long, DeepLinkCount> entry : countMap.entrySet()) {
             DeepLinkCount value = entry.getValue();
             if (value != null) {
@@ -66,7 +67,11 @@ public class Summary {
 
                 pc_click += value.getPc_click();
                 pc_ios_scan += value.getPc_ios_scan();
+                pc_ios_open += value.getPc_ios_open();
+                pc_ios_install += value.getPc_ios_install();
                 pc_adr_scan += value.getPc_adr_scan();
+                pc_adr_open += value.getPc_adr_open();
+                pc_adr_install += value.getPc_adr_install();
             }
         }
 
@@ -83,7 +88,11 @@ public class Summary {
         JSONObject pcJson = new JSONObject();
         pcJson.put("click", pc_click);
         pcJson.put("pc_ios_scan", pc_ios_scan);
+        pcJson.put("pc_ios_open", pc_ios_open);
+        pcJson.put("pc_ios_install", pc_ios_install);
         pcJson.put("pc_adr_scan", pc_adr_scan);
+        pcJson.put("pc_adr_open", pc_adr_open);
+        pcJson.put("pc_adr_install", pc_adr_install);
 
         JSONObject retJson = new JSONObject();
         retJson.put("link_count", deepLinkCounts);
@@ -113,9 +122,8 @@ public class Summary {
                                        @QueryParam("token") String token) {
         String[] deeplinkIds = deeplink_ids.split(",");
 
-        int iosClick = 0, iosInstall = 0, iosOpen = 0;
-        int adrClick = 0, adrInstall = 0, adrOpen = 0;
-        int pcClick = 0, pcIosScan = 0, pcAdrScan = 0;
+        int ios_click = 0, ios_install = 0, ios_open = 0, adr_click = 0, adr_install = 0, adr_open = 0;
+        int pc_click = 0, pc_ios_scan = 0, pc_adr_scan = 0, pc_ios_open = 0, pc_adr_open = 0, pc_ios_install = 0, pc_adr_install = 0;
 
         Map<Long, Map<String, String>> countsMap = summaryService.getCounts(ArrayUtil.toRawLongArr(deeplinkIds));
 
@@ -126,21 +134,25 @@ public class Summary {
                 summaryService.setDeepLinkCount(deepLinkCount, countMap);
             }
 
-            iosClick += deepLinkCount.getIos_click();
-            iosOpen += deepLinkCount.getIos_open();
-            iosInstall += deepLinkCount.getIos_install();
+            ios_click += deepLinkCount.getIos_click();
+            ios_open += deepLinkCount.getIos_open();
+            ios_install += deepLinkCount.getIos_install();
 
-            adrClick += deepLinkCount.getAdr_click();
-            adrOpen += deepLinkCount.getAdr_open();
-            adrInstall += deepLinkCount.getAdr_install();
+            adr_click += deepLinkCount.getAdr_click();
+            adr_open += deepLinkCount.getAdr_open();
+            adr_install += deepLinkCount.getAdr_install();
 
-            pcClick += deepLinkCount.getPc_click();
-            pcIosScan += deepLinkCount.getPc_ios_scan();
-            pcAdrScan += deepLinkCount.getPc_adr_scan();
+            pc_click += deepLinkCount.getPc_click();
+            pc_ios_scan += deepLinkCount.getPc_ios_scan();
+            pc_ios_open += deepLinkCount.getPc_ios_open();
+            pc_ios_install += deepLinkCount.getPc_ios_install();
+            pc_adr_scan += deepLinkCount.getPc_adr_scan();
+            pc_adr_open += deepLinkCount.getPc_adr_open();
+            pc_adr_install += deepLinkCount.getPc_adr_install();
         }
 
-        JSONObject resultJson =
-                summaryService.getCountJson(iosClick, iosInstall, iosOpen, adrClick, adrInstall, adrOpen, pcClick, pcIosScan, pcAdrScan);
+        JSONObject resultJson = summaryService.getCountJson(ios_click, ios_open, ios_install, adr_click, adr_open, adr_install, pc_click,
+                pc_ios_scan, pc_ios_open, pc_ios_install, pc_adr_scan, pc_adr_open, pc_adr_install);
         resultJson.put("link_count", deeplinkIds.length);
 
         return resultJson.toString();

@@ -219,7 +219,8 @@ public class ProfileUtil {
                 } else {
                     interval5[currentIndex].incrementAndGet();
                 }
-            } else if (type.equals(ProfileType.SERVICE.value()) || type.equals(ProfileType.HTTP.value())) {
+            }
+            else if (type.equals(ProfileType.SERVICE.value()) || type.equals(ProfileType.HTTP.value())) {
                 if (costTimeMillis < ProfileConstants.SERVICE_INTERVAL1) {
                     interval1[currentIndex].incrementAndGet();
                 } else if (costTimeMillis >= ProfileConstants.SERVICE_INTERVAL1 && costTimeMillis < ProfileConstants.SERVICE_INTERVAL2) {
@@ -232,7 +233,7 @@ public class ProfileUtil {
                     interval5[currentIndex].incrementAndGet();
                 }
             } else if (type.equals(ProfileType.MC.value()) || type.equals(ProfileType.REDIS.value())
-                    || type.equals(ProfileType.DB.value())) {
+                    || type.equals(ProfileType.DB.value()) || type.equals(ProfileType.MCQ.value())) {
                 if (costTimeMillis < ProfileConstants.RESOURCE_INTERVAL1) {
                     interval1[currentIndex].incrementAndGet();
                 } else if (costTimeMillis >= ProfileConstants.RESOURCE_INTERVAL1 && costTimeMillis < ProfileConstants.RESOURCE_INTERVAL2) {
