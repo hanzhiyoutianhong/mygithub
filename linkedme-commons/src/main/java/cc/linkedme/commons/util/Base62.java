@@ -84,7 +84,7 @@ public class Base62 {
         long decoding2 = Base62.decode("test");
         
         
-        System.out.println("Base62 Decoding: " + decoding);
+        System.out.println("Base62 Decoding: " + Base62.decode("QqGJHVxR7"));
         System.out.println("Base62 Decoding: " + decoding1);
         System.out.println("Base62 Decoding: " + decoding2);
     }
