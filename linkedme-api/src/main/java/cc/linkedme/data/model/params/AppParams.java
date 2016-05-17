@@ -48,6 +48,9 @@ public class AppParams {
 
     public String img_data;
     public String img_encoding;
+
+    public String app_logo;
+
     public long getApp_id() {
         return app_id;
     }
@@ -294,5 +297,13 @@ public class AppParams {
 
     public void setValue(String[] value) {
         this.value = value;
+    }
+
+    public String getApp_logo() {
+        return app_logo;
+    }
+
+    public void setApp_logo(String app_logo) {
+        this.app_logo = app_logo;
     }
 }

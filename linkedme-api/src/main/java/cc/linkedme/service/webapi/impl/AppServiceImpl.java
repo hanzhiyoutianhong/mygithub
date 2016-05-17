@@ -219,6 +219,7 @@ public class AppServiceImpl implements AppService {
 
             appInfo.setUse_default_landing_page(appParams.use_default_landing_page);
             appInfo.setCustom_landing_page(appParams.custom_landing_page);
+            appInfo.setApp_logo(appParams.app_logo);
 
             // 向mc中写入最新app信息
             setAppInfoToCache(appInfo);
