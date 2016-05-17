@@ -58,8 +58,6 @@ public class AppServiceImpl implements AppService {
     private void updateAppleAssociationFile(String appIdentifier, String appID) {
         BufferedReader br = null;
         String fileName = "/data1/tomcat8080/webapps/ROOT/apple-app-site-association";
-        // String fileName =
-        // "/Users/Vontroy/LinkedME/java-platform/lkme-web/src/main/webapp/apple-app-site-association";
         JSONObject json = new JSONObject();
         try {
             br = new BufferedReader(new FileReader(fileName));
@@ -103,15 +101,8 @@ public class AppServiceImpl implements AppService {
             }
         }
 
-        // System.out.println( json.toString());
-
         writeFile(fileName, json.toString());
     }
-
-    // public static void main(String args[]) {
-    // updateAppleAssociationFile("cccC", "GVU64N9P9M.io.oooooo");
-    // updateAppleAssociationFile("cccC", "hahahah");
-    // }
 
     public long createApp(AppParams appParams) {
         AppInfo appInfo = new AppInfo();
@@ -289,8 +280,6 @@ public class AppServiceImpl implements AppService {
 
     private void updateAppLinksFile(String appID, String packageName, String sha256CertFingerprints) {
         BufferedReader br = null;
-        // String fileName =
-        // "/Users/Vontroy/LinkedME/java-platform/lkme-web/src/main/webapp/.well-known/assetlinks.json";
         String fileName = "/data1/tomcat8080/webapps/ROOT/webapp/.well-known/assetlinks.json";
         JSONArray json = new JSONArray();
         try {
@@ -348,10 +337,6 @@ public class AppServiceImpl implements AppService {
         writeFile(fileName, json.toString());
     }
 
-    // public static void main( String args[] ) {
-    // updateAppLinksFile("2345", "package1", "SDHGE#@#EFSDFA");
-    // updateAppLinksFile("2345", "package2", "skdjflkwer232342");
-    // }
     private void writeFile(String fileName, String fileContent) {
         BufferedWriter bw = null;
         try {

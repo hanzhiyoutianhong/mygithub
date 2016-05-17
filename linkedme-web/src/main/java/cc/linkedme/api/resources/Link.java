@@ -165,11 +165,4 @@ public class Link {
 
         return jsonObject.toString();
     }
-//
-//    @Path("getinfo")
-//    @POST
-//    @Produces(MediaType.APPLICATION_JSON)
-//    public long getInfo( UrlParams urlParams, @Context HttpServletRequest request ) {
-//        return deepLinkService.getDeepLinkInfo( urlParams.deeplink_id, urlParams.app_id ).getDeeplinkId();
-//    }
 }

@@ -171,7 +171,7 @@ public class UrlServlet extends HttpServlet {
             isAndroid = true;
             if (appInfo.hasAndroid()) {
                 if ("google_play".equals(appInfo.getAndroid_search_option())) {
-                    url = appInfo.getGoogle_paly_url();
+                    url = appInfo.getGoogle_play_url();
                     isDownloadDirectly = false;
                 } else if ("custom_url".equals(appInfo.getAndroid_search_option())) {
                     url = appInfo.getAndroid_custom_url();
