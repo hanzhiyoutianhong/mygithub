@@ -16,6 +16,9 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.springframework.context.ApplicationContext;
+import org.springframework.web.context.support.WebApplicationContextUtils;
+
 import cc.linkedme.commons.log.ApiLogger;
 import cc.linkedme.commons.redis.JedisPort;
 import cc.linkedme.commons.shard.ShardingSupportHash;
@@ -26,12 +29,8 @@ import cc.linkedme.commons.util.Base62;
 import cc.linkedme.commons.util.Constants;
 import cc.linkedme.commons.util.UuidHelper;
 import cc.linkedme.data.model.AppInfo;
-import cc.linkedme.data.model.DeepLink;
 import cc.linkedme.service.DeepLinkService;
 import cc.linkedme.service.webapi.AppService;
-import com.google.api.client.repackaged.com.google.common.base.Strings;
-import org.springframework.context.ApplicationContext;
-import org.springframework.web.context.support.WebApplicationContextUtils;
 
 /**
  * Created by LinkedME01 on 16/4/1.
@@ -85,8 +84,8 @@ public class UrlServlet extends HttpServlet {
         long appId = Base62.decode(uriArr[1]);
         long deepLinkId = Base62.decode(uriArr[2]);
 
-        if(appId < 10000 || appId > 510000 || (!UuidHelper.isValidId(deepLinkId))) {
-            //无效的appId或者无效的短链. TODO app数量超过50w后,修改阀值
+        if (appId < 10000 || appId > 510000 || (!UuidHelper.isValidId(deepLinkId))) {
+            // 无效的appId或者无效的短链. TODO app数量超过50w后,修改阀值
             response.sendRedirect("/index.jsp"); // TODO 重定向为默认配置页面
             return;
         }
@@ -96,7 +95,7 @@ public class UrlServlet extends HttpServlet {
         // 根据deepLinkId获取deepLink信息
         AppInfo appInfo = appService.getAppById(appId); // 根据appId获取app信息
 
-        if(appInfo == null) {
+        if (appInfo == null) {
             response.sendRedirect("/index.jsp"); // TODO 重定向为默认配置页面
             return;
         }
@@ -155,7 +154,7 @@ public class UrlServlet extends HttpServlet {
 
         } else if (osFamily.equals("Android")) {
             if ("google_play".equals(appInfo.getAndroid_search_option())) {
-                url = appInfo.getGoogle_paly_url();
+                url = appInfo.getGoogle_play_url();
             } else if ("custom_url".equals(appInfo.getAndroid_search_option())) {
                 url = appInfo.getAndroid_custom_url();
             }
@@ -185,7 +184,7 @@ public class UrlServlet extends HttpServlet {
 
         // iPad
 
-        //如果连接里包含"ds_tag",说明之前已经记录过一次计数和日志 TODO 把ds_tag改成lkme_tag(或者click_tag)
+        // 如果连接里包含"ds_tag",说明之前已经记录过一次计数和日志 TODO 把ds_tag改成lkme_tag(或者click_tag)
         String dsTag = request.getParameter("ds_tag");
         if (dsTag == null) {
             // 点击计数

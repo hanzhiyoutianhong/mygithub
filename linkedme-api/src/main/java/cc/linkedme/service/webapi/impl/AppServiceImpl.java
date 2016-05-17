@@ -198,7 +198,7 @@ public class AppServiceImpl implements AppService {
             appInfo.setAndroid_not_url(appParams.android_not_url);
             appInfo.setAndroid_uri_scheme(appParams.android_uri_scheme);
             appInfo.setAndroid_search_option(appParams.android_search_option);
-            appInfo.setGoogle_paly_url(appParams.google_play_url);
+            appInfo.setGoogle_play_url(appParams.google_play_url);
             appInfo.setAndroid_custom_url(appParams.android_custom_url);
             appInfo.setAndroid_package_name(appParams.android_package_name);
             appInfo.setAndroid_sha256_fingerprints(appParams.android_sha256_fingerprints);

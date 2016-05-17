@@ -115,7 +115,7 @@ public class AppDaoImpl extends BaseDao implements AppDao {
                 app.setIos_app_prefix(resultSet.getString("ios_app_prefix"));
                 app.setAndroid_uri_scheme(resultSet.getString("android_uri_scheme"));
                 app.setAndroid_search_option(resultSet.getString("android_search_option"));
-                app.setGoogle_paly_url(resultSet.getString("google_play_url"));
+                app.setGoogle_play_url(resultSet.getString("google_play_url"));
                 app.setAndroid_custom_url(resultSet.getString("android_custom_url"));
                 app.setAndroid_package_name(resultSet.getString("android_package_name"));
                 app.setAndroid_sha256_fingerprints(resultSet.getString("android_sha256_fingerprints"));
@@ -216,7 +216,7 @@ public class AppDaoImpl extends BaseDao implements AppDao {
 
                 app.setAndroid_uri_scheme(resultSet.getString("android_uri_scheme"));
                 app.setAndroid_not_url(resultSet.getString("android_not_url"));
-                app.setGoogle_paly_url(resultSet.getString("google_play_url"));
+                app.setGoogle_play_url(resultSet.getString("google_play_url"));
                 app.setAndroid_custom_url(resultSet.getString("android_custom_url"));
                 app.setAndroid_search_option(resultSet.getString("android_search_option"));
                 app.setAndroid_package_name(resultSet.getString("android_package_name"));
