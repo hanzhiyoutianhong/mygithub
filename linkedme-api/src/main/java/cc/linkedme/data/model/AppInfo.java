@@ -33,7 +33,7 @@ public class AppInfo implements Serializable {
 
     private String android_uri_scheme;
     private String android_not_url;
-    private String google_paly_url;
+    private String google_play_url;
     private String android_custom_url;
     private String android_search_option;
     private String android_package_name;
@@ -171,12 +171,12 @@ public class AppInfo implements Serializable {
         this.android_search_option = android_search_option;
     }
 
-    public String getGoogle_paly_url() {
-        return google_paly_url;
+    public String getGoogle_play_url() {
+        return google_play_url;
     }
 
-    public void setGoogle_paly_url(String google_paly_url) {
-        this.google_paly_url = google_paly_url;
+    public void setGoogle_play_url(String google_play_url) {
+        this.google_play_url = google_play_url;
     }
 
     public String getAndroid_custom_url() {
@@ -251,6 +251,22 @@ public class AppInfo implements Serializable {
         this.custom_landing_page = custom_landing_page;
     }
 
+    public boolean hasIos() {
+        return ((ios_android_flag & 8) >> 3) == 1;
+    }
+
+    public boolean iosUniverseLinkEnable() {
+        return ((ios_android_flag & 4) >> 2) == 1;
+    }
+
+    public boolean hasAndroid() {
+        return ((ios_android_flag & 2) >> 1) == 1;
+    }
+
+    public boolean appLinksEnable() {
+        return (ios_android_flag & 1) == 1;
+    }
+
     public String toJson() {
         boolean has_ios = ((ios_android_flag & 8) >> 3) == 1;
         boolean ios_enable_ulink = ((ios_android_flag & 4) >> 2) == 1;
@@ -273,7 +289,7 @@ public class AppInfo implements Serializable {
         android.append("android_not_url", android_not_url);
         android.append("android_uri_scheme", android_uri_scheme);
         android.append("android_search_option", android_search_option);
-        android.append("google_play_url", google_paly_url);
+        android.append("google_play_url", google_play_url);
         android.append("android_custom_url", android_custom_url);
         android.append("android_package_name", android_package_name);
         android.append("android_enable_applinks", String.valueOf(android_enable_applinks));

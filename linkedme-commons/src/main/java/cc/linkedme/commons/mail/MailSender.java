@@ -115,7 +115,7 @@ public class MailSender {
         String url = "http://www.weibo.com";
         String resetPwdUrl = "https://www.linkedme.cc/dashboard/index.html#/access/resetpwd/123456";
         MailSender.sendHtmlMail("support@linkedme.cc", "hello, wrshine", "this is a test mail. <br /> from java program. <br /> <a href="+resetPwdUrl+">W3School</a>");
-        MailSender.sendHtmlMail("wrshine@163.com", "hello, wrshine", "this is a test mail. <br /> from java program. <br /> <a href="+resetPwdUrl+">W3School</a>");
+        MailSender.sendHtmlMail("276386627@qq.com", "hello, wrshine", String.format("亲爱的用户:<br /><br />LinkedME重置密码的链接为:  <a href=%s>点击链接</a>. <br /> 有任何问题可以咨询我们,Email:support@linkedme.cc.<br /><br />谢谢!<br /><br />LinkedME团队", resetPwdUrl));
         System.out.println("success");
     }
 }

@@ -265,7 +265,9 @@ public class App {
 
     @Path("/images/{name}.{type}")
     @GET
-    public void showImg(@PathParam("name") String imageName, @PathParam("type") String type, @Context HttpServletResponse response)
+    public void showImg(@PathParam("name") String imageName,
+                        @PathParam("type") String type,
+                        @Context HttpServletResponse response)
             throws IOException {
         InputStream inputStream = null;
         OutputStream out = null;

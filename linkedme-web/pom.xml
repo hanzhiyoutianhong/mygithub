@@ -102,7 +102,6 @@
 
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <spring.version>4.0.5.RELEASE</spring.version>
         <jersey.version>1.4</jersey.version>
     </properties>
 
