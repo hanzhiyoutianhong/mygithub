@@ -251,6 +251,22 @@ public class AppInfo implements Serializable {
         this.custom_landing_page = custom_landing_page;
     }
 
+    public boolean hasIos() {
+        return ((ios_android_flag & 8) >> 3) == 1;
+    }
+
+    public boolean iosUniverseLinkEnable() {
+        return ((ios_android_flag & 4) >> 2) == 1;
+    }
+
+    public boolean hasAndroid() {
+        return ((ios_android_flag & 2) >> 1) == 1;
+    }
+
+    public boolean appLinksEnable() {
+        return (ios_android_flag & 1) == 1;
+    }
+
     public String toJson() {
         boolean has_ios = ((ios_android_flag & 8) >> 3) == 1;
         boolean ios_enable_ulink = ((ios_android_flag & 4) >> 2) == 1;
