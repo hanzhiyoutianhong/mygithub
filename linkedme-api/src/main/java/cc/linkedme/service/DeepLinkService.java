@@ -4,6 +4,8 @@ import javax.annotation.Resource;
 
 import org.springframework.stereotype.Service;
 
+import com.esotericsoftware.kryo.KryoException;
+
 import cc.linkedme.commons.exception.LMException;
 import cc.linkedme.commons.exception.LMExceptionFactor;
 import cc.linkedme.commons.memcache.MemCacheTemplate;
@@ -53,7 +55,13 @@ public class DeepLinkService {
         DeepLink deepLink;
         byte[] deepLinkByteArr = deepLinkMemCache.get(String.valueOf(deepLinkId));
         if (deepLinkByteArr != null && deepLinkByteArr.length > 0) {
-            deepLink = KryoSerializationUtil.deserializeObj(deepLinkByteArr, DeepLink.class);
+            try {
+                deepLink = KryoSerializationUtil.deserializeObj(deepLinkByteArr, DeepLink.class);
+            } catch (KryoException e) {
+                deepLink = null;
+                deepLinkMemCache.delete(String.valueOf(deepLinkId));
+                // throw new KryoException("deserializeObj error.", e);
+            }
             if (deepLink != null) {
                 return deepLink;
             }
@@ -71,16 +79,16 @@ public class DeepLinkService {
         boolean result = true;
         for (int i = 0; i < deepLinkIds.length; i++) {
             DeepLink deepLink = deepLinkDao.getUrlInfo(deepLinkIds[i], appId);
-            if(deepLink == null) {
+            if (deepLink == null) {
                 continue;
             }
             if (deepLinkDao.deleteDeepLink(deepLinkIds[i], appId)) {
-                //删除mc里的短链
+                // 删除mc里的短链
                 deepLinkMemCache.delete(String.valueOf(deepLinkIds[i]));
 
-                //TODO 删除redis里关于短链的相关信息,md5和deeplink_id的键值对
+                // TODO 删除redis里关于短链的相关信息,md5和deeplink_id的键值对
                 JedisPort redisClient = deepLinkShardingSupport.getClient(deepLink.getDeeplinkMd5());
-                redisClient.del(new String[]{deepLink.getDeeplinkMd5()});
+                redisClient.del(new String[] {deepLink.getDeeplinkMd5()});
             } else {
                 result = false;
                 break;
@@ -148,7 +156,7 @@ public class DeepLinkService {
 
     public boolean updateUrl(UrlParams urlParams) {
         boolean result = deepLinkDao.updateUrlInfo(urlParams);
-        if(result) {
+        if (result) {
             deepLinkMemCache.delete(String.valueOf(urlParams.deeplink_id));
         }
         return result;
