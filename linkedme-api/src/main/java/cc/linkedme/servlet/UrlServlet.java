@@ -118,7 +118,7 @@ public class UrlServlet extends HttpServlet {
         String osFamily = client.os.family;
         String osMajor = client.os.major;
         String deviceFamily = client.device.family;
-        boolean isUniversallink = false;
+        boolean isUniversalLink = false;
         boolean isDownloadDirectly = false;
         boolean isCannotDeeplink = false; // What do you means for CannotDeepLink?
         boolean isCannotGetWinEvent = false; // TODO
@@ -145,7 +145,7 @@ public class UrlServlet extends HttpServlet {
                 scheme = appInfo.getIos_uri_scheme();
                 // universe link是否需要team_id, appInfo.getIos_team_id() != null
                 if (appInfo.getIos_bundle_id() != null && Integer.parseInt(osMajor) >= 9) {
-                    isUniversallink = true;
+                    isUniversalLink = true;
                 }
             } else {
                 url = appInfo.getIos_not_url();
@@ -315,7 +315,7 @@ public class UrlServlet extends HttpServlet {
         request.setAttribute("isChrome", isChrome);
         request.setAttribute("isUC", isUC);
 
-        request.setAttribute("isUniversallink", isUniversallink);
+        request.setAttribute("isUniversalLink", isUniversalLink);
         request.setAttribute("isDownloadDirectly", isDownloadDirectly);
         request.setAttribute("isCannotDeeplink", isCannotDeeplink);
         request.setAttribute("isCannotGetWinEvent", isCannotGetWinEvent);

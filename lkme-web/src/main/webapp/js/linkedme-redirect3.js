@@ -3,38 +3,37 @@
  * modify at 4.15
  */
 function start() {
-    if ("" === Params.Download_msg && (Params.Download_msg = ResDefaultDownloadMsg),
-        "" !== Params.Download_btn_text &&
-        (ResDownloadAPK = Params.Download_btn_text, ResGotoAppStoreDownload = Params.Download_btn_text),
+    if ("" !== Params.button_text &&
+        (downloadAPK = Params.button_text, gotoAppStore = Params.button_text),
             isIosNotAvailable()) return void gotoDivPlatformNotAvail("ios");
 
     if (isAndroidNotAvailable()) return void gotoDivPlatformNotAvail("android");
 
     if (Params.isWechat())
         DEBUG && alert("isWeChat"),
-            shouldGotoYYB() ? (DEBUG && alert(Params.YYB_url), gotoUrl(Params.YYB_url)) : Params.isIOS() ? (DEBUG && alert("isIOS"), gotoTip("ios", dsAction.destination.dstweixintipios)) : Params.isAndroid() && (DEBUG && alert("isAndroid"), gotoTip("android", dsAction.destination.dstweixintipandroid));
+            shouldGotoYYB() ? (DEBUG && alert(Params.yyb_url), gotoUrl(Params.yyb_url)) : Params.isIOS() ? (DEBUG && alert("isIOS"), gotoTip("ios", dsAction.destination.dstweixintipios)) : Params.isAndroid() && (DEBUG && alert("isAndroid"), gotoTip("android", dsAction.destination.dstweixintipandroid));
     else if (Params.isQQ()) DEBUG && alert("isQQ"),
-        shouldGotoYYB() ? (DEBUG && alert(Params.YYB_url), gotoUrl(Params.YYB_url)) : Params.isIOS() ? (DEBUG && alert("isIOS"), gotoTip("ios", dsAction.destination.dstqqtipios)) : Params.isAndroid() && (DEBUG && alert("isAndroid"), gotoTip("android", dsAction.destination.dstqqtipandroid));
+        shouldGotoYYB() ? (DEBUG && alert(Params.yyb_url), gotoUrl(Params.yyb_url)) : Params.isIOS() ? (DEBUG && alert("isIOS"), gotoTip("ios", dsAction.destination.dstqqtipios)) : Params.isAndroid() && (DEBUG && alert("isAndroid"), gotoTip("android", dsAction.destination.dstqqtipandroid));
     else if (Params.isWeibo()) DEBUG && alert("isWeibo"),
         Params.isIOS() ? (DEBUG && alert("isIOS"), gotoTip("ios", dsAction.destination.dstweibotipios)) : Params.isAndroid() && (DEBUG && alert("isAndroid"), gotoTip("android", dsAction.destination.dstweibotipandroid));
     else if (Params.isIOS()) {
         DEBUG && alert("isIOS");
-        var a = Params.Scheme + "://";
-        if (Params.Match_id && Params.Match_id.length > 0 && (a += "?click_id=" + Params.Match_id), DEBUG && alert(a), Params.Ios_major < 9) DEBUG && alert("IOS Major below 9:" + Params.Ios_major),
+        var a = Params.uri_scheme + "://";
+        if (Params.click_id && Params.click_id.length > 0 && (a += "?click_id=" + Params.click_id), DEBUG && alert(a), Params.ios_major < 9) DEBUG && alert("IOS Major below 9:" + Params.ios_major),
             iframeDeeplinkLaunch(a, 2e3,
                 function () {
-                    gotoUrl(Params.Url)
+                    gotoUrl(Params.forward_url)
                 });
-        else if (DEBUG && alert("IOS Major upper 9:" + Params.Ios_major), Params.isChrome()) DEBUG && alert("isChrome"),
+        else if (DEBUG && alert("IOS Major upper 9:" + Params.ios_major), Params.isChrome()) DEBUG && alert("isChrome"),
             chiosDeeplinkLaunch(a,
                 function () {
-                    gotoUrl(Params.Url)
+                    gotoUrl(Params.forward_url)
                 });
-        else if (Params.isUniversallink()) if (DEBUG && alert("isUniversallink = true"), env.cookieEnabled()) switch (DEBUG && alert("cookie Enabled; AppInsStatus:" + Params.AppInsStatus), parseInt(Params.AppInsStatus, 10)) {
+        else if (Params.isUniversalLink()) if (DEBUG && alert("isUniversalLink = true"), env.cookieEnabled()) switch (DEBUG && alert("cookie Enabled; installStatus:" + Params.installStatus), parseInt(Params.installStatus, 10)) {
             case CONST_APP_INS_STATUS.Installed:
                 return void gotoIOSLandingPage();
             case CONST_APP_INS_STATUS.NotInstall:
-                return void gotoUrl(Params.Url);
+                return void gotoUrl(Params.forward_url);
             case CONST_APP_INS_STATUS.Unclear:
                 return void gotoIOSLandingPage();
             default:
@@ -44,24 +43,24 @@ function start() {
         else DEBUG && alert("is safari"),
                 deeplinkLaunch(a, 2500,
                     function () {
-                        gotoUrl(Params.Url)
+                        gotoUrl(Params.forward_url)
                     })
     } else if (Params.isAndroid())
-        if (DEBUG && alert("isAndroid"), a = Params.Scheme + "://" + Params.Host, Params.Match_id && Params.Match_id.length > 0 && (a += "?click_id=" + Params.Match_id),
+        if (DEBUG && alert("isAndroid"), a = Params.uri_scheme + "://" + Params.host, Params.click_id && Params.click_id.length > 0 && (a += "?click_id=" + Params.click_id),
             DEBUG && alert(a), Params.isCannotDeeplink()) iframeDeeplinkLaunch(a, 10e3,
             function () {
                 gotoCannotDeeplink()
             });
         else if (Params.isQQBrowser()) DEBUG && alert("QQ browser"),
-            shouldGotoYYB() ? (DEBUG && alert(Params.YYB_url), gotoUrl(Params.YYB_url)) : gotoCannotDeeplink();
+            shouldGotoYYB() ? (DEBUG && alert(Params.yyb_url), gotoUrl(Params.yyb_url)) : gotoCannotDeeplink();
         else if (Params.isUC()) DEBUG && alert("UC browser"),
             gotoUC(a);
-        else if (Params.isChrome() && Params.Chrome_major >= 25 && !Params.isForceUseScheme()) {
-            DEBUG && alert("Chrome_major:" + Params.Chrome_major);
-            var b = Params.Host;
-            Params.Match_id && Params.Match_id.length > 0 && (b += "?click_id=" + Params.Match_id);
-            var c = Params.Pkg,
-                d = "intent://" + b + "#Intent;scheme=" + Params.Scheme + ";package=" + c + ";S.browser_fallback_url=" + Params.Url + ";end";
+        else if (Params.isChrome() && Params.chrome_major >= 25 && !Params.isForceUseScheme()) {
+            DEBUG && alert("chrome_major:" + Params.chrome_major);
+            var b = Params.host;
+            Params.click_id && Params.click_id.length > 0 && (b += "?click_id=" + Params.click_id);
+            var c = Params.package_name,
+                d = "intent://" + b + "#Intent;scheme=" + Params.uri_scheme + ";package=" + c + ";S.browser_fallback_url=" + Params.forward_url + ";end";
             alert("d=" + d);
             deeplinkLaunch(d, 2e3,
                 function () {
@@ -103,13 +102,13 @@ var winWidth = $(window).width(),
             var c = {
                     action: a,
                     kvs: {
-                        click_id: Params.Match_id,
+                        click_id: Params.click_id,
                         destination: b,
                         visit_id: Params.visitId
                     }
                 },
                 d = JSON.stringify(c);
-            $.post(this.trackingUrl + Params.AppID, d,
+            $.post(this.trackingUrl + Params.app_id, d,
                 function (a) {
                 }).error(function () {
             })
@@ -118,14 +117,14 @@ var winWidth = $(window).width(),
             var d = {
                     action: a,
                     kvs: {
-                        click_id: Params.Match_id,
+                        click_id: Params.click_id,
                         user_btn: b,
                         user_choice: c,
                         visit_id: Params.visitId
                     }
                 },
                 e = JSON.stringify(d);
-            $.post(this.trackingUrl + Params.AppID, e,
+            $.post(this.trackingUrl + Params.app_id, e,
                 function (a) {
                 }).error(function () {
             })
@@ -138,13 +137,13 @@ var winWidth = $(window).width(),
     },
 
     weixinTipTemplate = '<div class="image-tip" width="100%" height="100%" style="position:relative;">    <div style="background-color:#ffffff;width:100%;height:100%;position:absolute; top:0;">        {img_tip}    </div>    <div style="text-align:center; width:100%; position:absolute; top:67%">        </div></div>',
-    imgInfo = "<img src=" + ResPathLang + 'openbrowser_{mobile-os}.png align="center" style="height: 100%;"/>',
-    div_goto_landingpage = '<div style="background-image:url({Bg_Url});background-size: 100% 100%;width:100%;height:100%;">    <div style = "position:absolute; top:20%; width:100%; ">        <div style="text-align:center; width:100%; ">            <img id="appIcon" src={Icon_Url} style="width:22%;"/>        </div>        <div style="text-align:center; width:100%; margin-top:10px;">            <span id="appName" style="font-size: 1.5em; color: #959595; padding: 15px 10px;">                {App_Name}            </span>        </div>    </div>    <div style="text-align:center; width:100%; position:absolute; top:56%;">        <span id="downloadTitle" style="font-size: 1em; color: #959595; padding: 15px 10px;">            {Download_title}        </span>    </div>    <div style="text-align:center; width:100%; position:absolute; top:59%;">    </div>    <div style="text-align:center; width:100%; position:absolute; top:70%;">        <{Element_type} id="btnGotoLandingPage" style="background-color:#FFFFFF; border: {Border_width}px solid #959595; color: #959595; padding: 6px 20px; -webkit-border-radius: 30px; -moz-border-radius: 30px; border-radius: 30px;">{Btn_landingpage_text}</{Element_type}>    </div></div>',
-    div_goto_cannot_deeplink_with_market_btn = '<div style="background-image:url(' + ResPathLang + 'oops.png);background-size: 100% 100%;width:100%;height:100%;">    <div style="text-align:center; width:100%; position:absolute; top:80%;">        <button id="btnGotoAndroidMarket" style="font-size: 1em; background-color:#FFFFFF; border: 3px solid #959595; color: #959595; padding: 6px 20px; -webkit-border-radius: 30px; -moz-border-radius: 30px; border-radius: 30px;">' + ResGotoAppStore + "</button>    </div></div>",
-    div_goto_cannot_deeplink_with_download_btn = '<div style="background-image:url(' + ResPathLang + 'oops.png);background-size: 100% 100%;width:100%;height:100%;">    <div style="text-align:center; width:100%; position:absolute; top:80%;">        <button id="btnGotoAndroidDownload" style="font-size: 1em; background-color:#FFFFFF; border: 3px solid #959595; color: #959595; padding: 6px 20px; -webkit-border-radius: 30px; -moz-border-radius: 30px; border-radius: 30px;">' + ResDownloadAPK + "</button>    </div></div>",
-    div_allow_me_deeplink = '<div style="background-image:url(' + ResPathLang + 'allowme.png);background-size: 100% 100%;width:100%;height:100%;">    <div style="text-align:center; width:100%; position:absolute; top:35%;">        <p id="textCountDown" style="font-size: 1em; color: #959595; padding: 6px 20px; -webkit-border-radius: 30px; -moz-border-radius: 30px; border-radius: 30px;"></p>    </div></div>',
+    imgInfo = "<img src=" + basePathLang + 'open_{mobile-os}_browser.png align="center" style="height: 100%;"/>',
+    div_goto_landingpage = '<div style="background-image:url({Bg_Url});background-size: 100% 100%;width:100%;height:100%;">    <div style = "position:absolute; top:20%; width:100%; ">        <div style="text-align:center; width:100%; ">            <img id="appIcon" src={logo_url} style="width:22%;"/>        </div>        <div style="text-align:center; width:100%; margin-top:10px;">            <span id="appName" style="font-size: 1.5em; color: #959595; padding: 15px 10px;">                {app_name}            </span>        </div>    </div>    <div style="text-align:center; width:100%; position:absolute; top:56%;">        <span id="downloadTitle" style="font-size: 1em; color: #959595; padding: 15px 10px;">            {Download_title}        </span>    </div>    <div style="text-align:center; width:100%; position:absolute; top:59%;">    </div>    <div style="text-align:center; width:100%; position:absolute; top:70%;">        <{Element_type} id="btnGotoLandingPage" style="background-color:#FFFFFF; border: {Border_width}px solid #959595; color: #959595; padding: 6px 20px; -webkit-border-radius: 30px; -moz-border-radius: 30px; border-radius: 30px;">{Btn_landingpage_text}</{Element_type}>    </div></div>',
+    div_goto_cannot_deeplink_with_market_btn = '<div style="background-image:url(' + basePathLang + 'cannot_forward.png);background-size: 100% 100%;width:100%;height:100%;">    <div style="text-align:center; width:100%; position:absolute; top:80%;">        <button id="btnGotoAndroidMarket" style="font-size: 1em; background-color:#FFFFFF; border: 3px solid #959595; color: #959595; padding: 6px 20px; -webkit-border-radius: 30px; -moz-border-radius: 30px; border-radius: 30px;">' + gotoStore + "</button>    </div></div>",
+    div_goto_cannot_deeplink_with_download_btn = '<div style="background-image:url(' + basePathLang + 'cannot_forward.png);background-size: 100% 100%;width:100%;height:100%;">    <div style="text-align:center; width:100%; position:absolute; top:80%;">        <button id="btnGotoAndroidDownload" style="font-size: 1em; background-color:#FFFFFF; border: 3px solid #959595; color: #959595; padding: 6px 20px; -webkit-border-radius: 30px; -moz-border-radius: 30px; border-radius: 30px;">' + downloadAPK + "</button>    </div></div>",
+    div_allow_me_deeplink = '<div style="background-image:url(' + basePathLang + 'open_app.png);background-size: 100% 100%;width:100%;height:100%;">    <div style="text-align:center; width:100%; position:absolute; top:35%;">        <p id="textCountDown" style="font-size: 1em; color: #959595; padding: 6px 20px; -webkit-border-radius: 30px; -moz-border-radius: 30px; border-radius: 30px;"></p>    </div></div>',
 
-    div_platform_not_available = '<div style="background-image:url(' + ResPathLang + '{Platform}_not_avail.png);background-size: 100% 100%;width:100%;height:100%;"></div>',
+    div_platform_not_available = '<div style="background-image:url(' + basePathLang + 'no_{Platform}.png);background-size: 100% 100%;width:100%;height:100%;"></div>',
 
     env = {
         windowLocation: function (a) {
@@ -225,7 +224,7 @@ var winWidth = $(window).width(),
                 })
     },
     gotoTip = function (a, b) {
-        weixin_tip = weixinTipTemplate.replace(/{img_tip}/g, imgInfo).replace(/{Icon_Url}/g, Params.IconUrl).replace(/{mobile-os}/g, a),
+        weixin_tip = weixinTipTemplate.replace(/{img_tip}/g, imgInfo).replace(/{logo_url}/g, Params.logo_url).replace(/{mobile-os}/g, a),
             $("body").append(weixin_tip),
             $(".image-tip").show(),
             env.windowUrlAddTag(),
@@ -236,7 +235,7 @@ var winWidth = $(window).width(),
         DEBUG && alert("cannot deeplink"),
             Params.isDownloadDirectly() ? ($("body").append(div_goto_cannot_deeplink_with_download_btn), $("#btnGotoAndroidDownload").click(function () {
                 dsAction.reportDSJSUserClickEvent(dsAction.actionJSUserClick, "gotoAndroidDirectDownload", "yes"),
-                    gotoUrl(Params.Url)
+                    gotoUrl(Params.forward_url)
             })) : ($("body").append(div_goto_cannot_deeplink_with_market_btn), $("#btnGotoAndroidMarket").click(function () {
                 dsAction.reportDSJSUserClickEvent(dsAction.actionJSUserClick, "gotoAndroidMarket", "yes"),
                     gotoAndroidMarket()
@@ -250,18 +249,18 @@ var winWidth = $(window).width(),
     gotoIOSLandingPage = function () {
         dstLocation = dsAction.destination.dstios9UniversalLinkLandPage,
         DEBUG && alert(dstLocation),
-            div_goto_landingpage = div_goto_landingpage.replace(/{Bg_Url}/g, ResPathLang + "bg_ul.png").replace(/{App_Name}/g, Params.AppName).replace(/{Icon_Url}/g, Params.IconUrl).replace(/{Download_title}/g, Params.Download_title).replace(/{Download_msg}/g, Params.Download_msg).replace(/{Btn_landingpage_text}/g, ResGotoAppStoreDownload).replace(/{Border_width}/g, "3").replace(/{Element_type}/g, "button"),
+            div_goto_landingpage = div_goto_landingpage.replace(/{Bg_Url}/g, basePathLang + "bg.png").replace(/{app_name}/g, Params.app_name).replace(/{logo_url}/g, Params.logo_url).replace(/{Download_title}/g, Params.app_title).replace(/{Download_msg}/g, Params.app_slogan).replace(/{Btn_landingpage_text}/g, gotoAppStore).replace(/{Border_width}/g, "3").replace(/{Element_type}/g, "button"),
             $("body").append(div_goto_landingpage),
             dsAction.reportDSJSEvent(dsAction.actionJSDst, dstLocation),
             $("#btnGotoLandingPage").click(function () {
                 dsAction.reportDSJSUserClickEvent(dsAction.actionJSUserClick, "gotoIosAppStore", "yes"),
-                    gotoUrl(Params.Url)
+                    gotoUrl(Params.forward_url)
             })
     },
     gotoAndroidMarketLandingPage = function () {
         dstLocation = dsAction.destination.dstandroidMarketLandPage,
         DEBUG && alert(dstLocation),
-            div_goto_landingpage = div_goto_landingpage.replace(/{Bg_Url}/g, ResPath + "bg1.png").replace(/{App_Name}/g, Params.AppName).replace(/{Icon_Url}/g, Params.IconUrl).replace(/{Download_title}/g, Params.Download_title).replace(/{Download_msg}/g, Params.Download_msg).replace(/{Btn_landingpage_text}/g, ResGotoAppStoreDownload).replace(/{Border_width}/g, "3").replace(/{Element_type}/g, "button"),
+            div_goto_landingpage = div_goto_landingpage.replace(/{Bg_Url}/g, basePathLang + "bg.png").replace(/{app_name}/g, Params.app_name).replace(/{logo_url}/g, Params.logo_url).replace(/{Download_title}/g, Params.app_title).replace(/{Download_msg}/g, Params.app_slogan).replace(/{Btn_landingpage_text}/g, gotoAppStore).replace(/{Border_width}/g, "3").replace(/{Element_type}/g, "button"),
             $("body").append(div_goto_landingpage),
             dsAction.reportDSJSEvent(dsAction.actionJSDst, dstLocation),
             $("#btnGotoLandingPage").click(function () {
@@ -272,19 +271,19 @@ var winWidth = $(window).width(),
     gotoAndroidCannotGoMarketLandingPage = function () {
         dstLocation = dsAction.destination.dstandroidCannotGoMarketLandPage,
         DEBUG && alert(dstLocation),
-            div_goto_landingpage = div_goto_landingpage.replace(/{Bg_Url}/g, ResPath + "bg1.png").replace(/{App_Name}/g, Params.AppName).replace(/{Icon_Url}/g, Params.IconUrl).replace(/{Download_title}/g, Params.Download_title).replace(/{Download_msg}/g, Params.Download_msg).replace(/{Btn_landingpage_text}/g, ResPleaseOpenAppStore).replace(/{Border_width}/g, "0").replace(/{Element_type}/g, "p"),
+            div_goto_landingpage = div_goto_landingpage.replace(/{Bg_Url}/g, basePathLang + "bg.png").replace(/{app_name}/g, Params.app_name).replace(/{logo_url}/g, Params.logo_url).replace(/{Download_title}/g, Params.app_title).replace(/{Download_msg}/g, Params.app_slogan).replace(/{Btn_landingpage_text}/g, openStore).replace(/{Border_width}/g, "0").replace(/{Element_type}/g, "p"),
             $("body").append(div_goto_landingpage),
             dsAction.reportDSJSEvent(dsAction.actionJSDst, dstLocation)
     },
     gotoAndroidDownloadLandingPage = function () {
         dstLocation = dsAction.destination.dstandroidDirectDownloadLandPage,
         DEBUG && alert(dstLocation),
-            div_goto_landingpage = div_goto_landingpage.replace(/{Bg_Url}/g, ResPath + "bg1.png").replace(/{App_Name}/g, Params.AppName).replace(/{Icon_Url}/g, Params.IconUrl).replace(/{Download_title}/g, Params.Download_title).replace(/{Download_msg}/g, Params.Download_msg).replace(/{Btn_landingpage_text}/g, ResDownloadAPK).replace(/{Border_width}/g, "3").replace(/{Element_type}/g, "button"),
+            div_goto_landingpage = div_goto_landingpage.replace(/{Bg_Url}/g, basePathLang + "bg.png").replace(/{app_name}/g, Params.app_name).replace(/{logo_url}/g, Params.logo_url).replace(/{Download_title}/g, Params.app_title).replace(/{Download_msg}/g, Params.app_slogan).replace(/{Btn_landingpage_text}/g, downloadAPK).replace(/{Border_width}/g, "3").replace(/{Element_type}/g, "button"),
             $("body").append(div_goto_landingpage),
             dsAction.reportDSJSEvent(dsAction.actionJSDst, dstLocation),
             $("#btnGotoLandingPage").click(function () {
                 dsAction.reportDSJSUserClickEvent(dsAction.actionJSUserClick, "gotoAndroidDirectDownload", "yes"),
-                    gotoUrl(Params.Url)
+                    gotoUrl(Params.forward_url)
             })
     },
     gotoUC = function (a) {
@@ -305,7 +304,7 @@ var winWidth = $(window).width(),
     },
     gotoAndroidMarket = function () {
         env.windowChangeHistory(),
-            dstLocation = "market://details?id=" + Params.Pkg,
+            dstLocation = "market://details?id=" + Params.package_name,
         DEBUG && alert(dstLocation),
             dsAction.reportDSJSEvent(dsAction.actionJSDst, dstLocation),
             env.windowLocation(dstLocation)
@@ -365,11 +364,11 @@ var winWidth = $(window).width(),
     },
     isIosNotAvailable = function () {
         <!--void 0 和undefined-->
-        return Params.isIOS() && (void 0 === Params.BundleID || "" === Params.BundleID)
+        return Params.isIOS() && (void 0 === Params.bundle_id || "" === Params.bundle_id)
     },
     isAndroidNotAvailable = function () {
-        return Params.isAndroid() && (void 0 === Params.Pkg || "" === Params.Pkg)
+        return Params.isAndroid() && (void 0 === Params.package_name || "" === Params.package_name)
     },
     shouldGotoYYB = function () {
-        return void 0 !== Params.YYB_url && "" !== Params.YYB_url && !Params.isIOS()
+        return void 0 !== Params.yyb_url && "" !== Params.yyb_url && !Params.isIOS()
     };

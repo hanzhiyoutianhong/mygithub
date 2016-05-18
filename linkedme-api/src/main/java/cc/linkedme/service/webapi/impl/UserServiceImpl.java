@@ -120,6 +120,13 @@ public class UserServiceImpl implements UserService {
 
     public boolean requestDemo(DemoRequestParams demoRequestParams) {
         int result = userDao.requestDemo(demoRequestParams);
+        if (result > 0) {
+            MailSender.sendHtmlMail("support@linkedme.cc", "hello,LinkedME, 来新用户了!",
+                    String.format("新用户的邮箱:%s <br />新用户的电话:%s <br />请及时联系!", demoRequestParams.email, demoRequestParams.mobile_phone));
+            MailSender.sendHtmlMail(demoRequestParams.email, "LinkedME Demo申请成功",
+                    "亲爱的用户:<br /><br />您的LinkedME Demo已经申请成功, 稍后会有工作人员和您联系.<br /> 有任何问题可以咨询我们,Email:support@linkedme.cc.<br /><br />谢谢!<br /><br />LinkedME团队");
+
+        }
         return result > 0;
     }
 

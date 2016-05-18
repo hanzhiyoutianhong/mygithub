@@ -8,8 +8,8 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <html>
 <head>
-    <script type="text/javascript" src="jsserver/lib/jquery-2.1.4.min.js"></script>
-    <script type="text/javascript" src="jsserver/lib/jquery.qrcode.min.js"></script>
+    <script type="text/javascript" src="js/lib/jquery-2.1.4.min.js"></script>
+    <script type="text/javascript" src="js/lib/jquery.qrcode.min.js"></script>
     <title>linkedme</title>
 </head>
 <body style="background:url(img/background.jpg);background-size:100%;">

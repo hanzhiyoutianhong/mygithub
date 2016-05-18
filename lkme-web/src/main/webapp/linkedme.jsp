@@ -9,35 +9,31 @@
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
 
-    <script src="<%=basePath %>/jsserver/lib/jquery-2.1.4.min.js"></script>
+    <script src="<%=basePath %>/js/lib/jquery-2.1.4.min.js"></script>
     <script type="text/javascript">
         var Params = {
+            app_id: '${AppID}',
             app_name: '${AppName}',
-            Pkg: '${Pkg}',
-            BundleID: '${BundleID}',
-            AppID: '${AppID}',
-            IconUrl: '${IconUrl}',
-            Url: '${Url}',
-            <!--click_id replace deeplink_id_base62-->
-            Match_id: '${Match_id}',
-            Download_msg: '${Download_msg}',
-            Download_btn_text: '${Download_btn_text}',
-            Download_title: '${Download_title}',
-            Chrome_major: '${Chrome_major}',
-            Ios_major: '${Ios_major}',
-            Redirect_url: '${Redirect_url}',
-            YYB_url: '${YYB_url}',
-            Scheme: '${Scheme}',
-            Host: '${Host}',
-            AppInsStatus: '${AppInsStatus}',
-            TimeStamp: '${TimeStamp}',
-            <!--—tracking-->
+            app_slogan: '${Download_msg}',
+            app_title: '${Download_title}',
+            bundle_id: '${BundleID}',
+            package_name: '${Pkg}',
+            uri_scheme: '${Scheme}',
+            forward_url: '${Url}',
+            yyb_url: '${YYB_url}',
+            logo_url: '${IconUrl}',
+            host: '${Host}',
+            click_id: '${Match_id}',
+            ios_major: '${Ios_major}',
+            chrome_major: '${Chrome_major}',
+            installStatus: '${AppInsStatus}',
+            button_text: '${Download_btn_text}',
             visitId: '${visitId}',
-            isAndroid: function () {
-                return 'true' == '${isAndroid}';
-            },
             isIOS: function () {
                 return 'true' == '${isIOS}';
+            },
+            isAndroid: function () {
+                return 'true' == '${isAndroid}';
             },
             isWechat: function () {
                 return 'true' == '${isWechat}';
@@ -51,14 +47,14 @@
             isQQBrowser: function () {
                 return 'true' == '${isQQBrowser}';
             },
-            isFirefox: function () {
-                return 'true' == '${isFirefox}';
-            },
             isChrome: function () {
-                return (this.Chrome_major > 0);
+                return (this.chrome_major > 0);
             },
-            isUniversallink: function () {
-                return 'true' == '${isUniversallink}';
+            isUC: function () {
+                return 'true' == '${isUC}';
+            },
+            isUniversalLink: function () {
+                return 'true' == '${isUniversalLink}';
             },
             isDownloadDirectly: function () {
                 return 'true' == '${isDownloadDirectly}';
@@ -74,35 +70,34 @@
             },
             isForceUseScheme: function () {
                 return 'true' == '${isForceUseScheme}';
-            },
-            isUC: function () {
-                return 'true' == '${isUC}';
             }
         };
         var DEBUG = ${DEBUG};
-        var MOCK_DATA = false;
         var lang = navigator.language;
         var isEng = /^en/.test(lang);
         if (isEng) {
-            document.write("<script src='<%=basePath %>/jsserver/en/langconfig.js'><\/script>");
+            document.write("<script src='<%=basePath %>/js/en/langconfig.js'><\/script>");
         } else {
-            document.write("<script src='<%=basePath %>/jsserver/cn/langconfig.js'><\/script>");
+            document.write("<script src='<%=basePath %>/js/cn/langconfig.js'><\/script>");
         }
     </script>
-    <script src="<%=basePath %>/jsserver/linkedme-redirect.js?v=1459492344"></script>
+    <script src="<%=basePath %>/js/linkedme-redirect.js"></script>
     <title></title>
     <style type="text/css">
         * {
             margin: 0;
             padding: 0;
         }
+
         a {
             text-decoration: none;
         }
+
         img {
             max-width: 100%;
             height: auto;
         }
+
         .image-tip {
             text-align: center;
             display: none;
