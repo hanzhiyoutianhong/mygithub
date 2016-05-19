@@ -8,10 +8,10 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
-import com.google.api.client.repackaged.com.google.common.base.Joiner;
 import org.springframework.dao.DataAccessException;
 import org.springframework.jdbc.core.RowMapper;
 
+import com.google.api.client.repackaged.com.google.common.base.Joiner;
 import com.google.api.client.repackaged.com.google.common.base.Strings;
 
 import cc.linkedme.commons.exception.LMException;
@@ -177,6 +177,8 @@ public class DeepLinkDaoImpl extends BaseDao implements DeepLinkDao {
         TableChannel tableChannel = tableContainer.getTableChannel("deeplink", GET_DEEPLINKS, appid, date);
         String sql = tableChannel.getSql();
         String condition = "";
+        start_date += " 00:00:00";
+        end_date += " 23:59:59";
         List<String> paramList = new ArrayList<String>();
         paramList.add(String.valueOf(appid));
         if (!Strings.isNullOrEmpty(start_date)) {
@@ -266,15 +268,15 @@ public class DeepLinkDaoImpl extends BaseDao implements DeepLinkDao {
         String desktop_custom_url = urlParams.desktop_custom_url;
 
         Joiner joiner = Joiner.on(",");
-        String feature = joiner.join( urlParams.feature );
+        String feature = joiner.join(urlParams.feature);
 
-        String campaign = joiner.join( urlParams.campaign);
+        String campaign = joiner.join(urlParams.campaign);
 
         String stage = joiner.join(urlParams.stage);
 
         String channel = joiner.join(urlParams.channel);
 
-        String tags = joiner.join( urlParams.tags);
+        String tags = joiner.join(urlParams.tags);
 
         String source = urlParams.source;
         String params = urlParams.params.toString();

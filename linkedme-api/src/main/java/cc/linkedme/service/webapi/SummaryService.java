@@ -15,35 +15,35 @@ import java.util.Set;
 
 import javax.annotation.Resource;
 
-import cc.linkedme.dao.webapi.DeepLinkDateCountDao;
-import cc.linkedme.data.model.DeepLinkDateCount;
-import net.sf.json.JSONArray;
-import net.sf.json.JSONObject;
-
 import org.apache.commons.lang.StringUtils;
 import org.springframework.stereotype.Service;
+import org.springframework.util.CollectionUtils;
+
+import com.google.api.client.repackaged.com.google.common.base.Strings;
+
 import cc.linkedme.commons.exception.LMException;
 import cc.linkedme.commons.exception.LMExceptionFactor;
 import cc.linkedme.commons.log.ApiLogger;
 import cc.linkedme.commons.redis.JedisPipelineReadCallback;
-import cc.linkedme.commons.redis.JedisReadPipeline;
-import cc.linkedme.commons.util.Base62;
 import cc.linkedme.commons.redis.JedisPort;
+import cc.linkedme.commons.redis.JedisReadPipeline;
 import cc.linkedme.commons.shard.ShardingSupportHash;
+import cc.linkedme.commons.util.Base62;
 import cc.linkedme.commons.util.Constants;
 import cc.linkedme.commons.util.Util;
 import cc.linkedme.dao.sdkapi.DeepLinkDao;
 import cc.linkedme.dao.webapi.BtnCountDao;
+import cc.linkedme.dao.webapi.DeepLinkDateCountDao;
 import cc.linkedme.data.dao.util.DateDuration;
 import cc.linkedme.data.model.ButtonCount;
 import cc.linkedme.data.model.ButtonInfo;
 import cc.linkedme.data.model.DeepLink;
 import cc.linkedme.data.model.DeepLinkCount;
+import cc.linkedme.data.model.DeepLinkDateCount;
 import cc.linkedme.data.model.params.SummaryButtonParams;
 import cc.linkedme.data.model.params.SummaryDeepLinkParams;
-
-import com.google.api.client.repackaged.com.google.common.base.Strings;
-import org.springframework.util.CollectionUtils;
+import net.sf.json.JSONArray;
+import net.sf.json.JSONObject;
 
 /**
  * Created by LinkedME01 on 16/3/20.
@@ -99,10 +99,7 @@ public class SummaryService {
                     start_date = onlineTime;
                 }
                 if (endDate.after(currentDate)) {
-                    // 结束日期设置为第二天,这样能保证当天发的短链能被检索出来
-                    Calendar calendar = Calendar.getInstance();
-                    calendar.add(Calendar.DAY_OF_YEAR, 1);
-                    end_date = simpleDateFormat.format(calendar.getTime());
+                    end_date = simpleDateFormat.format(currentDate);
                 }
             }
         } catch (ParseException e) {
@@ -197,7 +194,8 @@ public class SummaryService {
 
         JSONObject retJson = getCountJson(deepLinkCount.getIos_click(), deepLinkCount.getIos_open(), deepLinkCount.getIos_install(),
                 deepLinkCount.getAdr_click(), deepLinkCount.getAdr_open(), deepLinkCount.getAdr_install(), deepLinkCount.getPc_click(),
-                deepLinkCount.getPc_ios_scan(), deepLinkCount.getPc_ios_open(), deepLinkCount.getPc_ios_install(), deepLinkCount.getPc_adr_scan(), deepLinkCount.getPc_adr_open(), deepLinkCount.getPc_adr_install());
+                deepLinkCount.getPc_ios_scan(), deepLinkCount.getPc_ios_open(), deepLinkCount.getPc_ios_install(),
+                deepLinkCount.getPc_adr_scan(), deepLinkCount.getPc_adr_open(), deepLinkCount.getPc_adr_install());
 
         resultJson.put("data", retJson);
 
@@ -251,11 +249,9 @@ public class SummaryService {
         String startDate = summaryDeepLinkParams.startDate;
         String endDate = summaryDeepLinkParams.endDate;
         summaryDeepLinkParams.startDate = "2016-05-01";
-        Calendar calendar = Calendar.getInstance();
-        calendar.add(Calendar.DAY_OF_YEAR, 1);
-        summaryDeepLinkParams.endDate = simpleDateFormat.format(calendar.getTime());
+        summaryDeepLinkParams.endDate = simpleDateFormat.format(new Date());
 
-        List<DeepLink> deepLinks = getDeepLinks(summaryDeepLinkParams);//查询所有短链
+        List<DeepLink> deepLinks = getDeepLinks(summaryDeepLinkParams);// 查询所有短链
 
         Map<String, Map<String, Long>> allCounts = new HashMap<>();
 
