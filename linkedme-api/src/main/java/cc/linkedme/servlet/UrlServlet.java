@@ -16,6 +16,7 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import cc.linkedme.commons.cookie.CookieHelper;
 import cc.linkedme.commons.log.ApiLogger;
 import cc.linkedme.commons.redis.JedisPort;
 import cc.linkedme.commons.shard.ShardingSupportHash;
@@ -24,12 +25,15 @@ import cc.linkedme.commons.useragent.Parser;
 import cc.linkedme.commons.useragent.UserAgent;
 import cc.linkedme.commons.util.Base62;
 import cc.linkedme.commons.util.Constants;
+import cc.linkedme.commons.util.MD5Utils;
 import cc.linkedme.commons.util.UuidHelper;
+import cc.linkedme.commons.uuid.UuidCreator;
 import cc.linkedme.data.model.AppInfo;
 import cc.linkedme.data.model.DeepLink;
 import cc.linkedme.service.DeepLinkService;
 import cc.linkedme.service.webapi.AppService;
 import com.google.api.client.repackaged.com.google.common.base.Strings;
+import com.google.common.base.Joiner;
 import org.springframework.context.ApplicationContext;
 import org.springframework.web.context.support.WebApplicationContextUtils;
 
@@ -45,7 +49,11 @@ public class UrlServlet extends HttpServlet {
 
     private AppService appService;
 
+    private ShardingSupportHash<JedisPort> clientShardingSupport;
+
     private ShardingSupportHash<JedisPort> deepLinkCountShardingSupport;
+
+    private UuidCreator uuidCreator;
 
     private static ThreadPoolExecutor deepLinkCountThreadPool = new ThreadPoolExecutor(20, 20, 60L, TimeUnit.SECONDS,
             new LinkedBlockingQueue<Runnable>(300), new ThreadPoolExecutor.DiscardOldestPolicy());
@@ -66,7 +74,9 @@ public class UrlServlet extends HttpServlet {
         userAgentParser = (Parser) context.getBean("userAgentParser");
         deepLinkService = (DeepLinkService) context.getBean("deepLinkService");
         appService = (AppService) context.getBean("appService");
+        clientShardingSupport = (ShardingSupportHash) context.getBean("clientShardingSupport");
         deepLinkCountShardingSupport = (ShardingSupportHash) context.getBean("deepLinkCountShardingSupport");
+        uuidCreator = (UuidCreator) context.getBean("uuidCreator");
     }
 
     /**
@@ -114,10 +124,28 @@ public class UrlServlet extends HttpServlet {
         for (UserAgent ua : userAgentList) {
             uaMap.put(ua.family, ua);
         }
-
         String osFamily = client.os.family;
         String osMajor = client.os.major;
         String deviceFamily = client.device.family;
+
+        //如果没有cookie,设置cookie
+        String identityId = CookieHelper.getCookieValue(request, CookieHelper.getCookieName());
+        boolean hasIdentityId = false;
+        if (Strings.isNullOrEmpty(identityId)) {
+            identityId = String.valueOf(uuidCreator.nextId(1));
+            CookieHelper.setCookie(response, CookieHelper.getCookieName(), identityId);
+        } else {
+            //如果有cookie,查询库里是否有identity_id;
+            JedisPort identityRedisClient = clientShardingSupport.getClient(identityId);
+            String deviceId = identityRedisClient.get(identityId + ".di");
+            hasIdentityId = !Strings.isNullOrEmpty(deviceId);
+        }
+
+        //生成browser_fingerprint_id
+        Joiner joiner = Joiner.on("&").skipNulls();
+        String clientIP = request.getHeader("x-forwarded-for");
+        String browserFingerprintId = MD5Utils.md5(joiner.join(appId, osFamily, osMajor, clientIP));
+
         boolean isUniversalLink = false;
         boolean isDownloadDirectly = false;
         boolean isCannotDeeplink = false; // What do you means for CannotDeepLink?
@@ -321,6 +349,11 @@ public class UrlServlet extends HttpServlet {
         request.setAttribute("isCannotGetWinEvent", isCannotGetWinEvent);
         request.setAttribute("isCannotGoMarket", isCannotGoMarket);
         request.setAttribute("isForceUseScheme", isForceUseScheme);
+
+        request.setAttribute("deepLinkId", deepLinkId);
+        request.setAttribute("browserFingerprintId", browserFingerprintId);
+        request.setAttribute("identityId", identityId);
+        request.setAttribute("hasIdentityId", hasIdentityId);
 
         request.setAttribute("DEBUG", DEBUG);
 

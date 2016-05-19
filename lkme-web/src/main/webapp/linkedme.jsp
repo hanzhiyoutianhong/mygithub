@@ -28,7 +28,12 @@
             chrome_major: '${Chrome_major}',
             installStatus: '${AppInsStatus}',
             button_text: '${Download_btn_text}',
-            visitId: '${visitId}',
+            visit_id: '${visitId}',
+            deeplink_id:'${deepLinkId}',
+            browser_fingerprint_id:'${browserFingerprintId}',
+            identity_id:'${identityId}',
+            has_identity_id:'${hasIdentityId}',
+
             isIOS: function () {
                 return 'true' == '${isIOS}';
             },

@@ -89,16 +89,16 @@ public class SummaryService {
             SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd");
             Date onlineDate = simpleDateFormat.parse(onlineTime);
             Date stDate = simpleDateFormat.parse(start_date);
-            Date edDate = simpleDateFormat.parse(end_date);
+            Date endDate = simpleDateFormat.parse(end_date);
             Date currentDate = new Date();
 
-            if (stDate.after(currentDate) || edDate.before(onlineDate)) {
+            if (stDate.after(currentDate) || endDate.before(onlineDate)) {
                 throw new LMException(LMExceptionFactor.LM_ILLEGAL_PARAM_VALUE, "date is invalid!");
             } else {
                 if (stDate.before(onlineDate)) {
                     start_date = onlineTime;
                 }
-                if (edDate.after(currentDate)) {
+                if (endDate.after(currentDate)) {
                     // 结束日期设置为第二天,这样能保证当天发的短链能被检索出来
                     Calendar calendar = Calendar.getInstance();
                     calendar.add(Calendar.DAY_OF_YEAR, 1);
@@ -250,10 +250,12 @@ public class SummaryService {
         SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd");
         String startDate = summaryDeepLinkParams.startDate;
         String endDate = summaryDeepLinkParams.endDate;
-        summaryDeepLinkParams.startDate = "2016-04-01";
-        summaryDeepLinkParams.endDate = simpleDateFormat.format(new Date());
+        summaryDeepLinkParams.startDate = "2016-05-01";
+        Calendar calendar = Calendar.getInstance();
+        calendar.add(Calendar.DAY_OF_YEAR, 1);
+        summaryDeepLinkParams.endDate = simpleDateFormat.format(calendar.getTime());
 
-        List<DeepLink> deepLinks = getDeepLinks(summaryDeepLinkParams);
+        List<DeepLink> deepLinks = getDeepLinks(summaryDeepLinkParams);//查询所有短链
 
         Map<String, Map<String, Long>> allCounts = new HashMap<>();
 
@@ -639,7 +641,7 @@ public class SummaryService {
             // TODO 后续可以改成多线程调用
             int db = entry.getKey();
             List<Long> idList = entry.getValue();
-            JedisPort client = deepLinkCountShardingSupport.getClient(db);
+            JedisPort client = deepLinkCountShardingSupport.getClientByDb(db);
             List<Object> list = client.pipeline(new JedisPipelineReadCallback() {
                 @Override
                 public void call(JedisReadPipeline pipeline) {

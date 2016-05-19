@@ -1,4 +1,4 @@
-package cc.linkedme.common;
+package cc.linkedme.commons.cookie;
 
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
@@ -7,9 +7,9 @@ import javax.servlet.http.HttpServletResponse;
 /**
  * Created by qipo on 15/9/15.
  */
-public class LMCookieHelper {
+public class CookieHelper {
 
-    private static final String COOKIE_IDENTIFY_ID = "identity_id";
+    private static final String LKME_COOKIE_NAME = "linkedme_id";
 
     /**
      * set cookie expiration which is thirty days default system
@@ -113,13 +113,13 @@ public class LMCookieHelper {
      * construction function
      */
 
-    public LMCookieHelper() {}
+    public CookieHelper() {}
 
     /**
      * get and set function
      */
 
-    public static String getCookieIdentifyId() {
-        return COOKIE_IDENTIFY_ID;
+    public static String getCookieName() {
+        return LKME_COOKIE_NAME;
     }
 }
