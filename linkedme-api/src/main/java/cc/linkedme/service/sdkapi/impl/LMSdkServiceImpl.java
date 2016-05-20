@@ -111,39 +111,45 @@ public class LMSdkServiceImpl implements LMSdkService {
         long identityId;
         long deepLinkId = 0;
         DeepLink deepLink = null;
-        if (Strings.isNullOrEmpty(identityIdStr)) { // 之前不存在identityId
+        if (Strings.isNullOrEmpty(identityIdStr)) { // 之前不存在<device, identityId>
             // device_fingerprint_id 与 browse_fingerprint_id匹配逻辑
-            String[] identityIdAndDeepLinkId = matchDfpIdAndBfpId(installParams, String.valueOf(appId));
-            if (identityIdAndDeepLinkId.length == 2) { // 匹配成功
-                identityId = Long.parseLong(identityIdAndDeepLinkId[0]);
-                deepLinkId = Long.parseLong(identityIdAndDeepLinkId[1]);
-                deepLink = deepLinkService.getDeepLinkInfo(deepLinkId, appId);
+            String deviceFingerprintId =
+                    createFingerprintId(String.valueOf(appId), installParams.os, installParams.os_version, installParams.clientIP);
+            JedisPort dfpIdRedisClient = clientShardingSupport.getClient(deviceFingerprintId);
+            identityIdStr = dfpIdRedisClient.hget(deviceFingerprintId, "iid");
+            String deepLinkIdStr = dfpIdRedisClient.hget(deviceFingerprintId, "did");
 
+            if (identityIdStr != null && deepLinkIdStr != null) { // 匹配成功
+                identityId = Long.parseLong(identityIdStr);
+                deepLinkId = Long.parseLong(deepLinkIdStr);
+                deepLink = deepLinkService.getDeepLinkInfo(deepLinkId, appId);
             } else {
                 // 匹配不成功, 生成identity_id
                 identityId = uuidCreator.nextId(1); // 1表示发号器的identity_id业务
             }
-            // 记录<device_id, identity_id>和<identity_id, device_id>
-            clientRedisClient.set(deviceId, identityId);
-
+            clientRedisClient.set(deviceId, identityId);// 记录<device_id, identity_id>
             JedisPort identityRedisClient = clientShardingSupport.getClient(identityId);
-            identityRedisClient.set(identityId + ".di", deviceId);
-        } else { // 之前存在identityId
+            identityRedisClient.set(identityId + ".di", deviceId); // 记录<identity_id, device_id>
+        } else { // 之前存在<device, identityId>
             identityId = Long.parseLong(identityIdStr);
             JedisPort identityRedisClient = clientShardingSupport.getClient(identityId);
             String deepLinkIdStr = identityRedisClient.get(identityIdStr + ".dpi");
-            if (Strings.isNullOrEmpty(deepLinkIdStr)) { // 之前存在identityId,
-                                                        // 但是没有identityId与deepLink的键值对
+            if (Strings.isNullOrEmpty(deepLinkIdStr)) { // 之前存在identityId,但是没有identityId与deepLinkId的键值对
                 // device_fingerprint_id 与 browse_fingerprint_id匹配逻辑
                 // 如果匹配上了,更新<device_id, identity_id>记录，并把<device_id, identity_id>放在历史库;
-                String[] identityIdAndDeepLinkId = matchDfpIdAndBfpId(installParams, String.valueOf(appId));
-                if (identityIdAndDeepLinkId.length == 2) { // device_fingerprint_id 与
-                                                           // browse_fingerprint_id匹配成功
-                    long rightIdentityId = Long.parseLong(identityIdAndDeepLinkId[0]);
-                    long dlId = Long.parseLong(identityIdAndDeepLinkId[1]);
+                String deviceFingerprintId =
+                        createFingerprintId(String.valueOf(appId), installParams.os, installParams.os_version, installParams.clientIP);
+                JedisPort dfpIdRedisClient = clientShardingSupport.getClient(deviceFingerprintId);
+                identityIdStr = dfpIdRedisClient.hget(deviceFingerprintId, "iid");
+                deepLinkIdStr = dfpIdRedisClient.hget(deviceFingerprintId, "did");
+
+                if (identityIdStr != null && deepLinkIdStr != null) { // 匹配成功
+                    identityId = Long.parseLong(identityIdStr);
+                    deepLinkId = Long.parseLong(deepLinkIdStr);
                     deepLink = deepLinkService.getDeepLinkInfo(deepLinkId, appId);
-                    clientRedisClient.set(deviceId + ".old", identityId); // TODO 有问题,会有多个old吗?
-                    clientRedisClient.set(deviceId, rightIdentityId);
+
+                    clientRedisClient.sadd(deviceId + ".old", String.valueOf(identityId));
+                    clientRedisClient.set(deviceId, identityId); // 更新<device_id, identity_id>
                 }
             } else { // 之前存在identityId, 并有identityId与deepLink的键值对
                 deepLinkId = Long.parseLong(deepLinkIdStr);
@@ -174,7 +180,6 @@ public class LMSdkServiceImpl implements LMSdkService {
     }
 
     private String[] matchDfpIdAndBfpId(InstallParams installParams, String appId) {
-        Joiner joiner = Joiner.on("&").skipNulls();
         String deviceFingerprintId = createFingerprintId(appId, installParams.os, installParams.os_version, installParams.clientIP);
         JedisPort clientRedisClient = clientShardingSupport.getClient(deviceFingerprintId);
         String identityIdAndDeepLinkId = clientRedisClient.get(deviceFingerprintId);
@@ -196,7 +201,7 @@ public class LMSdkServiceImpl implements LMSdkService {
 
     private static String getClickIdFromUri(String deepLinkUrl) {
         String clickId = "";
-        if(Strings.isNullOrEmpty(deepLinkUrl)) {
+        if (Strings.isNullOrEmpty(deepLinkUrl)) {
             return "0";
         }
         if (deepLinkUrl.startsWith("http") || deepLinkUrl.startsWith("https")) {
@@ -270,7 +275,7 @@ public class LMSdkServiceImpl implements LMSdkService {
                     isScan = true;
                 }
                 String scanPrefix = "";
-                if(isScan) {
+                if (isScan) {
                     scanPrefix = "pc_";
                 }
                 final String openType = scanPrefix + DeepLinkCount.getCountTypeFromOs(openParams.os, "open");
@@ -369,8 +374,8 @@ public class LMSdkServiceImpl implements LMSdkService {
         String urlParamsStr = joiner.join(urlParams.linkedme_key, joiner2.join(urlParams.tags), urlParams.alias,
                 joiner2.join(urlParams.channel), joiner2.join(urlParams.feature), joiner2.join(urlParams.stage), urlParams.params);
 
-        //dashboard创建的短链,添加时间戳信息,保证每次都不一样
-        if("Dashboard".equals(urlParams.source)) {
+        // dashboard创建的短链,添加时间戳信息,保证每次都不一样
+        if ("Dashboard".equals(urlParams.source)) {
             urlParamsStr = urlParamsStr + "&" + System.currentTimeMillis();
         }
         String deepLinkMd5 = MD5Utils.md5(urlParamsStr);
