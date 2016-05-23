@@ -3,7 +3,6 @@ package cc.linkedme.service.webapi;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.Date;
@@ -79,6 +78,251 @@ public class SummaryService {
             return date1 > date2 ? 1 : (date1 == date2 ? 0 : -1);
         }
     };
+
+    public String getDeepLinksCounts(SummaryDeepLinkParams summaryDeepLinkParams) {
+        List<DeepLinkDateCount> deepLinkDateCountList = deepLinkDateCountDao.getDeepLinksDateCounts(summaryDeepLinkParams.appid,
+                summaryDeepLinkParams.startDate, summaryDeepLinkParams.endDate);
+        long iosClick = 0, iosOpen = 0, iosInstall = 0, adrClick = 0, adrOpen = 0, adrInstall = 0;
+        long pcClick = 0, pcIosScan = 0, pcAdrScan = 0, pcIosOpen = 0, pcAdrOpen = 0, pcIosInstall = 0, pcAdrInstall = 0;
+        Map<String, Map<String, Long>> allDateCounts = new HashMap<>();
+        Set<Long> deepLinkIdSet = new HashSet<>();
+        DeepLink dl;
+        int link_count = 0;
+        for (DeepLinkDateCount deepLinkDateCount : deepLinkDateCountList) {
+            if (!deepLinkIdSet.contains(deepLinkDateCount.getDeeplinkId())) {
+                deepLinkIdSet.add(deepLinkDateCount.getDeeplinkId());
+                dl = deepLinkDao.getDeepLinkInfo(deepLinkDateCount.getDeeplinkId(), summaryDeepLinkParams.appid);
+
+                if (!isValidDeepLink(summaryDeepLinkParams, dl)) {
+                    continue;
+                }
+            }
+
+            link_count++;
+
+            putElementToAllDateCounts(allDateCounts, deepLinkDateCount);
+
+            iosClick += deepLinkDateCount.getIosClick();
+            iosOpen += deepLinkDateCount.getIosOpen();
+            iosInstall += deepLinkDateCount.getIosInstall();
+
+            adrClick += deepLinkDateCount.getAdrClick();
+            adrOpen += deepLinkDateCount.getAdrOpen();
+            adrInstall += deepLinkDateCount.getAdrInstall();
+
+            pcClick += deepLinkDateCount.getPcClick();
+            pcIosScan += deepLinkDateCount.getPcIosScan();
+            pcAdrScan += deepLinkDateCount.getPcAdrScan();
+            pcIosOpen += deepLinkDateCount.getIosOpen();
+            pcAdrOpen += deepLinkDateCount.getAdrOpen();
+            pcIosInstall += deepLinkDateCount.getPcIosInstall();
+            pcAdrInstall += deepLinkDateCount.getPcAdrInstall();
+
+        }
+
+        JSONObject resultJson = getDeepLinkCountJson(allDateCounts, iosClick, iosOpen, iosInstall, adrClick, adrOpen, adrInstall, pcClick,
+                pcIosScan, pcIosOpen, pcIosInstall, pcAdrScan, pcAdrOpen, pcAdrInstall, link_count);
+
+        return resultJson.toString();
+    }
+
+    public String getDeepLinkHistoryCountNew(SummaryDeepLinkParams summaryDeepLinkParams) {
+        List<DeepLinkDateCount> deepLinkDateCountList = deepLinkDateCountDao.getDeepLinkDateCount(summaryDeepLinkParams.appid,
+                summaryDeepLinkParams.deepLinkId, summaryDeepLinkParams.startDate, summaryDeepLinkParams.endDate);
+        long iosClick = 0, iosOpen = 0, iosInstall = 0, adrClick = 0, adrOpen = 0, adrInstall = 0;
+        long pcClick = 0, pcIosScan = 0, pcAdrScan = 0, pcIosOpen = 0, pcAdrOpen = 0, pcIosInstall = 0, pcAdrInstall = 0;
+        Map<String, Map<String, Long>> allDateCounts = new HashMap<>();
+        int link_count = 0;
+        for (DeepLinkDateCount deepLinkDateCount : deepLinkDateCountList) {
+            putElementToAllDateCounts(allDateCounts, deepLinkDateCount);
+
+            iosClick += deepLinkDateCount.getIosClick();
+            iosOpen += deepLinkDateCount.getIosOpen();
+            iosInstall += deepLinkDateCount.getIosInstall();
+
+            adrClick += deepLinkDateCount.getAdrClick();
+            adrOpen += deepLinkDateCount.getAdrOpen();
+            adrInstall += deepLinkDateCount.getAdrInstall();
+
+            pcClick += deepLinkDateCount.getPcClick();
+            pcIosScan += deepLinkDateCount.getPcIosScan();
+            pcAdrScan += deepLinkDateCount.getPcAdrScan();
+            pcIosOpen += deepLinkDateCount.getIosOpen();
+            pcAdrOpen += deepLinkDateCount.getAdrOpen();
+            pcIosInstall += deepLinkDateCount.getPcIosInstall();
+            pcAdrInstall += deepLinkDateCount.getPcAdrInstall();
+
+        }
+
+        JSONObject resultJson = getDeepLinkCountJson(allDateCounts, iosClick, iosOpen, iosInstall, adrClick, adrOpen, adrInstall, pcClick,
+                pcIosScan, pcIosOpen, pcIosInstall, pcAdrScan, pcAdrOpen, pcAdrInstall, link_count);
+
+        return resultJson.toString();
+    }
+
+    public String getDeepLinksHistoryCounts(SummaryDeepLinkParams summaryDeepLinkParams, long[] deepLinkIds) {
+        long iosClick = 0, iosOpen = 0, iosInstall = 0, adrClick = 0, adrOpen = 0, adrInstall = 0;
+        long pcClick = 0, pcIosScan = 0, pcAdrScan = 0, pcIosOpen = 0, pcAdrOpen = 0, pcIosInstall = 0, pcAdrInstall = 0;
+        for (long deepLinkId : deepLinkIds) {
+            List<DeepLinkDateCount> deepLinkDateCountList = deepLinkDateCountDao.getDeepLinkDateCount(summaryDeepLinkParams.appid,
+                    deepLinkId, summaryDeepLinkParams.startDate, summaryDeepLinkParams.endDate);
+            for (DeepLinkDateCount deepLinkDateCount : deepLinkDateCountList) {
+                iosClick += deepLinkDateCount.getIosClick();
+                iosOpen += deepLinkDateCount.getIosOpen();
+                iosInstall += deepLinkDateCount.getIosInstall();
+
+                adrClick += deepLinkDateCount.getAdrClick();
+                adrOpen += deepLinkDateCount.getAdrOpen();
+                adrInstall += deepLinkDateCount.getAdrInstall();
+
+                pcClick += deepLinkDateCount.getPcClick();
+                pcIosScan += deepLinkDateCount.getPcIosScan();
+                pcAdrScan += deepLinkDateCount.getPcAdrScan();
+                pcIosOpen += deepLinkDateCount.getIosOpen();
+                pcAdrOpen += deepLinkDateCount.getAdrOpen();
+                pcIosInstall += deepLinkDateCount.getPcIosInstall();
+                pcAdrInstall += deepLinkDateCount.getPcAdrInstall();
+            }
+        }
+
+        JSONObject iosJson = new JSONObject();
+        iosJson.put("click", iosClick);
+        iosJson.put("open", iosOpen);
+        iosJson.put("install", iosInstall);
+
+        JSONObject adrJson = new JSONObject();
+        adrJson.put("click", adrClick);
+        adrJson.put("open", adrOpen);
+        adrJson.put("install", adrInstall);
+
+        JSONObject pcJson = new JSONObject();
+        pcJson.put("click", pcClick);
+        pcJson.put("pc_ios_scan", pcIosScan);
+        pcJson.put("pc_ios_open", pcIosOpen);
+        pcJson.put("pc_ios_install", pcIosInstall);
+        pcJson.put("pc_adr_scan", pcAdrScan);
+        pcJson.put("pc_adr_open", pcAdrOpen);
+        pcJson.put("pc_adr_install", pcAdrInstall);
+
+        JSONObject resultJson = new JSONObject();
+        resultJson.put("ios", iosJson);
+        resultJson.put("android", adrJson);
+        resultJson.put("pc", pcJson);
+        resultJson.put("link_count", deepLinkIds.length);
+
+        return resultJson.toString();
+    }
+
+    private void putElementToAllDateCounts(Map<String, Map<String, Long>> allDateCounts, DeepLinkDateCount deepLinkDateCount) {
+        Map<String, Long> count = allDateCounts.get(deepLinkDateCount.getDate());
+        if (count != null) {
+            count.put("click", count.get("click") + deepLinkDateCount.getClick());
+            count.put("open", count.get("open") + deepLinkDateCount.getOpen());
+            count.put("install", count.get("install") + deepLinkDateCount.getInstall());
+        } else {
+            count = new HashMap<>();
+            count.put("click", deepLinkDateCount.getClick());
+            count.put("open", deepLinkDateCount.getOpen());
+            count.put("install", deepLinkDateCount.getInstall());
+            allDateCounts.put(deepLinkDateCount.getDate(), count);
+        }
+    }
+
+    private JSONObject getDeepLinkCountJson(Map<String, Map<String, Long>> allDateCounts, long iosClick, long iosOpen, long iosInstall,
+            long adrClick, long adrOpen, long adrInstall, long pcClick, long pcIosScan, long pcIosOpen, long pcIosInstall, long pcAdrScan,
+            long pcAdrOpen, long pcAdrInstall, int link_count) {
+
+        JSONArray clickArr = new JSONArray();
+        JSONArray openArr = new JSONArray();
+        JSONArray installArr = new JSONArray();
+
+        int i = 0;
+        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd");
+        for (Map.Entry<String, Map<String, Long>> entry : allDateCounts.entrySet()) {
+            String date = entry.getKey();
+            Map<String, Long> countMap = entry.getValue();
+            long timeStamp = strDateToTimestamps(date, simpleDateFormat);
+            JSONArray clickJson = new JSONArray();
+            clickJson.add(0, timeStamp);
+            clickJson.add(1, countMap.get("click"));
+            clickArr.add(i, clickJson);
+
+            JSONArray openJson = new JSONArray();
+            openJson.add(0, timeStamp);
+            openJson.add(1, countMap.get("open"));
+            openArr.add(i, openJson);
+
+            JSONArray installJson = new JSONArray();
+            installJson.add(0, timeStamp);
+            installJson.add(1, countMap.get("install"));
+            installArr.add(i, installJson);
+
+            i++;
+        }
+
+        clickArr.sort(comparator);
+        openArr.sort(comparator);
+        installArr.sort(comparator);
+
+        JSONObject iosJson = new JSONObject();
+        iosJson.put("click", iosClick);
+        iosJson.put("open", iosOpen);
+        iosJson.put("install", iosInstall);
+
+        JSONObject adrJson = new JSONObject();
+        adrJson.put("click", adrClick);
+        adrJson.put("open", adrOpen);
+        adrJson.put("install", adrInstall);
+
+        JSONObject pcJson = new JSONObject();
+        pcJson.put("click", pcClick);
+        pcJson.put("pc_ios_scan", pcIosScan);
+        pcJson.put("pc_ios_open", pcIosOpen);
+        pcJson.put("pc_ios_install", pcIosInstall);
+        pcJson.put("pc_adr_scan", pcAdrScan);
+        pcJson.put("pc_adr_open", pcAdrOpen);
+        pcJson.put("pc_adr_install", pcAdrInstall);
+
+        JSONObject resultJson = new JSONObject();
+        resultJson.put("click", clickArr);
+        resultJson.put("open", openArr);
+        resultJson.put("install", installArr);
+        resultJson.put("link_count", link_count);
+        resultJson.put("ios", iosJson);
+        resultJson.put("android", adrJson);
+        resultJson.put("pc", pcJson);
+        return resultJson;
+    }
+
+    private boolean isValidDeepLink(SummaryDeepLinkParams summaryDeepLinkParams, DeepLink deepLink) {
+        boolean a = false;
+        boolean b = false;
+        boolean c = false;
+        boolean d = false;
+        boolean e = false;
+
+        if ((deepLink.getFeature() == null && Strings.isNullOrEmpty(summaryDeepLinkParams.feature))
+                || (deepLink.getFeature() != null && deepLink.getFeature().contains(summaryDeepLinkParams.feature))) {
+            a = true;
+        }
+        if ((deepLink.getCampaign() == null && Strings.isNullOrEmpty(summaryDeepLinkParams.campaign))
+                || (deepLink.getCampaign() != null && deepLink.getCampaign().contains(summaryDeepLinkParams.campaign))) {
+            b = true;
+        }
+        if ((deepLink.getStage() == null && Strings.isNullOrEmpty(summaryDeepLinkParams.stage))
+                || (deepLink.getStage() != null && deepLink.getStage().contains(summaryDeepLinkParams.stage))) {
+            c = true;
+        }
+        if ((deepLink.getTags() == null && Strings.isNullOrEmpty(summaryDeepLinkParams.tags))
+                || (deepLink.getTags() != null && deepLink.getTags().contains(summaryDeepLinkParams.tags))) {
+            c = true;
+        }
+        if ((deepLink.getSource() == null && Strings.isNullOrEmpty(summaryDeepLinkParams.source))
+                || (deepLink.getSource() != null && deepLink.getCampaign().equals(summaryDeepLinkParams.campaign))) {
+            e = true;
+        }
+        return a && b && c && d && e;
+    }
 
     public List<DeepLink> getDeepLinks(SummaryDeepLinkParams summaryDeepLinkParams) {
         String start_date = summaryDeepLinkParams.startDate;
@@ -259,18 +503,7 @@ public class SummaryService {
             List<DeepLinkDateCount> deepLinkDateCounts = deepLinkDateCountDao.getDeepLinkDateCount(summaryDeepLinkParams.appid,
                     deepLinks.get(i).getDeeplinkId(), startDate, endDate);
             for (DeepLinkDateCount deepLinkDateCount : deepLinkDateCounts) {
-                Map<String, Long> count = allCounts.get(deepLinkDateCount.getDate());
-                if (count != null) {
-                    count.put("click", count.get("click") + deepLinkDateCount.getClick());
-                    count.put("open", count.get("open") + deepLinkDateCount.getOpen());
-                    count.put("install", count.get("install") + deepLinkDateCount.getInstall());
-                } else {
-                    count = new HashMap<>();
-                    count.put("click", deepLinkDateCount.getClick());
-                    count.put("open", deepLinkDateCount.getOpen());
-                    count.put("install", deepLinkDateCount.getInstall());
-                    allCounts.put(deepLinkDateCount.getDate(), count);
-                }
+                putElementToAllDateCounts(allCounts, deepLinkDateCount);
             }
         }
 

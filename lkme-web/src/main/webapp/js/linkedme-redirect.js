@@ -383,16 +383,21 @@ var visit_id = "visit_id",
 
         recordId: function () {
             var c = {
-                    identity_id: Params.identity_id,
-                    is_valid_identityid: Params.is_valid_identity,
-                    browser_fingerprint_id: Params.browser_fingerprint_id,
-                    deeplink_id: Params.deeplink_id
+                identity_id: Params.identity_id,
+                is_valid_identityid: Params.is_valid_identity,
+                browser_fingerprint_id: Params.browser_fingerprint_id,
+                deeplink_id: Params.deeplink_id
+            };
+            $.ajax({
+                method: "POST",
+                contentType: "application/json; charset=utf-8",
+                url: this.recordIdUrl,
+                data: JSON.stringify(c),
+                success: function () {
                 },
-                d = JSON.stringify(c);
-            $.post(this.recordIdUrl, d,
-                function () {
-                }).error(function () {
-            });
+                error: function () {
+                }
+            })
         },
         reportJSEvent: function (a, b) {
             var c = {

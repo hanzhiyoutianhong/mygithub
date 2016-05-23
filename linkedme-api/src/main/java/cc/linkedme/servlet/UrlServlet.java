@@ -126,7 +126,7 @@ public class UrlServlet extends HttpServlet {
         }
         String osFamily = client.os.family;
         String osMajor = client.os.major;
-        String deviceFamily = client.device.family;
+        String osVersion = Joiner.on(".").skipNulls().join(client.os.major, client.os.minor, client.os.patch);
 
         // 如果没有cookie,设置cookie
         String identityId = CookieHelper.getCookieValue(request, CookieHelper.getCookieName());
@@ -142,9 +142,8 @@ public class UrlServlet extends HttpServlet {
         }
 
         // 生成browser_fingerprint_id
-        Joiner joiner = Joiner.on("&").skipNulls();
         String clientIP = request.getHeader("x-forwarded-for");
-        String browserFingerprintId = MD5Utils.md5(joiner.join(appId, osFamily, osMajor, clientIP));
+        String browserFingerprintId = MD5Utils.md5(Joiner.on("&").skipNulls().join(appId, osFamily, osVersion, clientIP));
 
         boolean isUniversalLink = false;
         boolean isDownloadDirectly = false;

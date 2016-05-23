@@ -28,6 +28,7 @@
             <map>
                 <entry key="ADD_DEEPLINK" value="insert into $db$.$tb$ (deeplink_id, deeplink_md5, linkedme_key, identity_id, appid, create_time, tags, alias, channel, feature, stage, campaign, params, source, sdk_version, link_label, ios_use_default, ios_custom_url, android_use_default, android_custom_url, desktop_use_default, desktop_custom_url, update_time) values(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, now())"/>
                 <entry key="GET_DEEPLINK_DATE_COUNT" value="select app_id, date, click, open, install from $db$.$tb$ where deeplink_id = ? " />
+                <entry key="GET_DEEPLINKS_DATE_COUNTS_BY_APPID" value="select deeplink_id, date, click, open, install, ios_click, ios_open, ios_install, adr_click, adr_open, adr_install, pc_click, pc_ios_scan, pc_adr_scan, pc_ios_open, pc_adr_open, pc_ios_install, pc_adr_install from $db$.$tb$ where app_id = ? " />
                 <entry key="DELETE_DEEPLINK" value="update $db$.$tb$ set valid_status = '0' where deeplink_id = ?"/>
                 <entry key="UPDATE_URL_INFO" value="update $db$.$tb$ set appid = ?, ios_use_default = ?, ios_custom_url = ?, android_use_default = ?, android_custom_url = ?, desktop_use_default = ?, desktop_custom_url = ?, feature = ?, campaign = ?, stage = ?, channel = ?, tags = ?, source = ?, params = ? where deeplink_id = ? and appid = ? and valid_status = '1' "/>
             </map>

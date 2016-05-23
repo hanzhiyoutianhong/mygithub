@@ -31,6 +31,28 @@ public class Summary {
     @Resource
     private SummaryService summaryService;
 
+    @Path("/counts")
+    @GET
+    @Produces(MediaType.APPLICATION_JSON)
+    public String getDeepLinkCounts(@QueryParam("app_id") int appid,
+                                     @QueryParam("start_date") String start_date,
+                                     @QueryParam("end_date") String end_date,
+                                     @QueryParam("feature") String feature,
+                                     @QueryParam("campaign") String campaign,
+                                     @QueryParam("stage") String stage,
+                                     @QueryParam("channel") String channel,
+                                     @QueryParam("tag") String tag,
+                                     @QueryParam("source") String source,
+                                     @QueryParam("unique") boolean unique,
+                                     @QueryParam("interval") int interval,
+                                     @QueryParam("token") String token) {
+
+        SummaryDeepLinkParams summaryDeepLinkParams =
+                new SummaryDeepLinkParams(appid, start_date, end_date, feature, campaign, stage, channel, tag, source, unique);
+        summaryService.getDeepLinksCounts(summaryDeepLinkParams);
+        return null;
+    }
+
     @Path("/deeplinks_count")
     @GET
     @Produces(MediaType.APPLICATION_JSON)
@@ -119,6 +141,9 @@ public class Summary {
     @GET
     @Produces({MediaType.APPLICATION_JSON})
     public String getMultiDeepLinkInfo(@QueryParam("deeplink_ids") String deeplink_ids,
+                                       @QueryParam("app_id") String appId,
+                                       @QueryParam("start_date") String startDate,
+                                       @QueryParam("end_date") String endDate,
                                        @QueryParam("token") String token) {
         String[] deeplinkIds = deeplink_ids.split(",");
 

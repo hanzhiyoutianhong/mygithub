@@ -111,9 +111,11 @@ public class LMSdkServiceImpl implements LMSdkService {
         long identityId;
         long deepLinkId = 0;
         DeepLink deepLink = null;
+        String deviceFingerprintId = "d";
+        String browserFingerprintId = "b";
         if (Strings.isNullOrEmpty(identityIdStr)) { // 之前不存在<device, identityId>
             // device_fingerprint_id 与 browse_fingerprint_id匹配逻辑
-            String deviceFingerprintId =
+            deviceFingerprintId =
                     createFingerprintId(String.valueOf(appId), installParams.os, installParams.os_version, installParams.clientIP);
             JedisPort dfpIdRedisClient = clientShardingSupport.getClient(deviceFingerprintId);
             identityIdStr = dfpIdRedisClient.hget(deviceFingerprintId, "iid");
@@ -137,7 +139,7 @@ public class LMSdkServiceImpl implements LMSdkService {
             if (Strings.isNullOrEmpty(deepLinkIdStr)) { // 之前存在identityId,但是没有identityId与deepLinkId的键值对
                 // device_fingerprint_id 与 browse_fingerprint_id匹配逻辑
                 // 如果匹配上了,更新<device_id, identity_id>记录，并把<device_id, identity_id>放在历史库;
-                String deviceFingerprintId =
+                deviceFingerprintId =
                         createFingerprintId(String.valueOf(appId), installParams.os, installParams.os_version, installParams.clientIP);
                 JedisPort dfpIdRedisClient = clientShardingSupport.getClient(deviceFingerprintId);
                 identityIdStr = dfpIdRedisClient.hget(deviceFingerprintId, "iid");
@@ -161,6 +163,8 @@ public class LMSdkServiceImpl implements LMSdkService {
         long fromDeepLinkId = deepLinkId; // 用于统计一个deeplink带来的下载量
         if (Strings.isNullOrEmpty(params)) {
             fromDeepLinkId = 0;
+        } else {
+            browserFingerprintId = deviceFingerprintId;
         }
         // 写mcq
         clientInfo.setIdentityId(identityId);
@@ -169,8 +173,8 @@ public class LMSdkServiceImpl implements LMSdkService {
         JsonBuilder resultJson = new JsonBuilder();
         resultJson.append("session_id", System.currentTimeMillis());
         resultJson.append("identity_id", String.valueOf(identityId));
-        resultJson.append("device_fingerprint_id", installParams.device_fingerprint_id);
-        resultJson.append("browser_fingerprint_id", "");
+        resultJson.append("device_fingerprint_id", deviceFingerprintId);
+        resultJson.append("browser_fingerprint_id", browserFingerprintId);
         resultJson.append("link", "");
         resultJson.append("deeplink_id", fromDeepLinkId);
         resultJson.append("params", params);
@@ -371,8 +375,8 @@ public class LMSdkServiceImpl implements LMSdkService {
         Joiner joiner = Joiner.on("&").skipNulls();
         Joiner joiner2 = Joiner.on(",").skipNulls();
         // linkedme_key & tags & alias & channel & feature & stage & params
-        String urlParamsStr = joiner.join(urlParams.linkedme_key, joiner2.join(urlParams.tags), urlParams.alias,
-                joiner2.join(urlParams.channel), joiner2.join(urlParams.feature), joiner2.join(urlParams.stage), urlParams.params);
+        String urlParamsStr = joiner.join(urlParams.linkedme_key, joiner2.join(urlParams.tags), joiner2.join(urlParams.channel),
+                joiner2.join(urlParams.feature), joiner2.join(urlParams.stage), urlParams.params);
 
         // dashboard创建的短链,添加时间戳信息,保证每次都不一样
         if ("Dashboard".equals(urlParams.source)) {
