@@ -399,6 +399,10 @@ public class LMSdkServiceImpl implements LMSdkService {
                 appId = Long.parseLong(appIdStr);
             }
         }
+        if (appId <= 0) {
+            String msg = ("Dashboard".equals(urlParams.source)) ? "app_id = 0" : "linkedme_key is invalid";
+            throw new LMException(LMExceptionFactor.LM_ILLEGAL_PARAMETER_VALUE, msg);
+        }
         if (id != null) {
             String link = Base62.encode(Long.parseLong(id));
             return Constants.DEEPLINK_HTTPS_PREFIX + "/" + Base62.encode(appId) + "/" + link;

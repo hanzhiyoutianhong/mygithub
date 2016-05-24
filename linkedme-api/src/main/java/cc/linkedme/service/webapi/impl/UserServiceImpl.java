@@ -31,8 +31,15 @@ public class UserServiceImpl implements UserService {
         if (userDao.queryEmail(userParams.email))
             throw new LMException(LMExceptionFactor.LM_USER_EMAIL_ALREADY_REGISTERED);
         else {
-            userDao.updateUserInfo(userParams);
-            return true;
+            int res = userDao.updateUserInfo(userParams);
+            if (res > 0) {
+                MailSender.sendHtmlMail("support@linkedme.cc", "hello,LinkedME, 来新用户了!",
+                        String.format("新用户的邮箱:%s <br />新用户的电话:%s <br />请及时联系!", userParams.email, userParams.phone_number));
+                MailSender.sendHtmlMail(userParams.email, "LinkedME 注册成功",
+                        "亲爱的用户:<br /><br />您的LinkedME账号已经注册成功, 如果您还没有申请LinkedME Demo,请用注册的邮箱去LinkedME官网申请.<br /> 有任何问题可以咨询我们,Email:support@linkedme.cc.<br /><br />谢谢!<br /><br />LinkedME团队");
+                return true;
+            }
+            return false;
         }
     }
 
@@ -101,7 +108,9 @@ public class UserServiceImpl implements UserService {
             String resetPwdUrl = "https://www.linkedme.cc/dashboard/index.html#/access/resetpwd/" + randomCode;
             if (result) {
                 MailSender.sendHtmlMail(userParams.email, "Change Your Password!",
-                        String.format("亲爱的用户:<br /><br />LinkedME重置密码的链接为:  <a href=%s>点击链接</a>. <br /> 有任何问题可以咨询我们,Email:support@linkedme.cc.<br /><br />谢谢!<br /><br />LinkedME团队", resetPwdUrl));
+                        String.format(
+                                "亲爱的用户:<br /><br />LinkedME重置密码的链接为:  <a href=%s>点击链接</a>. <br /> 有任何问题可以咨询我们,Email:support@linkedme.cc.<br /><br />谢谢!<br /><br />LinkedME团队",
+                                resetPwdUrl));
                 return true;
             }
             return false;
@@ -121,7 +130,7 @@ public class UserServiceImpl implements UserService {
     public boolean requestDemo(DemoRequestParams demoRequestParams) {
         int result = userDao.requestDemo(demoRequestParams);
         if (result > 0) {
-            MailSender.sendHtmlMail("support@linkedme.cc", "hello,LinkedME, 来新用户了!",
+            MailSender.sendHtmlMail("support@linkedme.cc", "hello,LinkedME, 有人申请Demo了!",
                     String.format("新用户的邮箱:%s <br />新用户的电话:%s <br />请及时联系!", demoRequestParams.email, demoRequestParams.mobile_phone));
             MailSender.sendHtmlMail(demoRequestParams.email, "LinkedME Demo申请成功",
                     "亲爱的用户:<br /><br />您的LinkedME Demo已经申请成功, 稍后会有工作人员和您联系.<br /> 有任何问题可以咨询我们,Email:support@linkedme.cc.<br /><br />谢谢!<br /><br />LinkedME团队");

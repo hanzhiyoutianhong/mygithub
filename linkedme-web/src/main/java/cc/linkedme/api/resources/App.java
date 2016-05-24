@@ -69,7 +69,9 @@ public class App {
     @Path("/get_apps")
     @GET
     @Produces(MediaType.APPLICATION_JSON)
-    public String getApps(@QueryParam("user_id") long user_id, @QueryParam("token") String token, @Context HttpServletRequest request) {
+    public String getApps(@QueryParam("user_id") long user_id,
+                          @QueryParam("token") String token,
+                          @Context HttpServletRequest request) {
         ApiLogger.biz(user_id + "biz test");
         if (user_id <= 0) {
             throw new LMException(LMExceptionFactor.LM_ILLEGAL_PARAM_VALUE);
@@ -110,15 +112,15 @@ public class App {
     @Path("/query_app")
     @GET
     @Produces(MediaType.APPLICATION_JSON)
-    public String queryApp(@QueryParam("app_id") long app_id, @QueryParam("type") String type, @QueryParam("token") String token,
-            @Context HttpServletRequest request) {
-
-        if (app_id <= 0) {
-            throw new LMException(LMExceptionFactor.LM_ILLEGAL_PARAM_VALUE);
-        }
+    public String queryApp(@QueryParam("app_id") long app_id,
+                           @QueryParam("user_id") long user_id,
+                           @QueryParam("type") String type,
+                           @QueryParam("token") String token,
+                           @Context HttpServletRequest request) {
 
         AppParams appParams = new AppParams();
         appParams.app_id = app_id;
+        appParams.user_id = user_id;
         appParams.type = type;
 
         AppInfo appInfo = appService.getAppById(appParams.app_id);
@@ -183,10 +185,6 @@ public class App {
         appParams.app_id = app_id;
 
         if (appParams.user_id <= 0) {
-            throw new LMException(LMExceptionFactor.LM_ILLEGAL_PARAM_VALUE);
-        }
-
-        if (appParams.app_id <= 0) {
             throw new LMException(LMExceptionFactor.LM_ILLEGAL_PARAM_VALUE);
         }
 

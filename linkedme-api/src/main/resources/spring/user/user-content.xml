@@ -26,7 +26,7 @@
         <property name="sqls">
             <map>
                 <entry key="LOGIN" value="select pwd from $db$.$tb$ where email=?"/>
-                <entry key="REGISTER" value="insert into $db$.$tb$ (email, pwd, name, company, role_id, register_time, last_login_time) values(?, ?, ?, ?, ?, ?, ?)"/>
+                <entry key="REGISTER" value="insert into $db$.$tb$ (email, pwd, name, phone_number, company, role_id, register_time, last_login_time) values(?, ?, ?, ?, ?, ?, ?, ?)"/>
                 <entry key="EMAIL_EXISTENCE_QUERY" value="select * from $db$.$tb$ where email= ? and valid_status = '1' "/>
                 <entry key="USER_INFO_QUERY" value="select id, email, pwd, name, company, role_id, register_time, last_login_time from $db$.$tb$ where email= ? and valid_status = '1' "/>
                 <entry key="PWD_RESET" value="update $db$.$tb$ set pwd=? where random_code = ? and valid_status = '1' "/>
