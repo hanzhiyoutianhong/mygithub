@@ -36,7 +36,7 @@ public class UserServiceImpl implements UserService {
                 MailSender.sendHtmlMail("support@linkedme.cc", "hello,LinkedME, 来新用户了!",
                         String.format("新用户的邮箱:%s <br />新用户的电话:%s <br />请及时联系!", userParams.email, userParams.phone_number));
                 MailSender.sendHtmlMail(userParams.email, "LinkedME 注册成功",
-                        "亲爱的用户:<br /><br />您的LinkedME账号已经注册成功, 如果您还没有申请LinkedME Demo,请用注册的邮箱去LinkedME官网申请.<br /> 有任何问题可以咨询我们,Email:support@linkedme.cc.<br /><br />谢谢!<br /><br />LinkedME团队");
+                        String.format("<center><div style='width:500px;text-align:left'><div><a href='https://www.linkedme.cc/'><img src='https://www.linkedme.cc/images/linkedme_logo.png' style='margin-bottom:10px' width='150'/></a></div><div style='border:solid 1px #eeeeee;border-radius:5px;padding:15px;font-size:13px;line-height:20px;'><p>Hi，%s:</p><p>非常高兴您注册成为LinkedME的用户！我是LinkedME的创始人——齐坡，非常高兴和您取得联系。今后您在使用LinkedME产品时，遇到任何没有得到及时解决的问题，都可以和我联系（齐坡：qipo@linkedme.cc），真诚为您提供最好的服务！</p><p>我们是国内首家企业级深度链接服务平台，应用深度链接技术帮助App提供下载、激活、留存、变现等问题的解决方案。我们研发了两款产品，分别是LinkPage和LinkSense，LinkPage产品主打\"精细化运营\"，提高活跃和留存。LinkSense产品主打\"流量变现\"，一键接入众多大型服务提供商，把流量换成更高的收入。有关产品的疑问，可以直接联系我们！（市场负责人：youwei@linkedme.cc）</p><p>深度链接，链接你我！</p></div><div id='figure'><a href='http://weibo.com/poqi1987'><img src='https://www.linkedme.cc/images/qipo_logo.png' width='50' style='vertical-align:middle;padding-top:15px'/></a> 齐坡，CEO</div></div></center>", userParams.name));
                 return true;
             }
             return false;

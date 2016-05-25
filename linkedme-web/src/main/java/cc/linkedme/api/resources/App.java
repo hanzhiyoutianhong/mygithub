@@ -72,7 +72,6 @@ public class App {
     public String getApps(@QueryParam("user_id") long user_id,
                           @QueryParam("token") String token,
                           @Context HttpServletRequest request) {
-        ApiLogger.biz(user_id + "biz test");
         if (user_id <= 0) {
             throw new LMException(LMExceptionFactor.LM_ILLEGAL_PARAM_VALUE);
         }

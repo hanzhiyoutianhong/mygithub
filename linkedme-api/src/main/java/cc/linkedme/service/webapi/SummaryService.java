@@ -69,7 +69,7 @@ public class SummaryService {
     @Resource
     ShardingSupportHash<JedisPort> btnCountShardingSupport;
 
-    public Comparator comparator = new Comparator<JSONArray>() {
+    public static Comparator comparator = new Comparator<JSONArray>() {
         @Override
         public int compare(JSONArray o1, JSONArray o2) {
             long date1 = o1.getLong(0);
@@ -364,6 +364,12 @@ public class SummaryService {
 
     public String getDeepLinksWithCount(SummaryDeepLinkParams summaryDeepLinkParams) {
         List<DeepLink> deepLinks = getDeepLinks(summaryDeepLinkParams);
+        Collections.sort(deepLinks, new Comparator<DeepLink>() {
+            @Override
+            public int compare(DeepLink o1, DeepLink o2) {
+                return o2.getCreateTime().compareTo(o1.getCreateTime());
+            }
+        });
         int deepLinkNum = deepLinks.size();
         int startIndex = summaryDeepLinkParams.skipNumber;
         if (startIndex < 0) {

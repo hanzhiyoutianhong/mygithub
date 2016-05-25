@@ -74,6 +74,8 @@ public class LMSdkServiceImpl implements LMSdkService {
     public final static float UNIVERSE_LINK_IOS_VERSION = 8;
 
     public String install(InstallParams installParams) {
+        JSONObject requestJson = JSONObject.fromObject(installParams);
+
         ClientInfo clientInfo = new ClientInfo();
         clientInfo.setDeviceId(installParams.device_id);
         clientInfo.setLinkedmeKey(installParams.linkedme_key);
@@ -108,11 +110,13 @@ public class LMSdkServiceImpl implements LMSdkService {
         String deviceId = installParams.device_id;
         JedisPort clientRedisClient = clientShardingSupport.getClient(deviceId);
         String identityIdStr = clientRedisClient.get(deviceId);
-        long identityId;
+        long identityId = 0;
         long deepLinkId = 0;
         DeepLink deepLink = null;
         String deviceFingerprintId = "d";
         String browserFingerprintId = "b";
+        String installType = "other";
+
         if (Strings.isNullOrEmpty(identityIdStr)) { // 之前不存在<device, identityId>
             // device_fingerprint_id 与 browse_fingerprint_id匹配逻辑
             deviceFingerprintId =
@@ -163,38 +167,35 @@ public class LMSdkServiceImpl implements LMSdkService {
         long fromDeepLinkId = deepLinkId; // 用于统计一个deeplink带来的下载量
         if (Strings.isNullOrEmpty(params)) {
             fromDeepLinkId = 0;
+            params = "";
         } else {
             browserFingerprintId = deviceFingerprintId;
+            installType = DeepLinkCount.getCountTypeFromOs(installParams.os, "install");
         }
         // 写mcq
         clientInfo.setIdentityId(identityId);
         clientMsgPusher.addClient(clientInfo, fromDeepLinkId);
 
-        JsonBuilder resultJson = new JsonBuilder();
-        resultJson.append("session_id", System.currentTimeMillis());
-        resultJson.append("identity_id", String.valueOf(identityId));
-        resultJson.append("device_fingerprint_id", deviceFingerprintId);
-        resultJson.append("browser_fingerprint_id", browserFingerprintId);
-        resultJson.append("link", "");
-        resultJson.append("deeplink_id", fromDeepLinkId);
-        resultJson.append("params", params);
-        resultJson.append("is_first_session", true);
-        resultJson.append("clicked_linkedme_link", !Strings.isNullOrEmpty(params));
-        return resultJson.flip().toString();
-    }
+        String sessionId = String.valueOf(System.currentTimeMillis());
+        JSONObject resultJson = new JSONObject();
+        resultJson.put("session_id", sessionId);
+        resultJson.put("identity_id", String.valueOf(identityId));
+        resultJson.put("device_fingerprint_id", deviceFingerprintId);
+        resultJson.put("browser_fingerprint_id", browserFingerprintId);
+        resultJson.put("link", "");
+        resultJson.put("deeplink_id", fromDeepLinkId);
+        resultJson.put("params", params);
+        resultJson.put("is_first_session", true);
+        resultJson.put("clicked_linkedme_link", !Strings.isNullOrEmpty(params));
 
-    private String[] matchDfpIdAndBfpId(InstallParams installParams, String appId) {
-        String deviceFingerprintId = createFingerprintId(appId, installParams.os, installParams.os_version, installParams.clientIP);
-        JedisPort clientRedisClient = clientShardingSupport.getClient(deviceFingerprintId);
-        String identityIdAndDeepLinkId = clientRedisClient.get(deviceFingerprintId);
-        if (Strings.isNullOrEmpty(identityIdAndDeepLinkId)) {
-            return new String[0];
-        }
-        String[] result = identityIdAndDeepLinkId.split(",");
-        if (result.length != 2) {
-            return new String[0];
-        }
-        return result;
+        JSONObject log = new JSONObject();
+        log.put("request", requestJson);
+        log.put("response", resultJson);
+        ApiLogger.biz(String.format("%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s", installParams.clientIP, "install", installType, appId,
+                deepLinkId, identityId, installParams.linkedme_key, sessionId, installParams.retry_times, installParams.is_debug,
+                installParams.sdk_version, log.toString()));
+
+        return resultJson.toString();
     }
 
     private static String createFingerprintId(String appId, String os, String os_version, String clientIP) {
@@ -229,6 +230,8 @@ public class LMSdkServiceImpl implements LMSdkService {
     }
 
     public String open(OpenParams openParams) {
+        JSONObject requestJson = JSONObject.fromObject(openParams);
+
         String deepLinkUrl = "";
         boolean isDirectForward = false;
         boolean isScan = false;
@@ -255,9 +258,10 @@ public class LMSdkServiceImpl implements LMSdkService {
         long deepLinkId = 0;
         String params = "";
         boolean clicked_linkedme_link = false;
+        String openTypeForLog = "other";
+        long appId = 0;
         if (!Strings.isNullOrEmpty(deepLinkUrl)) {
             // 根据linkedme_key获取appid
-            long appId = 0;
             JedisPort linkedmeKeyClient = linkedmeKeyShardingSupport.getClient(openParams.linkedme_key);
             String appIdStr = linkedmeKeyClient.hget(openParams.linkedme_key, "appid");
             if (appIdStr != null) {
@@ -283,6 +287,7 @@ public class LMSdkServiceImpl implements LMSdkService {
                     scanPrefix = "pc_";
                 }
                 final String openType = scanPrefix + DeepLinkCount.getCountTypeFromOs(openParams.os, "open");
+                openTypeForLog = openType;
                 final String clickType = DeepLinkCount.getCountTypeFromOs(openParams.os, "click");
                 boolean isUpdateClickCount = isDirectForward;
                 long dpId = deepLinkId;
@@ -306,14 +311,15 @@ public class LMSdkServiceImpl implements LMSdkService {
 
                 // universe link或者Android直接跳转,没有经过urlServlet,在此处添加点击日志
                 if (isDirectForward) {
-                    ApiLogger.biz(String.format("%s\t%s\t%s\t%s\t%s\t%s", openParams.clientIP, "click", appId, deepLinkId, clickType,
+                    ApiLogger.biz(String.format("%s\t%s\t%s\t%s\t%s\t%s", openParams.clientIP, "click", clickType, appId, deepLinkId,
                             "direct forward from:" + openParams.os));
                 }
             }
         }
 
+        String sessionId = String.valueOf(System.currentTimeMillis());
         JSONObject resultJson = new JSONObject();
-        resultJson.put("session_id", String.valueOf(System.currentTimeMillis()));
+        resultJson.put("session_id", sessionId);
         resultJson.put("identity_id", openParams.identity_id);
         resultJson.put("device_fingerprint_id", openParams.device_fingerprint_id);
         resultJson.put("browser_fingerprint_id", "");
@@ -322,6 +328,13 @@ public class LMSdkServiceImpl implements LMSdkService {
         resultJson.put("params", params);
         resultJson.put("is_first_session", false);
         resultJson.put("clicked_linkedme_link", clicked_linkedme_link);
+
+        JSONObject log = new JSONObject();
+        log.put("request", requestJson);
+        log.put("response", resultJson);
+        ApiLogger.biz(String.format("%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s", openParams.clientIP, "open", openTypeForLog, appId,
+                deepLinkId, openParams.identity_id, openParams.linkedme_key, sessionId, openParams.retry_times, openParams.is_debug,
+                openParams.sdk_version, log.toString()));
 
         return resultJson.toString();
     }
