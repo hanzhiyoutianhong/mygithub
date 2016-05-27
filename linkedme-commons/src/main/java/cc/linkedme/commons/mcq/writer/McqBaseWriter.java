@@ -77,7 +77,9 @@ public class McqBaseWriter implements BaseWriter {
         }
 
         /*
-         * 1、对每条消息轮询所有的mcq，如果处理成功则直接返回。 2、如果处理失败，则尝试写入下一个mcq。 3、如果所有的mcq均写入失败，则不做处理。
+         * 1、对每条消息轮询所有的mcq，如果处理成功则直接返回。
+         * 2、如果处理失败，则尝试写入下一个mcq。
+         * 3、如果所有的mcq均写入失败，则不做处理。
          */
         boolean writeRs = false;
         for (int i = 0; i < writers.size(); i++) {
