@@ -57,20 +57,8 @@ public class LMSdkResources {
 //                installParams.os_version, String.valueOf(installParams.timestamp))) {
 //            throw new LMException(LMExceptionFactor.LM_AUTH_FAILED);
 //        }
-
-        JSONObject requestJson = JSONObject.fromObject(installParams);
-
         installParams.clientIP = request.getHeader("x-forwarded-for");
         String result = lmSdkService.install(installParams);
-
-        JSONObject log = new JSONObject();
-        JSONObject responseJson = JSONObject.fromObject(result);
-        log.put("request", requestJson);
-        log.put("response", responseJson);
-        ApiLogger.biz(String.format("%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s", request.getHeader("x-forwarded-for"), "install",
-                responseJson.get("identity_id"), installParams.linkedme_key, responseJson.get("deeplink_id"),
-                responseJson.get("session_id"), installParams.retry_times, installParams.is_debug, installParams.sdk_version,
-                log.toString()));
 
         return result;
     }
@@ -86,20 +74,8 @@ public class LMSdkResources {
 //            throw new LMException(LMExceptionFactor.LM_AUTH_FAILED);
 //        }
         openParams.clientIP = request.getHeader("x-forwarded-for");
-        JSONObject requestJson = JSONObject.fromObject(openParams);
-
-        String response = lmSdkService.open(openParams);
-        JSONObject responseJson = JSONObject.fromObject(response);
-        long deepLinkId = responseJson.getLong("deeplink_id");
-        long sessionId = responseJson.getLong("session_id");
-        JSONObject log = new JSONObject();
-        log.put("request", requestJson);
-        log.put("response", responseJson);
-        ApiLogger.biz(String.format("%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s", request.getHeader("x-forwarded-for"), "open",
-                openParams.identity_id, openParams.linkedme_key, deepLinkId, sessionId, openParams.retry_times, openParams.is_debug,
-                openParams.sdk_version, log.toString()));
-
-        return response;
+        String result = lmSdkService.open(openParams);
+        return result;
     }
 
     @Path("/url")

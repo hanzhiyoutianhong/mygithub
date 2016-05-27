@@ -48,7 +48,7 @@ public class UserDaoImpl extends BaseDao implements UserDao {
 
         try {
             res += tableChannel.getJdbcTemplate().update(tableChannel.getSql(), new Object[] {userParams.email, userParams.pwd,
-                    userParams.name, userParams.company, userParams.role_id, register_time, last_login_time});
+                    userParams.name, userParams.phone_number, userParams.company, userParams.role_id, register_time, last_login_time});
         } catch (DataAccessException e) {
             if (DaoUtil.isDuplicateInsert(e)) {
                 ApiLogger.warn(new StringBuilder(128).append("Duplicate insert user, userEmail=").append(userParams.email), e);

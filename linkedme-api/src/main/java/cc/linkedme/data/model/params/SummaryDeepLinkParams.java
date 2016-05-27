@@ -25,8 +25,22 @@ public class SummaryDeepLinkParams {
 
     public SummaryDeepLinkParams() {}
 
-    public SummaryDeepLinkParams(int appid, String startDate, String endDate, String feature, String campaign, String stage,
-            String channel, String tags, String source, boolean unique, int returnNumber, int skipNumber, String orderby) {
+    public SummaryDeepLinkParams(int appid, String startDate, String endDate, String feature, String campaign, String stage, String channel,
+            String tags, String source, boolean unique) {
+        this.appid = appid;
+        this.startDate = startDate;
+        this.endDate = endDate;
+        this.feature = feature;
+        this.campaign = campaign;
+        this.stage = stage;
+        this.channel = channel;
+        this.tags = tags;
+        this.source = source;
+        this.unique = unique;
+    }
+
+    public SummaryDeepLinkParams(int appid, String startDate, String endDate, String feature, String campaign, String stage, String channel,
+            String tags, String source, boolean unique, int returnNumber, int skipNumber, String orderby) {
         this.appid = appid;
         this.startDate = startDate;
         this.endDate = endDate;
@@ -43,8 +57,8 @@ public class SummaryDeepLinkParams {
     }
 
 
-    public SummaryDeepLinkParams(int appid, String startDate, String endDate, String feature, String campaign, String stage,
-                                 String channel, String tags, String source, boolean unique, int interval, String orderby) {
+    public SummaryDeepLinkParams(int appid, String startDate, String endDate, String feature, String campaign, String stage, String channel,
+            String tags, String source, boolean unique, int interval, String orderby) {
         this.appid = appid;
         this.startDate = startDate;
         this.endDate = endDate;

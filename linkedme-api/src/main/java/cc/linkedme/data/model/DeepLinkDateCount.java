@@ -15,12 +15,27 @@ public class DeepLinkDateCount {
     private int appId;
     private long deeplinkId;
     private String date;
-    private Long click;
-    private Long open;
-    private Long install;
+    private long click;
+    private long open;
+    private long install;
+    
+    private long iosClick;
+    private long iosOpen;
+    private long iosInstall;
 
-    @Basic
-    @Column(name = "app_id")
+    private long adrClick;
+    private long adrOpen;
+    private long adrInstall;
+
+    private long pcClick;
+    private long pcIosScan;
+    private long pcAdrScan;
+    private long pcIosOpen;
+    private long pcAdrOpen;
+
+    private long pcIosInstall;
+    private long pcAdrInstall;
+
     public int getAppId() {
         return appId;
     }
@@ -29,8 +44,6 @@ public class DeepLinkDateCount {
         this.appId = appId;
     }
 
-    @Basic
-    @Column(name = "deeplink_id")
     public long getDeeplinkId() {
         return deeplinkId;
     }
@@ -39,8 +52,6 @@ public class DeepLinkDateCount {
         this.deeplinkId = deeplinkId;
     }
 
-    @Basic
-    @Column(name = "date")
     public String getDate() {
         return date;
     }
@@ -49,61 +60,132 @@ public class DeepLinkDateCount {
         this.date = date;
     }
 
-    @Basic
-    @Column(name = "click")
-    public Long getClick() {
+    public long getClick() {
         return click;
     }
 
-    public void setClick(Long click) {
+    public void setClick(long click) {
         this.click = click;
     }
 
-    @Basic
-    @Column(name = "open")
-    public Long getOpen() {
+    public long getOpen() {
         return open;
     }
 
-    public void setOpen(Long open) {
+    public void setOpen(long open) {
         this.open = open;
     }
 
-    @Basic
-    @Column(name = "install")
-    public Long getInstall() {
+    public long getInstall() {
         return install;
     }
 
-    public void setInstall(Long install) {
+    public void setInstall(long install) {
         this.install = install;
     }
 
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-
-        DeepLinkDateCount that = (DeepLinkDateCount) o;
-
-        if (appId != that.appId) return false;
-        if (deeplinkId != that.deeplinkId) return false;
-        if (date != null ? !date.equals(that.date) : that.date != null) return false;
-        if (click != null ? !click.equals(that.click) : that.click != null) return false;
-        if (open != null ? !open.equals(that.open) : that.open != null) return false;
-        if (install != null ? !install.equals(that.install) : that.install != null) return false;
-
-        return true;
+    public long getIosClick() {
+        return iosClick;
     }
 
-    @Override
-    public int hashCode() {
-        int result = appId;
-        result = 31 * result + (int) (deeplinkId ^ (deeplinkId >>> 32));
-        result = 31 * result + (date != null ? date.hashCode() : 0);
-        result = 31 * result + (click != null ? click.hashCode() : 0);
-        result = 31 * result + (open != null ? open.hashCode() : 0);
-        result = 31 * result + (install != null ? install.hashCode() : 0);
-        return result;
+    public void setIosClick(long iosClick) {
+        this.iosClick = iosClick;
     }
+
+    public long getIosOpen() {
+        return iosOpen;
+    }
+
+    public void setIosOpen(long iosOpen) {
+        this.iosOpen = iosOpen;
+    }
+
+    public long getIosInstall() {
+        return iosInstall;
+    }
+
+    public void setIosInstall(long iosInstall) {
+        this.iosInstall = iosInstall;
+    }
+
+    public long getAdrClick() {
+        return adrClick;
+    }
+
+    public void setAdrClick(long adrClick) {
+        this.adrClick = adrClick;
+    }
+
+    public long getAdrOpen() {
+        return adrOpen;
+    }
+
+    public void setAdrOpen(long adrOpen) {
+        this.adrOpen = adrOpen;
+    }
+
+    public long getAdrInstall() {
+        return adrInstall;
+    }
+
+    public void setAdrInstall(long adrInstall) {
+        this.adrInstall = adrInstall;
+    }
+
+    public long getPcClick() {
+        return pcClick;
+    }
+
+    public void setPcClick(long pcClick) {
+        this.pcClick = pcClick;
+    }
+
+    public long getPcIosScan() {
+        return pcIosScan;
+    }
+
+    public void setPcIosScan(long pcIosScan) {
+        this.pcIosScan = pcIosScan;
+    }
+
+    public long getPcAdrScan() {
+        return pcAdrScan;
+    }
+
+    public void setPcAdrScan(long pcAdrScan) {
+        this.pcAdrScan = pcAdrScan;
+    }
+
+    public long getPcIosOpen() {
+        return pcIosOpen;
+    }
+
+    public void setPcIosOpen(long pcIosOpen) {
+        this.pcIosOpen = pcIosOpen;
+    }
+
+    public long getPcAdrOpen() {
+        return pcAdrOpen;
+    }
+
+    public void setPcAdrOpen(long pcAdrOpen) {
+        this.pcAdrOpen = pcAdrOpen;
+    }
+
+    public long getPcIosInstall() {
+        return pcIosInstall;
+    }
+
+    public void setPcIosInstall(long pcIosInstall) {
+        this.pcIosInstall = pcIosInstall;
+    }
+
+    public long getPcAdrInstall() {
+        return pcAdrInstall;
+    }
+
+    public void setPcAdrInstall(long pcAdrInstall) {
+        this.pcAdrInstall = pcAdrInstall;
+    }
+
 }

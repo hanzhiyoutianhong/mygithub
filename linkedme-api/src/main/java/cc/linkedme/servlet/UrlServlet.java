@@ -126,25 +126,24 @@ public class UrlServlet extends HttpServlet {
         }
         String osFamily = client.os.family;
         String osMajor = client.os.major;
-        String deviceFamily = client.device.family;
+        String osVersion = Joiner.on(".").skipNulls().join(client.os.major, client.os.minor, client.os.patch);
 
-        //如果没有cookie,设置cookie
+        // 如果没有cookie,设置cookie
         String identityId = CookieHelper.getCookieValue(request, CookieHelper.getCookieName());
-        boolean hasIdentityId = false;
+        boolean isValidIdentity = false;
         if (Strings.isNullOrEmpty(identityId)) {
             identityId = String.valueOf(uuidCreator.nextId(1));
             CookieHelper.setCookie(response, CookieHelper.getCookieName(), identityId);
         } else {
-            //如果有cookie,查询库里是否有identity_id;
+            // 如果有cookie,查询库里是否有identity_id的记录;
             JedisPort identityRedisClient = clientShardingSupport.getClient(identityId);
             String deviceId = identityRedisClient.get(identityId + ".di");
-            hasIdentityId = !Strings.isNullOrEmpty(deviceId);
+            isValidIdentity = !Strings.isNullOrEmpty(deviceId);
         }
 
-        //生成browser_fingerprint_id
-        Joiner joiner = Joiner.on("&").skipNulls();
+        // 生成browser_fingerprint_id
         String clientIP = request.getHeader("x-forwarded-for");
-        String browserFingerprintId = MD5Utils.md5(joiner.join(appId, osFamily, osMajor, clientIP));
+        String browserFingerprintId = MD5Utils.md5(Joiner.on("&").skipNulls().join(appId, osFamily, osVersion, clientIP));
 
         boolean isUniversalLink = false;
         boolean isDownloadDirectly = false;
@@ -187,10 +186,10 @@ public class UrlServlet extends HttpServlet {
             }
 
             if (deepLink.getSource() != null && deepLink.getSource().trim().toLowerCase().equals("dashboard")
-                    && deepLink.getIos_custom_url() != null) {
+                    && !deepLink.isIos_use_default() && deepLink.getIos_custom_url() != null) {
                 clickCount(deepLinkId, countType);
-                ApiLogger.biz(String.format("%s\t%s\t%s\t%s\t%s\t%s", request.getHeader("x-forwarded-for"), "click", appId, deepLinkId,
-                        countType, userAgent));
+                ApiLogger.biz(String.format("%s\t%s\t%s\t%s\t%s\t%s", request.getHeader("x-forwarded-for"), "click", countType, appId,
+                        deepLinkId, userAgent));
                 response.sendRedirect(formatCustomUrl(deepLink.getIos_custom_url()));
                 return;
             }
@@ -218,10 +217,10 @@ public class UrlServlet extends HttpServlet {
             }
 
             if (deepLink.getSource() != null && deepLink.getSource().trim().toLowerCase().equals("dashboard")
-                    && deepLink.getAndroid_custom_url() != null) {
+                    && !deepLink.isAndroid_use_default() && deepLink.getAndroid_custom_url() != null) {
                 clickCount(deepLinkId, countType);
-                ApiLogger.biz(String.format("%s\t%s\t%s\t%s\t%s\t%s", request.getHeader("x-forwarded-for"), "click", appId, deepLinkId,
-                        countType, userAgent));
+                ApiLogger.biz(String.format("%s\t%s\t%s\t%s\t%s\t%s", request.getHeader("x-forwarded-for"), "click", countType, appId,
+                        deepLinkId, userAgent));
                 response.sendRedirect(formatCustomUrl(deepLink.getAndroid_custom_url()));
                 return;
             }
@@ -231,10 +230,10 @@ public class UrlServlet extends HttpServlet {
             countType = "pc_click";
 
             if (deepLink.getSource() != null && deepLink.getSource().trim().toLowerCase().equals("dashboard")
-                    && deepLink.getDesktop_custom_url() != null) {
+                    && !deepLink.isDesktop_use_default() && deepLink.getDesktop_custom_url() != null) {
                 clickCount(deepLinkId, countType);
-                ApiLogger.biz(String.format("%s\t%s\t%s\t%s\t%s\t%s", request.getHeader("x-forwarded-for"), "click", appId, deepLinkId,
-                        countType, userAgent));
+                ApiLogger.biz(String.format("%s\t%s\t%s\t%s\t%s\t%s", request.getHeader("x-forwarded-for"), "click", countType, appId,
+                        deepLinkId, userAgent));
                 response.sendRedirect(formatCustomUrl(deepLink.getDesktop_custom_url()));
                 return;
             }
@@ -244,8 +243,8 @@ public class UrlServlet extends HttpServlet {
             String codeUrl = Constants.DEEPLINK_HTTPS_PREFIX + request.getRequestURI() + "?scan=1";
 
             clickCount(deepLinkId, countType);
-            ApiLogger.biz(String.format("%s\t%s\t%s\t%s\t%s\t%s", request.getHeader("x-forwarded-for"), "click", appId, deepLinkId,
-                    countType, userAgent));
+            ApiLogger.biz(String.format("%s\t%s\t%s\t%s\t%s\t%s", request.getHeader("x-forwarded-for"), "click", countType, appId,
+                    deepLinkId, userAgent));
 
             response.sendRedirect(location + "?code_url=" + codeUrl);
             return;
@@ -259,8 +258,8 @@ public class UrlServlet extends HttpServlet {
             // 点击计数
             clickCount(deepLinkId, countType);
             // 记录日志
-            ApiLogger.biz(String.format("%s\t%s\t%s\t%s\t%s\t%s", request.getHeader("x-forwarded-for"), "click", appId, deepLinkId,
-                    countType, userAgent));
+            ApiLogger.biz(String.format("%s\t%s\t%s\t%s\t%s\t%s", request.getHeader("x-forwarded-for"), "click", countType, appId,
+                    deepLinkId, userAgent));
         }
 
         boolean isWechat = false;
@@ -304,7 +303,7 @@ public class UrlServlet extends HttpServlet {
         }
 
         String appLogo = "../img/icon.png";
-        if(appInfo.getApp_logo() != null && appInfo.getApp_logo().startsWith("http")) {
+        if (appInfo.getApp_logo() != null && appInfo.getApp_logo().startsWith("http")) {
             appLogo = appInfo.getApp_logo();
         }
 
@@ -353,7 +352,7 @@ public class UrlServlet extends HttpServlet {
         request.setAttribute("deepLinkId", deepLinkId);
         request.setAttribute("browserFingerprintId", browserFingerprintId);
         request.setAttribute("identityId", identityId);
-        request.setAttribute("hasIdentityId", hasIdentityId);
+        request.setAttribute("isValidIdentity", isValidIdentity);
 
         request.setAttribute("DEBUG", DEBUG);
 

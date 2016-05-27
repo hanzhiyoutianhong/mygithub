@@ -92,7 +92,6 @@ public class DeepLinkDaoImpl extends BaseDao implements DeepLinkDao {
         DeepLink dp = new DeepLink();
         TableChannel tableChannel = tableContainer.getTableChannel("deeplink", GET_DEEPLINK_INFO, appid, date);
         try {
-
             tableChannel.getJdbcTemplate().query(tableChannel.getSql(), new Object[] {deepLinkId, appid}, new RowMapper() {
                 public Object mapRow(ResultSet resultSet, int i) throws SQLException {
                     dp.setDeeplinkId(resultSet.getBigDecimal("deeplink_id").longValue());

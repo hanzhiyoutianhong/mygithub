@@ -1,7 +1,9 @@
 package cc.linkedme.commons.profile;
 
 import java.text.DecimalFormat;
+import java.text.SimpleDateFormat;
 import java.util.Arrays;
+import java.util.Date;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
@@ -81,6 +83,7 @@ public class ProfileUtil {
 
     public static void logAccessStatistic(boolean clear) {
         DecimalFormat mbFormat = new DecimalFormat("#0.00");
+        SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
         long currentTimeMillis = System.currentTimeMillis();
 
         for (Map.Entry<String, AccessStatisticItem> entry : accessStatistics.entrySet()) {
@@ -101,6 +104,7 @@ public class ProfileUtil {
             String name = keys[1];
 
             JsonBuilder jsonBuilder = new JsonBuilder();
+            jsonBuilder.append("timestamp", df.format(new Date()));
             jsonBuilder.append("type", type);
             jsonBuilder.append("name", name);
             jsonBuilder.append("slowThreshold", result.slowThreshold);
@@ -120,7 +124,7 @@ public class ProfileUtil {
             } else {
                 jsonBuilder.append("total_count", result.totalCount);
                 jsonBuilder.append("slow_count", result.slowCount);
-                jsonBuilder.append("avg_time", mbFormat.format(result.costTime / result.totalCount));
+                jsonBuilder.append("avg_time", Double.parseDouble(mbFormat.format(result.costTime / result.totalCount)));
                 // jsonBuilder.append("avg_tps", result.totalCount /
                 // ProfileConstants.STATISTIC_PEROID);
                 // jsonBuilder.append("max_tps", result.maxCount);

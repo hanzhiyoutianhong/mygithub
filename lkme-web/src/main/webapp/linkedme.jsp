@@ -32,7 +32,7 @@
             deeplink_id:'${deepLinkId}',
             browser_fingerprint_id:'${browserFingerprintId}',
             identity_id:'${identityId}',
-            has_identity_id:'${hasIdentityId}',
+            is_valid_identity:'${isValidIdentity}',
 
             isIOS: function () {
                 return 'true' == '${isIOS}';

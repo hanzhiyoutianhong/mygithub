@@ -31,131 +31,24 @@ public class Summary {
     @Resource
     private SummaryService summaryService;
 
-    @Path("/deeplinks_count")
+    @Path("/counts")
     @GET
     @Produces(MediaType.APPLICATION_JSON)
-    public String getDeepLinkSummary(@QueryParam("app_id") int appid,
-                                     @QueryParam("start_date") String start_date,
-                                     @QueryParam("end_date") String end_date,
-                                     @QueryParam("feature") String feature,
-                                     @QueryParam("campaign") String campaign,
-                                     @QueryParam("stage") String stage,
-                                     @QueryParam("channel") String channel,
-                                     @QueryParam("tag") String tag,
-                                     @QueryParam("source") String source,
-                                     @QueryParam("unique") boolean unique,
-                                     @QueryParam("return_number") int return_number,
-                                     @QueryParam("skip_number") int skip_number,
-                                     @QueryParam("orderby") String orderby) {
+    public String getDeepLinkCounts(@QueryParam("app_id") int appId,
+                                    @QueryParam("start_date") String start_date,
+                                    @QueryParam("end_date") String end_date,
+                                    @QueryParam("feature") String feature,
+                                    @QueryParam("campaign") String campaign,
+                                    @QueryParam("stage") String stage,
+                                    @QueryParam("channel") String channel,
+                                    @QueryParam("tag") String tag,
+                                    @QueryParam("source") String source,
+                                    @QueryParam("unique") boolean unique,
+                                    @QueryParam("token") String token) {
 
-        SummaryDeepLinkParams summaryDeepLinkParams = new SummaryDeepLinkParams(appid, start_date, end_date, feature, campaign, stage,
-                channel, tag, source, unique, return_number, skip_number, orderby);
-        Map<Long, DeepLinkCount> countMap = summaryService.getDeepLinkSummary(summaryDeepLinkParams);
-        int deepLinkCounts = countMap.size();
-        long ios_click = 0, ios_install = 0, ios_open = 0, adr_click = 0, adr_install = 0, adr_open = 0;
-        long pc_click = 0, pc_ios_scan = 0, pc_adr_scan = 0, pc_ios_open = 0, pc_adr_open = 0, pc_ios_install = 0, pc_adr_install = 0;
-        for (Map.Entry<Long, DeepLinkCount> entry : countMap.entrySet()) {
-            DeepLinkCount value = entry.getValue();
-            if (value != null) {
-                ios_click += value.getIos_click();
-                ios_install += value.getIos_install();
-                ios_open += value.getIos_open();
-
-                adr_click += value.getAdr_click();
-                adr_install += value.getAdr_install();
-                adr_open += value.getAdr_open();
-
-                pc_click += value.getPc_click();
-                pc_ios_scan += value.getPc_ios_scan();
-                pc_ios_open += value.getPc_ios_open();
-                pc_ios_install += value.getPc_ios_install();
-                pc_adr_scan += value.getPc_adr_scan();
-                pc_adr_open += value.getPc_adr_open();
-                pc_adr_install += value.getPc_adr_install();
-            }
-        }
-
-        JSONObject iosJson = new JSONObject();
-        iosJson.put("click", ios_click);
-        iosJson.put("install", ios_install);
-        iosJson.put("open", ios_open);
-
-        JSONObject adrJson = new JSONObject();
-        adrJson.put("click", adr_click);
-        adrJson.put("install", adr_install);
-        adrJson.put("open", adr_open);
-
-        JSONObject pcJson = new JSONObject();
-        pcJson.put("click", pc_click);
-        pcJson.put("pc_ios_scan", pc_ios_scan);
-        pcJson.put("pc_ios_open", pc_ios_open);
-        pcJson.put("pc_ios_install", pc_ios_install);
-        pcJson.put("pc_adr_scan", pc_adr_scan);
-        pcJson.put("pc_adr_open", pc_adr_open);
-        pcJson.put("pc_adr_install", pc_adr_install);
-
-        JSONObject retJson = new JSONObject();
-        retJson.put("link_count", deepLinkCounts);
-        retJson.put("ios", iosJson);
-        retJson.put("android", adrJson);
-        retJson.put("pc", pcJson);
-        return retJson.toString();
-    }
-
-    @Path("deeplink_count")
-    @GET
-    @Produces({MediaType.APPLICATION_JSON})
-    public String getDeepLinkInfo(@QueryParam("deeplink_id") long deeplink_id,
-                                  @QueryParam("app_id") int app_id,
-                                  @QueryParam("token") String token) {
-        SummaryDeepLinkParams summaryDeepLinkParams = new SummaryDeepLinkParams();
-        summaryDeepLinkParams.deepLinkId = deeplink_id;
-        summaryDeepLinkParams.appid = app_id;
-
-        return summaryService.getDeepLinkInfoByDeepLinkId(summaryDeepLinkParams);
-    }
-
-    @Path("multi_deeplink_count")
-    @GET
-    @Produces({MediaType.APPLICATION_JSON})
-    public String getMultiDeepLinkInfo(@QueryParam("deeplink_ids") String deeplink_ids,
-                                       @QueryParam("token") String token) {
-        String[] deeplinkIds = deeplink_ids.split(",");
-
-        int ios_click = 0, ios_install = 0, ios_open = 0, adr_click = 0, adr_install = 0, adr_open = 0;
-        int pc_click = 0, pc_ios_scan = 0, pc_adr_scan = 0, pc_ios_open = 0, pc_adr_open = 0, pc_ios_install = 0, pc_adr_install = 0;
-
-        Map<Long, Map<String, String>> countsMap = summaryService.getCounts(ArrayUtil.toRawLongArr(deeplinkIds));
-
-        for (Map.Entry<Long, Map<String, String>> entry : countsMap.entrySet()) {
-            DeepLinkCount deepLinkCount = new DeepLinkCount(entry.getKey());
-            Map<String, String> countMap = entry.getValue();
-            if (!CollectionUtils.isEmpty(countMap)) {
-                summaryService.setDeepLinkCount(deepLinkCount, countMap);
-            }
-
-            ios_click += deepLinkCount.getIos_click();
-            ios_open += deepLinkCount.getIos_open();
-            ios_install += deepLinkCount.getIos_install();
-
-            adr_click += deepLinkCount.getAdr_click();
-            adr_open += deepLinkCount.getAdr_open();
-            adr_install += deepLinkCount.getAdr_install();
-
-            pc_click += deepLinkCount.getPc_click();
-            pc_ios_scan += deepLinkCount.getPc_ios_scan();
-            pc_ios_open += deepLinkCount.getPc_ios_open();
-            pc_ios_install += deepLinkCount.getPc_ios_install();
-            pc_adr_scan += deepLinkCount.getPc_adr_scan();
-            pc_adr_open += deepLinkCount.getPc_adr_open();
-            pc_adr_install += deepLinkCount.getPc_adr_install();
-        }
-
-        JSONObject resultJson = summaryService.getCountJson(ios_click, ios_open, ios_install, adr_click, adr_open, adr_install, pc_click,
-                pc_ios_scan, pc_ios_open, pc_ios_install, pc_adr_scan, pc_adr_open, pc_adr_install);
-        resultJson.put("link_count", deeplinkIds.length);
-
-        return resultJson.toString();
+        SummaryDeepLinkParams summaryDeepLinkParams =
+                new SummaryDeepLinkParams(appId, start_date, end_date, feature, campaign, stage, channel, tag, source, unique);
+        return summaryService.getDeepLinksHistoryCounts(summaryDeepLinkParams);
     }
 
     @Path("/deeplink_count_history")
@@ -172,28 +65,22 @@ public class Summary {
         return result;
     }
 
-    @Path("/deeplinks_count_history")
+    @Path("multi_deeplink_count")
     @GET
-    @Produces(MediaType.APPLICATION_JSON)
-    public String getDeepLinksHistoryCount(@QueryParam("app_id") int appid,
-                                          @QueryParam("start_date") String start_date,
-                                          @QueryParam("end_date") String end_date,
-                                          @QueryParam("feature") String feature,
-                                          @QueryParam("campaign") String campaign,
-                                          @QueryParam("stage") String stage,
-                                          @QueryParam("channel") String channel,
-                                          @QueryParam("tag") String tags,
-                                          @QueryParam("source") String source,
-                                          @QueryParam("unique") boolean unique,
-                                          @QueryParam("interval") int interval,
-                                          @QueryParam("orderby") String orderby,
-                                          @QueryParam("token") String token) {
-
-        SummaryDeepLinkParams summaryDeepLinkParams = new SummaryDeepLinkParams(appid, start_date, end_date, feature, campaign, stage,
-                channel, tags, source, unique, interval, orderby);
-        String result = summaryService.getDeepLinksHistoryCount(summaryDeepLinkParams);
+    @Produces({MediaType.APPLICATION_JSON})
+    public String getMultiDeepLinkInfo(@QueryParam("deeplink_ids") String deeplinkIds,
+                                       @QueryParam("app_id") int appId,
+                                       @QueryParam("start_date") String startDate,
+                                       @QueryParam("end_date") String endDate,
+                                       @QueryParam("token") String token) {
+        String[] deeplinkIdsArr = deeplinkIds.split(",");
+        if(deeplinkIdsArr == null || deeplinkIdsArr.length == 0) {
+            return "{}";
+        }
+        String result = summaryService.getDeepLinksCounts(appId, deeplinkIdsArr, startDate, endDate);
         return result;
     }
+
 
     @Path("/get_income_rank")
     @GET
@@ -251,6 +138,30 @@ public class Summary {
 
         SummaryButtonParams summaryButtonParams = new SummaryButtonParams(user_id, app_id, start_date, end_date, button_id, interval);
         String result = summaryService.getBtnClickAndOrderCounts(summaryButtonParams);
+        return result;
+    }
+
+    @Deprecated
+    @Path("/deeplinks_count_history")
+    @GET
+    @Produces(MediaType.APPLICATION_JSON)
+    public String getDeepLinksHistoryCount(@QueryParam("app_id") int appid,
+                                           @QueryParam("start_date") String start_date,
+                                           @QueryParam("end_date") String end_date,
+                                           @QueryParam("feature") String feature,
+                                           @QueryParam("campaign") String campaign,
+                                           @QueryParam("stage") String stage,
+                                           @QueryParam("channel") String channel,
+                                           @QueryParam("tag") String tags,
+                                           @QueryParam("source") String source,
+                                           @QueryParam("unique") boolean unique,
+                                           @QueryParam("interval") int interval,
+                                           @QueryParam("orderby") String orderby,
+                                           @QueryParam("token") String token) {
+
+        SummaryDeepLinkParams summaryDeepLinkParams = new SummaryDeepLinkParams(appid, start_date, end_date, feature, campaign, stage,
+                channel, tags, source, unique, interval, orderby);
+        String result = summaryService.getDeepLinksHistoryCount(summaryDeepLinkParams);
         return result;
     }
 

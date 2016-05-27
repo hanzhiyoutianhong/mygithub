@@ -43,15 +43,7 @@ public class ShardingSupportHash<T> implements ShardingSupport<T> {
 
     @Override
     public DbTable getDbTable(long id) {
-        int raw = HashUtil.getHash(id, hashGene, hashAlg, noneHash);
-        int db = raw / tablePerDb;
-        String table = String.valueOf(raw % tablePerDb);
-
-        DbTable dbTable = new DbTable(db, table);
-        if (CommonUtil.isDebugEnabled()) {
-            ApiLogger.debug("DaoShardingHash getDbTable dbTable:" + dbTable.toString());
-        }
-        return dbTable;
+        return getDbTable(String.valueOf(id));
     }
 
     public DbTable getDbTable(String id) {

@@ -33,7 +33,7 @@ function start() {
                 gotoTip("ios", lkmeAction.destination.dstWeChatIOS);
             } else if (Params.isAndroid()) {
                 DEBUG_ALERT("isAndroid");
-                gotoTip("android", lkmeAction.destination.dstWeChatAndroid)
+                gotoTip("android", lkmeAction.destination.dstWeChatAndroid);
             }
         }
     } else if (Params.isQQ()) {
@@ -79,12 +79,8 @@ function start() {
                 if (env.cookieEnabled()) {
                     DEBUG_ALERT("cookie Enabled; installStatus:" + Params.installStatus);
                     switch (parseInt(Params.installStatus, 10)) {
-                        case INSTALL_STATUS.Installed:
-                            return void gotoIOSLandingPage();
                         case INSTALL_STATUS.NotInstall:
                             return void gotoUrl(Params.forward_url);
-                        case INSTALL_STATUS.Unknown:
-                            return void gotoIOSLandingPage();
                         default:
                             return void gotoIOSLandingPage();
                     }
@@ -94,17 +90,14 @@ function start() {
                 }
             } else if (Params.isChrome()) {
                 DEBUG_ALERT("isChrome");
-                chiosDeepLinkLaunch(a,
-                    function () {
-                        gotoUrl(Params.forward_url);
-                    });
+                chiosDeepLinkLaunch(a, function () {
+                    gotoUrl(Params.forward_url);
+                });
             } else {
                 DEBUG_ALERT("is safari");
-                deeplinkLaunch(a, 2500,
-                    function () {
-                        gotoUrl(Params.forward_url)
-
-                    });
+                deeplinkLaunch(a, 2500, function () {
+                    gotoUrl(Params.forward_url);
+                });
             }
         }
     } else if (Params.isAndroid()) {
@@ -115,10 +108,9 @@ function start() {
         }
         DEBUG_ALERT(a);
         if (Params.isCannotDeeplink()) {
-            iframeDeepLinkLaunch(a, 10e3,
-                function () {
-                    gotoCannotDeeplink()
-                });
+            iframeDeepLinkLaunch(a, 10e3, function () {
+                gotoCannotDeeplink();
+            });
         } else if (Params.isQQBrowser()) {
             DEBUG_ALERT("QQ browser");
             if (shouldGotoYYB()) {
@@ -136,20 +128,18 @@ function start() {
             if (Params.click_id && Params.click_id.length > 0) {
                 b += "?click_id=" + Params.click_id;
             }
-            var c = Params.package_name,
-                d = "intent://" + b + "#Intent;scheme=" + Params.uri_scheme + ";package=" + c + ";S.browser_fallback_url=" + Params.forward_url + ";end";
+            var c = Params.package_name;
+            var d = "intent://" + b + "#Intent;scheme=" + Params.uri_scheme + ";package=" + c + ";S.browser_fallback_url=" + Params.forward_url + ";end";
             DEBUG_ALERT("d=" + d);
             deeplinkLaunch(d, 2e3, function () {
                 gotoAndroidNewInstall()
             })
         } else {
             DEBUG_ALERT("default browser");
-            iframeDeepLinkLaunch(a, 2e3,
-                function () {
-                    gotoAndroidNewInstall()
-                })
+            iframeDeepLinkLaunch(a, 2e3, function () {
+                gotoAndroidNewInstall()
+            })
         }
-
     }
 }
 
@@ -157,14 +147,15 @@ var visit_id = "visit_id",
     deepLinkLocation = "",
     dstLocation = "",
     gotoTip = function (a, b) {
-        page_tip = pageTemplate.replace(/{img_tip}/g, imgInfo).replace(/{logo_url}/g, Params.logo_url).replace(/{mobile-os}/g, a),
-            $("body").append(page_tip),
-            $(".image-tip").show(),
-            env.windowUrlAddFlag(),
-            dstLocation = b,
-            lkmeAction.reportJSEvent(lkmeAction.actionJSDst, dstLocation)
+        page_tip = pageTemplate.replace(/{img_tip}/g, imgInfo).replace(/{logo_url}/g, Params.logo_url).replace(/{mobile-os}/g, a);
+        $("body").append(page_tip);
+        $(".image-tip").show();
+        env.windowUrlAddFlag();
+        dstLocation = b;
+        lkmeAction.reportJSEvent(lkmeAction.actionJSDst, dstLocation);
     },
     gotoCannotDeeplink = function () {
+        ////记录identity_id和browser_fingerprint_id
         DEBUG && alert("cannot deeplink");
         if (Params.isDownloadDirectly()) {
             $("body").append(div_goto_cannot_deeplink_with_download_btn), $("#btnGotoAndroidDownload").click(function () {
@@ -179,6 +170,7 @@ var visit_id = "visit_id",
         }
         dstLocation = lkmeAction.destination.dstCannotDeepLink;
         lkmeAction.reportJSEvent(lkmeAction.actionJSDst, dstLocation);
+        lkmeAction.recordId();
     },
     gotoAndroidNewInstall = function () {
         if (Params.isDownloadDirectly()) {
@@ -194,38 +186,42 @@ var visit_id = "visit_id",
     gotoAndroidDownloadLandingPage = function () {
         dstLocation = lkmeAction.destination.dstAndroidDirectDownloadLandingPage,
         DEBUG && alert(dstLocation),
-            div_goto_landingpage = div_goto_landingpage.replace(/{Bg_Url}/g, baseImgPathLang + "bg.png").replace(/{app_name}/g, Params.app_name).replace(/{logo_url}/g, Params.logo_url).replace(/{Download_title}/g, Params.app_title).replace(/{Download_msg}/g, Params.app_slogan).replace(/{Btn_landingpage_text}/g, downloadAPK).replace(/{Border_width}/g, "3").replace(/{Element_type}/g, "button"),
-            $("body").append(div_goto_landingpage),
-            lkmeAction.reportJSEvent(lkmeAction.actionJSDst, dstLocation),
-            $("#btnGotoLandingPage").click(function () {
-                lkmeAction.reportJSUserClickEvent(lkmeAction.actionJSUserClick, "gotoAndroidDirectDownload", "yes"),
-                    gotoUrl(Params.forward_url)
-            })
+            div_goto_landingpage = div_goto_landingpage.replace(/{Bg_Url}/g, baseImgPathLang + "bg.png").replace(/{app_name}/g, Params.app_name).replace(/{logo_url}/g, Params.logo_url).replace(/{Download_title}/g, Params.app_title).replace(/{Download_msg}/g, Params.app_slogan).replace(/{Btn_landingpage_text}/g, downloadAPK).replace(/{Border_width}/g, "3").replace(/{Element_type}/g, "button");
+        $("body").append(div_goto_landingpage);
+        lkmeAction.reportJSEvent(lkmeAction.actionJSDst, dstLocation);
+        $("#btnGotoLandingPage").click(function () {
+            lkmeAction.reportJSUserClickEvent(lkmeAction.actionJSUserClick, "gotoAndroidDirectDownload", "yes");
+            gotoUrl(Params.forward_url);
+        });
+        lkmeAction.recordId();
     },
     gotoAndroidCannotGoMarketLandingPage = function () {
-        dstLocation = lkmeAction.destination.dstAndroidCannotGoMarketLandingPage,
-        DEBUG && alert(dstLocation),
-            div_goto_landingpage = div_goto_landingpage.replace(/{Bg_Url}/g, baseImgPathLang + "bg.png").replace(/{app_name}/g, Params.app_name).replace(/{logo_url}/g, Params.logo_url).replace(/{Download_title}/g, Params.app_title).replace(/{Download_msg}/g, Params.app_slogan).replace(/{Btn_landingpage_text}/g, openStore).replace(/{Border_width}/g, "0").replace(/{Element_type}/g, "p"),
-            $("body").append(div_goto_landingpage),
-            lkmeAction.reportJSEvent(lkmeAction.actionJSDst, dstLocation)
+        dstLocation = lkmeAction.destination.dstAndroidCannotGoMarketLandingPage;
+        DEBUG && alert(dstLocation);
+        div_goto_landingpage = div_goto_landingpage.replace(/{Bg_Url}/g, baseImgPathLang + "bg.png").replace(/{app_name}/g, Params.app_name).replace(/{logo_url}/g, Params.logo_url).replace(/{Download_title}/g, Params.app_title).replace(/{Download_msg}/g, Params.app_slogan).replace(/{Btn_landingpage_text}/g, openStore).replace(/{Border_width}/g, "0").replace(/{Element_type}/g, "p");
+        $("body").append(div_goto_landingpage);
+        lkmeAction.reportJSEvent(lkmeAction.actionJSDst, dstLocation);
+        lkmeAction.recordId();
     },
     gotoAndroidMarketLandingPage = function () {
-        dstLocation = lkmeAction.destination.dstAndroidMarketLandingPage,
-        DEBUG && alert(dstLocation),
-            div_goto_landingpage = div_goto_landingpage.replace(/{Bg_Url}/g, baseImgPathLang + "bg.png").replace(/{app_name}/g, Params.app_name).replace(/{logo_url}/g, Params.logo_url).replace(/{Download_title}/g, Params.app_title).replace(/{Download_msg}/g, Params.app_slogan).replace(/{Btn_landingpage_text}/g, gotoAppStore).replace(/{Border_width}/g, "3").replace(/{Element_type}/g, "button"),
-            $("body").append(div_goto_landingpage),
-            lkmeAction.reportJSEvent(lkmeAction.actionJSDst, dstLocation),
-            $("#btnGotoLandingPage").click(function () {
-                lkmeAction.reportJSUserClickEvent(lkmeAction.actionJSUserClick, "gotoAndroidMarket", "yes"),
-                    gotoAndroidMarket()
-            })
+        dstLocation = lkmeAction.destination.dstAndroidMarketLandingPage;
+        DEBUG && alert(dstLocation);
+        div_goto_landingpage = div_goto_landingpage.replace(/{Bg_Url}/g, baseImgPathLang + "bg.png").replace(/{app_name}/g, Params.app_name).replace(/{logo_url}/g, Params.logo_url).replace(/{Download_title}/g, Params.app_title).replace(/{Download_msg}/g, Params.app_slogan).replace(/{Btn_landingpage_text}/g, gotoAppStore).replace(/{Border_width}/g, "3").replace(/{Element_type}/g, "button");
+        $("body").append(div_goto_landingpage);
+        lkmeAction.reportJSEvent(lkmeAction.actionJSDst, dstLocation);
+        $("#btnGotoLandingPage").click(function () {
+            lkmeAction.reportJSUserClickEvent(lkmeAction.actionJSUserClick, "gotoAndroidMarket", "yes");
+            gotoAndroidMarket();
+        });
+        lkmeAction.recordId();
     },
     gotoAndroidMarket = function () {
-        env.windowChangeHistory(),
-            dstLocation = "market://details?id=" + Params.package_name,
-        DEBUG && alert(dstLocation),
-            lkmeAction.reportJSEvent(lkmeAction.actionJSDst, dstLocation),
-            env.windowLocation(dstLocation)
+        env.windowChangeHistory();
+        dstLocation = "market://details?id=" + Params.package_name;
+        DEBUG && alert(dstLocation);
+        lkmeAction.reportJSEvent(lkmeAction.actionJSDst, dstLocation);
+        env.windowLocation(dstLocation);
+        lkmeAction.recordId();
     },
     gotoUC = function (a) {
         dstLocation = lkmeAction.destination.dstUCBrowser;
@@ -244,27 +240,30 @@ var visit_id = "visit_id",
         d()
     },
     gotoIOSLandingPage = function () {
-        dstLocation = lkmeAction.destination.dstUniversalLinkLandingPage,
-        DEBUG && alert(dstLocation),
-            div_goto_landingpage = div_goto_landingpage.replace(/{Bg_Url}/g, baseImgPathLang + "bg.png").replace(/{app_name}/g, Params.app_name).replace(/{logo_url}/g, Params.logo_url).replace(/{Download_title}/g, Params.app_title).replace(/{Download_msg}/g, Params.app_slogan).replace(/{Btn_landingpage_text}/g, gotoAppStore).replace(/{Border_width}/g, "3").replace(/{Element_type}/g, "button"),
-            $("body").append(div_goto_landingpage),
-            lkmeAction.reportJSEvent(lkmeAction.actionJSDst, dstLocation),
-            $("#btnGotoLandingPage").click(function () {
-                lkmeAction.reportJSUserClickEvent(lkmeAction.actionJSUserClick, "gotoIosAppStore", "yes"),
-                    gotoUrl(Params.forward_url)
-            })
+        //记录identity_id和browser_fingerprint_id
+        dstLocation = lkmeAction.destination.dstUniversalLinkLandingPage;
+        DEBUG && alert(dstLocation);
+        div_goto_landingpage = div_goto_landingpage.replace(/{Bg_Url}/g, baseImgPathLang + "bg.png").replace(/{app_name}/g, Params.app_name).replace(/{logo_url}/g, Params.logo_url).replace(/{Download_title}/g, Params.app_title).replace(/{Download_msg}/g, Params.app_slogan).replace(/{Btn_landingpage_text}/g, gotoAppStore).replace(/{Border_width}/g, "3").replace(/{Element_type}/g, "button");
+        $("body").append(div_goto_landingpage);
+        lkmeAction.reportJSEvent(lkmeAction.actionJSDst, dstLocation);
+        $("#btnGotoLandingPage").click(function () {
+            lkmeAction.reportJSUserClickEvent(lkmeAction.actionJSUserClick, "gotoIosAppStore", "yes");
+            gotoUrl(Params.forward_url);
+        });
+        lkmeAction.recordId();
     },
     gotoUrl = function (a) {
+        //记录identity_id和browser_fingerprint_id
         env.windowChangeHistory();
         dstLocation = a;
         lkmeAction.reportJSEvent(lkmeAction.actionJSDst, a);
         env.windowLocation(a);
     },
     goToNoAppDiv = function (a) {
-        div_platform_NA = div_platform_not_available.replace(/{Platform}/g, a),
-            $("body").append(div_platform_NA),
-            dstLocation = lkmeAction.destination.dstplatformNA.replace(/{Platform}/g, a),
-            lkmeAction.reportJSEvent(lkmeAction.actionJSDst, dstLocation)
+        var div_platform_NA = div_platform_not_available.replace(/{Platform}/g, a);
+        $("body").append(div_platform_NA);
+        dstLocation = lkmeAction.destination.dstplatformNA.replace(/{Platform}/g, a);
+        lkmeAction.reportJSEvent(lkmeAction.actionJSDst, dstLocation);
     },
     deeplinkLaunch = function (a, b, c) {
         // a = "intent://linkedme?click_id=sWpK2qR01#Intent;scheme=linkedmedemo;package=com.microquation.linkedme.android;S.browser_fallback_url=https://www.baidu.com;end";
@@ -282,10 +281,10 @@ var visit_id = "visit_id",
         deepLinkLocation = a;
         var c = null;
         try {
-            lkmeAction.reportJSEvent(lkmeAction.actionJSDeepLink, a),
-                c = env.windowOpen(a),
-            DEBUG && alert("pass"),
-                env.windowChangeHistory()
+            lkmeAction.reportJSEvent(lkmeAction.actionJSDeepLink, a);
+            c = env.windowOpen(a);
+            DEBUG && alert("pass");
+            env.windowChangeHistory();
         } catch (d) {
             DEBUG && alert("exception")
         }
@@ -302,7 +301,7 @@ var visit_id = "visit_id",
         deepLinkLocation = a;
         lkmeAction.reportJSEvent(lkmeAction.actionJSDeepLink, a);
         var e = setTimeout(function () {
-                c()
+                c();
             },
             b);
         clearTimeoutOnPageUnload(e);
@@ -356,6 +355,7 @@ var visit_id = "visit_id",
         return void 0 !== Params.yyb_url && "" !== Params.yyb_url && !Params.isIOS()
     },
     lkmeAction = {
+        recordIdUrl: "/i/js/record_id",
         trackingUrl: "/i/js/actions/",
         actionJSDeepLink: "/i/js/deeplink",
         actionJSDst: "/i/js/dst",
@@ -376,16 +376,39 @@ var visit_id = "visit_id",
             dstplatformNA: "dst-{Platform}-not-available"
         },
         <!--a = /i/js/dst, b = dst-ios-not-available-->
+        deeplink_id: '${deepLinkId}',
+        browser_fingerprint_id: '${browserFingerprintId}',
+        identity_id: '${identityId}',
+        is_valid_identity: '${isValidIdentity}',
+
+        recordId: function () {
+            var c = {
+                identity_id: Params.identity_id,
+                is_valid_identityid: Params.is_valid_identity,
+                browser_fingerprint_id: Params.browser_fingerprint_id,
+                deeplink_id: Params.deeplink_id
+            };
+            $.ajax({
+                method: "POST",
+                contentType: "application/json; charset=utf-8",
+                url: this.recordIdUrl,
+                data: JSON.stringify(c),
+                success: function () {
+                },
+                error: function () {
+                }
+            })
+        },
         reportJSEvent: function (a, b) {
             var c = {
-                    action: a,
-                    kvs: {
-                        click_id: Params.click_id,
-                        destination: b,
-                        visit_id: Params.visit_id
-                    }
-                },
-                d = JSON.stringify(c);
+                action: a,
+                kvs: {
+                    click_id: Params.click_id,
+                    destination: b,
+                    visit_id: Params.visit_id
+                }
+            };
+            d = JSON.stringify(c);
             $.post(this.trackingUrl + Params.app_id, d,
                 function (a) {
                 }).error(function () {

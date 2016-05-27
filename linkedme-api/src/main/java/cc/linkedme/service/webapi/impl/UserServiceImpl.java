@@ -31,8 +31,15 @@ public class UserServiceImpl implements UserService {
         if (userDao.queryEmail(userParams.email))
             throw new LMException(LMExceptionFactor.LM_USER_EMAIL_ALREADY_REGISTERED);
         else {
-            userDao.updateUserInfo(userParams);
-            return true;
+            int res = userDao.updateUserInfo(userParams);
+            if (res > 0) {
+                MailSender.sendHtmlMail("support@linkedme.cc", "hello,LinkedME, 来新用户了!",
+                        String.format("新用户的邮箱:%s <br />新用户的电话:%s <br />请及时联系!", userParams.email, userParams.phone_number));
+                MailSender.sendHtmlMail(userParams.email, "LinkedME 注册成功",
+                        String.format("<center><div style='width:500px;text-align:left'><div><a href='https://www.linkedme.cc/'><img src='https://www.linkedme.cc/images/linkedme_logo.png' style='margin-bottom:10px' width='150'/></a></div><div style='border:solid 1px #eeeeee;border-radius:5px;padding:15px;font-size:13px;line-height:20px;'><p>Hi，%s:</p><p>非常高兴您注册成为LinkedME的用户！我是LinkedME的创始人——齐坡，非常高兴和您取得联系。今后您在使用LinkedME产品时，遇到任何没有得到及时解决的问题，都可以和我联系（齐坡：qipo@linkedme.cc），真诚为您提供最好的服务！</p><p>我们是国内首家企业级深度链接服务平台，应用深度链接技术帮助App提供下载、激活、留存、变现等问题的解决方案。我们研发了两款产品，分别是LinkPage和LinkSense，LinkPage产品主打\"精细化运营\"，提高活跃和留存。LinkSense产品主打\"流量变现\"，一键接入众多大型服务提供商，把流量换成更高的收入。有关产品的疑问，可以直接联系我们！（市场负责人：youwei@linkedme.cc）</p><p>深度链接，链接你我！</p></div><div id='figure'><a href='http://weibo.com/poqi1987'><img src='https://www.linkedme.cc/images/qipo_logo.png' width='50' style='vertical-align:middle;padding-top:15px'/></a> 齐坡，CEO</div></div></center>", userParams.name));
+                return true;
+            }
+            return false;
         }
     }
 
@@ -101,7 +108,9 @@ public class UserServiceImpl implements UserService {
             String resetPwdUrl = "https://www.linkedme.cc/dashboard/index.html#/access/resetpwd/" + randomCode;
             if (result) {
                 MailSender.sendHtmlMail(userParams.email, "Change Your Password!",
-                        String.format("亲爱的用户:<br /><br />LinkedME重置密码的链接为:  <a href=%s>点击链接</a>. <br /> 有任何问题可以咨询我们,Email:support@linkedme.cc.<br /><br />谢谢!<br /><br />LinkedME团队", resetPwdUrl));
+                        String.format(
+                                "亲爱的用户:<br /><br />LinkedME重置密码的链接为:  <a href=%s>点击链接</a>. <br /> 有任何问题可以咨询我们,Email:support@linkedme.cc.<br /><br />谢谢!<br /><br />LinkedME团队",
+                                resetPwdUrl));
                 return true;
             }
             return false;
@@ -121,7 +130,7 @@ public class UserServiceImpl implements UserService {
     public boolean requestDemo(DemoRequestParams demoRequestParams) {
         int result = userDao.requestDemo(demoRequestParams);
         if (result > 0) {
-            MailSender.sendHtmlMail("support@linkedme.cc", "hello,LinkedME, 来新用户了!",
+            MailSender.sendHtmlMail("support@linkedme.cc", "hello,LinkedME, 有人申请Demo了!",
                     String.format("新用户的邮箱:%s <br />新用户的电话:%s <br />请及时联系!", demoRequestParams.email, demoRequestParams.mobile_phone));
             MailSender.sendHtmlMail(demoRequestParams.email, "LinkedME Demo申请成功",
                     "亲爱的用户:<br /><br />您的LinkedME Demo已经申请成功, 稍后会有工作人员和您联系.<br /> 有任何问题可以咨询我们,Email:support@linkedme.cc.<br /><br />谢谢!<br /><br />LinkedME团队");
