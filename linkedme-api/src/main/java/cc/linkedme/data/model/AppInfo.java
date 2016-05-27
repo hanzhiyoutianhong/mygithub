@@ -18,6 +18,15 @@ public class AppInfo implements Serializable {
     private String app_logo;
     private String type;
     private String creation_time;
+    private String test;
+
+    public String getTest() {
+        return test;
+    }
+
+    public void setTest(String test) {
+        this.test = test;
+    }
 
     private String app_key;
     private String app_secret;
