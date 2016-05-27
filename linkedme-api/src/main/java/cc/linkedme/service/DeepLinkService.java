@@ -2,6 +2,7 @@ package cc.linkedme.service;
 
 import javax.annotation.Resource;
 
+import com.google.gson.Gson;
 import org.springframework.stereotype.Service;
 
 import com.esotericsoftware.kryo.KryoException;
@@ -52,11 +53,13 @@ public class DeepLinkService {
     public DeepLink getDeepLinkInfo(long deepLinkId, long appId) {
         // 先从mc里取,如果没有取到,则从mysql里取
         // 从mysql里取到后,回中到mc
-        DeepLink deepLink;
+        DeepLink deepLink = new DeepLink();
         byte[] deepLinkByteArr = deepLinkMemCache.get(String.valueOf(deepLinkId));
         if (deepLinkByteArr != null && deepLinkByteArr.length > 0) {
             try {
-                deepLink = KryoSerializationUtil.deserializeObj(deepLinkByteArr, DeepLink.class);
+                Gson gson = new Gson();
+                String deepLinkJson = KryoSerializationUtil.deserializeObj(deepLinkByteArr, String.class);
+                deepLink = gson.fromJson( deepLinkJson, DeepLink.class );
             } catch (KryoException e) {
                 deepLink = null;
                 deepLinkMemCache.delete(String.valueOf(deepLinkId));
@@ -69,7 +72,9 @@ public class DeepLinkService {
 
         deepLink = deepLinkDao.getDeepLinkInfo(deepLinkId, appId);
         if (deepLink != null && deepLink.getDeeplinkId() > 0) {
-            deepLinkMemCache.set(String.valueOf(deepLinkId), KryoSerializationUtil.serializeObj(deepLink));
+            Gson gson = new Gson();
+            String gsonStr = gson.toJson(deepLink);
+            deepLinkMemCache.set(String.valueOf(deepLinkId), KryoSerializationUtil.serializeObj(gsonStr));
             return deepLink;
         }
         return null;
