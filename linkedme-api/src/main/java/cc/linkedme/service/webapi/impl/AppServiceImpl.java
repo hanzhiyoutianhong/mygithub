@@ -12,8 +12,6 @@ import java.util.Random;
 
 import javax.annotation.Resource;
 
-import cc.linkedme.commons.util.QuickLZ;
-import cc.linkedme.data.model.DeepLink;
 import com.google.gson.Gson;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang.ArrayUtils;
@@ -182,7 +180,7 @@ public class AppServiceImpl implements AppService {
 
         appInfo = appDao.getAppByAppId(appId);
         if (appInfo != null && appInfo.getApp_id() > 0) {
-            setAppInfoToCache( appInfo );
+            setAppInfoToCache(appInfo);
             return appInfo;
         }
         return null;
@@ -221,7 +219,7 @@ public class AppServiceImpl implements AppService {
             appInfo.setApp_logo(appParams.app_logo);
 
             // 向mc中写入最新app信息
-            setAppInfoToCache( appInfo );
+            setAppInfoToCache(appInfo);
 
             // TODO 去重,要区分第一次更新和后续更新
             // 更新apple-app-site-association(ios universe link)
