@@ -18,6 +18,7 @@ import cc.linkedme.data.model.DeepLink;
 import cc.linkedme.data.model.params.UrlParams;
 import net.sf.json.JSONArray;
 import net.sf.json.JSONObject;
+import org.springframework.web.bind.annotation.ResponseBody;
 
 /**
  * Created by LinkedME01 on 16/3/10.
@@ -42,7 +43,9 @@ public class DeepLinkService {
     }
 
     public boolean addDeepLinkToCache(DeepLink deepLink) {
-        byte[] b = KryoSerializationUtil.serializeObj(deepLink);
+        Gson gson = new Gson();
+        String deepLinkJson = gson.toJson( deepLink );
+        byte[] b = KryoSerializationUtil.serializeObj(deepLinkJson);
         boolean res = deepLinkMemCache.set(String.valueOf(deepLink.getDeeplinkId()), b);
         return res;
     }
@@ -53,7 +56,7 @@ public class DeepLinkService {
     public DeepLink getDeepLinkInfo(long deepLinkId, long appId) {
         // 先从mc里取,如果没有取到,则从mysql里取
         // 从mysql里取到后,回中到mc
-        DeepLink deepLink = new DeepLink();
+        DeepLink deepLink;
         byte[] deepLinkByteArr = deepLinkMemCache.get(String.valueOf(deepLinkId));
         if (deepLinkByteArr != null && deepLinkByteArr.length > 0) {
             try {
@@ -72,9 +75,7 @@ public class DeepLinkService {
 
         deepLink = deepLinkDao.getDeepLinkInfo(deepLinkId, appId);
         if (deepLink != null && deepLink.getDeeplinkId() > 0) {
-            Gson gson = new Gson();
-            String gsonStr = gson.toJson(deepLink);
-            deepLinkMemCache.set(String.valueOf(deepLinkId), KryoSerializationUtil.serializeObj(gsonStr));
+            addDeepLinkToCache( deepLink );
             return deepLink;
         }
         return null;

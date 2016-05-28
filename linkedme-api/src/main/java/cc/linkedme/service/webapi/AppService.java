@@ -14,7 +14,7 @@ import java.util.List;
 public interface AppService {
     long createApp(AppParams appParams);
 
-    boolean setAppInfoToCache(String appInfoJson, long appId);
+    boolean setAppInfoToCache(AppInfo appInfo);
 
     List<AppInfo> getAppsByUserId(AppParams appParams);
 
