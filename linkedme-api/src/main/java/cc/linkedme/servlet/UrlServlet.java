@@ -196,7 +196,7 @@ public class UrlServlet extends HttpServlet {
                         deepLinkId, userAgent));
                 response.sendRedirect(formatCustomUrl(deepLink.getIos_custom_url()));
                 //invoke ProfileUtil
-                recordeClickIntoProfile(start, countType);
+                recordClickIntoProfile(start, countType);
                 return;
             }
 
@@ -229,7 +229,7 @@ public class UrlServlet extends HttpServlet {
                         deepLinkId, userAgent));
                 response.sendRedirect(formatCustomUrl(deepLink.getAndroid_custom_url()));
                 //invoke ProfileUtil
-                recordeClickIntoProfile(start, countType);
+                recordClickIntoProfile(start, countType);
                 return;
             }
 
@@ -256,7 +256,7 @@ public class UrlServlet extends HttpServlet {
 
             response.sendRedirect(location + "?code_url=" + codeUrl);
             //invoke ProfileUtil
-            recordeClickIntoProfile(start, countType);
+            recordClickIntoProfile(start, countType);
             return;
         }
 
@@ -374,14 +374,12 @@ public class UrlServlet extends HttpServlet {
             // response.sendRedirect(location);
             return;
         }
-        //invoke ProfileUtil
-        recordeClickIntoProfile(start, countType);
 
         RequestDispatcher dispatcher = request.getRequestDispatcher("/linkedme.jsp");
         dispatcher.forward(request, response);
 
-        System.out.println("hello");
-
+        //invoke ProfileUtil
+        recordClickIntoProfile(start, countType);
     }
 
     /**
@@ -417,10 +415,10 @@ public class UrlServlet extends HttpServlet {
     }
 
 
-    private void recordeClickIntoProfile(long start, String countType) {
+    private void recordClickIntoProfile(long start, String countType) {
         long end = System.currentTimeMillis();
         long cost = end - start;
-        countType = "/sdk/" + countType;
+        countType = "/click/" + countType;
         ProfileUtil.accessStatistic(ProfileType.API.value(), countType, end, cost);
     }
 }
