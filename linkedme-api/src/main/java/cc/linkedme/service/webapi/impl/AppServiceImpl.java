@@ -16,6 +16,7 @@ import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang.ArrayUtils;
 
 import com.esotericsoftware.kryo.KryoException;
+import com.google.gson.Gson;
 
 import cc.linkedme.commons.exception.LMException;
 import cc.linkedme.commons.exception.LMExceptionFactor;
@@ -133,7 +134,10 @@ public class AppServiceImpl implements AppService {
 
     @Override
     public boolean setAppInfoToCache(AppInfo appInfo) {
-        byte[] b = KryoSerializationUtil.serializeObj(appInfo);
+        Gson gson = new Gson();
+        String gsonStr = gson.toJson(appInfo);
+
+        byte[] b = KryoSerializationUtil.serializeObj(gsonStr);
         boolean res = appInfoMemCache.set(String.valueOf(appInfo.getApp_id()), b);
         return res;
     }
@@ -157,12 +161,14 @@ public class AppServiceImpl implements AppService {
 
     public AppInfo getAppById(long appId) {
         AppInfo appInfo;
+        Gson gson = new Gson();
         // 先从mc取,没有命中再从DB取
         byte[] appInfoByteArr = appInfoMemCache.get(String.valueOf(appId));
         if (appInfoByteArr != null && appInfoByteArr.length > 0) {
 
             try {
-                appInfo = KryoSerializationUtil.deserializeObj(appInfoByteArr, AppInfo.class);
+                String appInfoJson = KryoSerializationUtil.deserializeObj(appInfoByteArr, String.class);
+                appInfo = gson.fromJson(appInfoJson, AppInfo.class);
             } catch (KryoException e) {
                 appInfo = null;
                 appInfoMemCache.delete(String.valueOf(appId));
@@ -174,7 +180,7 @@ public class AppServiceImpl implements AppService {
 
         appInfo = appDao.getAppByAppId(appId);
         if (appInfo != null && appInfo.getApp_id() > 0) {
-            appInfoMemCache.set(String.valueOf(appId), KryoSerializationUtil.serializeObj(appInfo));
+            setAppInfoToCache(appInfo);
             return appInfo;
         }
         return null;
