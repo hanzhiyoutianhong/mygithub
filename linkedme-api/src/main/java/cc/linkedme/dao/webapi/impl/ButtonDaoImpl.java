@@ -146,7 +146,7 @@ public class ButtonDaoImpl extends BaseDao implements ButtonDao {
                 result += jdbcTemplate.update(tableChannel.getSql(),
                         new Object[] {buttonInfo.getBtnName(), buttonInfo.getOnlineStatus(), buttonInfo.getBtnId(), buttonInfo.getAppId()});
             } catch (DataAccessException e) {
-                throw new LMException(LMExceptionFactor.LM_FAILURE_DB_OP);
+                throw new LMException(LMExceptionFactor.LM_FAILURE_DB_OP, "Failed to update button info");
             }
         } else {
             //获取当前在线的button信息
@@ -181,7 +181,7 @@ public class ButtonDaoImpl extends BaseDao implements ButtonDao {
         try {
             result += jdbcTemplate.update(tableChannel.getSql(), new Object[] {btnId});
         } catch (DataAccessException e) {
-            throw new LMException(LMExceptionFactor.LM_FAILURE_DB_OP);
+            throw new LMException(LMExceptionFactor.LM_FAILURE_DB_OP, "Failed to delete button: " + btnId);
         }
         return result > 0;
     }

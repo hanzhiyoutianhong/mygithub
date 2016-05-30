@@ -53,7 +53,7 @@ public class UserDaoImpl extends BaseDao implements UserDao {
             if (DaoUtil.isDuplicateInsert(e)) {
                 ApiLogger.warn(new StringBuilder(128).append("Duplicate insert user, userEmail=").append(userParams.email), e);
             }
-            throw new LMException(LMExceptionFactor.LM_FAILURE_DB_OP);
+            throw new LMException(LMExceptionFactor.LM_FAILURE_DB_OP, "Failed to update user info");
         }
         return res;
     }
@@ -68,7 +68,7 @@ public class UserDaoImpl extends BaseDao implements UserDao {
             if (DaoUtil.isDuplicateInsert(e)) {
                 ApiLogger.warn(new StringBuffer(128).append("Duplicate insert user, userEmail=").append(userParams.email), e);
             }
-            throw new LMException(LMExceptionFactor.LM_FAILURE_DB_OP);
+            throw new LMException(LMExceptionFactor.LM_FAILURE_DB_OP, "Failed to update user password");
         }
         return res;
     }
@@ -83,7 +83,7 @@ public class UserDaoImpl extends BaseDao implements UserDao {
             if (DaoUtil.isDuplicateInsert(e)) {
                 ApiLogger.warn(new StringBuffer(128).append("Duplicate insert user, userEmail=").append(userParams.email), e);
             }
-            throw new LMException(LMExceptionFactor.LM_FAILURE_DB_OP);
+            throw new LMException(LMExceptionFactor.LM_FAILURE_DB_OP, "Failed to update user password");
         }
         return res;
     }
@@ -98,7 +98,7 @@ public class UserDaoImpl extends BaseDao implements UserDao {
             if (DaoUtil.isDuplicateInsert(e)) {
                 ApiLogger.warn(new StringBuffer(128).append("Duplicate insert user, userEmail=").append(userParams.email), e);
             }
-            throw new LMException(LMExceptionFactor.LM_FAILURE_DB_OP);
+            throw new LMException(LMExceptionFactor.LM_FAILURE_DB_OP, "Failed to update login infos");
         }
         return res;
     }
@@ -164,7 +164,7 @@ public class UserDaoImpl extends BaseDao implements UserDao {
         try {
             res += tableChannel.getJdbcTemplate().update(tableChannel.getSql(), new Object[] {randomCode, email});
         } catch (DataAccessException e) {
-            throw new LMException(LMExceptionFactor.LM_FAILURE_DB_OP);
+            throw new LMException(LMExceptionFactor.LM_FAILURE_DB_OP, "Failed to set random code");
         }
         return res > 0;
     }
@@ -177,7 +177,7 @@ public class UserDaoImpl extends BaseDao implements UserDao {
         try {
             res += jdbcTemplate.update(tableChannel.getSql(), new Object[] {userParams.token, userParams.email});
         } catch (DataAccessException e) {
-            throw new LMException(LMExceptionFactor.LM_FAILURE_DB_OP);
+            throw new LMException(LMExceptionFactor.LM_FAILURE_DB_OP, "Failed to update token");
         }
         return res;
     }
