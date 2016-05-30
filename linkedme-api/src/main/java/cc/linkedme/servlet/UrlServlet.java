@@ -18,6 +18,8 @@ import javax.servlet.http.HttpServletResponse;
 
 import cc.linkedme.commons.cookie.CookieHelper;
 import cc.linkedme.commons.log.ApiLogger;
+import cc.linkedme.commons.profile.ProfileType;
+import cc.linkedme.commons.profile.ProfileUtil;
 import cc.linkedme.commons.redis.JedisPort;
 import cc.linkedme.commons.shard.ShardingSupportHash;
 import cc.linkedme.commons.useragent.Client;
@@ -83,6 +85,8 @@ public class UrlServlet extends HttpServlet {
      * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
      */
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+
+        long start = System.currentTimeMillis();
         // TODO Auto-generated method stub
         // eg, https://lkme.cc/hafzh/fhza80af?scan=0; appId, deeplinkId;
         String uri = request.getRequestURI();
@@ -191,6 +195,8 @@ public class UrlServlet extends HttpServlet {
                 ApiLogger.biz(String.format("%s\t%s\t%s\t%s\t%s\t%s", request.getHeader("x-forwarded-for"), "click", countType, appId,
                         deepLinkId, userAgent));
                 response.sendRedirect(formatCustomUrl(deepLink.getIos_custom_url()));
+                //invoke ProfileUtil
+                recordClickIntoProfile(start, countType);
                 return;
             }
 
@@ -222,6 +228,8 @@ public class UrlServlet extends HttpServlet {
                 ApiLogger.biz(String.format("%s\t%s\t%s\t%s\t%s\t%s", request.getHeader("x-forwarded-for"), "click", countType, appId,
                         deepLinkId, userAgent));
                 response.sendRedirect(formatCustomUrl(deepLink.getAndroid_custom_url()));
+                //invoke ProfileUtil
+                recordClickIntoProfile(start, countType);
                 return;
             }
 
@@ -247,6 +255,8 @@ public class UrlServlet extends HttpServlet {
                     deepLinkId, userAgent));
 
             response.sendRedirect(location + "?code_url=" + codeUrl);
+            //invoke ProfileUtil
+            recordClickIntoProfile(start, countType);
             return;
         }
 
@@ -368,6 +378,8 @@ public class UrlServlet extends HttpServlet {
         RequestDispatcher dispatcher = request.getRequestDispatcher("/linkedme.jsp");
         dispatcher.forward(request, response);
 
+        //invoke ProfileUtil
+        recordClickIntoProfile(start, countType);
     }
 
     /**
@@ -400,5 +412,13 @@ public class UrlServlet extends HttpServlet {
             return url;
         }
         return "http://" + url;
+    }
+
+
+    private void recordClickIntoProfile(long start, String countType) {
+        long end = System.currentTimeMillis();
+        long cost = end - start;
+        countType = "/click/" + countType;
+        ProfileUtil.accessStatistic(ProfileType.API.value(), countType, end, cost);
     }
 }
