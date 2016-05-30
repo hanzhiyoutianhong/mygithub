@@ -2,10 +2,10 @@ package cc.linkedme.service;
 
 import javax.annotation.Resource;
 
-import com.google.gson.Gson;
 import org.springframework.stereotype.Service;
 
 import com.esotericsoftware.kryo.KryoException;
+import com.google.gson.Gson;
 
 import cc.linkedme.commons.exception.LMException;
 import cc.linkedme.commons.exception.LMExceptionFactor;
@@ -18,7 +18,6 @@ import cc.linkedme.data.model.DeepLink;
 import cc.linkedme.data.model.params.UrlParams;
 import net.sf.json.JSONArray;
 import net.sf.json.JSONObject;
-import org.springframework.web.bind.annotation.ResponseBody;
 
 /**
  * Created by LinkedME01 on 16/3/10.
@@ -44,7 +43,7 @@ public class DeepLinkService {
 
     public boolean addDeepLinkToCache(DeepLink deepLink) {
         Gson gson = new Gson();
-        String deepLinkJson = gson.toJson( deepLink );
+        String deepLinkJson = gson.toJson(deepLink);
         byte[] b = KryoSerializationUtil.serializeObj(deepLinkJson);
         boolean res = deepLinkMemCache.set(String.valueOf(deepLink.getDeeplinkId()), b);
         return res;
@@ -62,7 +61,7 @@ public class DeepLinkService {
             try {
                 Gson gson = new Gson();
                 String deepLinkJson = KryoSerializationUtil.deserializeObj(deepLinkByteArr, String.class);
-                deepLink = gson.fromJson( deepLinkJson, DeepLink.class );
+                deepLink = gson.fromJson(deepLinkJson, DeepLink.class);
             } catch (KryoException e) {
                 deepLink = null;
                 deepLinkMemCache.delete(String.valueOf(deepLinkId));
@@ -75,7 +74,7 @@ public class DeepLinkService {
 
         deepLink = deepLinkDao.getDeepLinkInfo(deepLinkId, appId);
         if (deepLink != null && deepLink.getDeeplinkId() > 0) {
-            addDeepLinkToCache( deepLink );
+            addDeepLinkToCache(deepLink);
             return deepLink;
         }
         return null;

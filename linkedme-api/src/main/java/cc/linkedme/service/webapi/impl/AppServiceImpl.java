@@ -12,11 +12,11 @@ import java.util.Random;
 
 import javax.annotation.Resource;
 
-import com.google.gson.Gson;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang.ArrayUtils;
 
 import com.esotericsoftware.kryo.KryoException;
+import com.google.gson.Gson;
 
 import cc.linkedme.commons.exception.LMException;
 import cc.linkedme.commons.exception.LMExceptionFactor;
