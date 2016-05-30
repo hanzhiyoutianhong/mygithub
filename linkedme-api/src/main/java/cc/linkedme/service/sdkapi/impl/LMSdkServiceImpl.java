@@ -387,7 +387,7 @@ public class LMSdkServiceImpl implements LMSdkService {
     public String url(UrlParams urlParams) {
         Joiner joiner = Joiner.on("&").skipNulls();
         Joiner joiner2 = Joiner.on(",").skipNulls();
-        // linkedme_key & tags & alias & channel & feature & stage & params
+        // linkedme_key & tags & alias & channel & feature & stage & params TODO 添加identity_id信息 区分用户和设备
         String urlParamsStr = joiner.join(urlParams.linkedme_key, joiner2.join(urlParams.tags), joiner2.join(urlParams.channel),
                 joiner2.join(urlParams.feature), joiner2.join(urlParams.stage), urlParams.params);
 

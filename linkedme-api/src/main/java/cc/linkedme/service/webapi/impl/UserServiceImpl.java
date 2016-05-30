@@ -133,7 +133,7 @@ public class UserServiceImpl implements UserService {
             MailSender.sendHtmlMail("support@linkedme.cc", "hello,LinkedME, 有人申请Demo了!",
                     String.format("新用户的邮箱:%s <br />新用户的电话:%s <br />请及时联系!", demoRequestParams.email, demoRequestParams.mobile_phone));
             MailSender.sendHtmlMail(demoRequestParams.email, "LinkedME Demo申请成功",
-                    "亲爱的用户:<br /><br />您的LinkedME Demo已经申请成功, 稍后会有工作人员和您联系.<br /> 有任何问题可以咨询我们,Email:support@linkedme.cc.<br /><br />谢谢!<br /><br />LinkedME团队");
+                    String.format("<center><div style='width:500px;text-align:left'><div><a href='https://www.linkedme.cc/'><img src='https://www.linkedme.cc/images/linkedme_logo.png' style='margin-bottom:10px' width='150'/></a></div><div style='border:solid 1px #eeeeee;border-radius:5px;padding:15px;font-size:13px;line-height:20px;'><p>Hi，%s:</p><p>您的申请已经收到，非常高兴您关注LinkedME！我是LinkedME的创始人——齐坡，我们产品将在6月1日，正式公布上线！到时我们市场部的工作人员会联系您，谢谢您的信任和支持！</p><p>LinkedME应用深度链接技术为移动互联网企业提供全新的解决方案，致力于帮助移动互联网企业的App提供下载、激活、活跃、留存，变现等众多问题。LinkedME竭诚为您提供最佳的服务，在今后您使用LinkedME的相关产品时，碰到任何不清楚和不满意的问题时，您可以直接联系我（邮箱qipo@linkedme.cc），收到您的反馈将是特别高兴的事情！我代表LinkedME团队表示重谢，并且您会收到LinkedME为您准备的惊喜礼物。</p><p>深度链接，链接你我！</p></div><div id='figure'><a href='http://weibo.com/poqi1987'><img src='https://www.linkedme.cc/images/qipo_logo.png' width='50' style='vertical-align:middle;padding-top:15px'/></a> 齐坡，CEO</div></div></center>", demoRequestParams.name));
 
         }
         return result > 0;
