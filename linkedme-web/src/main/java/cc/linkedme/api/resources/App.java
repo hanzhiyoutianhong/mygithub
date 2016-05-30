@@ -29,7 +29,6 @@ import com.google.api.client.repackaged.com.google.common.base.Strings;
 import cc.linkedme.commons.exception.LMException;
 import cc.linkedme.commons.exception.LMExceptionFactor;
 import cc.linkedme.commons.json.JsonBuilder;
-import cc.linkedme.commons.log.ApiLogger;
 import cc.linkedme.commons.util.Constants;
 import cc.linkedme.data.model.AppInfo;
 import cc.linkedme.data.model.UrlTagsInfo;
