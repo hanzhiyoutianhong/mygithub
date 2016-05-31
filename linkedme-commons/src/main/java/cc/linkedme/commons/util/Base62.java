@@ -69,11 +69,8 @@ public class Base62 {
     }
 
     public static void main(String[] args) {
-<<<<<<< HEAD
-        long num = 10022;
-=======
         long num = 3373567987154946L;
->>>>>>> b1edc18edc905935ebd0f360d3b2504c752c5bf2
+
         System.out.println("Number: " + num);
 
         String encoding = null;
