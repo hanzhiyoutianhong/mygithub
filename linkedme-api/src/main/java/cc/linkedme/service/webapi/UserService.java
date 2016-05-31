@@ -24,5 +24,5 @@ public interface UserService {
 
     boolean resetForgottenPwd(UserParams userParams);
 
-    boolean getDemo(DemoRequestParams demoRequestParams);
+    boolean requestDemo(DemoRequestParams demoRequestParams);
 }

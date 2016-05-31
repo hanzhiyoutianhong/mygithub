@@ -15,7 +15,7 @@ public interface UserDao {
 
     int changeUserPwd(UserParams userParams);
 
-    int resetLastLoginTime(UserParams userParams);
+    int setLoginInfos(UserParams userParams); //登录时更新lastLoginTime和token
 
     UserInfo getUserInfo(String email);
 
@@ -27,5 +27,5 @@ public interface UserDao {
 
     String getToken(String email);
 
-    int getDemo(DemoRequestParams demoRequestParams);
+    int requestDemo(DemoRequestParams demoRequestParams);
 }

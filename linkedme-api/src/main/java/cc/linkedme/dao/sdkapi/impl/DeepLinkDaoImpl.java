@@ -1,32 +1,31 @@
 package cc.linkedme.dao.sdkapi.impl;
 
-import cc.linkedme.commons.exception.LMException;
-import cc.linkedme.commons.exception.LMExceptionFactor;
-import cc.linkedme.commons.util.Util;
-import cc.linkedme.commons.util.UuidHelper;
-import cc.linkedme.dao.sdkapi.DeepLinkDao;
-import cc.linkedme.data.dao.util.JdbcTemplate;
-import cc.linkedme.data.model.AppInfo;
-import cc.linkedme.data.model.params.SummaryDeepLinkParams;
-import cc.linkedme.data.model.params.UrlParams;
-import com.google.api.client.repackaged.com.google.common.base.Strings;
-import org.springframework.dao.DataAccessException;
-
-import cc.linkedme.commons.log.ApiLogger;
-import cc.linkedme.dao.BaseDao;
-import cc.linkedme.data.dao.strategy.TableChannel;
-import cc.linkedme.data.dao.util.DaoUtil;
-import cc.linkedme.data.model.DeepLink;
-import org.springframework.jdbc.core.RowMapper;
-
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.sql.Timestamp;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+
+import org.springframework.dao.DataAccessException;
+import org.springframework.jdbc.core.RowMapper;
+
+import com.google.api.client.repackaged.com.google.common.base.Joiner;
+import com.google.api.client.repackaged.com.google.common.base.Strings;
+
+import cc.linkedme.commons.exception.LMException;
+import cc.linkedme.commons.exception.LMExceptionFactor;
+import cc.linkedme.commons.log.ApiLogger;
+import cc.linkedme.commons.util.Util;
+import cc.linkedme.commons.util.UuidHelper;
+import cc.linkedme.dao.BaseDao;
+import cc.linkedme.dao.sdkapi.DeepLinkDao;
+import cc.linkedme.data.dao.strategy.TableChannel;
+import cc.linkedme.data.dao.util.DaoUtil;
+import cc.linkedme.data.dao.util.JdbcTemplate;
+import cc.linkedme.data.model.DeepLink;
+import cc.linkedme.data.model.params.UrlParams;
 
 /**
  * Created by LinkedME01 on 16/3/8.
@@ -93,8 +92,7 @@ public class DeepLinkDaoImpl extends BaseDao implements DeepLinkDao {
         DeepLink dp = new DeepLink();
         TableChannel tableChannel = tableContainer.getTableChannel("deeplink", GET_DEEPLINK_INFO, appid, date);
         try {
-
-            tableChannel.getJdbcTemplate().query(tableChannel.getSql(), new Object[]{deepLinkId, appid}, new RowMapper() {
+            tableChannel.getJdbcTemplate().query(tableChannel.getSql(), new Object[] {deepLinkId, appid}, new RowMapper() {
                 public Object mapRow(ResultSet resultSet, int i) throws SQLException {
                     dp.setDeeplinkId(resultSet.getBigDecimal("deeplink_id").longValue());
                     dp.setCreateTime(resultSet.getString("create_time"));
@@ -115,7 +113,7 @@ public class DeepLinkDaoImpl extends BaseDao implements DeepLinkDao {
                     return null;
                 }
             });
-        }catch (Exception e) {
+        } catch (Exception e) {
             ApiLogger.error("db error", e);
         }
         if (dp.getDeeplinkId() == 0) {
@@ -178,6 +176,8 @@ public class DeepLinkDaoImpl extends BaseDao implements DeepLinkDao {
         TableChannel tableChannel = tableContainer.getTableChannel("deeplink", GET_DEEPLINKS, appid, date);
         String sql = tableChannel.getSql();
         String condition = "";
+        start_date += " 00:00:00";
+        end_date += " 23:59:59";
         List<String> paramList = new ArrayList<String>();
         paramList.add(String.valueOf(appid));
         if (!Strings.isNullOrEmpty(start_date)) {
@@ -208,7 +208,7 @@ public class DeepLinkDaoImpl extends BaseDao implements DeepLinkDao {
             condition += "and tags like '%' ? '%' ";
             paramList.add(tag);
         }
-        if(!Strings.isNullOrEmpty(source)) {
+        if (!Strings.isNullOrEmpty(source)) {
             condition += "and source = ? ";
             paramList.add(source);
         }
@@ -256,6 +256,7 @@ public class DeepLinkDaoImpl extends BaseDao implements DeepLinkDao {
         long appId = urlParams.app_id;
         Date date = UuidHelper.getDateFromId(deepLinkId);
         TableChannel tableChannel = tableContainer.getTableChannel("deeplink", UPDATE_URL_INFO, appId, date);
+        JdbcTemplate jdbcTemplate = tableChannel.getJdbcTemplate();
         int result = 0;
 
         boolean ios_use_default = urlParams.ios_use_default;
@@ -264,41 +265,30 @@ public class DeepLinkDaoImpl extends BaseDao implements DeepLinkDao {
         String android_custom_url = urlParams.android_custom_url;
         boolean desktop_use_default = urlParams.desktop_use_default;
         String desktop_custom_url = urlParams.desktop_custom_url;
-        String feature = "";
-        for (int i = 0; i < urlParams.feature.length - 1; i++)
-            feature = feature + urlParams.feature[i] + ",";
-        feature = feature + urlParams.feature[urlParams.feature.length - 1];
 
-        String campaign = "";
-        for (int i = 0; i < urlParams.campaign.length - 1; i++)
-            campaign = campaign + urlParams.campaign[i] + ",";
-        campaign = campaign + urlParams.campaign[urlParams.campaign.length - 1];
+        Joiner joiner = Joiner.on(",");
+        String feature = joiner.join(urlParams.feature);
 
-        String stage = "";
-        for (int i = 0; i < urlParams.stage.length - 1; i++)
-            stage = stage + urlParams.stage[i] + ",";
-        stage = stage + urlParams.stage[urlParams.stage.length - 1];
+        String campaign = joiner.join(urlParams.campaign);
 
-        String channel = "";
-        for (int i = 0; i < urlParams.channel.length - 1; i++)
-            channel = channel + urlParams.channel[i] + ",";
-        channel = channel + urlParams.channel[urlParams.channel.length - 1];
+        String stage = joiner.join(urlParams.stage);
 
-        String tags = "";
-        for (int i = 0; i < urlParams.tags.length - 1; i++)
-            tags = tags + urlParams.tags[i] + ",";
-        tags = tags + urlParams.tags[urlParams.tags.length - 1];
+        String channel = joiner.join(urlParams.channel);
+
+        String tags = joiner.join(urlParams.tags);
 
         String source = urlParams.source;
         String params = urlParams.params.toString();
 
+        Object[] values = new Object[] {appId, ios_use_default, ios_custom_url, android_use_default, android_custom_url,
+                desktop_use_default, desktop_custom_url, feature, campaign, stage, channel, tags, source, params, deepLinkId, appId};
 
-        result +=
-                tableChannel.getJdbcTemplate()
-                        .update(tableChannel.getSql(),
-                                new Object[] {appId, ios_use_default, ios_custom_url, android_use_default, android_custom_url,
-                                        desktop_use_default, desktop_custom_url, feature, campaign, stage, channel, tags, source, params,
-                                        deepLinkId, appId});
+        try {
+            result += jdbcTemplate.update(tableChannel.getSql(), values);
+        } catch (DataAccessException e) {
+            e.printStackTrace();
+        }
+
         if (result == 1) return true;
         return false;
     }

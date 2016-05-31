@@ -347,7 +347,7 @@ public class DeepLink implements Serializable{
     public JSONObject toJsonObject() {
         JSONObject jsonObject = new JSONObject();
         jsonObject.put("deeplink_id", deeplinkId);
-        jsonObject.put("deeplink_url", Constants.DEEPLINK_HTTPS_PREFIX + Base62.encode(appId) + "/" + Base62.encode(deeplinkId));
+        jsonObject.put("deeplink_url", Constants.DEEPLINK_HTTPS_PREFIX + "/" + Base62.encode(appId) + "/" + Base62.encode(deeplinkId));
         if (!Strings.isNullOrEmpty(feature)) {
             JSONArray featureJson = JSONArray.fromObject(getFeature().split(","));
             jsonObject.put("feature", featureJson);
@@ -386,7 +386,11 @@ public class DeepLink implements Serializable{
             JSONObject pcCount = new JSONObject();
             pcCount.put("pc_click", deepLinkCount.getPc_click());
             pcCount.put("pc_ios_scan", deepLinkCount.getPc_ios_scan());
+            pcCount.put("pc_ios_open", deepLinkCount.getPc_ios_open());
+            pcCount.put("pc_ios_install", deepLinkCount.getPc_ios_install());
             pcCount.put("pc_adr_scan", deepLinkCount.getPc_adr_scan());
+            pcCount.put("pc_adr_open", deepLinkCount.getPc_adr_open());
+            pcCount.put("pc_adr_install", deepLinkCount.getPc_adr_install());
 
             jsonObject.put("ios", iosCount);
             jsonObject.put("android", adrCount);

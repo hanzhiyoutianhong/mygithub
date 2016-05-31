@@ -1,30 +1,41 @@
 package cc.linkedme.api.resources;
 
-import cc.linkedme.commons.exception.LMException;
-import cc.linkedme.commons.exception.LMExceptionFactor;
-import cc.linkedme.commons.json.JsonBuilder;
-import cc.linkedme.commons.log.ApiLogger;
-import cc.linkedme.data.model.AppInfo;
-import cc.linkedme.data.model.UrlTagsInfo;
-import cc.linkedme.data.model.params.AppParams;
-import cc.linkedme.data.model.params.UrlParams;
-import cc.linkedme.service.webapi.AppService;
-import com.google.api.client.repackaged.com.google.common.base.Strings;
-import net.sf.json.JSONArray;
-
-import net.sf.json.JSONObject;
-import org.apache.commons.lang.StringUtils;
-import org.springframework.stereotype.Component;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
+import java.util.ArrayList;
+import java.util.List;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import javax.ws.rs.*;
+import javax.ws.rs.Consumes;
+import javax.ws.rs.GET;
+import javax.ws.rs.POST;
+import javax.ws.rs.Path;
+import javax.ws.rs.PathParam;
+import javax.ws.rs.Produces;
+import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
-import java.io.*;
-import java.util.ArrayList;
-import java.util.List;
+
+import org.apache.commons.lang.StringUtils;
+import org.springframework.stereotype.Component;
+
+import com.google.api.client.repackaged.com.google.common.base.Strings;
+
+import cc.linkedme.commons.exception.LMException;
+import cc.linkedme.commons.exception.LMExceptionFactor;
+import cc.linkedme.commons.json.JsonBuilder;
+import cc.linkedme.commons.util.Constants;
+import cc.linkedme.data.model.AppInfo;
+import cc.linkedme.data.model.UrlTagsInfo;
+import cc.linkedme.data.model.params.AppParams;
+import cc.linkedme.service.webapi.AppService;
+import net.sf.json.JSONArray;
+import net.sf.json.JSONObject;
 
 /**
  * Created by LinkedME01 on 16/3/17.
@@ -35,8 +46,6 @@ import java.util.List;
 public class App {
     @Resource
     private AppService appService;
-
-    public static final String ImgPath = "./"; // TODO 改路径
 
     @Path("/create_app")
     @POST
@@ -62,7 +71,6 @@ public class App {
     public String getApps(@QueryParam("user_id") long user_id,
                           @QueryParam("token") String token,
                           @Context HttpServletRequest request) {
-        ApiLogger.biz(user_id + "biz test");
         if (user_id <= 0) {
             throw new LMException(LMExceptionFactor.LM_ILLEGAL_PARAM_VALUE);
         }
@@ -103,18 +111,17 @@ public class App {
     @GET
     @Produces(MediaType.APPLICATION_JSON)
     public String queryApp(@QueryParam("app_id") long app_id,
-                           @QueryParam("type") String type, @QueryParam("token") String token,
-            @Context HttpServletRequest request) {
-
-        if (app_id <= 0) {
-            throw new LMException(LMExceptionFactor.LM_ILLEGAL_PARAM_VALUE);
-        }
+                           @QueryParam("user_id") long user_id,
+                           @QueryParam("type") String type,
+                           @QueryParam("token") String token,
+                           @Context HttpServletRequest request) {
 
         AppParams appParams = new AppParams();
         appParams.app_id = app_id;
+        appParams.user_id = user_id;
         appParams.type = type;
 
-        AppInfo appInfo = appService.queryApp(appParams);
+        AppInfo appInfo = appService.getAppById(appParams.app_id);
         if (appInfo == null) {
             return "{}";
         }
@@ -176,10 +183,6 @@ public class App {
         appParams.app_id = app_id;
 
         if (appParams.user_id <= 0) {
-            throw new LMException(LMExceptionFactor.LM_ILLEGAL_PARAM_VALUE);
-        }
-
-        if (appParams.app_id <= 0) {
             throw new LMException(LMExceptionFactor.LM_ILLEGAL_PARAM_VALUE);
         }
 
@@ -246,8 +249,8 @@ public class App {
         if (Strings.isNullOrEmpty(appParams.img_encoding)) {
             throw new LMException(LMExceptionFactor.LM_ILLEGAL_PARAM_VALUE, "img encoding is null");
         }
-        // String basePath = request.getScheme() + "://" + request.getServerName() + ":"
-        // + request.getServerPort() + "/app/images/";
+//         String basePath = request.getScheme() + "://" + request.getServerName() + ":"
+//         + request.getServerPort() + "/i/app/images/";
         String basePath = "https://www.linkedme.cc/i/app/images/";
         String imageName = appService.uploadImg(appParams, basePath);
         JsonBuilder resultJson = new JsonBuilder();
@@ -258,12 +261,14 @@ public class App {
 
     @Path("/images/{name}.{type}")
     @GET
-    public void showImg(@PathParam("name") String imageName, @PathParam("type") String type, @Context HttpServletResponse response)
+    public void showImg(@PathParam("name") String imageName,
+                        @PathParam("type") String type,
+                        @Context HttpServletResponse response)
             throws IOException {
         InputStream inputStream = null;
         OutputStream out = null;
         try {
-            File file = new File(ImgPath + imageName + "." + type);
+            File file = new File(Constants.ImgPath + imageName + "." + type);
             inputStream = new FileInputStream(file);
             out = response.getOutputStream();
             // pic size = 1M

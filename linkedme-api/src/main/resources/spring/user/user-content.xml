@@ -26,12 +26,13 @@
         <property name="sqls">
             <map>
                 <entry key="LOGIN" value="select pwd from $db$.$tb$ where email=?"/>
-                <entry key="REGISTER" value="insert into $db$.$tb$ (email, pwd, name, company, role_id, register_time, last_login_time) values(?, ?, ?, ?, ?, ?, ?)"/>
+                <entry key="REGISTER" value="insert into $db$.$tb$ (email, pwd, name, phone_number, company, role_id, register_time, last_login_time) values(?, ?, ?, ?, ?, ?, ?, ?)"/>
                 <entry key="EMAIL_EXISTENCE_QUERY" value="select * from $db$.$tb$ where email= ? and valid_status = '1' "/>
                 <entry key="USER_INFO_QUERY" value="select id, email, pwd, name, company, role_id, register_time, last_login_time from $db$.$tb$ where email= ? and valid_status = '1' "/>
                 <entry key="PWD_RESET" value="update $db$.$tb$ set pwd=? where random_code = ? and valid_status = '1' "/>
                 <entry key="CHANGE_PWD" value="update $db$.$tb$ set pwd=? where email = ? and valid_status = '1' "/>
                 <entry key="LAST_LOGIN_TIME_RESET" value="update $db$.$tb$ set last_login_time=? where email= ? and valid_status = '1' "/>
+                <entry key="SET_LOGIN_TIME_AND_TOKEN" value="update $db$.$tb$ set last_login_time=?, token=? where email= ? and valid_status = '1'"/>
                 <entry key="UPDATE_TOKEN" value="update $db$.$tb$ set token = ? where email = ? and valid_status = '1'"/>
                 <entry key="SET_RANDOM_CODE" value="update $db$.$tb$ set random_code = ? where email = ? and valid_status = '1'"/>
                 <entry key="GET_TOKEN" value="select token from $db$.$tb$ where id = ? and valid_status = '1'"/>
@@ -54,7 +55,7 @@
         <property name="tableCount" value="1"/>
         <property name="sqls">
             <map>
-                <entry key="REQUEST_DEMO" value="insert into $db$.$tb$ (name, email, mobile_phone, company_product_name, from_channel, create_time) values(?, ?, ?, ?, ?, now())"/>
+                <entry key="REQUEST_DEMO" value="insert into $db$.$tb$ (name, email, mobile_phone, company_product_name, from_channel, other_channel, create_time) values(?, ?, ?, ?, ?, ?, now())"/>
             </map>
         </property>
         <property name="jdbcTemplates">

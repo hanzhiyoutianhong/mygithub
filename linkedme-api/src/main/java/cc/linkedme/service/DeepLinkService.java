@@ -1,5 +1,12 @@
 package cc.linkedme.service;
 
+import javax.annotation.Resource;
+
+import org.springframework.stereotype.Service;
+
+import com.esotericsoftware.kryo.KryoException;
+import com.google.gson.Gson;
+
 import cc.linkedme.commons.exception.LMException;
 import cc.linkedme.commons.exception.LMExceptionFactor;
 import cc.linkedme.commons.memcache.MemCacheTemplate;
@@ -11,9 +18,6 @@ import cc.linkedme.data.model.DeepLink;
 import cc.linkedme.data.model.params.UrlParams;
 import net.sf.json.JSONArray;
 import net.sf.json.JSONObject;
-import org.springframework.stereotype.Service;
-
-import javax.annotation.Resource;
 
 /**
  * Created by LinkedME01 on 16/3/10.
@@ -38,7 +42,9 @@ public class DeepLinkService {
     }
 
     public boolean addDeepLinkToCache(DeepLink deepLink) {
-        byte[] b = KryoSerializationUtil.serializeObj(deepLink);
+        Gson gson = new Gson();
+        String deepLinkJson = gson.toJson(deepLink);
+        byte[] b = KryoSerializationUtil.serializeObj(deepLinkJson);
         boolean res = deepLinkMemCache.set(String.valueOf(deepLink.getDeeplinkId()), b);
         return res;
     }
@@ -52,7 +58,15 @@ public class DeepLinkService {
         DeepLink deepLink;
         byte[] deepLinkByteArr = deepLinkMemCache.get(String.valueOf(deepLinkId));
         if (deepLinkByteArr != null && deepLinkByteArr.length > 0) {
-            deepLink = KryoSerializationUtil.deserializeObj(deepLinkByteArr, DeepLink.class);
+            try {
+                Gson gson = new Gson();
+                String deepLinkJson = KryoSerializationUtil.deserializeObj(deepLinkByteArr, String.class);
+                deepLink = gson.fromJson(deepLinkJson, DeepLink.class);
+            } catch (KryoException e) {
+                deepLink = null;
+                deepLinkMemCache.delete(String.valueOf(deepLinkId));
+                // throw new KryoException("deserializeObj error.", e);
+            }
             if (deepLink != null) {
                 return deepLink;
             }
@@ -60,7 +74,7 @@ public class DeepLinkService {
 
         deepLink = deepLinkDao.getDeepLinkInfo(deepLinkId, appId);
         if (deepLink != null && deepLink.getDeeplinkId() > 0) {
-            deepLinkMemCache.set(String.valueOf(deepLinkId), KryoSerializationUtil.serializeObj(deepLink));
+            addDeepLinkToCache(deepLink);
             return deepLink;
         }
         return null;
@@ -70,16 +84,16 @@ public class DeepLinkService {
         boolean result = true;
         for (int i = 0; i < deepLinkIds.length; i++) {
             DeepLink deepLink = deepLinkDao.getUrlInfo(deepLinkIds[i], appId);
-            if(deepLink == null) {
+            if (deepLink == null) {
                 continue;
             }
             if (deepLinkDao.deleteDeepLink(deepLinkIds[i], appId)) {
-                //删除mc里的短链
+                // 删除mc里的短链
                 deepLinkMemCache.delete(String.valueOf(deepLinkIds[i]));
 
-                //TODO 删除redis里关于短链的相关信息,md5和deeplink_id的键值对
+                // TODO 删除redis里关于短链的相关信息,md5和deeplink_id的键值对
                 JedisPort redisClient = deepLinkShardingSupport.getClient(deepLink.getDeeplinkMd5());
-                redisClient.del(new String[]{deepLink.getDeeplinkMd5()});
+                redisClient.del(new String[] {deepLink.getDeeplinkMd5()});
             } else {
                 result = false;
                 break;
@@ -115,7 +129,7 @@ public class DeepLinkService {
         String[] campaigns = deepLinkInfo.getCampaign().split(",");
         JSONArray campaignArray = new JSONArray();
         for (int i = 0; i < campaigns.length; i++) {
-            campaignArray.add(features[i]);
+            campaignArray.add(campaigns[i]);
         }
         resultJson.put("campaign", campaignArray);
 
@@ -147,7 +161,7 @@ public class DeepLinkService {
 
     public boolean updateUrl(UrlParams urlParams) {
         boolean result = deepLinkDao.updateUrlInfo(urlParams);
-        if(result) {
+        if (result) {
             deepLinkMemCache.delete(String.valueOf(urlParams.deeplink_id));
         }
         return result;

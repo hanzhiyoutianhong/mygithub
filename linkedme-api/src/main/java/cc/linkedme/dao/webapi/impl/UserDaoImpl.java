@@ -7,19 +7,21 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
-import cc.linkedme.dao.webapi.UserDao;
-import cc.linkedme.data.model.params.DemoRequestParams;
 import org.springframework.dao.DataAccessException;
 import org.springframework.jdbc.core.RowMapper;
+
+import com.google.api.client.repackaged.com.google.common.base.Strings;
 
 import cc.linkedme.commons.exception.LMException;
 import cc.linkedme.commons.exception.LMExceptionFactor;
 import cc.linkedme.commons.log.ApiLogger;
 import cc.linkedme.dao.BaseDao;
+import cc.linkedme.dao.webapi.UserDao;
 import cc.linkedme.data.dao.strategy.TableChannel;
 import cc.linkedme.data.dao.util.DaoUtil;
 import cc.linkedme.data.dao.util.JdbcTemplate;
 import cc.linkedme.data.model.UserInfo;
+import cc.linkedme.data.model.params.DemoRequestParams;
 import cc.linkedme.data.model.params.UserParams;
 
 /**
@@ -31,10 +33,10 @@ public class UserDaoImpl extends BaseDao implements UserDao {
     public static final String EMAIL_EXISTENCE_QUERY = "EMAIL_EXISTENCE_QUERY";
     public static final String PWD_RESET = "PWD_RESET";
     public static final String CHANGE_PWD = "CHANGE_PWD";
-    public static final String LAST_LOGIN_TIME_RESET = "LAST_LOGIN_TIME_RESET";
     public static final String UPDATE_TOKEN = "UPDATE_TOKEN";
     public static final String GET_TOKEN = "GET_TOKEN";
     public static final String SET_RANDOM_CODE = "SET_RANDOM_CODE";
+    public static final String SET_LOGIN_TIME_AND_TOKEN = "SET_LOGIN_TIME_AND_TOKEN";
 
     public static final String REQUEST_DEMO = "REQUEST_DEMO";
 
@@ -46,7 +48,7 @@ public class UserDaoImpl extends BaseDao implements UserDao {
 
         try {
             res += tableChannel.getJdbcTemplate().update(tableChannel.getSql(), new Object[] {userParams.email, userParams.pwd,
-                    userParams.name, userParams.company, userParams.role_id, register_time, last_login_time});
+                    userParams.name, userParams.phone_number, userParams.company, userParams.role_id, register_time, last_login_time});
         } catch (DataAccessException e) {
             if (DaoUtil.isDuplicateInsert(e)) {
                 ApiLogger.warn(new StringBuilder(128).append("Duplicate insert user, userEmail=").append(userParams.email), e);
@@ -56,7 +58,7 @@ public class UserDaoImpl extends BaseDao implements UserDao {
         return res;
     }
 
-    public int changeUserPwd( UserParams userParams ) {
+    public int changeUserPwd(UserParams userParams) {
         int res = 0;
         TableChannel tableChannel = tableContainer.getTableChannel("userInfo", CHANGE_PWD, 0L, 0L);
 
@@ -86,12 +88,12 @@ public class UserDaoImpl extends BaseDao implements UserDao {
         return res;
     }
 
-    public int resetLastLoginTime(UserParams userParams) {
+    public int setLoginInfos(UserParams userParams) {
         int res = 0;
-        TableChannel tableChannel = tableContainer.getTableChannel("userInfo", LAST_LOGIN_TIME_RESET, 0L, 0L);
+        TableChannel tableChannel = tableContainer.getTableChannel("userInfo", SET_LOGIN_TIME_AND_TOKEN, 0L, 0L);
         try {
             res += tableChannel.getJdbcTemplate().update(tableChannel.getSql(),
-                    new Object[] {userParams.last_logout_time, userParams.email});
+                    new Object[] {userParams.last_logout_time, userParams.token, userParams.email});
         } catch (DataAccessException e) {
             if (DaoUtil.isDuplicateInsert(e)) {
                 ApiLogger.warn(new StringBuffer(128).append("Duplicate insert user, userEmail=").append(userParams.email), e);
@@ -203,12 +205,27 @@ public class UserDaoImpl extends BaseDao implements UserDao {
     }
 
     @Override
-    public int getDemo(DemoRequestParams demoRequestParams) {
+    public int requestDemo(DemoRequestParams demoRequestParams) {
         int res = 0;
+        String[] channelArr = null;
+        if (!Strings.isNullOrEmpty(demoRequestParams.from_channel)) {
+            channelArr = demoRequestParams.from_channel.split(",");
+        }
+        long channels = 0;
+        if (channelArr != null) {
+            // TODO 应该要去重
+            for (String str : channelArr) {
+                if (Integer.parseInt(str) > 60 || Integer.parseInt(str) < 0) {
+                    continue;
+                }
+                channels = channels + (1 << Integer.parseInt(str));
+            }
+        }
         TableChannel tableChannel = tableContainer.getTableChannel("demoInfo", REQUEST_DEMO, 0L, 0L);
         try {
-            res += tableChannel.getJdbcTemplate().update(tableChannel.getSql(), new Object[] {demoRequestParams.name, demoRequestParams.email,
-                    demoRequestParams.mobile_phone, demoRequestParams.company_product_name, demoRequestParams.from_channel});
+            res += tableChannel.getJdbcTemplate().update(tableChannel.getSql(),
+                    new Object[] {demoRequestParams.name, demoRequestParams.email, demoRequestParams.mobile_phone,
+                            demoRequestParams.company_product_name, channels, demoRequestParams.other_channel});
         } catch (DataAccessException e) {
             if (DaoUtil.isDuplicateInsert(e)) {
                 ApiLogger.warn(new StringBuilder(128).append("Duplicate insert DemoInfo, email=").append(demoRequestParams.email), e);

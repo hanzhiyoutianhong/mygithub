@@ -69,7 +69,11 @@ public class Base62 {
     }
 
     public static void main(String[] args) {
+<<<<<<< HEAD
         long num = 10022;
+=======
+        long num = 3373567987154946L;
+>>>>>>> b1edc18edc905935ebd0f360d3b2504c752c5bf2
         System.out.println("Number: " + num);
 
         String encoding = null;
@@ -81,10 +85,10 @@ public class Base62 {
 
         decoding = Base62.decode(encoding);
         long decoding1 = Base62.decode("sdk");
-        long decoding2 = Base62.decode("uber");
+        long decoding2 = Base62.decode("test");
         
         
-        System.out.println("Base62 Decoding: " + decoding);
+        System.out.println("Base62 Decoding: " + Base62.decode("QqGJHVxR7"));
         System.out.println("Base62 Decoding: " + decoding1);
         System.out.println("Base62 Decoding: " + decoding2);
     }

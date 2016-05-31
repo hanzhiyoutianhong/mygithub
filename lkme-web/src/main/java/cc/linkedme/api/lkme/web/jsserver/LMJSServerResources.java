@@ -7,18 +7,19 @@ import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 
 import cc.linkedme.commons.log.ApiLogger;
+import cc.linkedme.data.model.params.JsActionsParams;
+import cc.linkedme.data.model.params.JsRecordIdParams;
+import cc.linkedme.service.sdkapi.JsService;
 import net.sf.json.JSONObject;
 
 import org.springframework.stereotype.Component;
-import cc.linkedme.data.model.params.*;
-import cc.linkedme.service.sdkapi.LMSdkService;
 
-@Path("v1")
+@Path("js")
 @Component
 public class LMJSServerResources {
 
     @Resource
-    private LMSdkService lmSdkService;
+    private JsService jsService;
 
     @Path("/lmactions")
     @POST
@@ -38,6 +39,14 @@ public class LMJSServerResources {
         ApiLogger.info(resultJson.toString());
 
         return null;
+    }
+
+    @Path("/record_id")
+    @POST
+    @Produces({MediaType.APPLICATION_JSON})
+    public String recordId(JsRecordIdParams jsRecordIdParams, @Context HttpServletRequest request) {
+        jsService.recordId(jsRecordIdParams);
+        return "{}";
     }
 
 
