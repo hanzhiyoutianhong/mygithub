@@ -71,7 +71,7 @@ public class AppDaoImpl extends BaseDao implements AppDao {
                 ApiLogger.warn(new StringBuilder(128).append("Duplicate insert app table, app_name=").append(appInfo.getApp_name()), e);
                 throw new LMException(LMExceptionFactor.LM_FAILURE_DB_OP, "duplicate insert app table, app_name=" + appInfo.getApp_name());
             }
-            throw new LMException(LMExceptionFactor.LM_FAILURE_DB_OP);
+            throw new LMException(LMExceptionFactor.LM_FAILURE_DB_OP, "Failed to insert app" + appInfo.getApp_id());
         }
 
         AppInfo app = new AppInfo();
@@ -86,7 +86,7 @@ public class AppDaoImpl extends BaseDao implements AppDao {
                     }
                 });
             } catch (DataAccessException e) {
-                throw new LMException(LMExceptionFactor.LM_FAILURE_DB_OP);
+                throw new LMException(LMExceptionFactor.LM_FAILURE_DB_OP, "Failed to query app id");
             }
         }
         return (int) app.getApp_id();
@@ -141,7 +141,7 @@ public class AppDaoImpl extends BaseDao implements AppDao {
         try {
             result += jdbcTemplate.update(tableChannel.getSql(), new Object[] {appParams.user_id, appParams.app_id});
         } catch (DataAccessException e) {
-            throw new LMException(LMExceptionFactor.LM_FAILURE_DB_OP);
+            throw new LMException(LMExceptionFactor.LM_FAILURE_DB_OP, "Failed to delete app" + appParams.app_id);
         }
         return result;
     }
@@ -361,7 +361,7 @@ public class AppDaoImpl extends BaseDao implements AppDao {
         try {
             res += jdbcTemplate.update(tableChannel.getSql(), new Object[] {imagePath + imageName, appParams.app_id, appParams.user_id});
         } catch (DataAccessException e) {
-            throw new LMException(LMExceptionFactor.LM_FAILURE_DB_OP);
+            throw new LMException(LMExceptionFactor.LM_FAILURE_DB_OP, "Failed to update image path");
         }
         return res > 0 ? imageName : null;
     }

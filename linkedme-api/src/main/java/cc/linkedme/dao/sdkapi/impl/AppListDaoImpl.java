@@ -46,7 +46,7 @@ public class AppListDaoImpl extends BaseDao implements AppListDao {
             result += tableChannel.getJdbcTemplate().update( tableChannel.getSql(),
                     new Object[]{ identity_id, device_fingerprint_id, app_name, app_identifier, uri_scheme, public_source_dir, source_dir, install_date, last_update_date, version_code, version_name, os, sdk_version, retry_times, linkedme_key, sign});
         }catch (DataAccessException e) {
-            throw new LMException(LMExceptionFactor.LM_FAILURE_DB_OP);
+            throw new LMException(LMExceptionFactor.LM_FAILURE_DB_OP, "Get App List From Database Failed");
         }
 
         return result;

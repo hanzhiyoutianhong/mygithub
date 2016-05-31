@@ -58,7 +58,7 @@ public class LMExceptionFactor implements Serializable {
      * 创建uuid失败
      */
     public static final LMExceptionFactor LM_UUID_ERROR =
-            new LMExceptionFactor(HttpStatus.SERVICE_UNAVAILABLE, 50304, "creat uuid failed!", "发号失败!");
+            new LMExceptionFactor(HttpStatus.SERVICE_UNAVAILABLE, 50304, "create uuid failed!", "发号失败!");
 
 
 

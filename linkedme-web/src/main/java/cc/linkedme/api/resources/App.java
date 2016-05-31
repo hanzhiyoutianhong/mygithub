@@ -52,10 +52,10 @@ public class App {
     @Produces(MediaType.APPLICATION_JSON)
     public String createApp(AppParams appParam, @Context HttpServletRequest request) {
         if (appParam.user_id <= 0) {
-            throw new LMException(LMExceptionFactor.LM_ILLEGAL_PARAM_VALUE);
+            throw new LMException(LMExceptionFactor.LM_ILLEGAL_PARAM_VALUE, "invalid user id");
         }
         if (appParam.app_name == null) {
-            throw new LMException(LMExceptionFactor.LM_MISSING_PARAM);
+            throw new LMException(LMExceptionFactor.LM_MISSING_PARAM, "App name should not be empty");
         }
 
         long app_id = appService.createApp(appParam);
@@ -72,7 +72,7 @@ public class App {
                           @QueryParam("token") String token,
                           @Context HttpServletRequest request) {
         if (user_id <= 0) {
-            throw new LMException(LMExceptionFactor.LM_ILLEGAL_PARAM_VALUE);
+            throw new LMException(LMExceptionFactor.LM_ILLEGAL_PARAM_VALUE, "invalid user id");
         }
 
         AppParams appParams = new AppParams();
@@ -93,11 +93,11 @@ public class App {
     @Produces(MediaType.APPLICATION_JSON)
     public String deleteApp(AppParams appParams, @Context HttpServletRequest request) {
         if (appParams.user_id <= 0) {
-            throw new LMException(LMExceptionFactor.LM_ILLEGAL_PARAM_VALUE);
+            throw new LMException(LMExceptionFactor.LM_ILLEGAL_PARAM_VALUE, "invalid user id");
         }
 
         if (appParams.app_id <= 0) {
-            throw new LMException(LMExceptionFactor.LM_ILLEGAL_PARAM_VALUE);
+            throw new LMException(LMExceptionFactor.LM_ILLEGAL_PARAM_VALUE, "invalid app id");
         }
 
         int result = appService.deleteApp(appParams);
@@ -183,7 +183,7 @@ public class App {
         appParams.app_id = app_id;
 
         if (appParams.user_id <= 0) {
-            throw new LMException(LMExceptionFactor.LM_ILLEGAL_PARAM_VALUE);
+            throw new LMException(LMExceptionFactor.LM_ILLEGAL_PARAM_VALUE, "invalid user id");
         }
 
         List<UrlTagsInfo> result = appService.getUrlTags(appParams);
@@ -235,11 +235,11 @@ public class App {
     @Consumes(MediaType.APPLICATION_JSON)
     public String uploadImg(AppParams appParams, @Context HttpServletRequest request) {
         if (appParams.user_id <= 0) {
-            throw new LMException(LMExceptionFactor.LM_ILLEGAL_PARAM_VALUE, "user_id is null");
+            throw new LMException(LMExceptionFactor.LM_ILLEGAL_PARAM_VALUE, "invalid user id");
         }
 
         if (appParams.app_id <= 0) {
-            throw new LMException(LMExceptionFactor.LM_ILLEGAL_PARAM_VALUE, "app_id is null");
+            throw new LMException(LMExceptionFactor.LM_ILLEGAL_PARAM_VALUE, "invalid app id");
         }
 
         if (Strings.isNullOrEmpty(appParams.img_data)) {
