@@ -20,6 +20,7 @@ public class ClickBtnParams {
     public String sdk_version;
     public String btn_id;
     public String open_type;
+    public String device_fingerprint_id;
     public String price;
     public String click_time;
     public long timestamp;
@@ -121,4 +122,11 @@ public class ClickBtnParams {
         this.sign = sign;
     }
 
+    public String getDevice_fingerprint_id() {
+        return device_fingerprint_id;
+    }
+
+    public void setDevice_fingerprint_id(String device_fingerprint_id) {
+        this.device_fingerprint_id = device_fingerprint_id;
+    }
 }
