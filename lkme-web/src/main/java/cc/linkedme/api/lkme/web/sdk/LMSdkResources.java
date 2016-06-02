@@ -39,12 +39,12 @@ public class LMSdkResources {
 
 
     @Deprecated
-    @Path("/install_bak")
+    @Path("/install")
     @POST
     @Produces(MediaType.APPLICATION_JSON)
-    public String install_bak(
+    public String install(
                               @FormParam("device_id") String device_id,
-                              @FormParam("device_type") Byte device_type,
+                              @FormParam("device_type") int device_type,
                               @FormParam("device_brand") String device_brand,
                               @FormParam("device_model") String device_model,
                               @FormParam("has_bluetooth") boolean has_bluetooth,
@@ -68,8 +68,8 @@ public class LMSdkResources {
                               @FormParam("universal_link_url") String universal_link_url,
                               @FormParam("sdk_update") int sdk_update,
                               @FormParam("sdk_version") String sdk_version,
-                              @FormParam("iOS_team_id") String ios_team_id,
-                              @FormParam("iOS_bundle_id") String ios_bundle_id,
+                              @FormParam("ios_team_id") String ios_team_id,
+                              @FormParam("ios_bundle_id") String ios_bundle_id,
                               @FormParam("retry_times") int retry_times,
                               @FormParam("linkedme_key") String linkedme_key,
                               @FormParam("timestamp") long timestamp,
@@ -108,7 +108,7 @@ public class LMSdkResources {
         installParams.retry_times = retry_times;
         installParams.linkedme_key = linkedme_key;
         installParams.timestamp = timestamp ;
-        installParams.sign                      = sign                  ;
+        installParams.sign= sign                  ;
 
 
         if (Strings.isNullOrEmpty(installParams.linkedme_key)) {
@@ -126,7 +126,7 @@ public class LMSdkResources {
         return result;
     }
 
-    @Path("/install")
+    @Path("/install_bak")
     @POST
     @Produces(MediaType.APPLICATION_JSON)
     public String install(InstallParams installParams, @Context HttpServletRequest request) {
@@ -145,48 +145,48 @@ public class LMSdkResources {
         return result;
     }
 
-    @Path("/open_bak")
-    @GET
+    @Path("/open")
+    @POST
     @Produces({MediaType.APPLICATION_JSON})
-    public String openForm(@QueryParam("device_fingerprint_id") String device_fingerprint_id,
-                           @QueryParam("identity_id") long identity_id,
-                           @QueryParam("is_referable") boolean is_referable,
-                           @QueryParam("app_version") String app_version,
-                           @QueryParam("external_intent_uri") String external_intent_uri,
-                           @QueryParam("extra_uri_data") String extra_uri_data,
-                           @QueryParam("spotlight_identifier") String spotlight_identifier,
-                           @QueryParam("universal_link_url") String universal_link_url,
-                           @QueryParam("os_version") String os_version,
-                           @QueryParam("sdk_update") int sdk_update,
-                           @QueryParam("os") String os,
-                           @QueryParam("is_debug") boolean is_debug,
-                           @QueryParam("lat_val") String lat_val,
-                           @QueryParam("sdk_version") String sdk_version,
-                           @QueryParam("retry_times") int retry_times,
-                           @QueryParam("linkedme_key") String linkedme_key,
-                           @QueryParam("timestamp") long timestamp,
-                           @QueryParam("sign") String sign,
+    public String openForm(@FormParam("device_fingerprint_id") String device_fingerprint_id,
+                           @FormParam("identity_id") long identity_id,
+                           @FormParam("is_referable") boolean is_referable,
+                           @FormParam("app_version") String app_version,
+                           @FormParam("external_intent_uri") String external_intent_uri,
+                           @FormParam("extra_uri_data") String extra_uri_data,
+                           @FormParam("spotlight_identifier") String spotlight_identifier,
+                           @FormParam("universal_link_url") String universal_link_url,
+                           @FormParam("os_version") String os_version,
+                           @FormParam("sdk_update") int sdk_update,
+                           @FormParam("os") String os,
+                           @FormParam("is_debug") boolean is_debug,
+                           @FormParam("lat_val") String lat_val,
+                           @FormParam("sdk_version") String sdk_version,
+                           @FormParam("retry_times") int retry_times,
+                           @FormParam("linkedme_key") String linkedme_key,
+                           @FormParam("timestamp") long timestamp,
+                           @FormParam("sign") String sign,
                            @Context HttpServletRequest request) {
 
         OpenParams openParams = new OpenParams();
         openParams.device_fingerprint_id = device_fingerprint_id;
-        openParams.identity_id          = identity_id;
-        openParams.is_referable         = is_referable;
-        openParams.app_version          = app_version;
-        openParams.external_intent_uri  = external_intent_uri;
-        openParams.extra_uri_data       = extra_uri_data;
+        openParams.identity_id = identity_id;
+        openParams.is_referable = is_referable;
+        openParams.app_version = app_version;
+        openParams.external_intent_uri = external_intent_uri;
+        openParams.extra_uri_data = extra_uri_data;
         openParams.spotlight_identifier = spotlight_identifier;
-        openParams.universal_link_url   = universal_link_url;
-        openParams.os_version           = os_version;
-        openParams.sdk_update           = sdk_update;
-        openParams.os                   = os;
-        openParams.is_debug             = is_debug;
-        openParams.lat_val              = lat_val;
-        openParams.sdk_version          = sdk_version;
-        openParams.retry_times          = retry_times;
-        openParams.linkedme_key         = linkedme_key;
-        openParams.timestamp            = timestamp;
-        openParams.sign                 = sign;
+        openParams.universal_link_url = universal_link_url;
+        openParams.os_version = os_version;
+        openParams.sdk_update = sdk_update;
+        openParams.os = os;
+        openParams.is_debug = is_debug;
+        openParams.lat_val = lat_val;
+        openParams.sdk_version = sdk_version;
+        openParams.retry_times = retry_times;
+        openParams.linkedme_key = linkedme_key;
+        openParams.timestamp = timestamp;
+        openParams.sign = sign;
 
         // auth
 //        String apiName = "/i/sdk/open";
@@ -203,7 +203,7 @@ public class LMSdkResources {
 
 
 
-    @Path("/open")
+    @Path("/open_bak")
     @POST
     @Produces({MediaType.APPLICATION_JSON})
     public String open(OpenParams openParams, @Context HttpServletRequest request) {
@@ -219,7 +219,7 @@ public class LMSdkResources {
     }
 
 
-    @Path("/url_bak")
+    @Path("/url")
     @POST
     @Produces({MediaType.APPLICATION_JSON})
     public String url_form(
@@ -232,6 +232,7 @@ public class LMSdkResources {
                            @FormParam("feature") String feature,
                            @FormParam("stage") String stage,
                            @FormParam("params") String params,
+                           @FormParam("source") String source,
                            @FormParam("sdk_version") String sdk_version,
                            @FormParam("retry_times") int retry_times,
                            @FormParam("linkedme_key") String linkedme_key,
@@ -240,20 +241,25 @@ public class LMSdkResources {
                            @Context HttpServletRequest request) {
 
         UrlParams urlParams = new UrlParams();
-        urlParams.identity_id            =identity_id           ;
-        urlParams.device_fingerprint_id  =device_fingerprint_id ;
-        urlParams.session_id             =session_id            ;
-        urlParams.tags                   =tags.split(",")       ;
-        urlParams.alias                  =alias                 ;
-        urlParams.channel                =channel.split(",")    ;
-        urlParams.feature                =feature.split(",")    ;
-        urlParams.stage                  =stage.split(",")      ;
-        urlParams.params                 =JSONObject.fromObject(params);
-        urlParams.sdk_version            =sdk_version           ;
-        urlParams.retry_times            =retry_times           ;
-        urlParams.linkedme_key           =linkedme_key          ;
-        urlParams.timestamp              =timestamp             ;
-        urlParams.sign                   =sign                  ;
+        urlParams.identity_id = identity_id;
+        urlParams.device_fingerprint_id = device_fingerprint_id;
+        urlParams.session_id = session_id;
+        urlParams.tags = tags == null ? null : tags.split(",");
+        urlParams.alias = alias;
+        urlParams.channel = channel == null ? null : channel.split(",");
+        urlParams.feature = feature == null ? null : feature.split(",");
+        urlParams.stage = stage == null ? null : stage.split(",");
+        try {
+            urlParams.params = JSONObject.fromObject(params);
+        } catch (Exception e) {
+            throw new LMException(LMExceptionFactor.LM_ILLEGAL_PARAM_VALUE, "params is illegal");
+        }
+        urlParams.source = source;
+        urlParams.sdk_version = sdk_version;
+        urlParams.retry_times = retry_times;
+        urlParams.linkedme_key = linkedme_key;
+        urlParams.timestamp = timestamp;
+        urlParams.sign = sign;
 
 
         //        String apiName = "/i/sdk/url";
@@ -284,7 +290,7 @@ public class LMSdkResources {
     }
 
 
-    @Path("/url")
+    @Path("/url_bak")
     @POST
     @Produces({MediaType.APPLICATION_JSON})
     public String url(UrlParams urlParams, @Context HttpServletRequest request) {
@@ -315,7 +321,7 @@ public class LMSdkResources {
         return resultJson.toString();
     }
 
-    @Path("/close_bak")
+    @Path("/close")
     @POST
     @Produces({MediaType.APPLICATION_JSON})
     public String close(@FormParam("device_fingerprint_id")   String device_fingerprint_id,
@@ -329,14 +335,14 @@ public class LMSdkResources {
                         @Context HttpServletRequest request){
 
         CloseParams closeParams = new CloseParams();
-        closeParams.device_fingerprint_id = device_fingerprint_id ;
-        closeParams.identity_id           = identity_id           ;
-        closeParams.session_id            = session_id            ;
-        closeParams.sdk_version           = sdk_version           ;
-        closeParams.retry_times           = retry_times           ;
-        closeParams.linkedme_key          = linkedme_key          ;
-        closeParams.timestamp             = timestamp             ;
-        closeParams.sign                  = sign                  ;
+        closeParams.device_fingerprint_id = device_fingerprint_id;
+        closeParams.identity_id = identity_id;
+        closeParams.session_id = session_id;
+        closeParams.sdk_version = sdk_version;
+        closeParams.retry_times = retry_times;
+        closeParams.linkedme_key = linkedme_key;
+        closeParams.timestamp = timestamp;
+        closeParams.sign = sign;
 
         if (Strings.isNullOrEmpty(closeParams.linkedme_key)) {
             throw new LMException(LMExceptionFactor.LM_MISSING_PARAM, closeParams.linkedme_key);
@@ -361,7 +367,7 @@ public class LMSdkResources {
 
     }
 
-    @Path("/close")
+    @Path("/close_bak")
     @POST
     @Produces({MediaType.APPLICATION_JSON})
     public String close(CloseParams closeParams, @Context HttpServletRequest request) {
