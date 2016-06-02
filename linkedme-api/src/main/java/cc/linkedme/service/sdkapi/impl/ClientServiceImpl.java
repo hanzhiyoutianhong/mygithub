@@ -50,7 +50,7 @@ public class ClientServiceImpl implements ClientService {
             // DeepLink deepLink = deepLinkService.getDeepLinkInfo(deepLinkId, appId);
 
             // count
-            final String type = DeepLinkCount.getCountTypeFromOs(clientInfo.getOs(), "_install");
+            final String type = DeepLinkCount.getCountTypeFromOs(clientInfo.getOs(), "install");
             deepLinkCountThreadPool.submit(new Callable<Void>() {
                 @Override
                 public Void call() throws Exception {
