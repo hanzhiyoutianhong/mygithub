@@ -39,6 +39,12 @@ public class Test {
 
     private static Switcher testSwitcher =
             SwitcherManagerFactoryLoader.getSwitcherManagerFactory().getSwitcherManager().registerSwitcher("linkedme.test.enable", true);
+    @Path("/tomcatTest")
+    @GET
+    @Produces({MediaType.APPLICATION_JSON})
+    public String linkedmeTest(){
+        return "lkme-web tomcat-test!";
+    }
 
     @Path("/getJson.json")
     @GET

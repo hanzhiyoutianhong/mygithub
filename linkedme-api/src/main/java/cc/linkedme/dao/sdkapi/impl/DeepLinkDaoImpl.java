@@ -246,7 +246,7 @@ public class DeepLinkDaoImpl extends BaseDao implements DeepLinkDao {
         try {
             result += tableChannel.getJdbcTemplate().update(tableChannel.getSql(), new Object[] {deepLinkId});
         } catch (DataAccessException e) {
-            throw new LMException(LMExceptionFactor.LM_FAILURE_DB_OP);
+            throw new LMException(LMExceptionFactor.LM_FAILURE_DB_OP, "Failed to delete deeplink" + deepLinkId);
         }
         return result > 0;
     }

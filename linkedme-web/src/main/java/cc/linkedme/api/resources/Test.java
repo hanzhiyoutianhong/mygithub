@@ -14,6 +14,13 @@ import java.io.IOException;
 @Path("test")
 @Component
 public class Test {
+    @Path("/tomcatTest")
+    @GET
+    @Produces({MediaType.APPLICATION_JSON})
+    public String linkedmeTest(){
+        return "linkedme-web tomcat-test!";
+    }
+
     @Path("/getJson.json")
     @GET
     @Produces({MediaType.APPLICATION_JSON})
