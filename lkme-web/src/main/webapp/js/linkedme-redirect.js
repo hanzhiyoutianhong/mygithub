@@ -390,9 +390,8 @@ var visit_id = "visit_id",
             };
             $.ajax({
                 method: "POST",
-                contentType: "application/json; charset=utf-8",
                 url: this.recordIdUrl,
-                data: JSON.stringify(c),
+                data: c,
                 success: function () {
                 },
                 error: function () {
