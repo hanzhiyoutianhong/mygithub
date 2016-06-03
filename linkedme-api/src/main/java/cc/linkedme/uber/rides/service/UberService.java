@@ -50,10 +50,10 @@ public class UberService {
         String clientId = consumerAppInfo.getClientId();
         String serverToken = consumerAppInfo.getServerToken();
 
-        float startLat = initUberButtonParams.getPickup_lat();
-        float startLng = initUberButtonParams.getPickup_lng();
-        float endLat = initUberButtonParams.getDropoff_lat();
-        float endLng = initUberButtonParams.getDropoff_lng();
+        double startLat = initUberButtonParams.getPickup_lat();
+        double startLng = initUberButtonParams.getPickup_lng();
+        double endLat = initUberButtonParams.getDropoff_lat();
+        double endLng = initUberButtonParams.getDropoff_lng();
 
         // 计数
         String hashKey = buttonInfo.getAppId() + initUberButtonParams.btn_id;
