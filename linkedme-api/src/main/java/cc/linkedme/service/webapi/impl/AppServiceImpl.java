@@ -12,6 +12,7 @@ import java.util.Random;
 
 import javax.annotation.Resource;
 
+import cc.linkedme.data.model.params.DashboardUrlParams;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang.ArrayUtils;
 
@@ -245,7 +246,7 @@ public class AppServiceImpl implements AppService {
         return urlTagDao.configUrlTags(appParams);
     }
 
-    public void addUrlTags(UrlParams urlParams) {
+    public void addUrlTags(DashboardUrlParams urlParams) {
         AppParams appParams = new AppParams();
         appParams.app_id = urlParams.app_id;
         if (ArrayUtils.isNotEmpty(urlParams.feature)) {

@@ -223,6 +223,13 @@ public class LMSdkResources {
     @POST
     @Produces({MediaType.APPLICATION_JSON})
     public String url_form(
+                           @FormParam("app_id") int app_id,
+                           @FormParam("ios_use_default") boolean ios_use_default,
+                           @FormParam("ios_custom_url") String ios_custom_url,
+                           @FormParam("android_use_default") boolean android_use_default,
+                           @FormParam("android_custom_url") String android_custom_url,
+                           @FormParam("desktop_use_default") boolean desktop_use_default,
+                           @FormParam("desktop_custom_url") String desktop_custom_url,
                            @FormParam("identity_id") long identity_id,
                            @FormParam("device_fingerprint_id") String device_fingerprint_id,
                            @FormParam("session_id") String session_id,
@@ -230,6 +237,7 @@ public class LMSdkResources {
                            @FormParam("alias") String alias,
                            @FormParam("channel") String channel,
                            @FormParam("feature") String feature,
+                           @FormParam("campaign") String campaign,
                            @FormParam("stage") String stage,
                            @FormParam("params") String params,
                            @FormParam("source") String source,
@@ -240,7 +248,17 @@ public class LMSdkResources {
                            @FormParam("sign") String sign,
                            @Context HttpServletRequest request) {
 
+
         UrlParams urlParams = new UrlParams();
+        urlParams.app_id = app_id;
+        urlParams.ios_use_default = ios_use_default;
+        urlParams.ios_custom_url = ios_custom_url;
+        urlParams.android_use_default = android_use_default;
+        urlParams.android_custom_url = android_custom_url;
+        urlParams.desktop_use_default = desktop_use_default;
+        urlParams.desktop_custom_url = desktop_custom_url;
+        urlParams.campaign = campaign == null ? null : campaign.split(",");
+
         urlParams.identity_id = identity_id;
         urlParams.device_fingerprint_id = device_fingerprint_id;
         urlParams.session_id = session_id;
