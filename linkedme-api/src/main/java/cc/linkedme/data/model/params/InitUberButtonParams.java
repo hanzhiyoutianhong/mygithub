@@ -8,8 +8,6 @@ import org.codehaus.jackson.annotate.JsonIgnoreProperties;
  * Created by LinkedME01 on 16/3/28.
  */
 
-@XmlRootElement
-@JsonIgnoreProperties(ignoreUnknown = true)
 public class InitUberButtonParams {
 
     public long identity_id;
@@ -19,11 +17,12 @@ public class InitUberButtonParams {
     public boolean is_debug;
     public String sdk_version;
     public String btn_id;
-    public float pickup_lat;
-    public float pickup_lng;
+    public double pickup_lat;
+    public double pickup_lng;
     public String pickup_label;
-    public float dropoff_lat;
-    public float dropoff_lng;
+    public String device_fingerprint_id;
+    public double dropoff_lat;
+    public double dropoff_lng;
     public String dropoff_label;
     public long timestamp;
     public String sign;
@@ -84,19 +83,19 @@ public class InitUberButtonParams {
         this.btn_id = btn_id;
     }
 
-    public float getPickup_lat() {
+    public double getPickup_lat() {
         return pickup_lat;
     }
 
-    public void setPickup_lat(float pickup_lat) {
+    public void setPickup_lat(double pickup_lat) {
         this.pickup_lat = pickup_lat;
     }
 
-    public float getPickup_lng() {
+    public double getPickup_lng() {
         return pickup_lng;
     }
 
-    public void setPickup_lng(float pickup_lng) {
+    public void setPickup_lng(double pickup_lng) {
         this.pickup_lng = pickup_lng;
     }
 
@@ -108,19 +107,27 @@ public class InitUberButtonParams {
         this.pickup_label = pickup_label;
     }
 
-    public float getDropoff_lat() {
+    public String getDevice_fingerprint_id() {
+        return device_fingerprint_id;
+    }
+
+    public void setDevice_fingerprint_id(String device_fingerprint_id) {
+        this.device_fingerprint_id = device_fingerprint_id;
+    }
+
+    public double getDropoff_lat() {
         return dropoff_lat;
     }
 
-    public void setDropoff_lat(float dropoff_lat) {
+    public void setDropoff_lat(double dropoff_lat) {
         this.dropoff_lat = dropoff_lat;
     }
 
-    public float getDropoff_lng() {
+    public double getDropoff_lng() {
         return dropoff_lng;
     }
 
-    public void setDropoff_lng(float dropoff_lng) {
+    public void setDropoff_lng(double dropoff_lng) {
         this.dropoff_lng = dropoff_lng;
     }
 

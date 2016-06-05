@@ -8,14 +8,10 @@ import org.codehaus.jackson.annotate.JsonIgnoreProperties;
  * Created by LinkedME00 on 16/1/20.
  */
 
-@XmlRootElement
-@JsonIgnoreProperties(ignoreUnknown = true)
-public class InstallParams {
+public class InstallParams extends BaseParams{
 
-    public long identity_id;
-    public String linkedme_key;
     public String device_id;
-    public String device_fingerprint_id;
+
     public int device_type;
     public String device_brand;
     public String device_model;
@@ -29,6 +25,7 @@ public class InstallParams {
     public int screen_width;
     public boolean is_wifi;
     public boolean is_referable;
+    public String google_advertising_id;
     public boolean lat_val;
     public String carrier;
     public String app_version;
@@ -37,22 +34,9 @@ public class InstallParams {
     public String spotlight_identifier;
     public String universal_link_url;
     public int sdk_update;
-    public String sdk_version;
     public String ios_team_id;
     public String ios_bundle_id;
-    public int retry_times;
-    public boolean is_debug;
     public String clientIP;
-    public long timestamp;
-    public String sign;
-
-    public String getLinkedme_key() {
-        return linkedme_key;
-    }
-
-    public void setLinkedme_key(String linkedme_key) {
-        this.linkedme_key = linkedme_key;
-    }
 
     public String getDevice_id() {
         return device_id;
@@ -60,38 +44,6 @@ public class InstallParams {
 
     public void setDevice_id(String device_id) {
         this.device_id = device_id;
-    }
-
-    public long getIdentity_id() {
-        return identity_id;
-    }
-
-    public void setIdentity_id(long identity_id) {
-        this.identity_id = identity_id;
-    }
-
-    public String getSdk_version() {
-        return sdk_version;
-    }
-
-    public void setSdk_version(String sdk_version) {
-        this.sdk_version = sdk_version;
-    }
-
-    public int getRetry_times() {
-        return retry_times;
-    }
-
-    public void setRetry_times(int retry_times) {
-        this.retry_times = retry_times;
-    }
-
-    public boolean is_debug() {
-        return is_debug;
-    }
-
-    public void setIs_debug(boolean is_debug) {
-        this.is_debug = is_debug;
     }
 
     public int getDevice_type() {
@@ -118,20 +70,20 @@ public class InstallParams {
         this.device_model = device_model;
     }
 
-    public boolean isHas_nfc() {
-        return has_nfc;
-    }
-
-    public void setHas_nfc(boolean has_nfc) {
-        this.has_nfc = has_nfc;
-    }
-
     public boolean isHas_bluetooth() {
         return has_bluetooth;
     }
 
     public void setHas_bluetooth(boolean has_bluetooth) {
         this.has_bluetooth = has_bluetooth;
+    }
+
+    public boolean isHas_nfc() {
+        return has_nfc;
+    }
+
+    public void setHas_nfc(boolean has_nfc) {
+        this.has_nfc = has_nfc;
     }
 
     public boolean isHas_sim() {
@@ -198,7 +150,7 @@ public class InstallParams {
         this.is_referable = is_referable;
     }
 
-    public boolean getLat_val() {
+    public boolean isLat_val() {
         return lat_val;
     }
 
@@ -222,46 +174,6 @@ public class InstallParams {
         this.app_version = app_version;
     }
 
-    public int getSdk_update() {
-        return sdk_update;
-    }
-
-    public void setSdk_update(int sdk_update) {
-        this.sdk_update = sdk_update;
-    }
-
-    public String getIos_bundle_id() {
-        return ios_bundle_id;
-    }
-
-    public void setIos_bundle_id(String ios_bundle_id) {
-        this.ios_bundle_id = ios_bundle_id;
-    }
-
-    public String getDevice_fingerprint_id() {
-        return device_fingerprint_id;
-    }
-
-    public void setDevice_fingerprint_id(String device_fingerprint_id) {
-        this.device_fingerprint_id = device_fingerprint_id;
-    }
-
-    public String getIos_team_id() {
-        return ios_team_id;
-    }
-
-    public void setIos_team_id(String ios_team_id) {
-        this.ios_team_id = ios_team_id;
-    }
-
-    public String getSpotlight_identifier() {
-        return spotlight_identifier;
-    }
-
-    public void setSpotlight_identifier(String spotlight_identifier) {
-        this.spotlight_identifier = spotlight_identifier;
-    }
-
     public String getExtra_uri_data() {
         return extra_uri_data;
     }
@@ -278,6 +190,13 @@ public class InstallParams {
         this.external_intent_uri = external_intent_uri;
     }
 
+    public String getSpotlight_identifier() {
+        return spotlight_identifier;
+    }
+
+    public void setSpotlight_identifier(String spotlight_identifier) {
+        this.spotlight_identifier = spotlight_identifier;
+    }
 
     public String getUniversal_link_url() {
         return universal_link_url;
@@ -287,9 +206,28 @@ public class InstallParams {
         this.universal_link_url = universal_link_url;
     }
 
+    public int getSdk_update() {
+        return sdk_update;
+    }
 
-    public boolean isLat_val() {
-        return lat_val;
+    public void setSdk_update(int sdk_update) {
+        this.sdk_update = sdk_update;
+    }
+
+    public String getIos_team_id() {
+        return ios_team_id;
+    }
+
+    public void setIos_team_id(String ios_team_id) {
+        this.ios_team_id = ios_team_id;
+    }
+
+    public String getIos_bundle_id() {
+        return ios_bundle_id;
+    }
+
+    public void setIos_bundle_id(String ios_bundle_id) {
+        this.ios_bundle_id = ios_bundle_id;
     }
 
     public String getClientIP() {
@@ -300,20 +238,11 @@ public class InstallParams {
         this.clientIP = clientIP;
     }
 
-    public long getTimestamp() {
-        return timestamp;
+    public String getGoogle_advertising_id() {
+        return google_advertising_id;
     }
 
-    public void setTimestamp(long timestamp) {
-        this.timestamp = timestamp;
+    public void setGoogle_advertising_id(String google_advertising_id) {
+        this.google_advertising_id = google_advertising_id;
     }
-
-    public String getSign() {
-        return sign;
-    }
-
-    public void setSign(String sign) {
-        this.sign = sign;
-    }
-
 }

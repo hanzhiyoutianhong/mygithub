@@ -44,7 +44,17 @@ public class LMJSServerResources {
     @Path("/record_id")
     @POST
     @Produces({MediaType.APPLICATION_JSON})
-    public String recordId(JsRecordIdParams jsRecordIdParams, @Context HttpServletRequest request) {
+    public String recordId(@FormParam("identity_id") long identity_id,
+                           @FormParam("is_valid_identityid") boolean is_valid_identityid,
+                           @FormParam("browser_fingerprint_id") String browser_fingerprint_id,
+                           @FormParam("deeplink_id") long deeplink_id,
+                           @Context HttpServletRequest request) {
+
+        JsRecordIdParams jsRecordIdParams = new JsRecordIdParams();
+        jsRecordIdParams.identity_id = identity_id;
+        jsRecordIdParams.is_valid_identityid = is_valid_identityid;
+        jsRecordIdParams.browser_fingerprint_id = browser_fingerprint_id;
+        jsRecordIdParams.deeplink_id = deeplink_id;
         jsService.recordId(jsRecordIdParams);
         return "{}";
     }
