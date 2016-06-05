@@ -42,7 +42,7 @@ public class AppParams {
     public String android_sha256_fingerprints;
 
     public boolean use_default_landing_page;
-    public boolean qq_app_download_available;
+    public boolean is_yyb_available;
     public String custom_landing_page;
 
     public int ios_android_flag;
@@ -276,12 +276,12 @@ public class AppParams {
         this.custom_landing_page = custom_landing_page;
     }
 
-    public boolean isqq_app_download_available() {
-        return qq_app_download_available;
+    public boolean isis_yyb_available() {
+        return is_yyb_available;
     }
 
-    public void setqq_app_download_available(boolean qq_app_download_available) {
-        this.qq_app_download_available = qq_app_download_available;
+    public void setis_yyb_available(boolean is_yyb_available) {
+        this.is_yyb_available = is_yyb_available;
     }
 
     public String getImg_data() {

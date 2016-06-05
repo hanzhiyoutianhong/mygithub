@@ -69,9 +69,7 @@ public class App {
     @Path("/get_apps")
     @GET
     @Produces(MediaType.APPLICATION_JSON)
-    public String getApps(@QueryParam("user_id") long user_id,
-                          @QueryParam("token") String token,
-                          @Context HttpServletRequest request) {
+    public String getApps(@QueryParam("user_id") long user_id, @QueryParam("token") String token, @Context HttpServletRequest request) {
         if (user_id <= 0) {
             throw new LMException(LMExceptionFactor.LM_ILLEGAL_PARAM_VALUE, "invalid user id");
         }
@@ -111,11 +109,8 @@ public class App {
     @Path("/query_app")
     @GET
     @Produces(MediaType.APPLICATION_JSON)
-    public String queryApp(@QueryParam("app_id") long app_id,
-                           @QueryParam("user_id") long user_id,
-                           @QueryParam("type") String type,
-                           @QueryParam("token") String token,
-                           @Context HttpServletRequest request) {
+    public String queryApp(@QueryParam("app_id") long app_id, @QueryParam("user_id") long user_id, @QueryParam("type") String type,
+            @QueryParam("token") String token, @Context HttpServletRequest request) {
 
         AppParams appParams = new AppParams();
         appParams.app_id = app_id;
@@ -164,8 +159,9 @@ public class App {
         appParams.custom_landing_page = desktopJson.getString("custom_landing_page");
 
 
-        int ios_android_flag = ((appParams.qq_app_download_available ? 1 : 0) << 4 ) + ((appParams.has_ios ? 1 : 0) << 3) + ((appParams.ios_enable_ulink ? 1 : 0) << 2)
-                + ((appParams.has_android ? 1 : 0) << 1) + (appParams.android_enable_applinks ? 1 : 0);
+        int ios_android_flag = ((appParams.is_yyb_available ? 1 : 0) << 4) + ((appParams.has_ios ? 1 : 0) << 3)
+                + ((appParams.ios_enable_ulink ? 1 : 0) << 2) + ((appParams.has_android ? 1 : 0) << 1)
+                + (appParams.android_enable_applinks ? 1 : 0);
 
         appParams.ios_android_flag = ios_android_flag;
 
@@ -251,8 +247,8 @@ public class App {
         if (Strings.isNullOrEmpty(appParams.img_encoding)) {
             throw new LMException(LMExceptionFactor.LM_ILLEGAL_PARAM_VALUE, "img encoding is null");
         }
-//         String basePath = request.getScheme() + "://" + request.getServerName() + ":"
-//         + request.getServerPort() + "/i/app/images/";
+        // String basePath = request.getScheme() + "://" + request.getServerName() + ":"
+        // + request.getServerPort() + "/i/app/images/";
         String basePath = "https://www.linkedme.cc/i/app/images/";
         String imageName = appService.uploadImg(appParams, basePath);
         JsonBuilder resultJson = new JsonBuilder();
@@ -263,9 +259,7 @@ public class App {
 
     @Path("/images/{name}.{type}")
     @GET
-    public void showImg(@PathParam("name") String imageName,
-                        @PathParam("type") String type,
-                        @Context HttpServletResponse response)
+    public void showImg(@PathParam("name") String imageName, @PathParam("type") String type, @Context HttpServletResponse response)
             throws IOException {
         InputStream inputStream = null;
         OutputStream out = null;
