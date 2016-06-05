@@ -11,7 +11,7 @@
 
     <script src="<%=basePath %>/js/lib/jquery-2.1.4.min.js"></script>
     <script type="text/javascript">
-        var Params = {
+        var redirectInfo = {
             app_id: '${AppID}',
             app_name: '${AppName}',
             app_slogan: '${Download_msg}',
@@ -20,7 +20,7 @@
             package_name: '${Pkg}',
             uri_scheme: '${Scheme}',
             forward_url: '${Url}',
-            yyb_url: '${YYB_url}',
+            yyb_app_download: '${yyb_app_download}',
             logo_url: '${IconUrl}',
             host: '${Host}',
             click_id: '${Match_id}',
@@ -75,6 +75,9 @@
             },
             isForceUseScheme: function () {
                 return 'true' == '${isForceUseScheme}';
+            },
+            isQQAppDownloadAvailable: function () {
+                return 'true' == '${isQQAppDownloadAvailable}'
             }
         };
         var DEBUG = ${DEBUG};
@@ -86,7 +89,7 @@
             document.write("<script src='<%=basePath %>/js/cn/langconfig.js'><\/script>");
         }
     </script>
-    <script src="<%=basePath %>/js/linkedme-redirect.js"></script>
+    <script src="<%=basePath %>/js/linkedme-redirect-new.js"></script>
     <title></title>
     <style type="text/css">
         * {

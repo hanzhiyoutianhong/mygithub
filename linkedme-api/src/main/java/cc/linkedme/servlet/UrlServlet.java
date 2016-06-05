@@ -160,6 +160,7 @@ public class UrlServlet extends HttpServlet {
         String scheme = "";
         boolean isIOS = false;
         boolean isAndroid = false;
+        boolean qqAppDownloadAvailable = false;
         String countType;
         if (osFamily.equals("iOS")) {
             isIOS = true;
@@ -334,7 +335,7 @@ public class UrlServlet extends HttpServlet {
         request.setAttribute("Ios_major", osMajor);
         request.setAttribute("Redirect_url", "http://www.linkedme.cc"); // TODO
 
-        request.setAttribute("YYB_url", "http://a.app.qq.com/o/simple.jsp?pkgname=" + appInfo.getAndroid_package_name());
+        request.setAttribute("qq_app_download", "http://a.app.qq.com/o/simple.jsp?pkgname=" + appInfo.getAndroid_package_name());
         request.setAttribute("Scheme", scheme);
         request.setAttribute("Host", "linkedme"); // TODO
         request.setAttribute("AppInsStatus", 0); // TODO
@@ -351,6 +352,7 @@ public class UrlServlet extends HttpServlet {
         request.setAttribute("isFirefox", isFirefox);
         request.setAttribute("isChrome", isChrome);
         request.setAttribute("isUC", isUC);
+        request.setAttribute("isQQAppDownloadAvailable", qqAppDownloadAvailable );
 
         request.setAttribute("isUniversalLink", isUniversalLink);
         request.setAttribute("isDownloadDirectly", isDownloadDirectly);
@@ -366,6 +368,7 @@ public class UrlServlet extends HttpServlet {
 
         request.setAttribute("DEBUG", DEBUG);
 
+//=================================================================
         if ((!isWechat) && (!isWeibo) && isAndroid && isChrome && userAgentMajor >= 25) {
             String location = "intent://linkedme?click_id=" + uriArr[2] + "#Intent;scheme=" + scheme + ";package="
                     + appInfo.getAndroid_package_name() + ";S.browser_fallback_url=" + url + ";end";

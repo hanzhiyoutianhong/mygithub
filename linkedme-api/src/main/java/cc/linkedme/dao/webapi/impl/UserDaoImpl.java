@@ -3,6 +3,7 @@ package cc.linkedme.dao.webapi.impl;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -43,7 +44,8 @@ public class UserDaoImpl extends BaseDao implements UserDao {
     public int updateUserInfo(UserParams userParams) {
         int res = 0;
         TableChannel tableChannel = tableContainer.getTableChannel("userInfo", REGISTER, 0L, 0L);
-        String register_time = DateFormat.getDateTimeInstance().format(new Date());
+        SimpleDateFormat sdf = new SimpleDateFormat( "yyyy-MM-dd HH:mm:ss" );
+        String register_time = sdf.format(new Date());
         String last_login_time = register_time;
 
         try {
@@ -235,3 +237,4 @@ public class UserDaoImpl extends BaseDao implements UserDao {
         return res;
     }
 }
+

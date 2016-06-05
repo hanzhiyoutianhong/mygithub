@@ -20,6 +20,7 @@ import javax.ws.rs.core.MediaType;
 
 import cc.linkedme.commons.switcher.Switcher;
 import cc.linkedme.commons.switcher.SwitcherManagerFactoryLoader;
+import com.google.api.client.repackaged.com.google.common.base.Strings;
 import org.apache.commons.httpclient.HttpClient;
 import org.apache.commons.httpclient.HttpException;
 import org.apache.commons.httpclient.HttpMethod;

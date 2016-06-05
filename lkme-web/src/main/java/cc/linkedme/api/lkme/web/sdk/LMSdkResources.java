@@ -7,6 +7,7 @@ import cc.linkedme.commons.json.JsonBuilder;
 import cc.linkedme.commons.log.ApiLogger;
 import cc.linkedme.commons.util.Base62;
 import cc.linkedme.commons.util.Constants;
+import cc.linkedme.commons.util.UuidHelper;
 import cc.linkedme.data.model.AppListInfo;
 import cc.linkedme.data.model.params.*;
 
@@ -192,6 +193,18 @@ public class LMSdkResources {
             return "{\"ret\":\"true\"}";
         else
             return "{\"ret\":\"error\"}";
+    }
+
+    @Path("/webinit")
+    @GET
+    @Produces({MediaType.APPLICATION_JSON})
+    public String webInit(@QueryParam("lkme_key") String lkme_key) {
+        long identity_id = 3335758652112898L;
+        long session_id = 3347310671036418L;
+        JSONObject jsonObject = new JSONObject();
+        jsonObject.put( "identity_id", identity_id );
+        jsonObject.put( "session_id", session_id );
+        return jsonObject.toString();
     }
 
     @Deprecated
