@@ -52,7 +52,7 @@ public class Link {
     @Resource
     private AppService appService;
 
-    private static final String CREATE_URL_API = "https://lkme.cc/i/sdk/url";
+    private static final String CREATE_URL_API = "http://lkme.cc/i/sdk/url";
 
     @Path("/create")
     @POST

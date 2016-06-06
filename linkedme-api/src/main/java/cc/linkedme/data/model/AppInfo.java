@@ -268,6 +268,7 @@ public class AppInfo implements Serializable {
     }
 
     public String toJson() {
+        boolean is_yyb_available = ((ios_android_flag & 16) >> 4) == 1;
         boolean has_ios = ((ios_android_flag & 8) >> 3) == 1;
         boolean ios_enable_ulink = ((ios_android_flag & 4) >> 2) == 1;
         boolean has_android = ((ios_android_flag & 2) >> 1) == 1;
@@ -286,6 +287,7 @@ public class AppInfo implements Serializable {
 
         JsonBuilder android = new JsonBuilder();
         android.append("has_android", String.valueOf(has_android));
+        android.append("is_yyb_available", String.valueOf(is_yyb_available));
         android.append("android_not_url", android_not_url);
         android.append("android_uri_scheme", android_uri_scheme);
         android.append("android_search_option", android_search_option);

@@ -15,11 +15,9 @@ import org.springframework.stereotype.Component;
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import javax.ws.rs.FormParam;
-import javax.ws.rs.GET;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
-import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 import java.util.ArrayList;
@@ -36,46 +34,42 @@ public class LMSdkResources {
     @Resource
     private SignAuthService signAuthService;
 
-
-
     @Deprecated
     @Path("/install")
     @POST
     @Produces(MediaType.APPLICATION_JSON)
-    public String install(
-                              @FormParam("device_id") String device_id,
-                              @FormParam("device_type") int device_type,
-                              @FormParam("device_brand") String device_brand,
-                              @FormParam("device_model") String device_model,
-                              @FormParam("has_bluetooth") boolean has_bluetooth,
-                              @FormParam("has_nfc") boolean has_nfc,
-                              @FormParam("has_sim") boolean has_sim,
-                              @FormParam("os") String os,
-                              @FormParam("os_version") String os_version,
-                              @FormParam("screen_dpi") int screen_dpi,
-                              @FormParam("screen_height") int screen_height,
-                              @FormParam("screen_width") int screen_width,
-                              @FormParam("is_wifi") boolean is_wifi,
-                              @FormParam("is_referable") boolean is_referable,
-                              @FormParam("is_debug") boolean is_debug,
-                              @FormParam("google_advertising_id") String google_advertising_id,
-                              @FormParam("lat_val") boolean lat_val,
-                              @FormParam("carrier") String carrier,
-                              @FormParam("app_version") String app_version,
-                              @FormParam("external_intent_uri") String external_intent_uri,
-                              @FormParam("extra_uri_data") String extra_uri_data,
-                              @FormParam("spotlight_identifier") String spotlight_identifier,
-                              @FormParam("universal_link_url") String universal_link_url,
-                              @FormParam("sdk_update") int sdk_update,
-                              @FormParam("sdk_version") String sdk_version,
-                              @FormParam("ios_team_id") String ios_team_id,
-                              @FormParam("ios_bundle_id") String ios_bundle_id,
-                              @FormParam("retry_times") int retry_times,
-                              @FormParam("linkedme_key") String linkedme_key,
-                              @FormParam("timestamp") long timestamp,
-                              @FormParam("sign") String sign,
-                              @Context HttpServletRequest request) {
-
+    public String install(@FormParam("device_id") String device_id,
+                          @FormParam("device_type") int device_type,
+                          @FormParam("device_brand") String device_brand,
+                          @FormParam("device_model") String device_model,
+                          @FormParam("has_bluetooth") boolean has_bluetooth,
+                          @FormParam("has_nfc") boolean has_nfc,
+                          @FormParam("has_sim") boolean has_sim,
+                          @FormParam("os") String os,
+                          @FormParam("os_version") String os_version,
+                          @FormParam("screen_dpi") int screen_dpi,
+                          @FormParam("screen_height") int screen_height,
+                          @FormParam("screen_width") int screen_width,
+                          @FormParam("is_wifi") boolean is_wifi,
+                          @FormParam("is_referable") boolean is_referable,
+                          @FormParam("is_debug") boolean is_debug,
+                          @FormParam("google_advertising_id") String google_advertising_id,
+                          @FormParam("lat_val") boolean lat_val,
+                          @FormParam("carrier") String carrier,
+                          @FormParam("app_version") String app_version,
+                          @FormParam("external_intent_uri") String external_intent_uri,
+                          @FormParam("extra_uri_data") String extra_uri_data,
+                          @FormParam("spotlight_identifier") String spotlight_identifier,
+                          @FormParam("universal_link_url") String universal_link_url,
+                          @FormParam("sdk_update") int sdk_update,
+                          @FormParam("sdk_version") String sdk_version,
+                          @FormParam("ios_team_id") String ios_team_id,
+                          @FormParam("ios_bundle_id") String ios_bundle_id,
+                          @FormParam("retry_times") int retry_times,
+                          @FormParam("linkedme_key") String linkedme_key,
+                          @FormParam("timestamp") long timestamp,
+                          @FormParam("sign") String sign,
+                          @Context HttpServletRequest request) {
 
         InstallParams installParams = new InstallParams();
         installParams.device_id = device_id	;
@@ -199,10 +193,6 @@ public class LMSdkResources {
         return result;
     }
 
-
-
-
-
     @Path("/open_bak")
     @POST
     @Produces({MediaType.APPLICATION_JSON})
@@ -218,12 +208,10 @@ public class LMSdkResources {
         return result;
     }
 
-
     @Path("/url")
     @POST
     @Produces({MediaType.APPLICATION_JSON})
-    public String url_form(
-                           @FormParam("app_id") int app_id,
+    public String url_form(@FormParam("app_id") int app_id,
                            @FormParam("ios_use_default") boolean ios_use_default,
                            @FormParam("ios_custom_url") String ios_custom_url,
                            @FormParam("android_use_default") boolean android_use_default,
@@ -247,7 +235,6 @@ public class LMSdkResources {
                            @FormParam("timestamp") long timestamp,
                            @FormParam("sign") String sign,
                            @Context HttpServletRequest request) {
-
 
         UrlParams urlParams = new UrlParams();
         urlParams.app_id = app_id;
@@ -306,7 +293,6 @@ public class LMSdkResources {
 
         return resultJson.toString();
     }
-
 
     @Path("/url_bak")
     @POST

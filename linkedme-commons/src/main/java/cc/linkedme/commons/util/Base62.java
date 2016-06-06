@@ -70,7 +70,7 @@ public class Base62 {
 
     public static void main(String[] args) {
 
-        long num = 3373567987154946L;
+        long num = 3393978980368386L;
         
         System.out.println("Number: " + num);
 
@@ -87,7 +87,7 @@ public class Base62 {
         
         
         System.out.println("Base62 Decoding: " + Base62.decode("QqGJHVxR7"));
-        System.out.println("Base62 Decoding: " + Base62.encode( 10023L ));
+        System.out.println("Base62 Decoding: " + Base62.encode( 10024L ));
         System.out.println("Base62 Decoding: " + Base62.encode( num ));
     }
 

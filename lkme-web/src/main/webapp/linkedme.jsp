@@ -20,7 +20,7 @@
             package_name: '${Pkg}',
             uri_scheme: '${Scheme}',
             forward_url: '${Url}',
-            yyb_url: '${YYB_url}',
+            yyb_download_url: '${yyb_download_url}',
             logo_url: '${IconUrl}',
             host: '${Host}',
             click_id: '${Match_id}',
@@ -75,6 +75,9 @@
             },
             isForceUseScheme: function () {
                 return 'true' == '${isForceUseScheme}';
+            },
+            isYYBAvailable: function () {
+                return 'true' == '${isYYBAvailable}'
             }
         };
         var DEBUG = ${DEBUG};
@@ -86,7 +89,7 @@
             document.write("<script src='<%=basePath %>/js/cn/langconfig.js'><\/script>");
         }
     </script>
-    <script src="<%=basePath %>/js/linkedme-redirect.js"></script>
+    <script src="<%=basePath %>/js/linkedme-redirect-new.js"></script>
     <title></title>
     <style type="text/css">
         * {
