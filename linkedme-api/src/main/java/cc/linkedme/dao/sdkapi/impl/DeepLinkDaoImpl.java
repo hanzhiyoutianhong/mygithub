@@ -8,6 +8,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+import cc.linkedme.data.model.params.DashboardUrlParams;
 import org.springframework.dao.DataAccessException;
 import org.springframework.jdbc.core.RowMapper;
 
@@ -25,7 +26,6 @@ import cc.linkedme.data.dao.strategy.TableChannel;
 import cc.linkedme.data.dao.util.DaoUtil;
 import cc.linkedme.data.dao.util.JdbcTemplate;
 import cc.linkedme.data.model.DeepLink;
-import cc.linkedme.data.model.params.UrlParams;
 
 /**
  * Created by LinkedME01 on 16/3/8.
@@ -251,34 +251,34 @@ public class DeepLinkDaoImpl extends BaseDao implements DeepLinkDao {
         return result > 0;
     }
 
-    public boolean updateUrlInfo(UrlParams urlParams) {
-        long deepLinkId = urlParams.deeplink_id;
-        long appId = urlParams.app_id;
+    public boolean updateUrlInfo(DashboardUrlParams dashboardUrlParams) {
+        long deepLinkId = dashboardUrlParams.deeplink_id;
+        long appId = dashboardUrlParams.app_id;
         Date date = UuidHelper.getDateFromId(deepLinkId);
         TableChannel tableChannel = tableContainer.getTableChannel("deeplink", UPDATE_URL_INFO, appId, date);
         JdbcTemplate jdbcTemplate = tableChannel.getJdbcTemplate();
         int result = 0;
 
-        boolean ios_use_default = urlParams.ios_use_default;
-        String ios_custom_url = urlParams.ios_custom_url;
-        boolean android_use_default = urlParams.android_use_default;
-        String android_custom_url = urlParams.android_custom_url;
-        boolean desktop_use_default = urlParams.desktop_use_default;
-        String desktop_custom_url = urlParams.desktop_custom_url;
+        boolean ios_use_default = dashboardUrlParams.ios_use_default;
+        String ios_custom_url = dashboardUrlParams.ios_custom_url;
+        boolean android_use_default = dashboardUrlParams.android_use_default;
+        String android_custom_url = dashboardUrlParams.android_custom_url;
+        boolean desktop_use_default = dashboardUrlParams.desktop_use_default;
+        String desktop_custom_url = dashboardUrlParams.desktop_custom_url;
 
         Joiner joiner = Joiner.on(",");
-        String feature = joiner.join(urlParams.feature);
+        String feature = joiner.join(dashboardUrlParams.feature);
 
-        String campaign = joiner.join(urlParams.campaign);
+        String campaign = joiner.join(dashboardUrlParams.campaign);
 
-        String stage = joiner.join(urlParams.stage);
+        String stage = joiner.join(dashboardUrlParams.stage);
 
-        String channel = joiner.join(urlParams.channel);
+        String channel = joiner.join(dashboardUrlParams.channel);
 
-        String tags = joiner.join(urlParams.tags);
+        String tags = joiner.join(dashboardUrlParams.tags);
 
-        String source = urlParams.source;
-        String params = urlParams.params.toString();
+        String source = dashboardUrlParams.source;
+        String params = dashboardUrlParams.params.toString();
 
         Object[] values = new Object[] {appId, ios_use_default, ios_custom_url, android_use_default, android_custom_url,
                 desktop_use_default, desktop_custom_url, feature, campaign, stage, channel, tags, source, params, deepLinkId, appId};

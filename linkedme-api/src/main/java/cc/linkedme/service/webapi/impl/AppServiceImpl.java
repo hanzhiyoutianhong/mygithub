@@ -12,6 +12,8 @@ import java.util.Random;
 
 import javax.annotation.Resource;
 
+import cc.linkedme.data.model.params.DashboardUrlParams;
+import com.google.common.base.Strings;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang.ArrayUtils;
 
@@ -223,14 +225,15 @@ public class AppServiceImpl implements AppService {
 
             // TODO 去重,要区分第一次更新和后续更新
             // 更新apple-app-site-association(ios universe link)
-            if (appParams.ios_app_prefix != null && appParams.ios_bundle_id != null) {
+
+            if (!Strings.isNullOrEmpty(appParams.ios_app_prefix) && !Strings.isNullOrEmpty(appParams.ios_bundle_id)) {
                 String appID = appParams.ios_app_prefix + "." + appParams.ios_bundle_id;
                 String appIdentifier = Base62.encode(appParams.app_id);
                 updateAppleAssociationFile(appIdentifier, appID);
             }
 
             // 更新assetlinks.json文件(Android app link)
-            if (appParams.android_package_name != null && appParams.android_sha256_fingerprints != null) {
+            if (!Strings.isNullOrEmpty(appParams.android_package_name) && !Strings.isNullOrEmpty(appParams.android_sha256_fingerprints)) {
                 updateAppLinksFile(Long.toString(appParams.app_id), appParams.android_package_name, appParams.android_sha256_fingerprints);
             }
         }
@@ -245,7 +248,7 @@ public class AppServiceImpl implements AppService {
         return urlTagDao.configUrlTags(appParams);
     }
 
-    public void addUrlTags(UrlParams urlParams) {
+    public void addUrlTags(DashboardUrlParams urlParams) {
         AppParams appParams = new AppParams();
         appParams.app_id = urlParams.app_id;
         if (ArrayUtils.isNotEmpty(urlParams.feature)) {

@@ -2,6 +2,7 @@ package cc.linkedme.service;
 
 import javax.annotation.Resource;
 
+import cc.linkedme.data.model.params.DashboardUrlParams;
 import org.springframework.stereotype.Service;
 
 import com.esotericsoftware.kryo.KryoException;
@@ -159,10 +160,10 @@ public class DeepLinkService {
         return resultJson.toString();
     }
 
-    public boolean updateUrl(UrlParams urlParams) {
-        boolean result = deepLinkDao.updateUrlInfo(urlParams);
+    public boolean updateUrl(DashboardUrlParams dashboardUrlParams) {
+        boolean result = deepLinkDao.updateUrlInfo(dashboardUrlParams);
         if (result) {
-            deepLinkMemCache.delete(String.valueOf(urlParams.deeplink_id));
+            deepLinkMemCache.delete(String.valueOf(dashboardUrlParams.deeplink_id));
         }
         return result;
     }
