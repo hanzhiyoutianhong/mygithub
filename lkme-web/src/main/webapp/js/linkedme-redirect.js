@@ -25,8 +25,8 @@ function start() {
     if (Params.isWechat()) {
         DEBUG_ALERT("isWeChat");
         if (shouldGotoYYB()) {
-            DEBUG_ALERT(Params.yyb_url);
-            gotoUrl(Params.yyb_url);
+            DEBUG_ALERT(Params.yyb_download_url);
+            gotoUrl(Params.yyb_download_url);
         } else {
             if (Params.isIOS()) {
                 DEBUG_ALERT("isIOS");
@@ -39,8 +39,8 @@ function start() {
     } else if (Params.isQQ()) {
         DEBUG_ALERT("isQQ");
         if (shouldGotoYYB()) {
-            DEBUG_ALERT(Params.yyb_url);
-            gotoUrl(Params.yyb_url);
+            DEBUG_ALERT(Params.yyb_download_url);
+            gotoUrl(Params.yyb_download_url);
         } else {
             if (Params.isIOS()) {
                 DEBUG_ALERT("isIOS");
@@ -114,8 +114,8 @@ function start() {
         } else if (Params.isQQBrowser()) {
             DEBUG_ALERT("QQ browser");
             if (shouldGotoYYB()) {
-                DEBUG_ALERT(Params.yyb_url);
-                gotoUrl(Params.yyb_url);
+                DEBUG_ALERT(Params.yyb_download_url);
+                gotoUrl(Params.yyb_download_url);
             } else {
                 gotoCannotDeeplink();
             }
@@ -340,7 +340,7 @@ var visit_id = "visit_id",
         return Params.isAndroid() && (void 0 === Params.package_name || "" === Params.package_name)
     },
     shouldGotoYYB = function () {
-        return void 0 !== Params.yyb_url && "" !== Params.yyb_url && !Params.isIOS()
+        return void 0 !== Params.yyb_download_url && "" !== Params.yyb_download_url && !Params.isIOS()
     },
     lkmeAction = {
         recordIdUrl: "/i/js/record_id",

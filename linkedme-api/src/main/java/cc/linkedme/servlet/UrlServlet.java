@@ -335,7 +335,7 @@ public class UrlServlet extends HttpServlet {
         request.setAttribute("Ios_major", osMajor);
         request.setAttribute("Redirect_url", "http://www.linkedme.cc"); // TODO
 
-        request.setAttribute("yyb_app_download", "http://a.app.qq.com/o/simple.jsp?pkgname=" + appInfo.getAndroid_package_name());
+        request.setAttribute("yyb_download_url", "http://a.app.qq.com/o/simple.jsp?pkgname=" + appInfo.getAndroid_package_name());
         request.setAttribute("Scheme", scheme);
         request.setAttribute("Host", "linkedme"); // TODO
         request.setAttribute("AppInsStatus", 0); // TODO

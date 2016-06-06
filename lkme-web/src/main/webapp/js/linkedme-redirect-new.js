@@ -87,7 +87,7 @@ function start() {
         } else if (Params.isQQBrowser()) {
             DEBUG_ALERT("QQ browser");
             if (directToYYBAppDownload()) {
-                redirectUrl(Params.yyb_app_download);
+                redirectUrl(Params.yyb_download_url);
             } else {
                 gotoCannotDeeplink();
             }
@@ -277,7 +277,7 @@ var visit_id = "visit_id",
                 })
     },
     directToYYBAppDownload = function () {
-        return void 0 !== Params.yyb_app_download && "" !== Params.yyb_app_download && !Params.isIOS() && Params.isYYBAvailable()
+        return void 0 !== Params.yyb_download_url && "" !== Params.yyb_download_url && !Params.isIOS() && Params.isYYBAvailable()
     },
     redirectUrl = function (type) {
         DEBUG_ALERT(type);
@@ -290,7 +290,7 @@ var visit_id = "visit_id",
     redirectDst = function (app) {
         DEBUG_ALERT(app);
         if (directToYYBAppDownload()) {
-            redirectUrl(Params.yyb_app_download);
+            redirectUrl(Params.yyb_download_url);
         } else {
             if (Params.isIOS()) {
                 redirectTip("ios", "dst" + "-" + app + "-" + "android");

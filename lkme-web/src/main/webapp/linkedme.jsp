@@ -20,7 +20,7 @@
             package_name: '${Pkg}',
             uri_scheme: '${Scheme}',
             forward_url: '${Url}',
-            yyb_app_download: '${yyb_app_download}',
+            yyb_download_url: '${yyb_download_url}',
             logo_url: '${IconUrl}',
             host: '${Host}',
             click_id: '${Match_id}',
