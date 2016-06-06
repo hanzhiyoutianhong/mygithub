@@ -16,6 +16,12 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.springframework.context.ApplicationContext;
+import org.springframework.web.context.support.WebApplicationContextUtils;
+
+import com.google.api.client.repackaged.com.google.common.base.Strings;
+import com.google.common.base.Joiner;
+
 import cc.linkedme.commons.cookie.CookieHelper;
 import cc.linkedme.commons.log.ApiLogger;
 import cc.linkedme.commons.profile.ProfileType;
@@ -34,10 +40,6 @@ import cc.linkedme.data.model.AppInfo;
 import cc.linkedme.data.model.DeepLink;
 import cc.linkedme.service.DeepLinkService;
 import cc.linkedme.service.webapi.AppService;
-import com.google.api.client.repackaged.com.google.common.base.Strings;
-import com.google.common.base.Joiner;
-import org.springframework.context.ApplicationContext;
-import org.springframework.web.context.support.WebApplicationContextUtils;
 
 /**
  * Created by LinkedME01 on 16/4/1.
@@ -196,7 +198,7 @@ public class UrlServlet extends HttpServlet {
                 ApiLogger.biz(String.format("%s\t%s\t%s\t%s\t%s\t%s", request.getHeader("x-forwarded-for"), "click", countType, appId,
                         deepLinkId, userAgent));
                 response.sendRedirect(formatCustomUrl(deepLink.getIos_custom_url()));
-                //invoke ProfileUtil
+                // invoke ProfileUtil
                 recordClickIntoProfile(start, countType);
                 return;
             }
@@ -229,7 +231,7 @@ public class UrlServlet extends HttpServlet {
                 ApiLogger.biz(String.format("%s\t%s\t%s\t%s\t%s\t%s", request.getHeader("x-forwarded-for"), "click", countType, appId,
                         deepLinkId, userAgent));
                 response.sendRedirect(formatCustomUrl(deepLink.getAndroid_custom_url()));
-                //invoke ProfileUtil
+                // invoke ProfileUtil
                 recordClickIntoProfile(start, countType);
                 return;
             }
@@ -256,7 +258,7 @@ public class UrlServlet extends HttpServlet {
                     deepLinkId, userAgent));
 
             response.sendRedirect(location + "?code_url=" + codeUrl);
-            //invoke ProfileUtil
+            // invoke ProfileUtil
             recordClickIntoProfile(start, countType);
             return;
         }
@@ -313,7 +315,7 @@ public class UrlServlet extends HttpServlet {
         if (uaMap.containsKey("UC Browser")) {
             isUC = true;
         }
-        if(uaMap.containsKey("MIUI Browser")) {
+        if (uaMap.containsKey("MIUI Browser")) {
             isMIUI = true;
         }
 
@@ -356,7 +358,7 @@ public class UrlServlet extends HttpServlet {
         request.setAttribute("isFirefox", isFirefox);
         request.setAttribute("isChrome", isChrome);
         request.setAttribute("isUC", isUC);
-        request.setAttribute("isYYBAvailable", yybAvailable );
+        request.setAttribute("isYYBAvailable", yybAvailable);
 
         request.setAttribute("isUniversalLink", isUniversalLink);
         request.setAttribute("isDownloadDirectly", isDownloadDirectly);
@@ -384,7 +386,7 @@ public class UrlServlet extends HttpServlet {
         RequestDispatcher dispatcher = request.getRequestDispatcher("/linkedme.jsp");
         dispatcher.forward(request, response);
 
-        //invoke ProfileUtil
+        // invoke ProfileUtil
         recordClickIntoProfile(start, countType);
     }
 

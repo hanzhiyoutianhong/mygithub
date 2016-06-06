@@ -9,7 +9,7 @@ function DEBUG_ALERT(msg) {
 }
 
 function start() {
-    var uriVal = Params.uri_scheme + "://",
+    var uriVal = (Params.uri_scheme.indexOf("://") >= 0) ? Params.uri_scheme : (Params.uri_scheme + "://"),
         div_allow_me_deeplink = '<div style="background-image:url(' + baseImgPathLang + 'open_app.png);background-size: 100% 100%;width:100%;height:100%;">    <div style="text-align:center; width:100%; position:absolute; top:35%;">        <p id="textCountDown" style="font-size: 1em; color: #959595; padding: 6px 20px; -webkit-border-radius: 30px; -moz-border-radius: 30px; border-radius: 30px;"></p>    </div></div>';
     if (Params.isIOS() && (void 0 === Params.bundle_id || "" === Params.bundle_id))
         return goToNoAppDiv("ios");
@@ -350,14 +350,14 @@ var visit_id = "visit_id",
         },
         reportJSEvent: function (a, b) {
             var c = {
-                action: a,
-                kvs: {
-                    click_id: Params.click_id,
-                    destination: b,
-                    visit_id: Params.visit_id
-                }
-            },
-            d = JSON.stringify(c);
+                    action: a,
+                    kvs: {
+                        click_id: Params.click_id,
+                        destination: b,
+                        visit_id: Params.visit_id
+                    }
+                },
+                d = JSON.stringify(c);
             $.post(this.trackingUrl + Params.app_id, d,
                 function (a) {
                 }).error(function () {
