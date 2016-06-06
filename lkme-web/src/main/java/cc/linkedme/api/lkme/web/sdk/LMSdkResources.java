@@ -457,7 +457,7 @@ public class LMSdkResources {
     }
 
     private String formatLinkedmeKey(String linkedme_key) {
-        if (Strings.isNullOrEmpty(linkedme_key))
+        if (!Strings.isNullOrEmpty(linkedme_key))
             return linkedme_key.split("_")[linkedme_key.split("_").length - 1];
         else
             return linkedme_key;
