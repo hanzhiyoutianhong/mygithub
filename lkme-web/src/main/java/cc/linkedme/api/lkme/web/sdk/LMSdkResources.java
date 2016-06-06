@@ -456,9 +456,12 @@ public class LMSdkResources {
             return "{\"ret\":\"error\"}";
     }
 
-    private String formatLinkedmeKey(String linkedme_key) {
-        if (!Strings.isNullOrEmpty(linkedme_key))
-            return linkedme_key.split("_")[linkedme_key.split("_").length - 1];
+    public static String formatLinkedmeKey(String linkedme_key) {
+        if (!Strings.isNullOrEmpty(linkedme_key)) {
+            String[] linkedme_keys = linkedme_key.split("_");
+            int length = linkedme_keys.length;
+            return linkedme_keys[length - 1];
+        }
         else
             return linkedme_key;
     }
