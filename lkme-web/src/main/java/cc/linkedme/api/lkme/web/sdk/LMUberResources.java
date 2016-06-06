@@ -10,6 +10,7 @@ import cc.linkedme.auth.SignAuthService;
 import cc.linkedme.commons.exception.LMException;
 import cc.linkedme.commons.exception.LMExceptionFactor;
 import cc.linkedme.commons.log.ApiLogger;
+import cc.linkedme.commons.util.Util;
 import cc.linkedme.data.model.params.ClickBtnParams;
 import cc.linkedme.data.model.params.InitUberButtonParams;
 import cc.linkedme.uber.rides.service.UberService;
@@ -61,7 +62,7 @@ public class LMUberResources {
             initUberButtonParams.session_id = session_id;
             initUberButtonParams.sdk_version = sdk_version;
             initUberButtonParams.retry_times = retry_times;
-            initUberButtonParams.linkedme_key = LMSdkResources.formatLinkedmeKey(linkedme_key);
+            initUberButtonParams.linkedme_key = Util.formatLinkedmeKey(linkedme_key);
             initUberButtonParams.timestamp = timestamp;
             initUberButtonParams.sign = sign;
 
@@ -136,7 +137,7 @@ public class LMUberResources {
             clickBtnParams.session_id = session_id;
             clickBtnParams.sdk_version = sdk_version;
             clickBtnParams.retry_times = retry_times;
-            clickBtnParams.linkedme_key = LMSdkResources.formatLinkedmeKey(linkedme_key);
+            clickBtnParams.linkedme_key = Util.formatLinkedmeKey(linkedme_key);
             clickBtnParams.timestamp = timestamp;
             clickBtnParams.sign = sign;
 

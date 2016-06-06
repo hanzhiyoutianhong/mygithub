@@ -22,6 +22,7 @@ import java.util.regex.Pattern;
 import cc.linkedme.commons.exception.LMException;
 import cc.linkedme.commons.exception.LMExceptionFactor;
 import cc.linkedme.data.dao.util.DateDuration;
+import com.google.common.base.Strings;
 import org.apache.commons.lang.ArrayUtils;
 import org.apache.commons.lang.StringUtils;
 
@@ -936,6 +937,16 @@ public class Util {
         System.out.println(b);
         System.out.println(c);
         System.out.println(d);
+    }
+
+    public static String formatLinkedmeKey(String linkedme_key) {
+        if (!Strings.isNullOrEmpty(linkedme_key)) {
+            String[] linkedme_keys = linkedme_key.split("_");
+            int length = linkedme_keys.length;
+            return linkedme_keys[length - 1];
+        }
+        else
+            return linkedme_key;
     }
 
 }
