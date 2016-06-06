@@ -96,7 +96,7 @@ function start() {
             dstLocation = lkmeAction.destination.dstUCBrowser;
             var b = $("body").html();
             $("body").append(div_allow_me_deeplink);
-            var c = 6,
+            var c = 4,
                 d = function () {
                     c--,
                         $("#textCountDown").html(c),
@@ -228,7 +228,7 @@ var visit_id = "visit_id",
         child.border = "none";
         child.style.display = "none";
         child.src = dll;
-        document.body.appendChild(d);
+        document.body.appendChild(child);
         deepLinkLocation = dll;
         lkmeAction.reportJSEvent(lkmeAction.actionJSDeepLink, dll);
         var timeOut = setTimeout(function () {
