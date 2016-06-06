@@ -9,50 +9,50 @@ function DEBUG_ALERT(msg) {
 }
 
 function start() {
-    var uriVal = redirectInfo.uri_scheme + "://",
+    var uriVal = Params.uri_scheme + "://",
         div_allow_me_deeplink = '<div style="background-image:url(' + baseImgPathLang + 'open_app.png);background-size: 100% 100%;width:100%;height:100%;">    <div style="text-align:center; width:100%; position:absolute; top:35%;">        <p id="textCountDown" style="font-size: 1em; color: #959595; padding: 6px 20px; -webkit-border-radius: 30px; -moz-border-radius: 30px; border-radius: 30px;"></p>    </div></div>';
-    if (redirectInfo.isIOS() && (void 0 === redirectInfo.bundle_id || "" === redirectInfo.bundle_id))
+    if (Params.isIOS() && (void 0 === Params.bundle_id || "" === Params.bundle_id))
         return goToNoAppDiv("ios");
-    else if (redirectInfo.isAndroid() && (void 0 === redirectInfo.package_name || "" === redirectInfo.package_name))
+    else if (Params.isAndroid() && (void 0 === Params.package_name || "" === Params.package_name))
         return goToNoAppDiv("android");
 
-    if (redirectInfo.isWechat()) redirectDst("wechat");
-    else if (redirectInfo.isQQ()) redirectDst("qq");
-    else if (redirectInfo.isWeibo()) redirectDst("weibo");
-    else if (redirectInfo.isIOS()) {
+    if (Params.isWechat()) redirectDst("wechat");
+    else if (Params.isQQ()) redirectDst("qq");
+    else if (Params.isWeibo()) redirectDst("weibo");
+    else if (Params.isIOS()) {
         DEBUG_ALERT("isIOS");
-        if (redirectInfo.click_id && redirectInfo.click_id.length > 0) {
-            uriVal += "?click_id=" + redirectInfo.click_id;
+        if (Params.click_id && Params.click_id.length > 0) {
+            uriVal += "?click_id=" + Params.click_id;
         }
         DEBUG_ALERT(uriVal);
 
-        DEBUG_ALERT("iOS major is " + redirectInfo.ios_major);
+        DEBUG_ALERT("iOS major is " + Params.ios_major);
 
-        if (redirectInfo.ios_major < 9) {
+        if (Params.ios_major < 9) {
             iframeDeepLinkLaunch(uriVal, 2e3,
                 function () {
-                    gotoUrl(redirectInfo.forward_url);
+                    gotoUrl(Params.forward_url);
                 });
         } else {
-            if (redirectInfo.isUniversalLink()) {
+            if (Params.isUniversalLink()) {
                 DEBUG_ALERT("isUniversalLink = true");
                 if (cookieEnabled()) {
-                    DEBUG_ALERT("cookie Enabled; installStatus:" + redirectInfo.installStatus);
-                    return void gotoUrl(redirectInfo.forward_url);
+                    DEBUG_ALERT("cookie Enabled; installStatus:" + Params.installStatus);
+                    return void gotoUrl(Params.forward_url);
                 } else {
                     DEBUG && alert("cookie Not Enabled");
                     dstLocation = lkmeAction.destination.dstUniversalLinkLandingPage;
                     DEBUG && alert(dstLocation);
-                    div_goto_landingpage = div_goto_landingpage.replace(/{Bg_Url}/g, baseImgPathLang + "bg.png").replace(/{app_name}/g, redirectInfo.app_name).replace(/{logo_url}/g, redirectInfo.logo_url).replace(/{Download_msg}/g, redirectInfo.app_slogan).replace(/{Btn_landingpage_text}/g, gotoAppStore).replace(/{Border_width}/g, "3").replace(/{Element_type}/g, "button");
+                    div_goto_landingpage = div_goto_landingpage.replace(/{Bg_Url}/g, baseImgPathLang + "bg.png").replace(/{app_name}/g, Params.app_name).replace(/{logo_url}/g, Params.logo_url).replace(/{Download_msg}/g, Params.app_slogan).replace(/{Btn_landingpage_text}/g, gotoAppStore).replace(/{Border_width}/g, "3").replace(/{Element_type}/g, "button");
                     $("body").append(div_goto_landingpage);
                     lkmeAction.reportJSEvent(lkmeAction.actionJSDst, dstLocation);
                     $("#btnGotoLandingPage").click(function () {
                         lkmeAction.reportJSUserClickEvent(lkmeAction.actionJSUserClick, "gotoIosAppStore", "yes");
-                        gotoUrl(redirectInfo.forward_url);
+                        gotoUrl(Params.forward_url);
                     });
                     lkmeAction.recordId();
                 }
-            } else if (redirectInfo.isChrome()) {
+            } else if (Params.isChrome()) {
                 DEBUG_ALERT("isChrome");
                 deepLinkLocation = uriVal;
                 var c = null;
@@ -64,34 +64,34 @@ function start() {
                 } catch (d) {
                     DEBUG && alert("exception")
                 }
-                c ? window.close() : gotoUrl(redirectInfo.forward_url);
+                c ? window.close() : gotoUrl(Params.forward_url);
                 ;
             } else {
                 DEBUG_ALERT("is safari");
                 deeplinkLaunch(uriVal, 2500, function () {
-                    gotoUrl(redirectInfo.forward_url);
+                    gotoUrl(Params.forward_url);
                 });
             }
         }
-    } else if (redirectInfo.isAndroid()) {
+    } else if (Params.isAndroid()) {
         DEBUG_ALERT("isAndroid");
-        uriVal += redirectInfo.host;
-        if (redirectInfo.click_id && redirectInfo.click_id.length > 0) {
-            uriVal += "?click_id=" + redirectInfo.click_id;
+        uriVal += Params.host;
+        if (Params.click_id && Params.click_id.length > 0) {
+            uriVal += "?click_id=" + Params.click_id;
         }
         DEBUG_ALERT(uriVal);
-        if (redirectInfo.isCannotDeeplink()) {
+        if (Params.isCannotDeeplink()) {
             iframeDeepLinkLaunch(uriVal, 10e3, function () {
                 gotoCannotDeeplink();
             });
-        } else if (redirectInfo.isQQBrowser()) {
+        } else if (Params.isQQBrowser()) {
             DEBUG_ALERT("QQ browser");
             if (directToYYBAppDownload()) {
-                redirectUrl(redirectInfo.yyb_app_download);
+                redirectUrl(Params.yyb_app_download);
             } else {
                 gotoCannotDeeplink();
             }
-        } else if (redirectInfo.isUC()) {
+        } else if (Params.isUC()) {
             DEBUG_ALERT("UC browser");
             dstLocation = lkmeAction.destination.dstUCBrowser;
             var b = $("body").html();
@@ -107,14 +107,14 @@ function start() {
                             })) : setTimeout(d, 1e3)
                 };
             d()
-        } else if (redirectInfo.isChrome() && redirectInfo.chrome_major >= 25 && !redirectInfo.isForceUseScheme()) {
-            DEBUG_ALERT("chrome_major:" + redirectInfo.chrome_major);
-            var crUriVal = redirectInfo.host;
-            if (redirectInfo.click_id && redirectInfo.click_id.length > 0) {
-                crUriVal += "?click_id=" + redirectInfo.click_id;
+        } else if (Params.isChrome() && Params.chrome_major >= 25 && !Params.isForceUseScheme()) {
+            DEBUG_ALERT("chrome_major:" + Params.chrome_major);
+            var crUriVal = Params.host;
+            if (Params.click_id && Params.click_id.length > 0) {
+                crUriVal += "?click_id=" + Params.click_id;
             }
 
-            var intentVal = "intent://" + crUriVal + "#Intent;scheme=" + redirectInfo.uri_scheme + ";package=" + redirectInfo.package_name + ";S.browser_fallback_url=" + redirectInfo.forward_url + ";end";
+            var intentVal = "intent://" + crUriVal + "#Intent;scheme=" + Params.uri_scheme + ";package=" + Params.package_name + ";S.browser_fallback_url=" + Params.forward_url + ";end";
             DEBUG_ALERT("intentVal = " + intentVal);
             deeplinkLaunch(intentVal, 2e3, function () {
                 gotoAndroidNewInstall()
@@ -134,7 +134,7 @@ var visit_id = "visit_id",
     imgInfo = "<img src=" + baseImgPathLang + 'open_{mobile-os}_browser.png align="center" style="height: 100%;"/>',
     pageTemplate = '<div class="image-tip" width="100%" height="100%" style="position:relative;">    <div style="background-color:#ffffff;width:100%;height:100%;position:absolute; top:0;">        {img_tip}    </div>    <div style="text-align:center; width:100%; position:absolute; top:67%">        </div></div>',
     gotoTip = function (a, tag) {
-        $("body").append(pageTemplate.replace(/{img_tip}/g, imgInfo).replace(/{logo_url}/g, redirectInfo.logo_url).replace(/{mobile-os}/g, a));
+        $("body").append(pageTemplate.replace(/{img_tip}/g, imgInfo).replace(/{logo_url}/g, Params.logo_url).replace(/{mobile-os}/g, a));
         $(".image-tip").show();
         if (window.location.search.indexOf(visit_id) < 0) {
             tag = visit_id + "=" + Math.floor(1e6 * Math.random());
@@ -149,10 +149,10 @@ var visit_id = "visit_id",
     gotoCannotDeeplink = function () {
         ////记录identity_id和browser_fingerprint_id
         DEBUG && alert("cannot deeplink");
-        if (redirectInfo.isDownloadDirectly()) {
+        if (Params.isDownloadDirectly()) {
             $("body").append(div_goto_cannot_deeplink_with_download_btn), $("#btnGotoAndroidDownload").click(function () {
                 lkmeAction.reportJSUserClickEvent(lkmeAction.actionJSUserClick, "gotoAndroidDirectDownload", "yes");
-                gotoUrl(redirectInfo.forward_url);
+                gotoUrl(Params.forward_url);
             })
         } else {
             $("body").append(div_goto_cannot_deeplink_with_market_btn), $("#btnGotoAndroidMarket").click(function () {
@@ -166,28 +166,28 @@ var visit_id = "visit_id",
     },
     div_goto_landingpage = '<div style="background-image:url({Bg_Url});background-size: 100% 100%;width:100%;height:100%;">    <div style = "position:absolute; top:20%; width:100%; ">        <div style="text-align:center; width:100%; ">            <img id="appIcon" src={logo_url} style="width:22%;"/>        </div>        <div style="text-align:center; width:100%; margin-top:10px;">            <span id="appName" style="font-size: 1.5em; color: #959595; padding: 15px 10px;">                {app_name}            </span>        </div>    </div>    <div style="text-align:center; width:100%; position:absolute; top:56%;">        <span id="downloadTitle" style="font-size: 1em; color: #959595; padding: 15px 10px;">         </span>    </div>    <div style="text-align:center; width:100%; position:absolute; top:59%;">    </div>    <div style="text-align:center; width:100%; position:absolute; top:70%;">        <{Element_type} id="btnGotoLandingPage" style="background-color:#FFFFFF; border: {Border_width}px solid #959595; color: #959595; padding: 6px 20px; -webkit-border-radius: 30px; -moz-border-radius: 30px; border-radius: 30px;">{Btn_landingpage_text}</{Element_type}>    </div></div>',
     gotoAndroidNewInstall = function () {
-        if (redirectInfo.isDownloadDirectly()) {
+        if (Params.isDownloadDirectly()) {
             dstLocation = lkmeAction.destination.dstAndroidDirectDownloadLandingPage,
             DEBUG && alert(dstLocation);
-            div_goto_landingpage = div_goto_landingpage.replace(/{Bg_Url}/g, baseImgPathLang + "bg.png").replace(/{app_name}/g, redirectInfo.app_name).replace(/{logo_url}/g, redirectInfo.logo_url).replace(/{Download_msg}/g, redirectInfo.app_slogan).replace(/{Btn_landingpage_text}/g, downloadAPK).replace(/{Border_width}/g, "3").replace(/{Element_type}/g, "button");
+            div_goto_landingpage = div_goto_landingpage.replace(/{Bg_Url}/g, baseImgPathLang + "bg.png").replace(/{app_name}/g, Params.app_name).replace(/{logo_url}/g, Params.logo_url).replace(/{Download_msg}/g, Params.app_slogan).replace(/{Btn_landingpage_text}/g, downloadAPK).replace(/{Border_width}/g, "3").replace(/{Element_type}/g, "button");
             $("body").append(div_goto_landingpage);
             lkmeAction.reportJSEvent(lkmeAction.actionJSDst, dstLocation);
             $("#btnGotoLandingPage").click(function () {
                 lkmeAction.reportJSUserClickEvent(lkmeAction.actionJSUserClick, "gotoAndroidDirectDownload", "yes");
-                gotoUrl(redirectInfo.forward_url);
+                gotoUrl(Params.forward_url);
             });
             lkmeAction.recordId();
-        } else if (redirectInfo.isCannotGoMarket()) {
+        } else if (Params.isCannotGoMarket()) {
             dstLocation = lkmeAction.destination.dstAndroidCannotGoMarketLandingPage;
             DEBUG && alert(dstLocation);
-            div_goto_landingpage = div_goto_landingpage.replace(/{Bg_Url}/g, baseImgPathLang + "bg.png").replace(/{app_name}/g, redirectInfo.app_name).replace(/{logo_url}/g, redirectInfo.logo_url).replace(/{Btn_landingpage_text}/g, openStore).replace(/{Border_width}/g, "0").replace(/{Element_type}/g, "p");
+            div_goto_landingpage = div_goto_landingpage.replace(/{Bg_Url}/g, baseImgPathLang + "bg.png").replace(/{app_name}/g, Params.app_name).replace(/{logo_url}/g, Params.logo_url).replace(/{Btn_landingpage_text}/g, openStore).replace(/{Border_width}/g, "0").replace(/{Element_type}/g, "p");
             $("body").append(div_goto_landingpage);
             lkmeAction.reportJSEvent(lkmeAction.actionJSDst, dstLocation);
             lkmeAction.recordId();
-        } else if (redirectInfo.isCannotGetWinEvent() || redirectInfo.isUC()) {
+        } else if (Params.isCannotGetWinEvent() || Params.isUC()) {
             dstLocation = lkmeAction.destination.dstAndroidMarketLandingPage;
             DEBUG && alert(dstLocation);
-            div_goto_landingpage = div_goto_landingpage.replace(/{Bg_Url}/g, baseImgPathLang + "bg.png").replace(/{app_name}/g, redirectInfo.app_name).replace(/{logo_url}/g, redirectInfo.logo_url).replace(/{Btn_landingpage_text}/g, gotoAppStore).replace(/{Border_width}/g, "3").replace(/{Element_type}/g, "button");
+            div_goto_landingpage = div_goto_landingpage.replace(/{Bg_Url}/g, baseImgPathLang + "bg.png").replace(/{app_name}/g, Params.app_name).replace(/{logo_url}/g, Params.logo_url).replace(/{Btn_landingpage_text}/g, gotoAppStore).replace(/{Border_width}/g, "3").replace(/{Element_type}/g, "button");
             $("body").append(div_goto_landingpage);
             lkmeAction.reportJSEvent(lkmeAction.actionJSDst, dstLocation);
             $("#btnGotoLandingPage").click(function () {
@@ -201,7 +201,7 @@ var visit_id = "visit_id",
     },
     gotoAndroidMarket = function () {
         window.history.replaceState("Object", "Title", "0")
-        dstLocation = "market://details?id=" + redirectInfo.package_name;
+        dstLocation = "market://details?id=" + Params.package_name;
         DEBUG && alert(dstLocation);
         lkmeAction.reportJSEvent(lkmeAction.actionJSDst, dstLocation);
         window.location = dstLocation;
@@ -289,7 +289,7 @@ var visit_id = "visit_id",
                 })
     },
     directToYYBAppDownload = function () {
-        return void 0 !== redirectInfo.yyb_app_download && "" !== redirectInfo.yyb_app_download && !redirectInfo.isIOS() && redirectInfo.isYYBAppDownloadAvailable()
+        return void 0 !== Params.yyb_app_download && "" !== Params.yyb_app_download && !Params.isIOS() && Params.isYYBAppDownloadAvailable()
     },
     redirectUrl = function (type) {
         DEBUG_ALERT(type);
@@ -302,11 +302,11 @@ var visit_id = "visit_id",
     redirectDst = function (app) {
         DEBUG_ALERT(app);
         if (directToYYBAppDownload()) {
-            redirectUrl(redirectInfo.yyb_app_download);
+            redirectUrl(Params.yyb_app_download);
         } else {
-            if (redirectInfo.isIOS()) {
+            if (Params.isIOS()) {
                 redirectTip("ios", "dst" + "-" + app + "-" + "android");
-            } else if (redirectInfo.isAndroid()) {
+            } else if (Params.isAndroid()) {
                 redirectTip("android", "dst" + "-" + app + "-" + "android");
             }
         }
@@ -344,10 +344,10 @@ var visit_id = "visit_id",
 
         recordId: function () {
             var dataJson = {
-                identity_id: redirectInfo.identity_id,
-                is_valid_identityid: redirectInfo.is_valid_identity,
-                browser_fingerprint_id: redirectInfo.browser_fingerprint_id,
-                deeplink_id: redirectInfo.deeplink_id
+                identity_id: Params.identity_id,
+                is_valid_identityid: Params.is_valid_identity,
+                browser_fingerprint_id: Params.browser_fingerprint_id,
+                deeplink_id: Params.deeplink_id
             };
             $.ajax({
                 method: "POST",
@@ -364,13 +364,13 @@ var visit_id = "visit_id",
             var c = {
                 action: a,
                 kvs: {
-                    click_id: redirectInfo.click_id,
+                    click_id: Params.click_id,
                     destination: b,
-                    visit_id: redirectInfo.visit_id
+                    visit_id: Params.visit_id
                 }
             },
             d = JSON.stringify(c);
-            $.post(this.trackingUrl + redirectInfo.app_id, d,
+            $.post(this.trackingUrl + Params.app_id, d,
                 function (a) {
                 }).error(function () {
             })
@@ -379,14 +379,14 @@ var visit_id = "visit_id",
             var d = {
                     action: a,
                     kvs: {
-                        click_id: redirectInfo.click_id,
+                        click_id: Params.click_id,
                         user_btn: b,
                         user_choice: c,
-                        visit_id: redirectInfo.visit_id
+                        visit_id: Params.visit_id
                     }
                 },
                 e = JSON.stringify(d);
-            $.post(this.trackingUrl + redirectInfo.app_id, e,
+            $.post(this.trackingUrl + Params.app_id, e,
                 function (a) {
                 }).error(function () {
             })

@@ -11,7 +11,7 @@
 
     <script src="<%=basePath %>/js/lib/jquery-2.1.4.min.js"></script>
     <script type="text/javascript">
-        var redirectInfo = {
+        var Params = {
             app_id: '${AppID}',
             app_name: '${AppName}',
             app_slogan: '${Download_msg}',
