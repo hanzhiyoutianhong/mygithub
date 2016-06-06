@@ -69,7 +69,9 @@ public class App {
     @Path("/get_apps")
     @GET
     @Produces(MediaType.APPLICATION_JSON)
-    public String getApps(@QueryParam("user_id") long user_id, @QueryParam("token") String token, @Context HttpServletRequest request) {
+    public String getApps(@QueryParam("user_id") long user_id,
+                          @QueryParam("token") String token,
+                          @Context HttpServletRequest request) {
         if (user_id <= 0) {
             throw new LMException(LMExceptionFactor.LM_ILLEGAL_PARAM_VALUE, "invalid user id");
         }
@@ -109,8 +111,11 @@ public class App {
     @Path("/query_app")
     @GET
     @Produces(MediaType.APPLICATION_JSON)
-    public String queryApp(@QueryParam("app_id") long app_id, @QueryParam("user_id") long user_id, @QueryParam("type") String type,
-            @QueryParam("token") String token, @Context HttpServletRequest request) {
+    public String queryApp(@QueryParam("app_id") long app_id,
+                           @QueryParam("user_id") long user_id,
+                           @QueryParam("type") String type,
+                           @QueryParam("token") String token,
+                           @Context HttpServletRequest request) {
 
         AppParams appParams = new AppParams();
         appParams.app_id = app_id;
@@ -259,7 +264,9 @@ public class App {
 
     @Path("/images/{name}.{type}")
     @GET
-    public void showImg(@PathParam("name") String imageName, @PathParam("type") String type, @Context HttpServletResponse response)
+    public void showImg(@PathParam("name") String imageName,
+                        @PathParam("type") String type,
+                        @Context HttpServletResponse response)
             throws IOException {
         InputStream inputStream = null;
         OutputStream out = null;
