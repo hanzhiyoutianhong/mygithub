@@ -61,7 +61,7 @@ function start() {
         }
     } else if (Params.isIOS()) {
         DEBUG_ALERT("isIOS");
-        var a = Params.uri_scheme + "://";
+        var a = (Params.uri_scheme.indexOf("://") >= 0) ? Params.uri_scheme : (Params.uri_scheme + "://");
         if (Params.click_id && Params.click_id.length > 0) {
             a += "?click_id=" + Params.click_id;
         }
@@ -102,7 +102,8 @@ function start() {
         }
     } else if (Params.isAndroid()) {
         DEBUG_ALERT("isAndroid");
-        a = Params.uri_scheme + "://" + Params.host;
+        a = (Params.uri_scheme.indexOf("://") >= 0) ? Params.uri_scheme : (Params.uri_scheme + "://");
+        a += Params.host;
         if (Params.click_id && Params.click_id.length > 0) {
             a += "?click_id=" + Params.click_id;
         }
