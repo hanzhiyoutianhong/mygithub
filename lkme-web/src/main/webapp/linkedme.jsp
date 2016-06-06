@@ -76,8 +76,8 @@
             isForceUseScheme: function () {
                 return 'true' == '${isForceUseScheme}';
             },
-            isYYBAppDownloadAvailable: function () {
-                return 'true' == '${isYYBAppDownloadAvailable}'
+            isYYBAvailable: function () {
+                return 'true' == '${isYYBAvailable}'
             }
         };
         var DEBUG = ${DEBUG};

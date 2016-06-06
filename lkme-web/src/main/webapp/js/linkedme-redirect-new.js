@@ -289,7 +289,7 @@ var visit_id = "visit_id",
                 })
     },
     directToYYBAppDownload = function () {
-        return void 0 !== Params.yyb_app_download && "" !== Params.yyb_app_download && !Params.isIOS() && Params.isYYBAppDownloadAvailable()
+        return void 0 !== Params.yyb_app_download && "" !== Params.yyb_app_download && !Params.isIOS() && Params.isYYBAvailable()
     },
     redirectUrl = function (type) {
         DEBUG_ALERT(type);
