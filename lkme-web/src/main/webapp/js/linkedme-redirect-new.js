@@ -100,7 +100,7 @@ function start() {
                 d = function () {
                     c--,
                         $("#textCountDown").html(c),
-                        0 === c ? ($("#textCountDown").html(""), iframeDeepLinkLaunch(uriVal, 10e3,
+                        0 === c ? ($("#textCountDown").html(""), iframeDeepLinkLaunch(uriVal, 1e3,
                             function () {
                                 $("body").html(b),
                                     gotoAndroidNewInstall()
