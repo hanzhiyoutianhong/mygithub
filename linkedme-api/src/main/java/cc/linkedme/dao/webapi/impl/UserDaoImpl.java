@@ -2,7 +2,6 @@ package cc.linkedme.dao.webapi.impl;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -237,3 +236,4 @@ public class UserDaoImpl extends BaseDao implements UserDao {
         return res;
     }
 }
+

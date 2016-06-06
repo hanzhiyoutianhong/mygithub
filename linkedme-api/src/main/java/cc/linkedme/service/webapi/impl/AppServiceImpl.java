@@ -34,7 +34,6 @@ import cc.linkedme.dao.webapi.AppDao;
 import cc.linkedme.data.model.AppInfo;
 import cc.linkedme.data.model.UrlTagsInfo;
 import cc.linkedme.data.model.params.AppParams;
-import cc.linkedme.data.model.params.UrlParams;
 import cc.linkedme.service.webapi.AppService;
 import net.sf.json.JSONArray;
 import net.sf.json.JSONObject;

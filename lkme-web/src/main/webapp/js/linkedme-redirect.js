@@ -25,8 +25,8 @@ function start() {
     if (Params.isWechat()) {
         DEBUG_ALERT("isWeChat");
         if (shouldGotoYYB()) {
-            DEBUG_ALERT(Params.yyb_url);
-            gotoUrl(Params.yyb_url);
+            DEBUG_ALERT(Params.yyb_download_url);
+            gotoUrl(Params.yyb_download_url);
         } else {
             if (Params.isIOS()) {
                 DEBUG_ALERT("isIOS");
@@ -39,8 +39,8 @@ function start() {
     } else if (Params.isQQ()) {
         DEBUG_ALERT("isQQ");
         if (shouldGotoYYB()) {
-            DEBUG_ALERT(Params.yyb_url);
-            gotoUrl(Params.yyb_url);
+            DEBUG_ALERT(Params.yyb_download_url);
+            gotoUrl(Params.yyb_download_url);
         } else {
             if (Params.isIOS()) {
                 DEBUG_ALERT("isIOS");
@@ -114,26 +114,14 @@ function start() {
         } else if (Params.isQQBrowser()) {
             DEBUG_ALERT("QQ browser");
             if (shouldGotoYYB()) {
-                DEBUG_ALERT(Params.yyb_url);
-                gotoUrl(Params.yyb_url);
+                DEBUG_ALERT(Params.yyb_download_url);
+                gotoUrl(Params.yyb_download_url);
             } else {
                 gotoCannotDeeplink();
             }
         } else if (Params.isUC()) {
             DEBUG_ALERT("UC browser");
             gotoUC(a);
-        } else if (Params.isChrome() && Params.chrome_major >= 25 && !Params.isForceUseScheme()) {
-            DEBUG_ALERT("chrome_major:" + Params.chrome_major);
-            var b = Params.host;
-            if (Params.click_id && Params.click_id.length > 0) {
-                b += "?click_id=" + Params.click_id;
-            }
-            var c = Params.package_name;
-            var d = "intent://" + b + "#Intent;scheme=" + Params.uri_scheme + ";package=" + c + ";S.browser_fallback_url=" + Params.forward_url + ";end";
-            DEBUG_ALERT("d=" + d);
-            deeplinkLaunch(d, 2e3, function () {
-                gotoAndroidNewInstall()
-            })
         } else {
             DEBUG_ALERT("default browser");
             iframeDeepLinkLaunch(a, 2e3, function () {
@@ -352,7 +340,7 @@ var visit_id = "visit_id",
         return Params.isAndroid() && (void 0 === Params.package_name || "" === Params.package_name)
     },
     shouldGotoYYB = function () {
-        return void 0 !== Params.yyb_url && "" !== Params.yyb_url && !Params.isIOS()
+        return void 0 !== Params.yyb_download_url && "" !== Params.yyb_download_url && !Params.isIOS() && Params.isYYBAvailable()
     },
     lkmeAction = {
         recordIdUrl: "/i/js/record_id",

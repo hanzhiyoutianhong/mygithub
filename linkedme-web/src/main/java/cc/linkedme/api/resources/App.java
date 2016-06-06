@@ -50,6 +50,7 @@ public class App {
     @Path("/create_app")
     @POST
     @Produces(MediaType.APPLICATION_JSON)
+
     public String createApp(AppParams appParam, @Context HttpServletRequest request) {
         if (appParam.user_id <= 0) {
             throw new LMException(LMExceptionFactor.LM_ILLEGAL_PARAM_VALUE, "invalid user id");
@@ -162,8 +163,10 @@ public class App {
         appParams.use_default_landing_page = desktopJson.getBoolean("use_default_landing_page");
         appParams.custom_landing_page = desktopJson.getString("custom_landing_page");
 
-        int ios_android_flag = ((appParams.has_ios ? 1 : 0) << 3) + ((appParams.ios_enable_ulink ? 1 : 0) << 2)
-                + ((appParams.has_android ? 1 : 0) << 1) + (appParams.android_enable_applinks ? 1 : 0);
+
+        int ios_android_flag = ((appParams.is_yyb_available ? 1 : 0) << 4) + ((appParams.has_ios ? 1 : 0) << 3)
+                + ((appParams.ios_enable_ulink ? 1 : 0) << 2) + ((appParams.has_android ? 1 : 0) << 1)
+                + (appParams.android_enable_applinks ? 1 : 0);
 
         appParams.ios_android_flag = ios_android_flag;
 
@@ -249,8 +252,8 @@ public class App {
         if (Strings.isNullOrEmpty(appParams.img_encoding)) {
             throw new LMException(LMExceptionFactor.LM_ILLEGAL_PARAM_VALUE, "img encoding is null");
         }
-//         String basePath = request.getScheme() + "://" + request.getServerName() + ":"
-//         + request.getServerPort() + "/i/app/images/";
+        // String basePath = request.getScheme() + "://" + request.getServerName() + ":"
+        // + request.getServerPort() + "/i/app/images/";
         String basePath = "https://www.linkedme.cc/i/app/images/";
         String imageName = appService.uploadImg(appParams, basePath);
         JsonBuilder resultJson = new JsonBuilder();

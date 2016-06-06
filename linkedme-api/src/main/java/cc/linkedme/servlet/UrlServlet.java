@@ -160,6 +160,7 @@ public class UrlServlet extends HttpServlet {
         String scheme = "";
         boolean isIOS = false;
         boolean isAndroid = false;
+        boolean yybAvailable = false;
         String countType;
         if (osFamily.equals("iOS")) {
             isIOS = true;
@@ -334,7 +335,7 @@ public class UrlServlet extends HttpServlet {
         request.setAttribute("Ios_major", osMajor);
         request.setAttribute("Redirect_url", "http://www.linkedme.cc"); // TODO
 
-        request.setAttribute("YYB_url", "http://a.app.qq.com/o/simple.jsp?pkgname=" + appInfo.getAndroid_package_name());
+        request.setAttribute("yyb_download_url", "http://a.app.qq.com/o/simple.jsp?pkgname=" + appInfo.getAndroid_package_name());
         request.setAttribute("Scheme", scheme);
         request.setAttribute("Host", "linkedme"); // TODO
         request.setAttribute("AppInsStatus", 0); // TODO
@@ -351,6 +352,7 @@ public class UrlServlet extends HttpServlet {
         request.setAttribute("isFirefox", isFirefox);
         request.setAttribute("isChrome", isChrome);
         request.setAttribute("isUC", isUC);
+        request.setAttribute("isYYBAvailable", yybAvailable );
 
         request.setAttribute("isUniversalLink", isUniversalLink);
         request.setAttribute("isDownloadDirectly", isDownloadDirectly);
