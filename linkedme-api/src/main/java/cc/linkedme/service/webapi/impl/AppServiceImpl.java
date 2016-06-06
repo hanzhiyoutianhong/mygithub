@@ -12,11 +12,12 @@ import java.util.Random;
 
 import javax.annotation.Resource;
 
+import cc.linkedme.data.model.params.DashboardUrlParams;
+import com.google.common.base.Strings;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang.ArrayUtils;
 
 import com.esotericsoftware.kryo.KryoException;
-import com.google.api.client.repackaged.com.google.common.base.Strings;
 import com.google.gson.Gson;
 
 import cc.linkedme.commons.exception.LMException;
@@ -33,7 +34,6 @@ import cc.linkedme.dao.webapi.AppDao;
 import cc.linkedme.data.model.AppInfo;
 import cc.linkedme.data.model.UrlTagsInfo;
 import cc.linkedme.data.model.params.AppParams;
-import cc.linkedme.data.model.params.UrlParams;
 import cc.linkedme.service.webapi.AppService;
 import net.sf.json.JSONArray;
 import net.sf.json.JSONObject;
@@ -224,9 +224,7 @@ public class AppServiceImpl implements AppService {
 
             // TODO 去重,要区分第一次更新和后续更新
             // 更新apple-app-site-association(ios universe link)
-            // appParams.ios_app_prefix != null && appParams.ios_bundle_id != null &&
-            // Strings.isNullOrEmpty()"" != appParams.ios_app_prefix && "" !=
-            // appParams.ios_bundle_id
+
             if (!Strings.isNullOrEmpty(appParams.ios_app_prefix) && !Strings.isNullOrEmpty(appParams.ios_bundle_id)) {
                 String appID = appParams.ios_app_prefix + "." + appParams.ios_bundle_id;
                 String appIdentifier = Base62.encode(appParams.app_id);
@@ -249,7 +247,7 @@ public class AppServiceImpl implements AppService {
         return urlTagDao.configUrlTags(appParams);
     }
 
-    public void addUrlTags(UrlParams urlParams) {
+    public void addUrlTags(DashboardUrlParams urlParams) {
         AppParams appParams = new AppParams();
         appParams.app_id = urlParams.app_id;
         if (ArrayUtils.isNotEmpty(urlParams.feature)) {

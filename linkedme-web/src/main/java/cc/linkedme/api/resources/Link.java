@@ -2,21 +2,24 @@ package cc.linkedme.api.resources;
 
 import cc.linkedme.commons.exception.LMException;
 import cc.linkedme.commons.exception.LMExceptionFactor;
-import cc.linkedme.commons.util.ArrayUtil;
-import cc.linkedme.data.model.params.AppParams;
+import cc.linkedme.data.model.params.DashboardUrlParams;
 import cc.linkedme.data.model.params.SummaryDeepLinkParams;
 import cc.linkedme.data.model.params.UrlParams;
 import cc.linkedme.service.DeepLinkService;
 import cc.linkedme.service.webapi.AppService;
 import cc.linkedme.service.webapi.SummaryService;
 import com.google.api.client.repackaged.com.google.common.base.Strings;
+import com.google.common.base.Joiner;
 import net.sf.json.JSONObject;
-import org.apache.commons.httpclient.HttpClient;
-import org.apache.commons.httpclient.HttpException;
-import org.apache.commons.httpclient.methods.PostMethod;
-import org.apache.commons.httpclient.methods.RequestEntity;
-import org.apache.commons.httpclient.methods.StringRequestEntity;
-import org.apache.commons.lang.ArrayUtils;
+import org.apache.http.NameValuePair;
+import org.apache.http.ParseException;
+import org.apache.http.client.HttpClient;
+import org.apache.http.client.entity.UrlEncodedFormEntity;
+import org.apache.http.client.methods.HttpPost;
+import org.apache.http.impl.client.DefaultHttpClient;
+import org.apache.http.message.BasicNameValuePair;
+import org.apache.http.protocol.HTTP;
+import org.apache.http.util.EntityUtils;
 import org.springframework.stereotype.Component;
 
 import javax.annotation.Resource;
@@ -29,6 +32,9 @@ import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 import java.io.IOException;
+import java.io.UnsupportedEncodingException;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Created by LinkedME01 on 16/3/30.
@@ -47,32 +53,49 @@ public class Link {
     private AppService appService;
 
     private static final String CREATE_URL_API = "https://lkme.cc/i/sdk/url";
-    //private static final String CREATE_URL_API = "192.168.0.109/i/sdk/url";
 
     @Path("/create")
     @POST
     @Produces({MediaType.APPLICATION_JSON})
-    public String createUrl(UrlParams urlParams, @Context HttpServletRequest request) {
-        HttpClient client = new HttpClient();
-        PostMethod postMethod = new PostMethod(CREATE_URL_API);
+    public String createUrl(DashboardUrlParams dashboardUrlParams, @Context HttpServletRequest request) {
+        List<NameValuePair> params = new ArrayList<NameValuePair>();
+        params.add(new BasicNameValuePair("app_id", String.valueOf(dashboardUrlParams.app_id)));
+        params.add(new BasicNameValuePair("ios_use_default", String.valueOf(dashboardUrlParams.ios_use_default)));
+        params.add(new BasicNameValuePair("ios_custom_url", String.valueOf(dashboardUrlParams.ios_custom_url)));
+        params.add(new BasicNameValuePair("android_use_default", String.valueOf(dashboardUrlParams.android_use_default)));
+        params.add(new BasicNameValuePair("android_custom_url", String.valueOf(dashboardUrlParams.android_custom_url)));
+        params.add(new BasicNameValuePair("desktop_use_default", String.valueOf(dashboardUrlParams.desktop_use_default)));
+        params.add(new BasicNameValuePair("desktop_custom_url", String.valueOf(dashboardUrlParams.desktop_custom_url)));
+
+        Joiner joiner = Joiner.on("&").skipNulls();
+        params.add(new BasicNameValuePair("feature", joiner.join(dashboardUrlParams.feature)));
+        params.add(new BasicNameValuePair("campaign", joiner.join(dashboardUrlParams.campaign)));
+        params.add(new BasicNameValuePair("stage", joiner.join(dashboardUrlParams.stage)));
+        params.add(new BasicNameValuePair("channel", joiner.join(dashboardUrlParams.channel)));
+        params.add(new BasicNameValuePair("tags", joiner.join(dashboardUrlParams.tags)));
+        params.add(new BasicNameValuePair("source", dashboardUrlParams.source));
+        params.add(new BasicNameValuePair("params", dashboardUrlParams.params.toString()));
+
+        HttpClient client = new DefaultHttpClient();
         String result = null;
+        HttpPost postMethod = new HttpPost(CREATE_URL_API);
         try {
-            RequestEntity se = new StringRequestEntity(JSONObject.fromObject(urlParams).toString(), "application/json", "UTF-8");
-            postMethod.setRequestEntity(se);
-            client.executeMethod(postMethod);
-            result = new String(postMethod.getResponseBodyAsString().getBytes("utf-8"));
-        } catch (HttpException e) {
+            postMethod.setEntity(new UrlEncodedFormEntity(params, HTTP.UTF_8));
+            result = EntityUtils.toString(client.execute(postMethod).getEntity(), HTTP.UTF_8);
+        } catch (UnsupportedEncodingException e) {
+            e.printStackTrace();
+        } catch (ParseException e) {
             e.printStackTrace();
         } catch (IOException e) {
             e.printStackTrace();
         }
-        postMethod.releaseConnection();
-        if(Strings.isNullOrEmpty(result)) {
+        client.getConnectionManager().shutdown();
+        if (Strings.isNullOrEmpty(result)) {
             throw new LMException(LMExceptionFactor.LM_SYS_ERROR, "create deeplink failed!");
         }
 
         // 把短链的tags添加到库里
-        appService.addUrlTags(urlParams);
+        appService.addUrlTags(dashboardUrlParams);
 
         return result;
     }
@@ -107,7 +130,7 @@ public class Link {
     @Path("delete")
     @POST
     @Produces(MediaType.APPLICATION_JSON)
-    public String deleteUrl(UrlParams urlParams, @Context HttpServletRequest request) {
+    public String deleteUrl(DashboardUrlParams dashboardUrlParams, @Context HttpServletRequest request) {
 //        if (urlParams.deeplink_id <= 0) {
 //            throw new LMException(LMExceptionFactor.LM_ILLEGAL_PARAM_VALUE, "deeplink_id <= 0");
 //        }
@@ -115,7 +138,7 @@ public class Link {
 //            throw new LMException(LMExceptionFactor.LM_ILLEGAL_PARAM_VALUE, "app_id <= 0");
 //        }
 
-        boolean result = deepLinkService.deleteDeepLink(urlParams.deeplink_ids, urlParams.app_id);
+        boolean result = deepLinkService.deleteDeepLink(dashboardUrlParams.deeplink_ids, dashboardUrlParams.app_id);
         return "{ \"ret\" : " + result + "}";
     }
 
@@ -146,19 +169,19 @@ public class Link {
     @Path("update")
     @POST
     @Produces(MediaType.APPLICATION_JSON)
-    public String urlUpdate(UrlParams urlParams, @Context HttpServletRequest request) {// 忽略type和link_label
-        if (urlParams.deeplink_id <= 0) {
+    public String urlUpdate(DashboardUrlParams dashboardUrlParams, @Context HttpServletRequest request) {// 忽略type和link_label
+        if (dashboardUrlParams.deeplink_id <= 0) {
             throw new LMException(LMExceptionFactor.LM_ILLEGAL_PARAM_VALUE, "deeplink_id <= 0");
         }
-        if (urlParams.app_id <= 0) {
+        if (dashboardUrlParams.app_id <= 0) {
             throw new LMException(LMExceptionFactor.LM_ILLEGAL_PARAM_VALUE, "app_id <= 0");
         }
 
-        boolean res = deepLinkService.updateUrl(urlParams);
+        boolean res = deepLinkService.updateUrl(dashboardUrlParams);
 
         if (res) {
             // 把短链的tags添加到库里
-            appService.addUrlTags(urlParams);
+            appService.addUrlTags(dashboardUrlParams);
         }
         JSONObject jsonObject = new JSONObject();
         jsonObject.put("ret", res);
