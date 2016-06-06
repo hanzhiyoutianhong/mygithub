@@ -70,7 +70,7 @@ public class LMSdkResources {
                           @FormParam("timestamp") long timestamp,
                           @FormParam("sign") String sign,
                           @Context HttpServletRequest request) {
-        
+
         InstallParams installParams = new InstallParams();
         installParams.device_id = device_id	;
         installParams.device_type = device_type;
@@ -211,9 +211,7 @@ public class LMSdkResources {
     @Path("/url")
     @POST
     @Produces({MediaType.APPLICATION_JSON})
-    public String url_form(
-
-                           @FormParam("app_id") int app_id,
+    public String url_form(@FormParam("app_id") int app_id,
                            @FormParam("ios_use_default") boolean ios_use_default,
                            @FormParam("ios_custom_url") String ios_custom_url,
                            @FormParam("android_use_default") boolean android_use_default,
