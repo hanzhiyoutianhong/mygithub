@@ -5,6 +5,7 @@ import cc.linkedme.commons.exception.LMException;
 import cc.linkedme.commons.exception.LMExceptionFactor;
 import cc.linkedme.commons.log.ApiLogger;
 import cc.linkedme.commons.util.Base62;
+import cc.linkedme.commons.util.Util;
 import cc.linkedme.data.model.AppListInfo;
 import cc.linkedme.data.model.params.*;
 import cc.linkedme.service.sdkapi.AppListService;
@@ -100,9 +101,9 @@ public class LMSdkResources {
         installParams.ios_team_id = ios_team_id	;
         installParams.ios_bundle_id = ios_bundle_id	;
         installParams.retry_times = retry_times;
-        installParams.linkedme_key = linkedme_key;
+        installParams.linkedme_key = Util.formatLinkedmeKey(linkedme_key);
         installParams.timestamp = timestamp ;
-        installParams.sign= sign                  ;
+        installParams.sign= sign;
 
 
         if (Strings.isNullOrEmpty(installParams.linkedme_key)) {
@@ -178,7 +179,7 @@ public class LMSdkResources {
         openParams.lat_val = lat_val;
         openParams.sdk_version = sdk_version;
         openParams.retry_times = retry_times;
-        openParams.linkedme_key = linkedme_key;
+        openParams.linkedme_key = Util.formatLinkedmeKey(linkedme_key);
         openParams.timestamp = timestamp;
         openParams.sign = sign;
 
@@ -262,7 +263,7 @@ public class LMSdkResources {
         urlParams.source = source;
         urlParams.sdk_version = sdk_version;
         urlParams.retry_times = retry_times;
-        urlParams.linkedme_key = linkedme_key;
+        urlParams.linkedme_key = Util.formatLinkedmeKey(linkedme_key);
         urlParams.timestamp = timestamp;
         urlParams.sign = sign;
 
@@ -344,7 +345,7 @@ public class LMSdkResources {
         closeParams.session_id = session_id;
         closeParams.sdk_version = sdk_version;
         closeParams.retry_times = retry_times;
-        closeParams.linkedme_key = linkedme_key;
+        closeParams.linkedme_key = Util.formatLinkedmeKey(linkedme_key);
         closeParams.timestamp = timestamp;
         closeParams.sign = sign;
 
@@ -455,5 +456,4 @@ public class LMSdkResources {
         else
             return "{\"ret\":\"error\"}";
     }
-
 }
