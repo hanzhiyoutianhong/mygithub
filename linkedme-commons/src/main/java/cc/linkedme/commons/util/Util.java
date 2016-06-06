@@ -944,9 +944,9 @@ public class Util {
             String[] linkedme_keys = linkedme_key.split("_");
             int length = linkedme_keys.length;
             return linkedme_keys[length - 1];
-        }
-        else
+        } else {
             return linkedme_key;
+        }
     }
 
 }
