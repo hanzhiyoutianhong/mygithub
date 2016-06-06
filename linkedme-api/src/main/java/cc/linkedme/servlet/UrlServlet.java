@@ -280,6 +280,7 @@ public class UrlServlet extends HttpServlet {
         boolean isFirefox = false;
         boolean isChrome = false;
         boolean isUC = false;
+        boolean isMIUI = false;
 
         // DEBUG MODE
         boolean DEBUG = false;
@@ -311,6 +312,9 @@ public class UrlServlet extends HttpServlet {
         }
         if (uaMap.containsKey("UC Browser")) {
             isUC = true;
+        }
+        if(uaMap.containsKey("MIUI Browser")) {
+            isMIUI = true;
         }
 
         String appLogo = "../img/icon.png";
@@ -368,7 +372,7 @@ public class UrlServlet extends HttpServlet {
 
         request.setAttribute("DEBUG", DEBUG);
 
-        if ((!isWechat) && (!isWeibo) && isAndroid && isChrome && userAgentMajor >= 25) {
+        if ((!isWechat) && (!isWeibo) && isAndroid && isChrome && userAgentMajor >= 25 && !isMIUI) {
             String location = "intent://linkedme?click_id=" + uriArr[2] + "#Intent;scheme=" + scheme + ";package="
                     + appInfo.getAndroid_package_name() + ";S.browser_fallback_url=" + url + ";end";
             response.setStatus(307);
