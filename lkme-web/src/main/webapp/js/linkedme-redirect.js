@@ -340,7 +340,7 @@ var visit_id = "visit_id",
         return Params.isAndroid() && (void 0 === Params.package_name || "" === Params.package_name)
     },
     shouldGotoYYB = function () {
-        return void 0 !== Params.yyb_download_url && "" !== Params.yyb_download_url && !Params.isIOS()
+        return void 0 !== Params.yyb_download_url && "" !== Params.yyb_download_url && !Params.isIOS() && Params.isYYBAvailable()
     },
     lkmeAction = {
         recordIdUrl: "/i/js/record_id",
