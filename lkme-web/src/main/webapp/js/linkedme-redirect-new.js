@@ -107,18 +107,6 @@ function start() {
                             })) : setTimeout(d, 1e3)
                 };
             d()
-        } else if (Params.isChrome() && Params.chrome_major >= 25 && !Params.isForceUseScheme()) {
-            DEBUG_ALERT("chrome_major:" + Params.chrome_major);
-            var crUriVal = Params.host;
-            if (Params.click_id && Params.click_id.length > 0) {
-                crUriVal += "?click_id=" + Params.click_id;
-            }
-
-            var intentVal = "intent://" + crUriVal + "#Intent;scheme=" + Params.uri_scheme + ";package=" + Params.package_name + ";S.browser_fallback_url=" + Params.forward_url + ";end";
-            DEBUG_ALERT("intentVal = " + intentVal);
-            deeplinkLaunch(intentVal, 2e3, function () {
-                gotoAndroidNewInstall()
-            })
         } else {
             DEBUG_ALERT("default browser");
             iframeDeepLinkLaunch(uriVal, 2e3, function () {
