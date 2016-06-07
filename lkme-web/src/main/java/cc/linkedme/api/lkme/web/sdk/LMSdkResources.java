@@ -245,16 +245,16 @@ public class LMSdkResources {
         urlParams.android_custom_url = android_custom_url;
         urlParams.desktop_use_default = desktop_use_default;
         urlParams.desktop_custom_url = desktop_custom_url;
-        urlParams.campaign = campaign == null ? null : campaign.split(",");
+        urlParams.campaign = Strings.isNullOrEmpty(campaign) ? new String[0] : campaign.split(",");
 
         urlParams.identity_id = identity_id;
         urlParams.device_fingerprint_id = device_fingerprint_id;
         urlParams.session_id = session_id;
-        urlParams.tags = tags == null ? null : tags.split(",");
+        urlParams.tags = Strings.isNullOrEmpty(tags) ? new String[0] : tags.split(",");
         urlParams.alias = alias;
-        urlParams.channel = channel == null ? null : channel.split(",");
-        urlParams.feature = feature == null ? null : feature.split(",");
-        urlParams.stage = stage == null ? null : stage.split(",");
+        urlParams.channel = Strings.isNullOrEmpty(channel) ? new String[0] : channel.split(",");
+        urlParams.feature = Strings.isNullOrEmpty(feature) ? new String[0] : feature.split(",");
+        urlParams.stage = Strings.isNullOrEmpty(stage) ? new String[0] : stage.split(",");
         try {
             urlParams.params = JSONObject.fromObject(params);
         } catch (Exception e) {
