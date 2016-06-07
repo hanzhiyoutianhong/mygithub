@@ -44,7 +44,7 @@
     </div>
 
     <div class="footer">
-        Copyright@2014-2015 LinkedME 北京微方程科技有限公司
+        北京微方程科技有限公司 © 2015 LinkedME All Rights Reserved
     </div>
 
 </body>
