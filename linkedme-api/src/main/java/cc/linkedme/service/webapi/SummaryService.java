@@ -76,6 +76,7 @@ public class SummaryService {
         long pcClick = 0, pcIosScan = 0, pcAdrScan = 0, pcIosOpen = 0, pcAdrOpen = 0, pcIosInstall = 0, pcAdrInstall = 0;
         Map<String, Map<String, Long>> allDateCounts = new HashMap<>();
         Set<Long> deepLinkIdSet = new HashSet<>();
+        Set<Long> invalidDeepLinkIdSet = new HashSet<>();
         DeepLink dl;
         int link_count = 0;
         for (DeepLinkDateCount deepLinkDateCount : deepLinkDateCountList) {
@@ -84,10 +85,15 @@ public class SummaryService {
                 dl = deepLinkDao.getDeepLinkInfo(deepLinkDateCount.getDeeplinkId(), summaryDeepLinkParams.appid);
 
                 if (dl == null || !isValidDeepLink(summaryDeepLinkParams, dl)) {
+                    invalidDeepLinkIdSet.add(deepLinkDateCount.getDeeplinkId());
                     continue;
                 }
 
                 link_count++;
+            }
+            
+            if (invalidDeepLinkIdSet.contains(deepLinkDateCount.getDeeplinkId())) {
+                continue;
             }
 
             // 把每一天的click,open,install计数统计出来
