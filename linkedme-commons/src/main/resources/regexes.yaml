@@ -61,6 +61,22 @@ user_agent_parsers:
   - regex: 'TXMicroBlog'
     family_replacement: 'TencentWeibo'
 
+  #XiaoMi MiuiBrowser
+  - regex: 'XiaoMi'
+    family_replacement: 'MIUI Browser'
+
+  - regex: 'MiuiBrowser'
+    family_replacement: 'MIUI Browser'
+
+  - regex: '(MiuiBrowser)/(\d+)\.(\d+)\.(\d+)'
+    family_replacement: 'MIUI Browser'
+
+  - regex: 'XiaoMi/MiuiBrowser'
+    family_replacement: 'MIUI Browser'
+
+  - regex: '(XiaoMi/MiuiBrowser)/(\d+)\.(\d+)\.(\d+)'
+    family_replacement: 'MIUI Browser'
+
   # UC Browser
   - regex: '(UCBrowser)[ /](\d+)\.(\d+)\.(\d+)'
     family_replacement: 'UC Browser'
