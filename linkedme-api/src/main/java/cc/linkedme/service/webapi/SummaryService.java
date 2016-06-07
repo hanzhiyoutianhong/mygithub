@@ -327,7 +327,7 @@ public class SummaryService {
             d = true;
         }
         if ((deepLink.getSource() == null && Strings.isNullOrEmpty(summaryDeepLinkParams.source))
-                || (deepLink.getSource() != null && deepLink.getCampaign().equals(summaryDeepLinkParams.campaign))) {
+                || (deepLink.getSource() != null && deepLink.getSource().equals(summaryDeepLinkParams.source))) {
             e = true;
         }
         return a && b && c && d && e;
