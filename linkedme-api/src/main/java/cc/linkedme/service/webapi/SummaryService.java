@@ -310,24 +310,19 @@ public class SummaryService {
         boolean d = false;
         boolean e = false;
 
-        if ((deepLink.getFeature() == null && Strings.isNullOrEmpty(summaryDeepLinkParams.feature))
-                || (deepLink.getFeature() != null && deepLink.getFeature().contains(summaryDeepLinkParams.feature))) {
+        if (Strings.isNullOrEmpty(summaryDeepLinkParams.feature) || (deepLink.getFeature() != null && deepLink.getFeature().contains(summaryDeepLinkParams.feature))) {
             a = true;
         }
-        if ((deepLink.getCampaign() == null && Strings.isNullOrEmpty(summaryDeepLinkParams.campaign))
-                || (deepLink.getCampaign() != null && deepLink.getCampaign().contains(summaryDeepLinkParams.campaign))) {
+        if (Strings.isNullOrEmpty(summaryDeepLinkParams.campaign) || (deepLink.getCampaign() != null && deepLink.getCampaign().contains(summaryDeepLinkParams.campaign))) {
             b = true;
         }
-        if ((deepLink.getStage() == null && Strings.isNullOrEmpty(summaryDeepLinkParams.stage))
-                || (deepLink.getStage() != null && deepLink.getStage().contains(summaryDeepLinkParams.stage))) {
+        if (Strings.isNullOrEmpty(summaryDeepLinkParams.stage) || (deepLink.getStage() != null && deepLink.getStage().contains(summaryDeepLinkParams.stage))) {
             c = true;
         }
-        if ((deepLink.getTags() == null && Strings.isNullOrEmpty(summaryDeepLinkParams.tags))
-                || (deepLink.getTags() != null && deepLink.getTags().contains(summaryDeepLinkParams.tags))) {
+        if (Strings.isNullOrEmpty(summaryDeepLinkParams.tags) || (deepLink.getTags() != null && deepLink.getTags().contains(summaryDeepLinkParams.tags))) {
             d = true;
         }
-        if ((deepLink.getSource() == null && Strings.isNullOrEmpty(summaryDeepLinkParams.source))
-                || (deepLink.getSource() != null && deepLink.getSource().equals(summaryDeepLinkParams.source))) {
+        if (Strings.isNullOrEmpty(summaryDeepLinkParams.source) || (deepLink.getSource() != null && deepLink.getSource().equals(summaryDeepLinkParams.source))) {
             e = true;
         }
         return a && b && c && d && e;
