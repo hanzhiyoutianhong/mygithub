@@ -262,6 +262,15 @@ public class LMSdkResources {
         }
         urlParams.source = source;
         urlParams.sdk_version = sdk_version;
+
+        if(!Strings.isNullOrEmpty(sdk_version)){
+            if(sdk_version.toLowerCase().startsWith("ios")){
+                urlParams.source = "iOS";
+            }else if(sdk_version.toLowerCase().startsWith("android")){
+                urlParams.source = "Android";
+            }
+        }
+
         urlParams.retry_times = retry_times;
         urlParams.linkedme_key = Util.formatLinkedmeKey(linkedme_key);
         urlParams.timestamp = timestamp;
