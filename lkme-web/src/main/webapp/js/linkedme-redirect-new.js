@@ -331,7 +331,7 @@ var visit_id = "visit_id",
         is_valid_identity: '${isValidIdentity}',
 
         recordId: function () {
-            var dataJson = {
+            var paramDate = {
                 identity_id: Params.identity_id,
                 is_valid_identityid: Params.is_valid_identity,
                 browser_fingerprint_id: Params.browser_fingerprint_id,
@@ -339,9 +339,8 @@ var visit_id = "visit_id",
             };
             $.ajax({
                 method: "POST",
-                contentType: "application/json; charset=utf-8",
                 url: this.recordIdUrl,
-                data: JSON.stringify(dataJson),
+                data: paramDate,
                 success: function () {
                 },
                 error: function () {
