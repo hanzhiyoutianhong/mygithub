@@ -223,6 +223,7 @@ public class LMSdkServiceImpl implements LMSdkService {
                     }
                 }
             } catch (Exception e) {
+                ApiLogger.error("LMSdkServiceImpl.getClickIdFromUri failed, deepLinkUrl = " + deepLinkUrl);
                 throw new LMException(LMExceptionFactor.LM_ILLEGAL_PARAMETER_VALUE, deepLinkUrl);
             }
         }
