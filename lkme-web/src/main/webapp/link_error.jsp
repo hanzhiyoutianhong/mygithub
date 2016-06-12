@@ -13,7 +13,7 @@
     <script type="text/javascript">
         var ErrorParams = {
             invalidLink: function () {
-                return 'true' == '${isValidLink}'
+                return true
             }
         };
         var lang = navigator.language;

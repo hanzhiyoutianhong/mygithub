@@ -276,7 +276,7 @@ public class UrlServlet extends HttpServlet {
             // 记录日志
             ApiLogger.biz(String.format("%s\t%s\t%s\t%s\t%s\t%s", request.getHeader("x-forwarded-for"), "click", countType, appId,
                     deepLinkId, userAgent));
-        }else{
+        } else {
             ApiLogger.biz(String.format("%s\t", userAgent));
         }
 
