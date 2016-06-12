@@ -45,20 +45,6 @@
             max-width: 100%;
             height: auto;
         }
-
-        .image-tip {
-            text-align: center;
-            display: none;
-            position: fixed;
-            left: 0;
-            top: 0;
-            bottom: 0;
-            background: rgba(0, 0, 0, 0.4);
-            filter: alpha(opacity=40);
-            height: 100%;
-            width: 100%;
-            z-index: 100;
-        }
     </style>
 </head>
 <body style="width:100%; height:100%;">
