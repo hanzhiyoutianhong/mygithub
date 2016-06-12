@@ -198,8 +198,8 @@ var visit_id = "visit_id",
     gotoUrl = function (redirectUrl) {
         //记录identity_id和browser_fingerprint_id
         window.history.replaceState("Object", "Title", "0")
-        dstLocation = redirectUrl
-        lkmeAction.reportJSEvent(lkmeAction.actionJSDst, redirectUrl);
+        dstLocation = redirectUrl;
+        lkmeAction.reportJSEvent(lkmeAction.actionJSDst, dstLocation);
         window.location = redirectUrl;
     },
     div_platform_not_available = '<div style="background-image:url(' + baseImgPathLang + 'no_{Platform}.png);background-size: 100% 100%;width:100%;height:100%;"></div>',

@@ -96,7 +96,7 @@ public class UrlServlet extends HttpServlet {
 
         String[] uriArr = uri.split("/");
         if (uriArr.length < 3) {
-            response.sendRedirect("/index.jsp"); // TODO 重定向为默认配置页面
+            response.sendRedirect("/deeplink_error.jsp"); // TODO 重定向为默认配置页面
             // request.getRequestDispatcher("/index.jsp").forward(request, response);
             return;
         }
@@ -105,7 +105,7 @@ public class UrlServlet extends HttpServlet {
 
         if (appId < 10000 || appId > 510000 || (!UuidHelper.isValidId(deepLinkId))) {
             // 无效的appId或者无效的短链. TODO app数量超过50w后,修改阀值
-            response.sendRedirect("/index.jsp"); // TODO 重定向为默认配置页面
+            response.sendRedirect("/deeplink_error.jsp"); // TODO 重定向为默认配置页面
             return;
         }
 
@@ -114,7 +114,7 @@ public class UrlServlet extends HttpServlet {
         AppInfo appInfo = appService.getAppById(appId); // 根据appId获取app信息
 
         if (deepLink == null || appInfo == null) {
-            response.sendRedirect("/index.jsp"); // TODO 重定向为默认配置页面
+            response.sendRedirect("/deeplink_error.jsp"); // TODO 重定向为默认配置页面
             return;
         }
 
@@ -273,9 +273,10 @@ public class UrlServlet extends HttpServlet {
             // 记录日志
             ApiLogger.biz(String.format("%s\t%s\t%s\t%s\t%s\t%s", request.getHeader("x-forwarded-for"), "click", countType, appId,
                     deepLinkId, userAgent));
-        }else{
-            ApiLogger.biz(String.format("%s\t%s\t%s\t%s\t%s\t%s", request.getHeader("x-forwarded-for"), "re-click", "re-" +
-                    countType, appId, deepLinkId, userAgent));
+
+        } else {
+            ApiLogger.biz(String.format("%s\t%s\t%s\t%s\t%s\t%s", request.getHeader("x-forwarded-for"), "re-click", "re-" + countType,
+                    appId, deepLinkId, userAgent));
         }
 
         boolean isWechat = false;
