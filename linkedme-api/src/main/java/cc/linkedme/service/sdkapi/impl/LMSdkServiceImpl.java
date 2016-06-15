@@ -12,11 +12,7 @@ import cc.linkedme.dao.sdkapi.ClientDao;
 import cc.linkedme.data.model.ClientInfo;
 import cc.linkedme.data.model.DeepLink;
 import cc.linkedme.data.model.DeepLinkCount;
-import cc.linkedme.data.model.params.CloseParams;
-import cc.linkedme.data.model.params.InstallParams;
-import cc.linkedme.data.model.params.OpenParams;
-import cc.linkedme.data.model.params.PreInstallParams;
-import cc.linkedme.data.model.params.UrlParams;
+import cc.linkedme.data.model.params.*;
 import cc.linkedme.exception.LMException;
 import cc.linkedme.exception.LMExceptionFactor;
 import cc.linkedme.mcq.ClientMsgPusher;
@@ -28,6 +24,7 @@ import com.google.common.base.Joiner;
 import com.google.common.base.Strings;
 import net.sf.json.JSONArray;
 import net.sf.json.JSONObject;
+import org.apache.commons.lang.StringUtils;
 
 import java.net.URI;
 import java.text.SimpleDateFormat;
@@ -72,6 +69,41 @@ public class LMSdkServiceImpl implements LMSdkService {
             new LinkedBlockingQueue<Runnable>(300), new ThreadPoolExecutor.DiscardOldestPolicy());
 
     public final static float UNIVERSE_LINK_IOS_VERSION = 8;
+
+
+    public String webinit(WebInitParams webInitParams) {
+
+        String identityId = webInitParams.getIdentityId();
+        if (Strings.isNullOrEmpty(identityId) || !StringUtils.isNumeric(identityId) || !UuidHelper.isValidId(Long.parseLong(identityId))) {
+            identityId = String.valueOf(uuidCreator.nextId(1));
+            webInitParams.setIdentityId(identityId);
+        }
+
+
+        long sessionId = uuidCreator.nextId(0);
+        JSONObject resultJson = new JSONObject();
+        resultJson.put("identity_id", identityId);
+        resultJson.put("session_id", sessionId);
+
+        JedisPort linkedmeKeyClient = linkedmeKeyShardingSupport.getClient(webInitParams.getLMKey());
+        String appId = linkedmeKeyClient.hget(webInitParams.getLMKey(), "appid");
+
+        ApiLogger.biz(String.format("%s\t%s\t%s\t%s\t%s", webInitParams.getClientIP(), "webinit", appId, webInitParams.getLMKey(),
+                webInitParams.getIdentityId()));
+
+        return resultJson.toString();
+
+    }
+
+    public void webClose(WebCloseParams webCloseParams) {
+
+        JedisPort linkedmeKeyClient = linkedmeKeyShardingSupport.getClient(webCloseParams.getLMKey());
+        String appId = linkedmeKeyClient.hget(webCloseParams.getLMKey(), "appid");
+
+        ApiLogger.biz(String.format("%s\t%s\t%s\t%s\t%s\t%s\t%s", webCloseParams.getClientIP(), "webclose", appId,
+                webCloseParams.getLMKey(), webCloseParams.getIdentityId(), webCloseParams.getSessionId(), webCloseParams.getTimestamp()));
+
+    }
 
     public String install(InstallParams installParams) {
         JSONObject requestJson = JSONObject.fromObject(installParams);
@@ -388,7 +420,8 @@ public class LMSdkServiceImpl implements LMSdkService {
     public String url(UrlParams urlParams) {
         Joiner joiner = Joiner.on("&").skipNulls();
         Joiner joiner2 = Joiner.on(",").skipNulls();
-        // linkedme_key & tags & alias & channel & feature & stage & params TODO 添加identity_id信息 区分用户和设备
+        // linkedme_key & tags & alias & channel & feature & stage & params TODO 添加identity_id信息
+        // 区分用户和设备
         String urlParamsStr = joiner.join(urlParams.linkedme_key, joiner2.join(urlParams.tags), joiner2.join(urlParams.channel),
                 joiner2.join(urlParams.feature), joiner2.join(urlParams.stage), urlParams.params);
 

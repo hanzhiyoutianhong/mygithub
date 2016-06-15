@@ -15,10 +15,7 @@ import net.sf.json.JSONObject;
 import org.springframework.stereotype.Component;
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
-import javax.ws.rs.FormParam;
-import javax.ws.rs.POST;
-import javax.ws.rs.Path;
-import javax.ws.rs.Produces;
+import javax.ws.rs.*;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 import java.util.ArrayList;
@@ -34,6 +31,52 @@ public class LMSdkResources {
 
     @Resource
     private SignAuthService signAuthService;
+
+
+    @Path("/webinit")
+    @POST
+    @Produces(MediaType.APPLICATION_JSON)
+    public String webinit(@FormParam("linkedme_key") String LMKey,
+                          @FormParam("identity_id") String identityId,
+                          @Context HttpServletRequest request) {
+
+        if (Strings.isNullOrEmpty(LMKey)) {
+            throw new LMException(LMExceptionFactor.LM_MISSING_PARAM, LMKey);
+        }
+
+        WebInitParams webInitParams = new WebInitParams();
+        webInitParams.setLMKey(LMKey);
+        webInitParams.setIdentityId(identityId);
+
+        String clientIP = request.getHeader("x-forwarded-for");
+        webInitParams.setClientIP(clientIP);
+
+        String result = lmSdkService.webinit(webInitParams);
+        return result;
+
+    }
+
+
+    @Path("/webclose")
+    @POST
+    @Produces(MediaType.APPLICATION_JSON)
+    public void webclose(@FormParam("linkedme_key") String LMKey,
+                         @FormParam("session_id") String sessionId,
+                         @FormParam("identity_id") String identityId,
+                         @FormParam("timestamp") long timestamp,
+                         @Context HttpServletRequest request){
+
+        String clientIP = request.getHeader("x-forwarded-for");
+        WebCloseParams webCloseParams = new WebCloseParams();
+        webCloseParams.setLMKey(LMKey);
+        webCloseParams.setSessionId(sessionId);
+        webCloseParams.setIdentityId(identityId);
+        webCloseParams.setTimestamp(timestamp);
+        webCloseParams.setClientIP(clientIP);
+
+        lmSdkService.webClose(webCloseParams);
+    }
+
 
     @Deprecated
     @Path("/install")
