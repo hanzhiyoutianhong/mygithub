@@ -60,6 +60,9 @@ public class Base62 {
         if (str.length() < 1) throw new IllegalArgumentException("str must not be empty.");
 
         long result = 0;
+        if(str.equals("0")) {
+            return result;
+        }
         for (int i = 0; i < str.length(); i++) {
             result += ALPHABET.indexOf(str.charAt(i)) * Math.pow(base, i);
         }
@@ -83,12 +86,13 @@ public class Base62 {
 
         decoding = Base62.decode(encoding);
         long decoding1 = Base62.decode("sdk");
-        long decoding2 = Base62.decode("test");
+        long decoding2 = Base62.decode("0");
         
         
         System.out.println("Base62 Decoding: " + Base62.decode("QqGJHVxR7"));
         System.out.println("Base62 Decoding: " + Base62.encode( 10024L ));
         System.out.println("Base62 Decoding: " + Base62.encode( num ));
+        System.out.println(decoding2);
     }
 
 }
