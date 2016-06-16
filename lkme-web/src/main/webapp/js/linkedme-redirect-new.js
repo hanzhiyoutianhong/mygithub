@@ -11,15 +11,19 @@ function DEBUG_ALERT(msg) {
 function start() {
     var uriVal = (Params.uri_scheme.indexOf("://") >= 0) ? Params.uri_scheme : (Params.uri_scheme + "://"),
         div_allow_me_deeplink = '<div style="background-image:url(' + baseImgPathLang + 'open_app.png);background-size: 100% 100%;width:100%;height:100%;">    <div style="text-align:center; width:100%; position:absolute; top:35%;">        <p id="textCountDown" style="font-size: 1em; color: #959595; padding: 6px 20px; -webkit-border-radius: 30px; -moz-border-radius: 30px; border-radius: 30px;"></p>    </div></div>';
-    if (Params.isIOS() && (void 0 === Params.bundle_id || "" === Params.bundle_id))
+    if (Params.isIOS() && (void 0 === Params.bundle_id || "" === Params.bundle_id)) {
         return goToNoAppDiv("ios");
-    else if (Params.isAndroid() && (void 0 === Params.package_name || "" === Params.package_name))
+    } else if (Params.isAndroid() && (void 0 === Params.package_name || "" === Params.package_name)) {
         return goToNoAppDiv("android");
+    }
 
-    if (Params.isWechat()) redirectDst("wechat");
-    else if (Params.isQQ()) redirectDst("qq");
-    else if (Params.isWeibo()) redirectDst("weibo");
-    else if (Params.isIOS()) {
+    if (Params.isWechat()) {
+        redirectDst("wechat");
+    } else if (Params.isQQ()) {
+        redirectDst("qq");
+    } else if (Params.isWeibo()) {
+        redirectDst("weibo");
+    } else if (Params.isIOS()) {
         DEBUG_ALERT("isIOS");
         if (Params.click_id && Params.click_id.length > 0) {
             uriVal += "?click_id=" + Params.click_id;
@@ -36,22 +40,8 @@ function start() {
         } else {
             if (Params.isUniversalLink()) {
                 DEBUG_ALERT("isUniversalLink = true");
-                if (cookieEnabled()) {
-                    DEBUG_ALERT("cookie Enabled; installStatus:" + Params.installStatus);
-                    return void gotoUrl(Params.forward_url);
-                } else {
-                    DEBUG && alert("cookie Not Enabled");
-                    dstLocation = lkmeAction.destination.dstUniversalLinkLandingPage;
-                    DEBUG && alert(dstLocation);
-                    div_goto_landingpage = div_goto_landingpage.replace(/{Bg_Url}/g, baseImgPathLang + "bg.png").replace(/{app_name}/g, Params.app_name).replace(/{logo_url}/g, Params.logo_url).replace(/{Download_msg}/g, Params.app_slogan).replace(/{Btn_landingpage_text}/g, gotoAppStore).replace(/{Border_width}/g, "3").replace(/{Element_type}/g, "button");
-                    $("body").append(div_goto_landingpage);
-                    lkmeAction.reportJSEvent(lkmeAction.actionJSDst, dstLocation);
-                    $("#btnGotoLandingPage").click(function () {
-                        lkmeAction.reportJSUserClickEvent(lkmeAction.actionJSUserClick, "gotoIosAppStore", "yes");
-                        gotoUrl(Params.forward_url);
-                    });
-                    lkmeAction.recordId();
-                }
+                lkmeAction.recordId();
+                return void gotoUrl(Params.forward_url);
             } else if (Params.isChrome()) {
                 DEBUG_ALERT("isChrome");
                 deepLinkLocation = uriVal;
@@ -59,13 +49,12 @@ function start() {
                 try {
                     lkmeAction.reportJSEvent(lkmeAction.actionJSDeepLink, uriVal);
                     c = window.open(uriVal);
-                    DEBUG && alert("pass");
+                    DEBUG_ALERT("pass");
                     window.history.replaceState("Object", "Title", "0")
                 } catch (d) {
                     DEBUG && alert("exception")
                 }
                 c ? window.close() : gotoUrl(Params.forward_url);
-                ;
             } else {
                 DEBUG_ALERT("is safari");
                 deeplinkLaunch(uriVal, 2500, function () {
@@ -126,7 +115,7 @@ var visit_id = "visit_id",
         $(".image-tip").show();
         if (window.location.search.indexOf(visit_id) < 0) {
             tag = visit_id + "=" + Math.floor(1e6 * Math.random());
-            window.location.search = ( window.location.search == undefined || window.location.search != "" ) ? (window.location.search + "&" + tag) : ("?" + tag);
+            window.location.search = (window.location.search != "") ? (window.location.search + "&" + tag) : ("?" + tag);
             DEBUG && alert("Url Add Tag:" + tag)
         }
         dstLocation = tag;
@@ -188,7 +177,7 @@ var visit_id = "visit_id",
         }
     },
     gotoAndroidMarket = function () {
-        window.history.replaceState("Object", "Title", "0")
+        window.history.replaceState("Object", "Title", "0");
         dstLocation = "market://details?id=" + Params.package_name;
         DEBUG && alert(dstLocation);
         lkmeAction.reportJSEvent(lkmeAction.actionJSDst, dstLocation);
@@ -197,8 +186,7 @@ var visit_id = "visit_id",
     },
     gotoUrl = function (redirectUrl) {
         //记录identity_id和browser_fingerprint_id
-        window.history.replaceState("Object", "Title", "0")
-        dstLocation = redirectUrl
+        window.history.replaceState("Object", "Title", "0");
         lkmeAction.reportJSEvent(lkmeAction.actionJSDst, redirectUrl);
         window.location = redirectUrl;
     },
@@ -293,21 +281,11 @@ var visit_id = "visit_id",
             redirectUrl(Params.yyb_download_url);
         } else {
             if (Params.isIOS()) {
-                redirectTip("ios", "dst" + "-" + app + "-" + "android");
+                redirectTip("ios", "dst" + "-" + app + "-" + "ios");
             } else if (Params.isAndroid()) {
                 redirectTip("android", "dst" + "-" + app + "-" + "android");
             }
         }
-    },
-    cookieEnabled = function () {
-        var a = !1;
-        try {
-            localStorage.test = 2
-        } catch (b) {
-            DEBUG && alert("private mode"),
-                a = !0
-        }
-        return navigator.cookieEnabled && !a
     },
     lkmeAction = {
         recordIdUrl: "/i/js/record_id",

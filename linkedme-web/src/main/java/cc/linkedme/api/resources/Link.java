@@ -2,6 +2,7 @@ package cc.linkedme.api.resources;
 
 import cc.linkedme.commons.exception.LMException;
 import cc.linkedme.commons.exception.LMExceptionFactor;
+import cc.linkedme.commons.util.Constants;
 import cc.linkedme.data.model.params.DashboardUrlParams;
 import cc.linkedme.data.model.params.SummaryDeepLinkParams;
 import cc.linkedme.data.model.params.UrlParams;
@@ -52,8 +53,6 @@ public class Link {
     @Resource
     private AppService appService;
 
-    private static final String CREATE_URL_API = "http://lkme.cc/i/sdk/url";
-
     @Path("/create")
     @POST
     @Produces({MediaType.APPLICATION_JSON})
@@ -78,7 +77,7 @@ public class Link {
 
         HttpClient client = new DefaultHttpClient();
         String result = null;
-        HttpPost postMethod = new HttpPost(CREATE_URL_API);
+        HttpPost postMethod = new HttpPost(Constants.CREATE_URL_API);
         try {
             postMethod.setEntity(new UrlEncodedFormEntity(params, HTTP.UTF_8));
             result = EntityUtils.toString(client.execute(postMethod).getEntity(), HTTP.UTF_8);

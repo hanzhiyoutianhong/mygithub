@@ -223,8 +223,8 @@ public class LMSdkServiceImpl implements LMSdkService {
                     }
                 }
             } catch (Exception e) {
-                ApiLogger.error("LMSdkServiceImpl.getClickIdFromUri failed, deepLinkUrl = " + deepLinkUrl);
-                throw new LMException(LMExceptionFactor.LM_ILLEGAL_PARAMETER_VALUE, deepLinkUrl);
+                ApiLogger.warn("LMSdkServiceImpl.getClickIdFromUri failed, deepLinkUrl = " + deepLinkUrl);
+                return "0";
             }
         }
         return clickId;
@@ -271,10 +271,11 @@ public class LMSdkServiceImpl implements LMSdkService {
 
             String clickId = getClickIdFromUri(deepLinkUrl);
             deepLinkId = Base62.decode(clickId);
-            if (deepLinkId > 0) {
+            DeepLink deepLink = null;
+            if (deepLinkId > 0 && appId > 0) {
                 clicked_linkedme_link = true;
+                deepLink = deepLinkService.getDeepLinkInfo(deepLinkId, appId);
             }
-            DeepLink deepLink = deepLinkService.getDeepLinkInfo(deepLinkId, appId);
             if (deepLink != null) {
                 params = getParamsFromDeepLink(deepLink);
 
@@ -407,6 +408,9 @@ public class LMSdkServiceImpl implements LMSdkService {
 
         long appId = urlParams.app_id; // web创建url传appid, sdk创建url不传appid
         if (appId <= 0) {
+            if(Strings.isNullOrEmpty(urlParams.linkedme_key)) {
+                throw new LMException(LMExceptionFactor.LM_ILLEGAL_PARAMETER_VALUE, "linkedme_key is invalid");
+            }
             JedisPort linkedmeKeyClient = linkedmeKeyShardingSupport.getClient(urlParams.linkedme_key);
             String appIdStr = linkedmeKeyClient.hget(urlParams.linkedme_key, "appid");
             if (appIdStr != null) {
