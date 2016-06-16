@@ -5,18 +5,18 @@ package cc.linkedme.data.model.params;
  */
 public class WebCloseParams {
 
-    private String LMKey;
+    private String linkedmeKey;
     private String sessionId;
     private String identityId;
     private long timestamp;
     private String clientIP;
 
-    public String getLMKey() {
-        return LMKey;
+    public String getLinkedmeKey() {
+        return linkedmeKey;
     }
 
-    public void setLMKey(String LMKey) {
-        this.LMKey = LMKey;
+    public void setLinkedmeKey(String linkedmeKey) {
+        this.linkedmeKey = linkedmeKey;
     }
 
     public String getSessionId() {

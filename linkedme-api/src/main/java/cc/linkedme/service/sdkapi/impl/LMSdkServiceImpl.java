@@ -2,7 +2,6 @@ package cc.linkedme.service.sdkapi.impl;
 
 import javax.annotation.Resource;
 
-import cc.linkedme.commons.json.JsonBuilder;
 import cc.linkedme.commons.log.ApiLogger;
 import cc.linkedme.commons.redis.JedisPort;
 import cc.linkedme.commons.shard.ShardingSupportHash;
@@ -80,15 +79,15 @@ public class LMSdkServiceImpl implements LMSdkService {
         }
 
 
-        long sessionId = uuidCreator.nextId(0);
+        long sessionId = System.currentTimeMillis();
         JSONObject resultJson = new JSONObject();
         resultJson.put("identity_id", identityId);
         resultJson.put("session_id", sessionId);
 
-        JedisPort linkedmeKeyClient = linkedmeKeyShardingSupport.getClient(webInitParams.getLMKey());
-        String appId = linkedmeKeyClient.hget(webInitParams.getLMKey(), "appid");
+        JedisPort linkedmeKeyClient = linkedmeKeyShardingSupport.getClient(webInitParams.getLinkedmeKey());
+        String appId = linkedmeKeyClient.hget(webInitParams.getLinkedmeKey(), "appid");
 
-        ApiLogger.biz(String.format("%s\t%s\t%s\t%s\t%s", webInitParams.getClientIP(), "webinit", appId, webInitParams.getLMKey(),
+        ApiLogger.biz(String.format("%s\t%s\t%s\t%s\t%s", webInitParams.getClientIP(), "webinit", appId, webInitParams.getLinkedmeKey(),
                 webInitParams.getIdentityId()));
 
         return resultJson.toString();
@@ -97,11 +96,11 @@ public class LMSdkServiceImpl implements LMSdkService {
 
     public void webClose(WebCloseParams webCloseParams) {
 
-        JedisPort linkedmeKeyClient = linkedmeKeyShardingSupport.getClient(webCloseParams.getLMKey());
-        String appId = linkedmeKeyClient.hget(webCloseParams.getLMKey(), "appid");
+        JedisPort linkedmeKeyClient = linkedmeKeyShardingSupport.getClient(webCloseParams.getLinkedmeKey());
+        String appId = linkedmeKeyClient.hget(webCloseParams.getLinkedmeKey(), "appid");
 
         ApiLogger.biz(String.format("%s\t%s\t%s\t%s\t%s\t%s\t%s", webCloseParams.getClientIP(), "webclose", appId,
-                webCloseParams.getLMKey(), webCloseParams.getIdentityId(), webCloseParams.getSessionId(), webCloseParams.getTimestamp()));
+                webCloseParams.getLinkedmeKey(), webCloseParams.getIdentityId(), webCloseParams.getSessionId(), webCloseParams.getTimestamp()));
 
     }
 

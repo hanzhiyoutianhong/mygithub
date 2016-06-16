@@ -5,16 +5,16 @@ package cc.linkedme.data.model.params;
  */
 public class WebInitParams {
 
-    private String LMKey;
+    private String linkedmeKey;
     private String identityId;
     private String clientIP;
 
-    public String getLMKey() {
-        return LMKey;
+    public String getLinkedmeKey() {
+        return linkedmeKey;
     }
 
-    public void setLMKey(String LMKey) {
-        this.LMKey = LMKey;
+    public void setLinkedmeKey(String linkedmeKey) {
+        this.linkedmeKey = linkedmeKey;
     }
 
     public String getIdentityId() {
