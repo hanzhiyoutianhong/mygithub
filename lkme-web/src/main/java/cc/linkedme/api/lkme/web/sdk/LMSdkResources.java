@@ -16,9 +16,11 @@ import org.springframework.stereotype.Component;
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import javax.ws.rs.FormParam;
+import javax.ws.rs.GET;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
+import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 import java.util.ArrayList;
@@ -37,10 +39,10 @@ public class LMSdkResources {
 
 
     @Path("/webinit")
-    @POST
+    @GET
     @Produces(MediaType.APPLICATION_JSON)
-    public String webinit(@FormParam("linkedme_key") String linkedmeKey,
-                          @FormParam("identity_id") String identityId,
+    public String webinit(@QueryParam("linkedme_key") String linkedmeKey,
+                          @QueryParam("identity_id") String identityId,
                           @Context HttpServletRequest request) {
 
         if (Strings.isNullOrEmpty(linkedmeKey)) {
@@ -53,7 +55,6 @@ public class LMSdkResources {
 
         String clientIP = request.getHeader("x-forwarded-for");
         webInitParams.setClientIP(clientIP);
-
         String result = lmSdkService.webinit(webInitParams);
         return result;
 
@@ -86,8 +87,6 @@ public class LMSdkResources {
         return "{}";
     }
 
-
-    @Deprecated
     @Path("/install")
     @POST
     @Produces(MediaType.APPLICATION_JSON)
