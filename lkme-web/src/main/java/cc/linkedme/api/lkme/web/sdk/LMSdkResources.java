@@ -65,10 +65,10 @@ public class LMSdkResources {
     @POST
     @Produces(MediaType.APPLICATION_JSON)
     public String webclose(@FormParam("linkedme_key") String linkedmeKey,
-                         @FormParam("session_id") String sessionId,
-                         @FormParam("identity_id") String identityId,
-                         @FormParam("timestamp") long timestamp,
-                         @Context HttpServletRequest request){
+                           @FormParam("session_id") String sessionId,
+                           @FormParam("identity_id") String identityId,
+                           @FormParam("timestamp") long timestamp,
+                           @Context HttpServletRequest request) {
 
         if (Strings.isNullOrEmpty(linkedmeKey)) {
             throw new LMException(LMExceptionFactor.LM_MISSING_PARAM, linkedmeKey);
@@ -86,6 +86,7 @@ public class LMSdkResources {
 
         return "{}";
     }
+
 
     @Path("/install")
     @POST
@@ -124,37 +125,37 @@ public class LMSdkResources {
                           @Context HttpServletRequest request) {
 
         InstallParams installParams = new InstallParams();
-        installParams.device_id = device_id	;
+        installParams.device_id = device_id;
         installParams.device_type = device_type;
         installParams.device_brand = device_brand;
         installParams.device_model = device_model;
         installParams.has_bluetooth = has_bluetooth;
-        installParams.has_nfc = has_nfc	;
-        installParams.has_sim = has_sim	;
+        installParams.has_nfc = has_nfc;
+        installParams.has_sim = has_sim;
         installParams.os = os;
         installParams.os_version = os_version;
-        installParams.screen_dpi  = screen_dpi;
-        installParams.screen_height  = screen_height;
-        installParams.screen_width  = screen_width;
-        installParams.is_wifi  = is_wifi;
-        installParams.is_referable	= is_referable;
+        installParams.screen_dpi = screen_dpi;
+        installParams.screen_height = screen_height;
+        installParams.screen_width = screen_width;
+        installParams.is_wifi = is_wifi;
+        installParams.is_referable = is_referable;
         installParams.is_debug = is_debug;
-        installParams.google_advertising_id	= google_advertising_id;
+        installParams.google_advertising_id = google_advertising_id;
         installParams.lat_val = lat_val;
         installParams.carrier = carrier;
-        installParams.app_version = app_version	;
+        installParams.app_version = app_version;
         installParams.external_intent_uri = external_intent_uri;
         installParams.extra_uri_data = extra_uri_data;
         installParams.spotlight_identifier = spotlight_identifier;
         installParams.universal_link_url = universal_link_url;
         installParams.sdk_update = sdk_update;
-        installParams.sdk_version = sdk_version	;
-        installParams.ios_team_id = ios_team_id	;
-        installParams.ios_bundle_id = ios_bundle_id	;
+        installParams.sdk_version = sdk_version;
+        installParams.ios_team_id = ios_team_id;
+        installParams.ios_bundle_id = ios_bundle_id;
         installParams.retry_times = retry_times;
         installParams.linkedme_key = Util.formatLinkedmeKey(linkedme_key);
-        installParams.timestamp = timestamp ;
-        installParams.sign= sign;
+        installParams.timestamp = timestamp;
+        installParams.sign = sign;
 
 
         if (Strings.isNullOrEmpty(installParams.linkedme_key)) {
@@ -172,24 +173,6 @@ public class LMSdkResources {
         return result;
     }
 
-    @Path("/install_bak")
-    @POST
-    @Produces(MediaType.APPLICATION_JSON)
-    public String install(InstallParams installParams, @Context HttpServletRequest request) {
-        if (Strings.isNullOrEmpty(installParams.linkedme_key)) {
-            throw new LMException(LMExceptionFactor.LM_MISSING_PARAM, installParams.linkedme_key);
-        }
-
-//        String apiName = "/i/sdk/install";
-//        if (!signAuthService.doAuth(apiName, installParams.sign, installParams.device_id, String.valueOf(installParams.device_type), installParams.os,
-//                installParams.os_version, String.valueOf(installParams.timestamp))) {
-//            throw new LMException(LMExceptionFactor.LM_AUTH_FAILED);
-//        }
-        installParams.clientIP = request.getHeader("x-forwarded-for");
-        String result = lmSdkService.install(installParams);
-
-        return result;
-    }
 
     @Path("/open")
     @POST
@@ -314,10 +297,10 @@ public class LMSdkResources {
         urlParams.source = source;
         urlParams.sdk_version = sdk_version;
 
-        if(!Strings.isNullOrEmpty(sdk_version)){
-            if(sdk_version.toLowerCase().startsWith("ios")){
+        if (!Strings.isNullOrEmpty(sdk_version)) {
+            if (sdk_version.toLowerCase().startsWith("ios")) {
                 urlParams.source = "iOS";
-            }else if(sdk_version.toLowerCase().startsWith("android")){
+            } else if (sdk_version.toLowerCase().startsWith("android")) {
                 urlParams.source = "Android";
             }
         }
@@ -355,49 +338,19 @@ public class LMSdkResources {
         return resultJson.toString();
     }
 
-    @Path("/url_bak")
-    @POST
-    @Produces({MediaType.APPLICATION_JSON})
-    public String url(UrlParams urlParams, @Context HttpServletRequest request) {
-//        String apiName = "/i/sdk/url";
-//        if (!signAuthService.doAuth(apiName, urlParams.sign, String.valueOf(urlParams.identity_id), urlParams.linkedme_key, String.valueOf(urlParams.session_id), String.valueOf(urlParams.timestamp))) {
-//            throw new LMException(LMExceptionFactor.LM_AUTH_FAILED);
-//        }
-
-        JSONObject requestJson = JSONObject.fromObject(urlParams);
-
-        String url = lmSdkService.url(urlParams);
-        String[] urlArr = url.split("/");
-        long deepLinkId = 0;
-        if (urlArr.length == 5) {
-            deepLinkId = Base62.decode(urlArr[4]);
-        }
-        JSONObject resultJson = new JSONObject();
-        resultJson.put("url", url);
-
-        JSONObject log = new JSONObject();
-        log.put("request", requestJson);
-        log.put("response", resultJson);
-
-        ApiLogger.biz(String.format("%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s", request.getHeader("x-forwarded-for"), "url",
-                urlParams.identity_id, urlParams.linkedme_key, deepLinkId, urlParams.session_id, urlParams.retry_times, urlParams.is_debug,
-                urlParams.sdk_version, log.toString()));
-
-        return resultJson.toString();
-    }
 
     @Path("/close")
     @POST
     @Produces({MediaType.APPLICATION_JSON})
-    public String close(@FormParam("device_fingerprint_id")   String device_fingerprint_id,
+    public String close(@FormParam("device_fingerprint_id") String device_fingerprint_id,
                         @FormParam("identity_id") long identity_id,
-                        @FormParam("session_id")  String session_id,
+                        @FormParam("session_id") String session_id,
                         @FormParam("sdk_version") String sdk_version,
                         @FormParam("retry_times") int retry_times,
-                        @FormParam("linkedme_key")  String linkedme_key,
-                        @FormParam("timestamp")     long timestamp,
-                        @FormParam("sign")        String sign,
-                        @Context HttpServletRequest request){
+                        @FormParam("linkedme_key") String linkedme_key,
+                        @FormParam("timestamp") long timestamp,
+                        @FormParam("sign") String sign,
+                        @Context HttpServletRequest request) {
 
         CloseParams closeParams = new CloseParams();
         closeParams.device_fingerprint_id = device_fingerprint_id;
@@ -432,31 +385,6 @@ public class LMSdkResources {
 
     }
 
-    @Path("/close_bak")
-    @POST
-    @Produces({MediaType.APPLICATION_JSON})
-    public String close(CloseParams closeParams, @Context HttpServletRequest request) {
-        if (Strings.isNullOrEmpty(closeParams.linkedme_key)) {
-            throw new LMException(LMExceptionFactor.LM_MISSING_PARAM, closeParams.linkedme_key);
-        }
-
-//        String apiName = "/i/sdk/close";
-//        if (!signAuthService.doAuth(apiName, closeParams.sign, String.valueOf(closeParams.identity_id), closeParams.linkedme_key, String.valueOf(closeParams.session_id), String.valueOf(closeParams.timestamp))) {
-//            throw new LMException(LMExceptionFactor.LM_AUTH_FAILED);
-//        }
-
-        // lmSdkService.close(closeParams);
-        JSONObject requestJson = JSONObject.fromObject(closeParams);
-
-        JSONObject log = new JSONObject();
-        log.put("request", requestJson);
-        log.put("response", "{}");
-        ApiLogger.biz(String.format("%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s", request.getHeader("x-forwarded-for"), "close",
-                closeParams.identity_id, closeParams.linkedme_key, closeParams.session_id, closeParams.retry_times, closeParams.is_debug,
-                closeParams.sdk_version, log.toString()));
-
-        return "{}";
-    }
 
     @Path("/preInstall")
     @POST
