@@ -1,6 +1,7 @@
 package cc.linkedme.api.resources;
 
 import java.util.Map;
+import java.util.Random;
 
 import javax.annotation.Resource;
 import javax.ws.rs.GET;
@@ -30,6 +31,11 @@ import org.springframework.util.CollectionUtils;
 public class Summary {
     @Resource
     private SummaryService summaryService;
+
+    private static final long baseOfDevices = 103030L;
+    private static long addNum = 0L;
+    private static long seven_second_stamp = 1L;
+    private static long sumOfDevices = 0L;
 
     @Path("/counts")
     @GET
@@ -81,6 +87,19 @@ public class Summary {
         return result;
     }
 
+    @Path("/sum_of_devices")
+    @GET
+    @Produces(MediaType.APPLICATION_JSON)
+    public long getSumOfDevices() {
+        long timestamp = System.currentTimeMillis();
+        if (addNum == 0L) addNum += timestamp / 1000 - 1466397100L;
+        if ((timestamp / 7000) != seven_second_stamp) {
+            seven_second_stamp = timestamp / 7000;
+            addNum += (long) (Math.random() * 10) % 7 + 1;
+            sumOfDevices = addNum + (timestamp / 1000 - 1466397100L) / 10;
+        }
+        return sumOfDevices + baseOfDevices;
+    }
 
     @Path("/get_income_rank")
     @GET
