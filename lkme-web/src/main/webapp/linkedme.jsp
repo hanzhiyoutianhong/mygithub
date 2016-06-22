@@ -71,13 +71,13 @@
                 return 'true' == '${isCannotGetWinEvent}';
             },
             isCannotGoMarket: function () {
-                return 'true' == '${TimeStisCannotGoMarketamp}';
+                return 'true' == '${isCannotGoMarket}';
             },
             isForceUseScheme: function () {
                 return 'true' == '${isForceUseScheme}';
             },
             isYYBAvailable: function () {
-                return 'true' == '${isYYBAvailable}'
+                return 'true' == '${isYYBAvailable}' && "" !== Params.yyb_download_url && !Params.isIOS();
             }
         };
         var DEBUG = ${DEBUG};
