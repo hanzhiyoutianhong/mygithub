@@ -62,10 +62,10 @@ public class UserAgentParser {
     }
 
     public List<UserAgent> parseUA(String userAgentStr) {
-        if (userAgentStr == null) {
-            return null;
-        }
         List<UserAgent> agentList = new ArrayList<UserAgent>();
+        if (userAgentStr == null) {
+            return agentList;
+        }
         UserAgent agent;
         for (UAPattern p : patterns) {
             if ((agent = p.match(userAgentStr)) != null) {

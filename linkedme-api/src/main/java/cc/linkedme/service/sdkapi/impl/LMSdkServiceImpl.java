@@ -2,11 +2,15 @@ package cc.linkedme.service.sdkapi.impl;
 
 import javax.annotation.Resource;
 
-import cc.linkedme.commons.json.JsonBuilder;
 import cc.linkedme.commons.log.ApiLogger;
 import cc.linkedme.commons.redis.JedisPort;
 import cc.linkedme.commons.shard.ShardingSupportHash;
-import cc.linkedme.commons.util.*;
+import cc.linkedme.commons.util.ArrayUtil;
+import cc.linkedme.commons.util.Base62;
+import cc.linkedme.commons.util.Constants;
+import cc.linkedme.commons.util.DeepLinkUtil;
+import cc.linkedme.commons.util.MD5Utils;
+import cc.linkedme.commons.util.UuidHelper;
 import cc.linkedme.commons.uuid.UuidCreator;
 import cc.linkedme.dao.sdkapi.ClientDao;
 import cc.linkedme.data.model.ClientInfo;
@@ -17,6 +21,8 @@ import cc.linkedme.data.model.params.InstallParams;
 import cc.linkedme.data.model.params.OpenParams;
 import cc.linkedme.data.model.params.PreInstallParams;
 import cc.linkedme.data.model.params.UrlParams;
+import cc.linkedme.data.model.params.WebCloseParams;
+import cc.linkedme.data.model.params.WebInitParams;
 import cc.linkedme.exception.LMException;
 import cc.linkedme.exception.LMExceptionFactor;
 import cc.linkedme.mcq.ClientMsgPusher;
@@ -28,6 +34,7 @@ import com.google.common.base.Joiner;
 import com.google.common.base.Strings;
 import net.sf.json.JSONArray;
 import net.sf.json.JSONObject;
+import org.apache.commons.lang.StringUtils;
 
 import java.net.URI;
 import java.text.SimpleDateFormat;
@@ -72,6 +79,41 @@ public class LMSdkServiceImpl implements LMSdkService {
             new LinkedBlockingQueue<Runnable>(300), new ThreadPoolExecutor.DiscardOldestPolicy());
 
     public final static float UNIVERSE_LINK_IOS_VERSION = 8;
+
+
+    public String webinit(WebInitParams webInitParams) {
+
+        String identityId = webInitParams.getIdentityId();
+        if (Strings.isNullOrEmpty(identityId) || !StringUtils.isNumeric(identityId) || !UuidHelper.isValidId(Long.parseLong(identityId))) {
+            identityId = String.valueOf(uuidCreator.nextId(1));
+            webInitParams.setIdentityId(identityId);
+        }
+
+
+        long sessionId = System.currentTimeMillis();
+        JSONObject resultJson = new JSONObject();
+        resultJson.put("identity_id", identityId);
+        resultJson.put("session_id", sessionId);
+
+        JedisPort linkedmeKeyClient = linkedmeKeyShardingSupport.getClient(webInitParams.getLinkedmeKey());
+        String appId = linkedmeKeyClient.hget(webInitParams.getLinkedmeKey(), "appid");
+
+        ApiLogger.biz(String.format("%s\t%s\t%s\t%s\t%s", webInitParams.getClientIP(), "webinit", appId, webInitParams.getLinkedmeKey(),
+                webInitParams.getIdentityId()));
+
+        return resultJson.toString();
+
+    }
+
+    public void webClose(WebCloseParams webCloseParams) {
+
+        JedisPort linkedmeKeyClient = linkedmeKeyShardingSupport.getClient(webCloseParams.getLinkedmeKey());
+        String appId = linkedmeKeyClient.hget(webCloseParams.getLinkedmeKey(), "appid");
+
+        ApiLogger.biz(String.format("%s\t%s\t%s\t%s\t%s\t%s\t%s", webCloseParams.getClientIP(), "webclose", appId,
+                webCloseParams.getLinkedmeKey(), webCloseParams.getIdentityId(), webCloseParams.getSessionId(), webCloseParams.getTimestamp()));
+
+    }
 
     public String install(InstallParams installParams) {
         JSONObject requestJson = JSONObject.fromObject(installParams);
@@ -223,7 +265,8 @@ public class LMSdkServiceImpl implements LMSdkService {
                     }
                 }
             } catch (Exception e) {
-                throw new LMException(LMExceptionFactor.LM_ILLEGAL_PARAMETER_VALUE, deepLinkUrl);
+                ApiLogger.warn("LMSdkServiceImpl.getClickIdFromUri failed, deepLinkUrl = " + deepLinkUrl);
+                return "0";
             }
         }
         return clickId;
@@ -270,10 +313,11 @@ public class LMSdkServiceImpl implements LMSdkService {
 
             String clickId = getClickIdFromUri(deepLinkUrl);
             deepLinkId = Base62.decode(clickId);
-            if (deepLinkId > 0) {
+            DeepLink deepLink = null;
+            if (deepLinkId > 0 && appId > 0) {
                 clicked_linkedme_link = true;
+                deepLink = deepLinkService.getDeepLinkInfo(deepLinkId, appId);
             }
-            DeepLink deepLink = deepLinkService.getDeepLinkInfo(deepLinkId, appId);
             if (deepLink != null) {
                 params = getParamsFromDeepLink(deepLink);
 
@@ -387,7 +431,8 @@ public class LMSdkServiceImpl implements LMSdkService {
     public String url(UrlParams urlParams) {
         Joiner joiner = Joiner.on("&").skipNulls();
         Joiner joiner2 = Joiner.on(",").skipNulls();
-        // linkedme_key & tags & alias & channel & feature & stage & params TODO 添加identity_id信息 区分用户和设备
+        // linkedme_key & tags & alias & channel & feature & stage & params TODO 添加identity_id信息
+        // 区分用户和设备
         String urlParamsStr = joiner.join(urlParams.linkedme_key, joiner2.join(urlParams.tags), joiner2.join(urlParams.channel),
                 joiner2.join(urlParams.feature), joiner2.join(urlParams.stage), urlParams.params);
 
@@ -406,6 +451,9 @@ public class LMSdkServiceImpl implements LMSdkService {
 
         long appId = urlParams.app_id; // web创建url传appid, sdk创建url不传appid
         if (appId <= 0) {
+            if(Strings.isNullOrEmpty(urlParams.linkedme_key)) {
+                throw new LMException(LMExceptionFactor.LM_ILLEGAL_PARAMETER_VALUE, "linkedme_key is invalid");
+            }
             JedisPort linkedmeKeyClient = linkedmeKeyShardingSupport.getClient(urlParams.linkedme_key);
             String appIdStr = linkedmeKeyClient.hget(urlParams.linkedme_key, "appid");
             if (appIdStr != null) {
