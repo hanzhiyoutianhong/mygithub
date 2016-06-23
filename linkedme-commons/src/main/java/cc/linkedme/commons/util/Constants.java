@@ -8,6 +8,7 @@ public class Constants {
     public static final String DEEPLINK_HTTPS_PREFIX = "https://lkme.cc";
 
     public static final String CREATE_URL_API = "http://lkme.cc/i/sdk/url";
+    public static final String BTN_CLICK_URL = "http://lkme.cc/i/ride/click_btn";
 
     public static final boolean enableProfiling = true;
 

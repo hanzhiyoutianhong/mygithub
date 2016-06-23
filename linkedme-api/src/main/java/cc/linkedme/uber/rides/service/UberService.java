@@ -1,24 +1,32 @@
 package cc.linkedme.uber.rides.service;
 
-import cc.linkedme.commons.log.ApiLogger;
-import cc.linkedme.commons.redis.JedisPort;
-import cc.linkedme.commons.shard.ShardingSupportHash;
-import cc.linkedme.data.model.ButtonInfo;
-import cc.linkedme.data.model.ConsumerAppInfo;
-import cc.linkedme.data.model.params.ClickBtnParams;
-import cc.linkedme.data.model.params.InitUberButtonParams;
-import cc.linkedme.service.webapi.BtnService;
-import cc.linkedme.service.webapi.ConsumerService;
-import com.google.api.client.repackaged.com.google.common.base.Strings;
+import java.io.IOException;
+import java.util.Date;
+
+import javax.annotation.Resource;
+
 import net.sf.json.JSONArray;
 import net.sf.json.JSONObject;
+
 import org.apache.commons.httpclient.HttpClient;
 import org.apache.commons.httpclient.HttpMethod;
 import org.apache.commons.httpclient.methods.GetMethod;
+import org.apache.commons.lang3.time.DateFormatUtils;
 import org.springframework.stereotype.Service;
 
-import javax.annotation.Resource;
-import java.io.IOException;
+import cc.linkedme.commons.log.ApiLogger;
+import cc.linkedme.commons.redis.JedisPort;
+import cc.linkedme.commons.shard.ShardingSupportHash;
+import cc.linkedme.commons.useragent.Constants;
+import cc.linkedme.data.model.ButtonInfo;
+import cc.linkedme.data.model.ConsumerAppInfo;
+import cc.linkedme.data.model.params.ClickBtnParams;
+import cc.linkedme.data.model.params.GetBtnStatusParams;
+import cc.linkedme.data.model.params.InitUberButtonParams;
+import cc.linkedme.service.webapi.BtnService;
+import cc.linkedme.service.webapi.ConsumerService;
+
+import com.google.api.client.repackaged.com.google.common.base.Strings;
 
 /**
  * Created by LinkedME01 on 16/4/8.
@@ -26,6 +34,7 @@ import java.io.IOException;
 
 @Service
 public class UberService {
+    
     @Resource
     BtnService btnService;
 
@@ -34,15 +43,33 @@ public class UberService {
 
     @Resource
     ShardingSupportHash<JedisPort> btnCountShardingSupport;
-
+    
+    public String getBtnStatus(GetBtnStatusParams getBtnStatusParams){
+        
+        ButtonInfo btnInfo = btnService.getBtnInfo(getBtnStatusParams.getBtnId());
+        ConsumerAppInfo consumerAppInfo = consumerService.getConsumerAppInfo(btnInfo.getConsumerAppId());
+        
+        JSONObject json = new JSONObject();
+        json.put("online_status", btnInfo.getOnlineStatus() == 1);
+        json.put("scheme_url", consumerAppInfo.getSchemeUrl());
+        
+        return json.toString();
+    }
+    
     public String initButton(InitUberButtonParams initUberButtonParams) {
+        
         // 根据btn_id获取button信息
         ButtonInfo buttonInfo = btnService.getBtnInfo(initUberButtonParams.btn_id);
+        
+        JSONObject json = new JSONObject();
+        if(buttonInfo.getOnlineStatus() == 0){       
+            json.put("online_status", false);
+            return json.toString();
+        }
+        
         ConsumerAppInfo consumerAppInfo = consumerService.getConsumerAppInfo(buttonInfo.getConsumerAppId());
 
         // 根据buttonInfo.getConsumerAppId()获取变现方的app信息
-        String bundleId = consumerAppInfo.getBundleId();
-        String packageName = consumerAppInfo.getPackageName();
         String schemeUrl = consumerAppInfo.getSchemeUrl(); // TODO 有可能iOS和Android的schemeUrl不一样
         String customUrl = consumerAppInfo.getCustomUrl();
         String defaultUrl = consumerAppInfo.getDefaultUrl();
@@ -56,10 +83,22 @@ public class UberService {
         double endLng = initUberButtonParams.getDropoff_lng();
 
         // 计数
-        String hashKey = buttonInfo.getAppId() + initUberButtonParams.btn_id;
-        String viewCountKey = hashKey + ".view"; // TODO 后续suffix统一成枚举类型
-        JedisPort btnCountClient = btnCountShardingSupport.getClient(hashKey);
-        btnCountClient.incr(viewCountKey);
+        String btnCountKey =
+                DateFormatUtils.format(new Date(), "yyyyMMdd") + "_" + buttonInfo.getAppId() + "_" + initUberButtonParams.btn_id + "_"
+                        + consumerAppInfo.getAppId();
+        String hashField;
+        if ("ios".equals(initUberButtonParams.getSource())) {
+            hashField ="ios_view";
+        } else if ("android".equals(initUberButtonParams.getSource())) {
+            hashField = "android_view";
+        } else if("web".equals(initUberButtonParams.getSource())) {
+            hashField = "web_view";
+        } else{
+            hashField = "other_view";
+        }
+        ApiLogger.btnCount(btnCountKey);
+        JedisPort btnCountClient = btnCountShardingSupport.getClient(btnCountKey);
+        btnCountClient.hincrBy(btnCountKey, hashField, 1);
 
         String url = "https://api.uber.com.cn/v1/estimates/price?";
         String param =
@@ -103,19 +142,22 @@ public class UberService {
             formatSchemeUrl = formatSchemeUrl + "&product_id=" + productId;
         }
 
-        JSONObject btnMsg = new JSONObject();
-        btnMsg.put("price", price);
-        btnMsg.put("distance", distance);
-
-        JSONObject json = new JSONObject();
-        json.put("bundle_id", bundleId);
-        json.put("package_name", packageName);
-        json.put("scheme_url", formatSchemeUrl);
-        json.put("custom_url", customUrl);
-        json.put("default_url", defaultUrl);
-        json.put("button_icon", buttonIcon);
-
-        json.put("btn_msg", btnMsg);
+        json.put("online_status", true);
+        
+        JSONObject btn_title = new JSONObject();
+        btn_title.put("btn_icon", buttonIcon);
+        String btn_msg = "距离" + distance + ",需花费约" + price;
+        btn_title.put("btn_msg", btn_msg);
+        btn_title.put("scheme_url", formatSchemeUrl);
+        
+        String custom_url = String.format(customUrl  + "client_id=%s&action=setPickup&pickup[latitude]=%s&pickup[longitude]=%s&pickup[formatted_address]=%s&dropoff[latitude]=%s&dropoff[longitude]=%s&dropoff[formatted_address]=%s",
+                clientId, startLat, startLng, initUberButtonParams.pickup_label, endLat, endLng, initUberButtonParams.dropoff_label);
+        btn_title.put("custom_url", custom_url);
+        btn_title.put("default_url", defaultUrl);
+        btn_title.put("click_url", cc.linkedme.commons.util.Constants.BTN_CLICK_URL);
+        
+        json.put("btn_title", btn_title);
+       
         return json.toString();
     }
 
@@ -123,23 +165,33 @@ public class UberService {
         // 根据btn_id获取button信息
         ButtonInfo buttonInfo = btnService.getBtnInfo(clickBtnParams.btn_id);
 
-        String clickSuffix;
-        if ("app".equals(clickBtnParams.open_type)) {
-            clickSuffix = ".app";
-        } else if ("web".equals(clickBtnParams.open_type)) {
-            clickSuffix = ".web";
-        } else {
-            clickSuffix = ".other";
+        String btnCountKey =
+                DateFormatUtils.format(new Date(), "yyyyMMdd") + "_" + buttonInfo.getAppId() + "_" + buttonInfo.getBtnId() + "_"
+                        + buttonInfo.getConsumerAppId();
+        
+        String hashField;
+        if ("ios".equals(clickBtnParams.source)) {
+            hashField ="ios_click";
+        } else if ("android".equals(clickBtnParams.source)) {
+            hashField = "android_click";
+        } else if("web".equals(clickBtnParams.source)) {
+            hashField = "web_click";
+        } else{
+            hashField = "other_click";
         }
-        String incomeSuffix = ".income";
+        ApiLogger.btnCount(btnCountKey);
+        JedisPort btnCountClient = btnCountShardingSupport.getClient(btnCountKey);
+        btnCountClient.hincrBy(btnCountKey, hashField, 1);
+        
+//        String incomeSuffix = ".income";
 
         // app <-> btn计数
-        String btnHashKey = buttonInfo.getAppId() + clickBtnParams.btn_id;
-        clickCount(btnHashKey, clickSuffix, incomeSuffix, 0);   //TODO 后续金额改成实际值
+//        String btnHashKey = buttonInfo.getAppId() + clickBtnParams.btn_id;
+//        clickCount(btnHashKey, clickSuffix, incomeSuffix, 0);   //TODO 后续金额改成实际值
 
         // app <-> consumer_app计数
-        String hashKey = String.valueOf(buttonInfo.getAppId()) + buttonInfo.getConsumerAppId();
-        clickCount(hashKey, clickSuffix, incomeSuffix, 0);  //TODO 后续金额改成实际值
+//        String hashKey = String.valueOf(buttonInfo.getAppId()) + buttonInfo.getConsumerAppId();
+//        clickCount(hashKey, clickSuffix, incomeSuffix, 0);  //TODO 后续金额改成实际值
 
     }
 
