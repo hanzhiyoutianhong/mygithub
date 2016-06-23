@@ -135,6 +135,14 @@ public class App {
     @Produces(MediaType.APPLICATION_JSON)
     public String updateApp(AppParams appParams, @Context HttpServletRequest request) {
 
+        if(!Strings.isNullOrEmpty(appParams.lkme_key)){
+            appParams.lkme_key = appParams.lkme_key.substring(appParams.lkme_key.length()-32,appParams.lkme_key.length());
+
+        }
+        if(!Strings.isNullOrEmpty(appParams.lkme_secret)){
+            appParams.lkme_secret = appParams.lkme_secret.substring(appParams.lkme_secret.length()-32,appParams.lkme_secret.length());
+
+        }
         JSONObject linkSettingJson = appParams.link_setting;
         JSONObject iosJson = linkSettingJson.getJSONObject("ios");
         JSONObject adrJson = linkSettingJson.getJSONObject("android");
