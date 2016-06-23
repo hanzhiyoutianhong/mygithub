@@ -164,6 +164,7 @@ public class UrlServlet extends HttpServlet {
         boolean isAndroid = false;
         boolean yybAvailable = false;
         String countType;
+        String isScan = "click";
         if (osFamily.equals("iOS")) {
             isIOS = true;
 
@@ -188,6 +189,7 @@ public class UrlServlet extends HttpServlet {
 
             if ("1".equals(urlScanParam)) {
                 countType = "pc_ios_scan";
+                isScan = "scan";
             } else {
                 countType = "ios_click";
             }
@@ -195,7 +197,7 @@ public class UrlServlet extends HttpServlet {
             if (deepLink.getSource() != null && deepLink.getSource().trim().toLowerCase().equals("dashboard")
                     && !deepLink.isIos_use_default() && deepLink.getIos_custom_url() != null) {
                 clickCount(deepLinkId, countType);
-                ApiLogger.biz(String.format("%s\t%s\t%s\t%s\t%s\t%s", request.getHeader("x-forwarded-for"), "click", countType, appId,
+                ApiLogger.biz(String.format("%s\t%s\t%s\t%s\t%s\t%s", request.getHeader("x-forwarded-for"), isScan, countType, appId,
                         deepLinkId, userAgent));
                 response.sendRedirect(formatCustomUrl(deepLink.getIos_custom_url()));
                 // invoke ProfileUtil
@@ -221,6 +223,7 @@ public class UrlServlet extends HttpServlet {
 
             if ("1".equals(urlScanParam)) {
                 countType = "pc_adr_scan";
+                isScan = "scan";
             } else {
                 countType = "adr_click";
             }
@@ -228,7 +231,7 @@ public class UrlServlet extends HttpServlet {
             if (deepLink.getSource() != null && deepLink.getSource().trim().toLowerCase().equals("dashboard")
                     && !deepLink.isAndroid_use_default() && deepLink.getAndroid_custom_url() != null) {
                 clickCount(deepLinkId, countType);
-                ApiLogger.biz(String.format("%s\t%s\t%s\t%s\t%s\t%s", request.getHeader("x-forwarded-for"), "click", countType, appId,
+                ApiLogger.biz(String.format("%s\t%s\t%s\t%s\t%s\t%s", request.getHeader("x-forwarded-for"), isScan, countType, appId,
                         deepLinkId, userAgent));
                 response.sendRedirect(formatCustomUrl(deepLink.getAndroid_custom_url()));
                 // invoke ProfileUtil
