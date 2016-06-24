@@ -19,7 +19,7 @@ var lkmeAction = {
     recordId: function () {
         var param = {
             identity_id: Params.identity_id,
-            is_valid_identityid: Params.is_valid_identity,
+            is_valid_identity_id: Params.is_valid_identity,
             browser_fingerprint_id: Params.browser_fingerprint_id,
             deeplink_id: Params.deeplink_id
         };
@@ -35,7 +35,12 @@ var lkmeAction = {
     },
     recordJSEvent: function (destination) {
         var param = {
-            dst: destination
+            destination: destination,
+            identity_id: Params.identity_id,
+            is_valid_identity_id: Params.is_valid_identity,
+            browser_fingerprint_id: Params.browser_fingerprint_id,
+            app_id: Params.app_id,
+            deeplink_id: Params.deeplink_id
         };
         $.ajax({
             method: "POST",
@@ -49,7 +54,13 @@ var lkmeAction = {
     },
     recordJSUserClickEvent: function (destination) {
         var param = {
-            dst: destination
+            destination: destination,
+            identity_id: Params.identity_id,
+            is_valid_identity_id: Params.is_valid_identity,
+            browser_fingerprint_id: Params.browser_fingerprint_id,
+            app_id: Params.app_id,
+            deeplink_id: Params.deeplink_id,
+            click_id: Params.click_id
         };
         $.ajax({
             method: "POST",
