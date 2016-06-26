@@ -164,7 +164,7 @@ public class UrlServlet extends HttpServlet {
         boolean isAndroid = false;
         boolean yybAvailable = false;
         String countType;
-        String isScan = "click";
+        String apiName = "click";
         if (osFamily.equals("iOS")) {
             isIOS = true;
 
@@ -189,7 +189,7 @@ public class UrlServlet extends HttpServlet {
 
             if ("1".equals(urlScanParam)) {
                 countType = "pc_ios_scan";
-                isScan = "scan";
+                apiName = "scan";
             } else {
                 countType = "ios_click";
             }
@@ -197,7 +197,7 @@ public class UrlServlet extends HttpServlet {
             if (deepLink.getSource() != null && deepLink.getSource().trim().toLowerCase().equals("dashboard")
                     && !deepLink.isIos_use_default() && deepLink.getIos_custom_url() != null) {
                 clickCount(deepLinkId, countType);
-                ApiLogger.biz(String.format("%s\t%s\t%s\t%s\t%s\t%s", request.getHeader("x-forwarded-for"), isScan, countType, appId,
+                ApiLogger.biz(String.format("%s\t%s\t%s\t%s\t%s\t%s", request.getHeader("x-forwarded-for"), apiName, countType, appId,
                         deepLinkId, userAgent));
                 response.sendRedirect(formatCustomUrl(deepLink.getIos_custom_url()));
                 // invoke ProfileUtil
@@ -223,7 +223,7 @@ public class UrlServlet extends HttpServlet {
 
             if ("1".equals(urlScanParam)) {
                 countType = "pc_adr_scan";
-                isScan = "scan";
+                apiName = "scan";
             } else {
                 countType = "adr_click";
             }
@@ -231,7 +231,7 @@ public class UrlServlet extends HttpServlet {
             if (deepLink.getSource() != null && deepLink.getSource().trim().toLowerCase().equals("dashboard")
                     && !deepLink.isAndroid_use_default() && deepLink.getAndroid_custom_url() != null) {
                 clickCount(deepLinkId, countType);
-                ApiLogger.biz(String.format("%s\t%s\t%s\t%s\t%s\t%s", request.getHeader("x-forwarded-for"), isScan, countType, appId,
+                ApiLogger.biz(String.format("%s\t%s\t%s\t%s\t%s\t%s", request.getHeader("x-forwarded-for"), apiName, countType, appId,
                         deepLinkId, userAgent));
                 response.sendRedirect(formatCustomUrl(deepLink.getAndroid_custom_url()));
                 // invoke ProfileUtil
@@ -246,7 +246,7 @@ public class UrlServlet extends HttpServlet {
             if (deepLink.getSource() != null && deepLink.getSource().trim().toLowerCase().equals("dashboard")
                     && !deepLink.isDesktop_use_default() && deepLink.getDesktop_custom_url() != null) {
                 clickCount(deepLinkId, countType);
-                ApiLogger.biz(String.format("%s\t%s\t%s\t%s\t%s\t%s", request.getHeader("x-forwarded-for"), "click", countType, appId,
+                ApiLogger.biz(String.format("%s\t%s\t%s\t%s\t%s\t%s", request.getHeader("x-forwarded-for"), apiName, countType, appId,
                         deepLinkId, userAgent));
                 response.sendRedirect(formatCustomUrl(deepLink.getDesktop_custom_url()));
                 return;
@@ -257,7 +257,7 @@ public class UrlServlet extends HttpServlet {
             String codeUrl = Constants.DEEPLINK_HTTPS_PREFIX + request.getRequestURI() + "?scan=1";
 
             clickCount(deepLinkId, countType);
-            ApiLogger.biz(String.format("%s\t%s\t%s\t%s\t%s\t%s", request.getHeader("x-forwarded-for"), "click", countType, appId,
+            ApiLogger.biz(String.format("%s\t%s\t%s\t%s\t%s\t%s", request.getHeader("x-forwarded-for"), apiName, countType, appId,
                     deepLinkId, userAgent));
 
             response.sendRedirect(location + "?code_url=" + codeUrl);
@@ -274,7 +274,7 @@ public class UrlServlet extends HttpServlet {
             // 点击计数
             clickCount(deepLinkId, countType);
             // 记录日志
-            ApiLogger.biz(String.format("%s\t%s\t%s\t%s\t%s\t%s", request.getHeader("x-forwarded-for"), "click", countType, appId,
+            ApiLogger.biz(String.format("%s\t%s\t%s\t%s\t%s\t%s", request.getHeader("x-forwarded-for"), apiName, countType, appId,
                     deepLinkId, userAgent));
 
         } else {
