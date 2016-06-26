@@ -64,8 +64,7 @@ public class LMJSServerResources {
     @Produces({MediaType.APPLICATION_JSON})
     public String recordJSEvent(@FormParam("destination") String destination,
                                 @FormParam("identity_id") long identity_id,
-                                @FormParam("is_valid_identity_id") boolean is_valid_identity_id,
-                                @FormParam("browser_fingerprint_id") String browser_fingerprint_id,
+                                @FormParam("is_valid_identityid") boolean is_valid_identity_id,
                                 @FormParam("app_id") long app_id,
                                 @FormParam("deeplink_id") long deeplink_id){
         JSONObject jsonObject = new JSONObject();
@@ -84,8 +83,7 @@ public class LMJSServerResources {
     @Produces({MediaType.APPLICATION_JSON})
     public String recordClickEvent(@FormParam("destination") String destination,
                                    @FormParam("identity_id") long identity_id,
-                                   @FormParam("is_valid_identity_id") boolean is_valid_identity_id,
-                                   @FormParam("browser_fingerprint_id") String browser_fingerprint_id,
+                                   @FormParam("is_valid_identityid") boolean is_valid_identity_id,
                                    @FormParam("app_id") long app_id,
                                    @FormParam("deeplink_id") long deeplink_id,
                                    @FormParam("click_id") long click_id){
