@@ -59,5 +59,46 @@ public class LMJSServerResources {
         return "{}";
     }
 
+    @Path("/record_event")
+    @POST
+    @Produces({MediaType.APPLICATION_JSON})
+    public String recordJSEvent(@FormParam("destination") String destination,
+                                @FormParam("identity_id") long identity_id,
+                                @FormParam("is_valid_identity_id") boolean is_valid_identity_id,
+                                @FormParam("browser_fingerprint_id") String browser_fingerprint_id,
+                                @FormParam("app_id") long app_id,
+                                @FormParam("deeplink_id") long deeplink_id){
+        JSONObject jsonObject = new JSONObject();
+
+        jsonObject.put("identityId", identity_id );
+        jsonObject.put("is_valid_identity_id", is_valid_identity_id );
+        jsonObject.put("app_id", app_id );
+        jsonObject.put("deeplink_id", deeplink_id );
+        jsonObject.put("destination", destination );
+        ApiLogger.info( jsonObject );
+        return null;
+    }
+
+    @Path("/record_click_event")
+    @POST
+    @Produces({MediaType.APPLICATION_JSON})
+    public String recordClickEvent(@FormParam("destination") String destination,
+                                   @FormParam("identity_id") long identity_id,
+                                   @FormParam("is_valid_identity_id") boolean is_valid_identity_id,
+                                   @FormParam("browser_fingerprint_id") String browser_fingerprint_id,
+                                   @FormParam("app_id") long app_id,
+                                   @FormParam("deeplink_id") long deeplink_id,
+                                   @FormParam("click_id") long click_id){
+        JSONObject jsonObject = new JSONObject();
+
+        jsonObject.put("identityId", identity_id );
+        jsonObject.put("is_valid_identity_id", is_valid_identity_id );
+        jsonObject.put("app_id", app_id );
+        jsonObject.put("deeplink_id", deeplink_id );
+        jsonObject.put("click_id", click_id);
+        jsonObject.put("destination", destination );
+        ApiLogger.info( jsonObject );
+        return null;
+    }
 
 }
