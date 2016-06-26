@@ -5,6 +5,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.ws.rs.*;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
+import javax.xml.ws.spi.http.HttpContext;
 
 import cc.linkedme.commons.log.ApiLogger;
 import cc.linkedme.data.model.params.JsActionsParams;
@@ -63,18 +64,12 @@ public class LMJSServerResources {
     @POST
     @Produces({MediaType.APPLICATION_JSON})
     public String recordJSEvent(@FormParam("destination") String destination,
-                                @FormParam("identity_id") long identity_id,
-                                @FormParam("is_valid_identityid") boolean is_valid_identity_id,
-                                @FormParam("app_id") long app_id,
-                                @FormParam("deeplink_id") long deeplink_id){
-        JSONObject jsonObject = new JSONObject();
+                                @FormParam("identity_id") String identity_id,
+                                @FormParam("app_id") String app_id,
+                                @FormParam("deeplink_id") String deeplink_id, @Context HttpServletRequest request){
+        String clientIP = request.getRemoteAddr();
 
-        jsonObject.put("identityId", identity_id );
-        jsonObject.put("is_valid_identity_id", is_valid_identity_id );
-        jsonObject.put("app_id", app_id );
-        jsonObject.put("deeplink_id", deeplink_id );
-        jsonObject.put("destination", destination );
-        ApiLogger.info( jsonObject );
+        ApiLogger.biz(String.format("%s\t%s\t%s\t%s\t%s\t%s", clientIP, "record_event", identity_id, app_id, deeplink_id, destination));
         return null;
     }
 
@@ -83,19 +78,10 @@ public class LMJSServerResources {
     @Produces({MediaType.APPLICATION_JSON})
     public String recordClickEvent(@FormParam("destination") String destination,
                                    @FormParam("identity_id") long identity_id,
-                                   @FormParam("is_valid_identityid") boolean is_valid_identity_id,
                                    @FormParam("app_id") long app_id,
-                                   @FormParam("deeplink_id") long deeplink_id,
-                                   @FormParam("click_id") long click_id){
-        JSONObject jsonObject = new JSONObject();
-
-        jsonObject.put("identityId", identity_id );
-        jsonObject.put("is_valid_identity_id", is_valid_identity_id );
-        jsonObject.put("app_id", app_id );
-        jsonObject.put("deeplink_id", deeplink_id );
-        jsonObject.put("click_id", click_id);
-        jsonObject.put("destination", destination );
-        ApiLogger.info( jsonObject );
+                                   @FormParam("deeplink_id") long deeplink_id, @Context HttpServletRequest request){
+        String clientIP = request.getRemoteAddr();
+        ApiLogger.biz(String.format("%s\t%s\t%s\t%s\t%s\t%s", clientIP, "record_click_event", identity_id, app_id, deeplink_id, destination));
         return null;
     }
 
