@@ -13,7 +13,7 @@
         <property name="clients" ref="deepLinkJedisClientMap"/>
         <property name="hashAlg" value="crc32"/>
         <property name="hashGene" value="256"/>
-        <property name="tablePerDb" value="128"/>
+        <property name="tablePerDb" value="256"/>
     </bean>
 
     <bean id="deepLinkJedisClientMap" class="java.util.HashMap">
@@ -48,7 +48,7 @@
         <property name="clients" ref="countClientsMap"/>
         <property name="hashAlg" value="crc32"/>
         <property name="hashGene" value="256"/>
-        <property name="tablePerDb" value="128"/>
+        <property name="tablePerDb" value="256"/>
     </bean>
 
     <bean id="countClientsMap" class="java.util.HashMap">
@@ -80,7 +80,7 @@
         <property name="clients" ref="deviceJedisClientMap"/>
         <property name="hashAlg" value="crc32"/>
         <property name="hashGene" value="256"/>
-        <property name="tablePerDb" value="128"/>
+        <property name="tablePerDb" value="256"/>
     </bean>
 
     <bean id="deviceJedisClientMap" class="java.util.HashMap">
@@ -111,7 +111,7 @@
         <property name="clients" ref="btnCountJedisClientMap"/>
         <property name="hashAlg" value="crc32"/>
         <property name="hashGene" value="256"/>
-        <property name="tablePerDb" value="128"/>
+        <property name="tablePerDb" value="256"/>
     </bean>
 
     <bean id="btnCountJedisClientMap" class="java.util.HashMap">
@@ -143,7 +143,7 @@
         <property name="clients" ref="linkedmeKeyJedisClientMap"/>
         <property name="hashAlg" value="crc32"/>
         <property name="hashGene" value="256"/>
-        <property name="tablePerDb" value="128"/>
+        <property name="tablePerDb" value="256"/>
     </bean>
 
     <bean id="linkedmeKeyJedisClientMap" class="java.util.HashMap">
