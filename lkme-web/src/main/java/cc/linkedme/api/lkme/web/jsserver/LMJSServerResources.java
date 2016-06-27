@@ -5,6 +5,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.ws.rs.*;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
+import javax.xml.ws.spi.http.HttpContext;
 
 import cc.linkedme.commons.log.ApiLogger;
 import cc.linkedme.data.model.params.JsActionsParams;
@@ -59,5 +60,29 @@ public class LMJSServerResources {
         return "{}";
     }
 
+    @Path("/record_event")
+    @POST
+    @Produces({MediaType.APPLICATION_JSON})
+    public String recordJSEvent(@FormParam("destination") String destination,
+                                @FormParam("identity_id") String identity_id,
+                                @FormParam("app_id") String app_id,
+                                @FormParam("deeplink_id") String deeplink_id, @Context HttpServletRequest request){
+        String clientIP = request.getHeader("x-forwarded-for");
+        ApiLogger.biz(String.format("%s\t%s\t%s\t%s\t%s\t%s", clientIP, "js_event", identity_id, app_id, deeplink_id, destination));
+        return null;
+    }
+
+    @Path("/record_click_event")
+    @POST
+    @Produces({MediaType.APPLICATION_JSON})
+    public String recordClickEvent(@FormParam("destination") String destination,
+                                   @FormParam("identity_id") long identity_id,
+                                   @FormParam("app_id") long app_id,
+                                   @FormParam("deeplink_id") long deeplink_id, @Context HttpServletRequest request){
+        String clientIP = request.getHeader("x-forwarded-for");
+        ApiLogger.biz(
+                String.format("%s\t%s\t%s\t%s\t%s\t%s", clientIP, "user_click_event", identity_id, app_id, deeplink_id, destination));
+        return null;
+    }
 
 }

@@ -77,7 +77,7 @@
                 return 'true' == '${isForceUseScheme}';
             },
             isYYBAvailable: function () {
-                return 'true' == '${isYYBAvailable}' && "" !== Params.yyb_download_url && !Params.isIOS();
+                return 'true' == '${isYYBAvailable}' && "" !== Params.yyb_download_url && 0 !== Params.yyb_download_url && !Params.isIOS();
             }
         };
         var DEBUG = ${DEBUG};
@@ -89,7 +89,7 @@
             document.write("<script src='<%=basePath %>/js/cn/langconfig.js'><\/script>");
         }
     </script>
-    <script src="<%=basePath %>/js/linkedme-redirect-new.js"></script>
+    <script src="<%=basePath %>/js/linkedme-redirect4.js"></script>
     <title></title>
     <style type="text/css">
         * {
