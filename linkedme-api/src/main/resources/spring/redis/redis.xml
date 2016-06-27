@@ -13,14 +13,13 @@
         <property name="clients" ref="deepLinkJedisClientMap"/>
         <property name="hashAlg" value="crc32"/>
         <property name="hashGene" value="256"/>
-        <property name="tablePerDb" value="128"/>
+        <property name="tablePerDb" value="256"/>
     </bean>
 
     <bean id="deepLinkJedisClientMap" class="java.util.HashMap">
         <constructor-arg>
             <map>
                 <entry key="0" value-ref="deepLinkJedisClient_0"/>
-                <entry key="1" value-ref="deepLinkJedisClient_1"/>
             </map>
         </constructor-arg>
     </bean>
@@ -38,19 +37,6 @@
             </bean>
         </property>
     </bean>
-    <bean id="deepLinkJedisClient_1" class="cc.linkedme.commons.redis.JedisMSServer"
-          init-method="init">
-        <property name="masterConfig">
-            <bean parent="jedisPoolConfig">
-                <property name="serverPortDb" value="${deeplink.id.master_1}"></property>
-            </bean>
-        </property>
-        <property name="slaveConfig">
-            <bean parent="jedisPoolConfig">
-                <property name="serverPortDb" value="${deeplink.id.slave_1}"></property>
-            </bean>
-        </property>
-    </bean>
     <!-- ******************** deeplink end ************************************ -->
 
     <!-- ************** count dao start ******************* -->
@@ -62,14 +48,13 @@
         <property name="clients" ref="countClientsMap"/>
         <property name="hashAlg" value="crc32"/>
         <property name="hashGene" value="256"/>
-        <property name="tablePerDb" value="128"/>
+        <property name="tablePerDb" value="256"/>
     </bean>
 
     <bean id="countClientsMap" class="java.util.HashMap">
         <constructor-arg>
             <map>
                 <entry key="0" value-ref="countJedisClient_0"/>
-                <entry key="1" value-ref="countJedisClient_1"/>
             </map>
         </constructor-arg>
     </bean>
@@ -87,19 +72,6 @@
             </bean>
         </property>
     </bean>
-    <bean id="countJedisClient_1" class="cc.linkedme.commons.redis.JedisMSServer"
-          init-method="init">
-        <property name="masterConfig">
-            <bean parent="jedisPoolConfig">
-                <property name="serverPortDb" value="${deeplink.count.master_1}"></property>
-            </bean>
-        </property>
-        <property name="slaveConfig">
-            <bean parent="jedisPoolConfig">
-                <property name="serverPortDb" value="${deeplink.count.slave_1}"></property>
-            </bean>
-        </property>
-    </bean>
 
     <!-- ************** count dao end **********************-->
 
@@ -108,14 +80,13 @@
         <property name="clients" ref="deviceJedisClientMap"/>
         <property name="hashAlg" value="crc32"/>
         <property name="hashGene" value="256"/>
-        <property name="tablePerDb" value="128"/>
+        <property name="tablePerDb" value="256"/>
     </bean>
 
     <bean id="deviceJedisClientMap" class="java.util.HashMap">
         <constructor-arg>
             <map>
                 <entry key="0" value-ref="deviceJedisClient_0"/>
-                <entry key="1" value-ref="deviceJedisClient_1"/>
             </map>
         </constructor-arg>
     </bean>
@@ -133,19 +104,6 @@
             </bean>
         </property>
     </bean>
-    <bean id="deviceJedisClient_1" class="cc.linkedme.commons.redis.JedisMSServer"
-          init-method="init">
-        <property name="masterConfig">
-            <bean parent="jedisPoolConfig">
-                <property name="serverPortDb" value="${device.identityid.master_1}"></property>
-            </bean>
-        </property>
-        <property name="slaveConfig">
-            <bean parent="jedisPoolConfig">
-                <property name="serverPortDb" value="${device.identityid.slave_1}"></property>
-            </bean>
-        </property>
-    </bean>
     <!-- ******************** client end ************************************ -->
 
     <!-- ******************** btn count start ************************************ -->
@@ -153,14 +111,13 @@
         <property name="clients" ref="btnCountJedisClientMap"/>
         <property name="hashAlg" value="crc32"/>
         <property name="hashGene" value="256"/>
-        <property name="tablePerDb" value="128"/>
+        <property name="tablePerDb" value="256"/>
     </bean>
 
     <bean id="btnCountJedisClientMap" class="java.util.HashMap">
         <constructor-arg>
             <map>
                 <entry key="0" value-ref="btnCountJedisClient_0"/>
-                <entry key="1" value-ref="btnCountJedisClient_1"/>
             </map>
         </constructor-arg>
     </bean>
@@ -178,19 +135,7 @@
             </bean>
         </property>
     </bean>
-    <bean id="btnCountJedisClient_1" class="cc.linkedme.commons.redis.JedisMSServer"
-          init-method="init">
-        <property name="masterConfig">
-            <bean parent="jedisPoolConfig">
-                <property name="serverPortDb" value="${btn.count.master_1}"></property>
-            </bean>
-        </property>
-        <property name="slaveConfig">
-            <bean parent="jedisPoolConfig">
-                <property name="serverPortDb" value="${btn.count.slave_1}"></property>
-            </bean>
-        </property>
-    </bean>
+    
     <!-- ******************** btn count end ************************************ -->
 
     <!-- ******************** linkedmeKey appid secret start ************************************ -->
@@ -198,14 +143,13 @@
         <property name="clients" ref="linkedmeKeyJedisClientMap"/>
         <property name="hashAlg" value="crc32"/>
         <property name="hashGene" value="256"/>
-        <property name="tablePerDb" value="128"/>
+        <property name="tablePerDb" value="256"/>
     </bean>
 
     <bean id="linkedmeKeyJedisClientMap" class="java.util.HashMap">
         <constructor-arg>
             <map>
                 <entry key="0" value-ref="linkedmeKeyJedisClient_0"/>
-                <entry key="1" value-ref="linkedmeKeyJedisClient_1"/>
             </map>
         </constructor-arg>
     </bean>
@@ -220,19 +164,6 @@
         <property name="slaveConfig">
             <bean parent="jedisPoolConfig">
                 <property name="serverPortDb" value="${linkedmekey.slave_0}"></property>
-            </bean>
-        </property>
-    </bean>
-    <bean id="linkedmeKeyJedisClient_1" class="cc.linkedme.commons.redis.JedisMSServer"
-          init-method="init">
-        <property name="masterConfig">
-            <bean parent="jedisPoolConfig">
-                <property name="serverPortDb" value="${linkedmekey.master_1}"></property>
-            </bean>
-        </property>
-        <property name="slaveConfig">
-            <bean parent="jedisPoolConfig">
-                <property name="serverPortDb" value="${linkedmekey.slave_1}"></property>
             </bean>
         </property>
     </bean>

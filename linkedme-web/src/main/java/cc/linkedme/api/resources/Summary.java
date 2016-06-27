@@ -32,9 +32,9 @@ public class Summary {
     @Resource
     private SummaryService summaryService;
 
-    private static final long baseOfDevices = 103030L;
+    private static final long baseOfDevices = 2503030L;
     private static long addNum = 0L;
-    private static long seven_second_stamp = 1L;
+    private static long one_second_stamp = 1L;
     private static long sumOfDevices = 0L;
 
     @Path("/counts")
@@ -80,7 +80,7 @@ public class Summary {
                                        @QueryParam("end_date") String endDate,
                                        @QueryParam("token") String token) {
         String[] deeplinkIdsArr = deeplinkIds.split(",");
-        if(deeplinkIdsArr == null || deeplinkIdsArr.length == 0) {
+        if (deeplinkIdsArr == null || deeplinkIdsArr.length == 0) {
             return "{}";
         }
         String result = summaryService.getDeepLinksCounts(appId, deeplinkIdsArr, startDate, endDate);
@@ -92,11 +92,15 @@ public class Summary {
     @Produces(MediaType.APPLICATION_JSON)
     public long getSumOfDevices() {
         long timestamp = System.currentTimeMillis();
-        if (addNum == 0L) addNum += timestamp / 1000 - 1466397100L;
-        if ((timestamp / 7000) != seven_second_stamp) {
-            seven_second_stamp = timestamp / 7000;
-            addNum += (long) (Math.random() * 10) % 7 + 1;
-            sumOfDevices = addNum + (timestamp / 1000 - 1466397100L) / 10;
+        if (addNum == 0L) addNum += (timestamp / 1000 - 1466691000L) * 5;
+        if ((timestamp / 1000) != one_second_stamp) {
+            one_second_stamp = timestamp / 1000;
+            if (one_second_stamp % 10 == 0) {
+                addNum += (long) (Math.random() * 100) + 100;
+            } else {
+                addNum += (long) (Math.random() * 10) + 10;
+            }
+            sumOfDevices = addNum + (timestamp / 1000 - 1466397100L) * 10;
         }
         return sumOfDevices + baseOfDevices;
     }
@@ -134,11 +138,11 @@ public class Summary {
     @GET
     @Produces(MediaType.APPLICATION_JSON)
     public String getBtnCountHistory(@QueryParam("user_id") long user_id,
-                              @QueryParam("app_id") long app_id,
-                              @QueryParam("button_id") String button_id,
-                              @QueryParam("start_date") String start_date,
-                              @QueryParam("end_date") String end_date,
-                              @QueryParam("interval") int interval) {
+                                     @QueryParam("app_id") long app_id,
+                                     @QueryParam("button_id") String button_id,
+                                     @QueryParam("start_date") String start_date,
+                                     @QueryParam("end_date") String end_date,
+                                     @QueryParam("interval") int interval) {
 
         SummaryButtonParams summaryButtonParams = new SummaryButtonParams(user_id, app_id, start_date, end_date, button_id, interval);
         String result = summaryService.getBtnHistoryCounts(summaryButtonParams);

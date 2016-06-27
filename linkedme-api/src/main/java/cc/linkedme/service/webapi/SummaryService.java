@@ -826,6 +826,9 @@ public class SummaryService {
                     }
                 }
             });
+            if(list == null || list.size() == 0){
+                continue;
+            }
             for (int i = 0; i < idList.size(); i++) {
                 Map<String, String> countMap = (Map<String, String>) list.get(i);
                 if (CollectionUtils.isEmpty(countMap)) {
