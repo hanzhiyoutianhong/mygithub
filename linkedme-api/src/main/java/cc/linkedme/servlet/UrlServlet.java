@@ -201,7 +201,7 @@ public class UrlServlet extends HttpServlet {
 
             if (deepLink.getSource() != null && deepLink.getSource().trim().toLowerCase().equals("dashboard")
                     && !deepLink.isIos_use_default() && deepLink.getIos_custom_url() != null) {
-                clickCount(deepLinkId, countType);
+                clickCount(deepLinkId, appId, countType);
                 ApiLogger.biz(String.format("%s\t%s\t%s\t%s\t%s\t%s", request.getHeader("x-forwarded-for"), apiName, countType, appId,
                         deepLinkId, userAgent));
                 response.sendRedirect(formatCustomUrl(deepLink.getIos_custom_url()));
@@ -235,7 +235,7 @@ public class UrlServlet extends HttpServlet {
 
             if (deepLink.getSource() != null && deepLink.getSource().trim().toLowerCase().equals("dashboard")
                     && !deepLink.isAndroid_use_default() && deepLink.getAndroid_custom_url() != null) {
-                clickCount(deepLinkId, countType);
+                clickCount(deepLinkId, appId, countType);
                 ApiLogger.biz(String.format("%s\t%s\t%s\t%s\t%s\t%s", request.getHeader("x-forwarded-for"), apiName, countType, appId,
                         deepLinkId, userAgent));
                 response.sendRedirect(formatCustomUrl(deepLink.getAndroid_custom_url()));
@@ -250,7 +250,7 @@ public class UrlServlet extends HttpServlet {
 
             if (deepLink.getSource() != null && deepLink.getSource().trim().toLowerCase().equals("dashboard")
                     && !deepLink.isDesktop_use_default() && deepLink.getDesktop_custom_url() != null) {
-                clickCount(deepLinkId, countType);
+                clickCount(deepLinkId, appId, countType);
                 ApiLogger.biz(String.format("%s\t%s\t%s\t%s\t%s\t%s", request.getHeader("x-forwarded-for"), apiName, countType, appId,
                         deepLinkId, userAgent));
                 response.sendRedirect(formatCustomUrl(deepLink.getDesktop_custom_url()));
@@ -261,7 +261,7 @@ public class UrlServlet extends HttpServlet {
             String location = "https://lkme.cc/code.jsp";
             String codeUrl = Constants.DEEPLINK_HTTPS_PREFIX + request.getRequestURI() + "?scan=1";
 
-            clickCount(deepLinkId, countType);
+            clickCount(deepLinkId, appId, countType);
             ApiLogger.biz(String.format("%s\t%s\t%s\t%s\t%s\t%s", request.getHeader("x-forwarded-for"), apiName, countType, appId,
                     deepLinkId, userAgent));
 
@@ -277,7 +277,7 @@ public class UrlServlet extends HttpServlet {
         String visitId = request.getParameter("visit_id");
         if (visitId == null) {
             // 点击计数
-            clickCount(deepLinkId, countType);
+            clickCount(deepLinkId, appId, countType);
             // 记录日志
             ApiLogger.biz(String.format("%s\t%s\t%s\t%s\t%s\t%s", request.getHeader("x-forwarded-for"), apiName, countType, appId,
                     deepLinkId, userAgent));
@@ -410,7 +410,7 @@ public class UrlServlet extends HttpServlet {
         doGet(request, response);
     }
 
-    private void clickCount(long deepLinkId, String countType) {
+    private void clickCount(long deepLinkId, long appId, String countType) {
         String keyPrefix = Util.getCurrDate();
         deepLinkCountThreadPool.submit(new Callable<Void>() {
             @Override
@@ -418,8 +418,9 @@ public class UrlServlet extends HttpServlet {
                 try {
                     // TODO 对deeplink_id的有效性做判断
                     JedisPort countClient = deepLinkCountShardingSupport.getClient(deepLinkId);
-                    countClient.hincrBy(String.valueOf(deepLinkId), countType, 1);  //统计总计数
-                    countClient.hincrBy(keyPrefix + "_" + deepLinkId, countType, 1);    //按天统计
+                    countClient.hincrBy(String.valueOf(deepLinkId), countType, 1);  //统计短链总计数
+                    countClient.hincrBy(keyPrefix + "_" + deepLinkId, countType, 1);    //按天统计短链计数
+                    countClient.hincrBy(keyPrefix + "_" + appId, countType, 1);    //按天统计app的所有短链计数
                 } catch (Exception e) {
                     ApiLogger.warn("UrlServlet deepLinkCountThreadPool count failed", e);
                 }

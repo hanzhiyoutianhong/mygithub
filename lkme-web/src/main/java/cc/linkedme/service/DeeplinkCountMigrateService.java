@@ -48,24 +48,23 @@ public class DeeplinkCountMigrateService {
             int i = 0;
             Map<String, DeepLinkDateCount> deepLinkDateCounts = new HashMap<>(100);
             while ((temp = br.readLine()) != null) {
-                if (i < 100) {
-                    String[] lineArr = temp.split("\t");
-                    if (lineArr.length < 2 || Strings.isNullOrEmpty(lineArr[0]) || Strings.isNullOrEmpty(lineArr[1])) {
-                        continue;
-                    }
-                    DeepLinkDateCount deepLinkDateCount = new DeepLinkDateCount();
-                    deepLinkDateCount.setDeeplinkId(Long.parseLong(lineArr[0].split("_")[1]));
-                    deepLinkDateCount.setAppId(Integer.parseInt(lineArr[1]));
-                    deepLinkDateCounts.put(lineArr[0], deepLinkDateCount);
-                } else {
+                String[] lineArr = temp.split("\t");
+                if (lineArr.length < 2 || Strings.isNullOrEmpty(lineArr[0]) || Strings.isNullOrEmpty(lineArr[1])) {
+                    continue;
+                }
+                DeepLinkDateCount deepLinkDateCount = new DeepLinkDateCount();
+                deepLinkDateCount.setDeeplinkId(Long.parseLong(lineArr[0].split("_")[1]));
+                deepLinkDateCount.setAppId(Integer.parseInt(lineArr[1]));
+                deepLinkDateCounts.put(lineArr[0], deepLinkDateCount);
+                i++;
+                if (i == 100) {
+                    //导入数据
                     importDataToMysql(deepLinkDateCounts, fileName);
 
                     // 满100个元素后,把i置为0,重新生成新Map
                     i = 0;
                     deepLinkDateCounts = new HashMap<>(100);
                 }
-                i++;
-
             }
 
             if (i > 0) {

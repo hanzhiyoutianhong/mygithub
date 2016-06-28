@@ -39,36 +39,6 @@ public class ClientServiceImpl implements ClientService {
 
     public int addClient(ClientInfo clientInfo, long deepLinkId) {
         int result = clientDao.addClient(clientInfo);
-
-        if (result > 0 && deepLinkId > 0) {
-            // long appId = 0; // 根据linkedmeKey查找appId
-            // JedisPort linkedmeKeyClient =
-            // linkedmeKeyShardingSupport.getClient(clientInfo.getLinkedmeKey());
-            // String appIdStr = linkedmeKeyClient.hget(clientInfo.getLinkedmeKey(), "appid");
-            // if(appIdStr != null) {
-            // appId = Long.parseLong(appIdStr);
-            // }
-            // DeepLink deepLink = deepLinkService.getDeepLinkInfo(deepLinkId, appId);
-
-            // count
-            final String type = DeepLinkCount.getCountTypeFromOs(clientInfo.getOs(), "install");
-            String keyPrefix = Util.getCurrDate();
-            deepLinkCountThreadPool.submit(new Callable<Void>() {
-                @Override
-                public Void call() throws Exception {
-                    try {
-                        // TODO 对deeplink_id的有效性做判断
-                        JedisPort countClient = deepLinkCountShardingSupport.getClient(deepLinkId);
-                        countClient.hincrBy(String.valueOf(deepLinkId), type, 1);
-                        countClient.hincrBy(keyPrefix + "_" + deepLinkId, type, 1);
-                    } catch (Exception e) {
-                        ApiLogger.warn("ClientServiceImpl.addClient deepLinkCountThreadPool count failed", e);
-                    }
-                    return null;
-                }
-            });
-
-        }
         return result;
     }
 }
