@@ -286,8 +286,14 @@ public class DeepLinkDaoImpl extends BaseDao implements DeepLinkDao {
 
         try {
             result += jdbcTemplate.update(tableChannel.getSql(), values);
-        } catch (DataAccessException e) {
-            e.printStackTrace();
+        }catch (DataAccessException e) {
+            if (DaoUtil.isDuplicateInsert(e)) {
+                ApiLogger.warn(new StringBuilder(128).append("Duplicate insert deeplink_info table, deeplink_id=").append(deepLinkId),
+                        e);
+                throw new LMException(LMExceptionFactor.LM_FAILURE_DB_OP,
+                        "duplicate insert deeplink_info table, deeplink_id=" + deepLinkId);
+            }
+            throw new LMException(LMExceptionFactor.LM_FAILURE_DB_OP);
         }
 
         if (result == 1) return true;
