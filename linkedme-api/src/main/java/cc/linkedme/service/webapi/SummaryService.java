@@ -72,6 +72,9 @@ public class SummaryService {
     public String getDeepLinksHistoryCounts(SummaryDeepLinkParams summaryDeepLinkParams) {
         List<DeepLinkDateCount> deepLinkDateCountList = deepLinkDateCountDao.getDeepLinksDateCounts(summaryDeepLinkParams.appid,
                 summaryDeepLinkParams.startDate, summaryDeepLinkParams.endDate);
+
+        //获取今天有计数的短链
+
         long iosClick = 0, iosOpen = 0, iosInstall = 0, adrClick = 0, adrOpen = 0, adrInstall = 0;
         long pcClick = 0, pcIosScan = 0, pcAdrScan = 0, pcIosOpen = 0, pcAdrOpen = 0, pcIosInstall = 0, pcAdrInstall = 0;
         Map<String, Map<String, Long>> allDateCounts = new HashMap<>();

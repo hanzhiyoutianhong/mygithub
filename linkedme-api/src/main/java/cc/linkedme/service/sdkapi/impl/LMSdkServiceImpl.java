@@ -10,6 +10,7 @@ import cc.linkedme.commons.util.Base62;
 import cc.linkedme.commons.util.Constants;
 import cc.linkedme.commons.util.DeepLinkUtil;
 import cc.linkedme.commons.util.MD5Utils;
+import cc.linkedme.commons.util.Util;
 import cc.linkedme.commons.util.UuidHelper;
 import cc.linkedme.commons.uuid.UuidCreator;
 import cc.linkedme.dao.sdkapi.ClientDao;
@@ -111,7 +112,8 @@ public class LMSdkServiceImpl implements LMSdkService {
         String appId = linkedmeKeyClient.hget(webCloseParams.getLinkedmeKey(), "appid");
 
         ApiLogger.biz(String.format("%s\t%s\t%s\t%s\t%s\t%s\t%s", webCloseParams.getClientIP(), "webclose", appId,
-                webCloseParams.getLinkedmeKey(), webCloseParams.getIdentityId(), webCloseParams.getSessionId(), webCloseParams.getTimestamp()));
+                webCloseParams.getLinkedmeKey(), webCloseParams.getIdentityId(), webCloseParams.getSessionId(),
+                webCloseParams.getTimestamp()));
 
     }
 
@@ -213,6 +215,26 @@ public class LMSdkServiceImpl implements LMSdkService {
         } else {
             browserFingerprintId = deviceFingerprintId;
             installType = DeepLinkCount.getCountTypeFromOs(installParams.os, "install");
+
+            final String type = DeepLinkCount.getCountTypeFromOs(clientInfo.getOs(), "install");
+            String keyPrefix = Util.getCurrDate();
+            long countDeepLinkId = deepLinkId;
+            long fromAppId = appId; // 用于统计一个appId带来的下载量
+            deepLinkCountThreadPool.submit(new Callable<Void>() {
+                @Override
+                public Void call() throws Exception {
+                    try {
+                        // TODO 对deeplink_id的有效性做判断
+                        JedisPort countClient = deepLinkCountShardingSupport.getClient(countDeepLinkId);
+                        countClient.hincrBy(String.valueOf(countDeepLinkId), type, 1);
+                        countClient.hincrBy(keyPrefix + "_" + countDeepLinkId, type, 1);
+                        countClient.hincrBy(keyPrefix + "_" + fromAppId, type, 1);
+                    } catch (Exception e) {
+                        ApiLogger.warn("LMSdkServiceImpl.install deepLinkCountThreadPool count failed", e);
+                    }
+                    return null;
+                }
+            });
         }
         // 写mcq
         clientInfo.setIdentityId(identityId);
@@ -303,7 +325,7 @@ public class LMSdkServiceImpl implements LMSdkService {
         boolean clicked_linkedme_link = false;
         String openTypeForLog = "other";
         long appId = 0;
-        if (!Strings.isNullOrEmpty(deepLinkUrl)) {
+        if (!Strings.isNullOrEmpty(deepLinkUrl) || !Strings.isNullOrEmpty(openParams.spotlight_identifier)) {
             // 根据linkedme_key获取appid
             JedisPort linkedmeKeyClient = linkedmeKeyShardingSupport.getClient(openParams.linkedme_key);
             String appIdStr = linkedmeKeyClient.hget(openParams.linkedme_key, "appid");
@@ -312,6 +334,13 @@ public class LMSdkServiceImpl implements LMSdkService {
             }
 
             String clickId = getClickIdFromUri(deepLinkUrl);
+            if (!Strings.isNullOrEmpty(openParams.spotlight_identifier)
+                    && openParams.spotlight_identifier.startsWith(Constants.SPOTLIGHT_PREFIX)) {
+                String[] arr = openParams.spotlight_identifier.split("\\.");
+                if (arr.length == 3) {
+                    clickId = arr[2];
+                }
+            }
             deepLinkId = Base62.decode(clickId);
             DeepLink deepLink = null;
             if (deepLinkId > 0 && appId > 0) {
@@ -323,7 +352,7 @@ public class LMSdkServiceImpl implements LMSdkService {
 
                 // count
                 // TODO 如果是pc扫描过来的,需要在openType前边加上 "pc_",eg: pc_ios_open
-                if (deepLinkUrl.startsWith("http") && deepLinkUrl.contains("scan=1")) {
+                if (!Strings.isNullOrEmpty(deepLinkUrl) && deepLinkUrl.startsWith("http") && deepLinkUrl.contains("scan=1")) {
                     isScan = true;
                 }
                 String scanPrefix = "";
@@ -335,16 +364,22 @@ public class LMSdkServiceImpl implements LMSdkService {
                 final String clickType = DeepLinkCount.getCountTypeFromOs(openParams.os, "click");
                 boolean isUpdateClickCount = isDirectForward;
                 long dpId = deepLinkId;
+                long countAppId = appId;
+                String keyPrefix = Util.getCurrDate();
                 deepLinkCountThreadPool.submit(new Callable<Void>() {
                     @Override
                     public Void call() throws Exception {
                         try {
                             // TODO 对deeplink_id的有效性做判断
                             JedisPort countClient = deepLinkCountShardingSupport.getClient(dpId);
-                            countClient.hincrBy(String.valueOf(dpId), openType, 1);
+                            countClient.hincrBy(String.valueOf(dpId), openType, 1); //统计open总计数
+                            countClient.hincrBy(keyPrefix + "_" + dpId, openType, 1);   //按天统计open计数
+                            countClient.hincrBy(keyPrefix + "_" + countAppId, openType, 1);   //按天统计open计数
                             // 如果是universe link 或者是app links,要记录click计数
                             if (isUpdateClickCount) {
                                 countClient.hincrBy(String.valueOf(dpId), clickType, 1);
+                                countClient.hincrBy(keyPrefix + "_" + dpId, clickType, 1);
+                                countClient.hincrBy(keyPrefix + "_" + countAppId, clickType, 1);
                             }
                         } catch (Exception e) {
                             ApiLogger.warn("LMSdkServiceImpl.open deepLinkCountThreadPool count failed", e);
@@ -451,7 +486,7 @@ public class LMSdkServiceImpl implements LMSdkService {
 
         long appId = urlParams.app_id; // web创建url传appid, sdk创建url不传appid
         if (appId <= 0) {
-            if(Strings.isNullOrEmpty(urlParams.linkedme_key)) {
+            if (Strings.isNullOrEmpty(urlParams.linkedme_key)) {
                 throw new LMException(LMExceptionFactor.LM_ILLEGAL_PARAMETER_VALUE, "linkedme_key is invalid");
             }
             JedisPort linkedmeKeyClient = linkedmeKeyShardingSupport.getClient(urlParams.linkedme_key);

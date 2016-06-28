@@ -5,6 +5,7 @@ import cc.linkedme.commons.exception.LMException;
 import cc.linkedme.commons.exception.LMExceptionFactor;
 import cc.linkedme.commons.log.ApiLogger;
 import cc.linkedme.commons.util.Base62;
+import cc.linkedme.commons.util.Constants;
 import cc.linkedme.commons.util.Util;
 import cc.linkedme.data.model.AppListInfo;
 import cc.linkedme.data.model.params.*;
@@ -326,6 +327,10 @@ public class LMSdkResources {
         }
         JSONObject resultJson = new JSONObject();
         resultJson.put("url", url);
+
+        if(!Strings.isNullOrEmpty(channel) && channel.contains("spotlight")) {
+            resultJson.put("spotlight_identifier", Constants.SPOTLIGHT_PREFIX + urlArr[4]);
+        }
 
         JSONObject log = new JSONObject();
         log.put("request", requestJson);
