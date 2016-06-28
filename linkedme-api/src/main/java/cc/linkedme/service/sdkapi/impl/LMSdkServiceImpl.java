@@ -217,9 +217,11 @@ public class LMSdkServiceImpl implements LMSdkService {
             installType = DeepLinkCount.getCountTypeFromOs(installParams.os, "install");
 
             final String type = DeepLinkCount.getCountTypeFromOs(clientInfo.getOs(), "install");
-            String keyPrefix = Util.getCurrDate();
+
+            String date = Util.getCurrDate();
+            deepLinkMsgPusher.addDeepLinkCount(deepLinkId, (int) appId, date, type);
+
             long countDeepLinkId = deepLinkId;
-            long fromAppId = appId; // 用于统计一个appId带来的下载量
             deepLinkCountThreadPool.submit(new Callable<Void>() {
                 @Override
                 public Void call() throws Exception {
@@ -227,8 +229,6 @@ public class LMSdkServiceImpl implements LMSdkService {
                         // TODO 对deeplink_id的有效性做判断
                         JedisPort countClient = deepLinkCountShardingSupport.getClient(countDeepLinkId);
                         countClient.hincrBy(String.valueOf(countDeepLinkId), type, 1);
-                        countClient.hincrBy(keyPrefix + "_" + countDeepLinkId, type, 1);
-                        countClient.hincrBy(keyPrefix + "_" + fromAppId, type, 1);
                     } catch (Exception e) {
                         ApiLogger.warn("LMSdkServiceImpl.install deepLinkCountThreadPool count failed", e);
                     }
@@ -364,22 +364,23 @@ public class LMSdkServiceImpl implements LMSdkService {
                 final String clickType = DeepLinkCount.getCountTypeFromOs(openParams.os, "click");
                 boolean isUpdateClickCount = isDirectForward;
                 long dpId = deepLinkId;
-                long countAppId = appId;
-                String keyPrefix = Util.getCurrDate();
+                final int countAppId = (int)appId;
+
+                String date = Util.getCurrDate();
+                deepLinkMsgPusher.addDeepLinkCount(deepLinkId, (int) appId, date, openType);
+
                 deepLinkCountThreadPool.submit(new Callable<Void>() {
                     @Override
                     public Void call() throws Exception {
                         try {
                             // TODO 对deeplink_id的有效性做判断
                             JedisPort countClient = deepLinkCountShardingSupport.getClient(dpId);
-                            countClient.hincrBy(String.valueOf(dpId), openType, 1); //统计open总计数
-                            countClient.hincrBy(keyPrefix + "_" + dpId, openType, 1);   //按天统计open计数
-                            countClient.hincrBy(keyPrefix + "_" + countAppId, openType, 1);   //按天统计open计数
+                            countClient.hincrBy(String.valueOf(dpId), openType, 1); // 统计open总计数
                             // 如果是universe link 或者是app links,要记录click计数
                             if (isUpdateClickCount) {
                                 countClient.hincrBy(String.valueOf(dpId), clickType, 1);
-                                countClient.hincrBy(keyPrefix + "_" + dpId, clickType, 1);
-                                countClient.hincrBy(keyPrefix + "_" + countAppId, clickType, 1);
+
+                                deepLinkMsgPusher.addDeepLinkCount(dpId, countAppId, date, clickType);
                             }
                         } catch (Exception e) {
                             ApiLogger.warn("LMSdkServiceImpl.open deepLinkCountThreadPool count failed", e);

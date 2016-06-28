@@ -30,7 +30,7 @@ public class DeepLinkDateCountDaoImpl extends BaseDao implements DeepLinkDateCou
         TableChannel tableChannel =
                 tableContainer.getTableChannel("deepLinkDateCount", GET_DEEPLINK_DATE_COUNT_BY_ID, deepLinkId, deepLinkId);
         String sql = tableChannel.getSql();
-        List<String> paramList = new ArrayList<String>();
+        List<String> paramList = new ArrayList<>();
         paramList.add(String.valueOf(deepLinkId));
         if (startDate != null) {
             sql += "and date >= ? ";
@@ -177,6 +177,32 @@ public class DeepLinkDateCountDaoImpl extends BaseDao implements DeepLinkDateCou
             if (i > 0) {
                 result++;
             }
+        }
+        return result;
+    }
+
+    public int addDeepLinkDateCount(DeepLinkDateCount deepLinkDateCount, String countType) {
+        String totalCountType;
+        String[] arr = countType.split("_");
+        if ("click".equals(arr[arr.length - 1]) || "scan".equals(arr[arr.length - 1])) {
+            totalCountType = "click";
+        } else {
+            totalCountType = arr[arr.length - 1];
+        }
+
+        String date = deepLinkDateCount.getDate().replace("-", "");
+        String id = date + "_" + deepLinkDateCount.getDeeplinkId();
+
+        String sql = "insert into count_0.url_count_1606 (id, app_id, deeplink_id, date, " + totalCountType + ", " + countType
+                + ") values(?, ?, ?, ?, ?, ?) ON DUPLICATE KEY UPDATE " + totalCountType + " = " + totalCountType + " + values("
+                + totalCountType + "), " + countType + " = " + countType + " + values(" + countType + ")";
+        TableChannel tableChannel = tableContainer.getTableChannel("deepLinkDateCount", ADD_DEEPLINKS_DATE_COUNTS, 0L, 0L);
+        int result = 0;
+        try {
+            result = tableChannel.getJdbcTemplate().update(sql,
+                    new Object[] {id, deepLinkDateCount.getAppId(), deepLinkDateCount.getDeeplinkId(), deepLinkDateCount.getDate(), 1, 1});
+        } catch (Exception e) {
+            ApiLogger.error("DeepLinkDateCountDaoImpl.addDeepLinkDateCount add count failed!", e);
         }
         return result;
     }

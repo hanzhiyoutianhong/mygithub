@@ -41,9 +41,6 @@
         </constructor-arg>
     </bean>
 
-    <bean id="deepLinkCountMigrateTask" class="cc.linkedme.task.DeepLinkCountMigrateTask"/>
-    <bean id="taskTrigger" class="cc.linkedme.task.TaskTrigger"/>
-
 </beans>
 
 
