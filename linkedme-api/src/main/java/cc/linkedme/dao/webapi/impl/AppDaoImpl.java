@@ -10,7 +10,6 @@ import java.sql.Timestamp;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.List;
 import java.util.Map;
 import java.util.regex.Matcher;
@@ -332,7 +331,17 @@ public class AppDaoImpl extends BaseDao implements AppDao {
                 TableChannel tableChannel_set = tableContainer.getTableChannel("urlTags", SET_URL_TAGS_BY_APPID_AND_TYPE, 0L, 0L);
                 JdbcTemplate jdbcTemplate_set = tableChannel_set.getJdbcTemplate();
 
-                result += jdbcTemplate_set.update(tableChannel_set.getSql(), new Object[] {appParams.app_id, values[i], type});
+                try {
+                    result += jdbcTemplate_set.update(tableChannel_set.getSql(), new Object[] {appParams.app_id, values[i], type});
+                } catch (DataAccessException e) {
+                    if (DaoUtil.isDuplicateInsert(e)) {
+                        ApiLogger.warn(new StringBuilder(128).append("Duplicate insert url_tags_info table, tag_content= ").append(appParams.getValue()),
+                                e);
+                        throw new LMException(LMExceptionFactor.LM_FAILURE_DB_OP,
+                                "Duplicate insert url_tags_info table, tag_content = "+ appParams.getValue());
+                    }
+                    throw new LMException(LMExceptionFactor.LM_FAILURE_DB_OP);
+                }
             }
         }
         if (result > 0) return true;

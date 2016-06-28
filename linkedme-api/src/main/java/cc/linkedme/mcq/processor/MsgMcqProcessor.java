@@ -9,7 +9,6 @@ import cc.linkedme.data.model.DeepLink;
 import cc.linkedme.mcq.MsgUtils;
 import cc.linkedme.service.DeepLinkService;
 import cc.linkedme.service.sdkapi.ClientService;
-import net.sf.json.JSONException;
 import net.sf.json.JSONObject;
 
 import javax.annotation.Resource;
@@ -104,7 +103,7 @@ public class MsgMcqProcessor extends McqProcessor {
         ClientInfo clientInfo = MsgUtils.toClientInfoObj(info);
         long deepLinkId = info.getLong("deeplink_id");
         if(type == 21) {
-            result = addClint(clientInfo, deepLinkId);
+            result = addClient(clientInfo, deepLinkId);
         }else if(type == 22) {
 
         }else if(type == 23) {
@@ -125,7 +124,7 @@ public class MsgMcqProcessor extends McqProcessor {
         return result;
     }
 
-    private int addClint(ClientInfo clientInfo, long deepLinkId) {
+    private int addClient(ClientInfo clientInfo, long deepLinkId) {
         int result = 0;
         if(updateDb) {
             result = clientService.addClient(clientInfo, deepLinkId);

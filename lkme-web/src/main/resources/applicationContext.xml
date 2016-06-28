@@ -26,6 +26,8 @@
     <import resource="spring/resource-context.xml"/>
 
     <context:component-scan base-package="cc.linkedme.api.lkme.web"/>
+    <context:component-scan base-package="cc.linkedme.service"/>
+    <context:component-scan base-package="cc.linkedme.task"/>
 
 
 </beans>
