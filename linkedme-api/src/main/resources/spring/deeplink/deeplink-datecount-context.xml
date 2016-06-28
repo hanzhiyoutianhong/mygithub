@@ -23,7 +23,8 @@
         <property name="dbCount"  value="1"/>
 
         <property name="tableNamePrefix" value="url_count" />
-        <property name="tableCount" value="1" />
+        <property name="tableNamePostFix" value="yymm" />  <!-- 默认是索引 -->
+        <property name="tableCount" value="1" />           <!-- 这个参数和tableNamePostFix有关系，如果是日期就不用了。 -->
         <property name="sqls">
             <map>
                 <entry key="ADD_DEEPLINK_DATE_COUNT" value="insert into $db$.$tb$ " />
