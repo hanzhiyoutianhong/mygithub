@@ -1,6 +1,7 @@
 package cc.linkedme.dao.webapi.impl;
 
 import cc.linkedme.commons.log.ApiLogger;
+import cc.linkedme.commons.util.Util;
 import cc.linkedme.dao.BaseDao;
 import cc.linkedme.dao.webapi.DeepLinkDateCountDao;
 import cc.linkedme.data.dao.strategy.TableChannel;
@@ -24,11 +25,13 @@ public class DeepLinkDateCountDaoImpl extends BaseDao implements DeepLinkDateCou
     private static final String GET_DEEPLINK_DATE_COUNT_BY_ID = "GET_DEEPLINK_DATE_COUNT_BY_ID";
     private static final String GET_DEEPLINKS_DATE_COUNTS_BY_APPID = "GET_DEEPLINKS_DATE_COUNTS_BY_APPID";
     private static final String ADD_DEEPLINKS_DATE_COUNTS = "ADD_DEEPLINKS_DATE_COUNTS";
+    private static final String ADD_DEEPLINK_DATE_COUNT = "ADD_DEEPLINK_DATE_COUNT";
 
     @Override
     public List<DeepLinkDateCount> getDeepLinkDateCount(int appId, long deepLinkId, String startDate, String endDate) {
-        TableChannel tableChannel =
-                tableContainer.getTableChannel("deepLinkDateCount", GET_DEEPLINK_DATE_COUNT_BY_ID, deepLinkId, deepLinkId);
+
+        TableChannel tableChannel = tableContainer.getTableChannel("deepLinkDateCount", GET_DEEPLINK_DATE_COUNT_BY_ID, (long) appId,
+                Util.timeStrToDate(startDate));
         String sql = tableChannel.getSql();
         List<String> paramList = new ArrayList<>();
         paramList.add(String.valueOf(deepLinkId));
@@ -77,9 +80,10 @@ public class DeepLinkDateCountDaoImpl extends BaseDao implements DeepLinkDateCou
 
     @Override
     public List<DeepLinkDateCount> getDeepLinksDateCounts(int appId, String startDate, String endDate) {
-        TableChannel tableChannel = tableContainer.getTableChannel("deepLinkDateCount", GET_DEEPLINKS_DATE_COUNTS_BY_APPID, 0L, 0L);
+        TableChannel tableChannel = tableContainer.getTableChannel("deepLinkDateCount", GET_DEEPLINKS_DATE_COUNTS_BY_APPID, (long) appId,
+                Util.timeStrToDate(startDate));
         String sql = tableChannel.getSql();
-        List<String> paramList = new ArrayList<String>();
+        List<String> paramList = new ArrayList<>();
         paramList.add(String.valueOf(appId));
         if (startDate != null) {
             sql += "and date >= ? ";
@@ -190,13 +194,15 @@ public class DeepLinkDateCountDaoImpl extends BaseDao implements DeepLinkDateCou
             totalCountType = arr[arr.length - 1];
         }
 
+        TableChannel tableChannel = tableContainer.getTableChannel("deepLinkDateCount", ADD_DEEPLINK_DATE_COUNT,
+                (long) deepLinkDateCount.getAppId(), Util.timeStrToDate(deepLinkDateCount.getDate()));
+
         String date = deepLinkDateCount.getDate().replace("-", "");
         String id = date + "_" + deepLinkDateCount.getDeeplinkId();
 
-        String sql = "insert into count_0.url_count_1606 (id, app_id, deeplink_id, date, " + totalCountType + ", " + countType
+        String sql = tableChannel.getSql() + " (id, app_id, deeplink_id, date, " + totalCountType + ", " + countType
                 + ") values(?, ?, ?, ?, ?, ?) ON DUPLICATE KEY UPDATE " + totalCountType + " = " + totalCountType + " + values("
                 + totalCountType + "), " + countType + " = " + countType + " + values(" + countType + ")";
-        TableChannel tableChannel = tableContainer.getTableChannel("deepLinkDateCount", ADD_DEEPLINKS_DATE_COUNTS, 0L, 0L);
         int result = 0;
         try {
             result = tableChannel.getJdbcTemplate().update(sql,

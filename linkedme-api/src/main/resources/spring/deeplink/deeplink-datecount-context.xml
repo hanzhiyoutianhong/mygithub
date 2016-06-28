@@ -26,6 +26,7 @@
         <property name="tableCount" value="1" />
         <property name="sqls">
             <map>
+                <entry key="ADD_DEEPLINK_DATE_COUNT" value="insert into $db$.$tb$ " />
                 <entry key="ADD_DEEPLINKS_DATE_COUNTS" value="insert into count_0.url_count_1606 (app_id, deeplink_id, date, click, open, install, ios_click, ios_open, ios_install, adr_click, adr_open, adr_install, pc_click, pc_ios_scan, pc_adr_scan, pc_ios_open, pc_adr_open, pc_ios_install, pc_adr_install, id) values(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?) " />
                 <entry key="GET_DEEPLINK_DATE_COUNT_BY_ID" value="select app_id, date, click, open, install, ios_click, ios_open, ios_install, adr_click, adr_open, adr_install, pc_click, pc_ios_scan, pc_adr_scan, pc_ios_open, pc_adr_open, pc_ios_install, pc_adr_install from $db$.$tb$ where deeplink_id = ? " />
                 <entry key="GET_DEEPLINKS_DATE_COUNTS_BY_APPID" value="select deeplink_id, date, click, open, install, ios_click, ios_open, ios_install, adr_click, adr_open, adr_install, pc_click, pc_ios_scan, pc_adr_scan, pc_ios_open, pc_adr_open, pc_ios_install, pc_adr_install from $db$.$tb$ where app_id = ? " />
