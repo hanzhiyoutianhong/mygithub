@@ -6,6 +6,7 @@ import cc.linkedme.commons.util.ApiUtil;
 import cc.linkedme.commons.util.UseTimeStasticsMonitor;
 import cc.linkedme.data.model.ClientInfo;
 import cc.linkedme.data.model.DeepLink;
+import cc.linkedme.data.model.DeepLinkDateCount;
 import cc.linkedme.mcq.MsgUtils;
 import cc.linkedme.service.DeepLinkService;
 import cc.linkedme.service.sdkapi.ClientService;
@@ -77,9 +78,12 @@ public class MsgMcqProcessor extends McqProcessor {
         if (MsgUtils.isDeeplinkMsgType(type)) {
             // deepLink消息
             result = processDeepLinkMsg(type, info);
-        } else if(MsgUtils.isClientMsgType(type)) {
+        } else if (MsgUtils.isClientMsgType(type)) {
             // client消息(安装app)
             result = processClientMsg(type, info);
+        } else if (MsgUtils.isCountType(type)) {
+            // 短链计数
+            result = processCountMsg(type, info);
         }
         return result;
     }
@@ -102,12 +106,28 @@ public class MsgMcqProcessor extends McqProcessor {
         int result = ApiUtil.MQ_PROCESS_ABORT;
         ClientInfo clientInfo = MsgUtils.toClientInfoObj(info);
         long deepLinkId = info.getLong("deeplink_id");
-        if(type == 21) {
+        if (type == 21) {
             result = addClient(clientInfo, deepLinkId);
-        }else if(type == 22) {
+        } else if (type == 22) {
 
-        }else if(type == 23) {
+        } else if (type == 23) {
 
+        }
+        return result;
+    }
+
+    private int processCountMsg(int type, JSONObject info) {
+        //TODO 可以改成批量插入計數
+        int result = ApiUtil.MQ_PROCESS_ABORT;
+
+        DeepLinkDateCount deepLinkDateCount = new DeepLinkDateCount();
+        deepLinkDateCount.setDeeplinkId(info.getLong("deeplink_id"));
+        deepLinkDateCount.setAppId(info.getInt("app_id"));
+        deepLinkDateCount.setDate(info.getString("date"));
+
+        String countType = info.getString("count_type");
+        if (type == 31) {
+            result = addDeepLinkCount(deepLinkDateCount, countType);
         }
         return result;
     }
@@ -124,12 +144,16 @@ public class MsgMcqProcessor extends McqProcessor {
         return result;
     }
 
+    private int addDeepLinkCount(DeepLinkDateCount deepLinkDateCount, String countType) {
+        return deepLinkService.addDeepLinkCount(deepLinkDateCount, countType);
+    }
+
     private int addClient(ClientInfo clientInfo, long deepLinkId) {
         int result = 0;
-        if(updateDb) {
+        if (updateDb) {
             result = clientService.addClient(clientInfo, deepLinkId);
         }
-        if(updateMc) {
+        if (updateMc) {
 
         }
         return result;

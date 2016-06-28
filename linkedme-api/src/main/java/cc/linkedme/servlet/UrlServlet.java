@@ -13,6 +13,7 @@ import java.util.concurrent.LinkedBlockingQueue;
 import java.util.concurrent.ThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
 
+import javax.annotation.Resource;
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletConfig;
 import javax.servlet.ServletException;
@@ -21,6 +22,8 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import cc.linkedme.commons.util.Util;
+import cc.linkedme.mcq.ClientMsgPusher;
+import cc.linkedme.mcq.DeepLinkMsgPusher;
 import org.springframework.context.ApplicationContext;
 import org.springframework.web.context.support.WebApplicationContextUtils;
 
@@ -64,6 +67,8 @@ public class UrlServlet extends HttpServlet {
 
     private UuidCreator uuidCreator;
 
+    private DeepLinkMsgPusher deepLinkMsgPusher;
+
     private static ThreadPoolExecutor deepLinkCountThreadPool = new ThreadPoolExecutor(20, 20, 60L, TimeUnit.SECONDS,
             new LinkedBlockingQueue<Runnable>(300), new ThreadPoolExecutor.DiscardOldestPolicy());
 
@@ -86,6 +91,7 @@ public class UrlServlet extends HttpServlet {
         clientShardingSupport = (ShardingSupportHash) context.getBean("clientShardingSupport");
         deepLinkCountShardingSupport = (ShardingSupportHash) context.getBean("deepLinkCountShardingSupport");
         uuidCreator = (UuidCreator) context.getBean("uuidCreator");
+        deepLinkMsgPusher = (DeepLinkMsgPusher) context.getBean("deepLinkMsgPusher");
     }
 
     /**
@@ -411,16 +417,16 @@ public class UrlServlet extends HttpServlet {
     }
 
     private void clickCount(long deepLinkId, long appId, String countType) {
-        String keyPrefix = Util.getCurrDate();
+        String date = Util.getCurrDate();
+        deepLinkMsgPusher.addDeepLinkCount(deepLinkId, (int) appId, date, countType);
+
         deepLinkCountThreadPool.submit(new Callable<Void>() {
             @Override
             public Void call() throws Exception {
                 try {
                     // TODO 对deeplink_id的有效性做判断
                     JedisPort countClient = deepLinkCountShardingSupport.getClient(deepLinkId);
-                    countClient.hincrBy(String.valueOf(deepLinkId), countType, 1);  //统计短链总计数
-                    countClient.hincrBy(keyPrefix + "_" + deepLinkId, countType, 1);    //按天统计短链计数
-                    countClient.hincrBy(keyPrefix + "_" + appId, countType, 1);    //按天统计app的所有短链计数
+                    countClient.hincrBy(String.valueOf(deepLinkId), countType, 1); // 统计短链总计数
                 } catch (Exception e) {
                     ApiLogger.warn("UrlServlet deepLinkCountThreadPool count failed", e);
                 }

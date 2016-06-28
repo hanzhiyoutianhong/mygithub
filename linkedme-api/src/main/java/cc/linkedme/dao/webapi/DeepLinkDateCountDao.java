@@ -13,4 +13,6 @@ public interface DeepLinkDateCountDao {
     List<DeepLinkDateCount> getDeepLinksDateCounts(int appId, String startDate, String endDate);
 
     int addDeepLinksDateCounts(String date, DeepLinkDateCount[] deepLinksDateCounts);
+
+    int addDeepLinkDateCount(DeepLinkDateCount deepLinkDateCount, String countType);
 }

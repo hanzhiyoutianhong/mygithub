@@ -68,7 +68,7 @@ public class DeepLinkDaoImpl extends BaseDao implements DeepLinkDao {
         boolean desktop_use_default = deepLink.isDesktop_use_default();
         String desktop_custom_url = deepLink.getDesktop_custom_url();
 
-        TableChannel tableChannel = tableContainer.getTableChannel("deeplink", ADD_DEEPLINK, appid, new Date());
+        TableChannel tableChannel = tableContainer.getTableChannel("deeplink", ADD_DEEPLINK, appid, UuidHelper.getDateFromId(deeplink_id));
 
         try {
             result += tableChannel.getJdbcTemplate().update(tableChannel.getSql(),
@@ -77,10 +77,11 @@ public class DeepLinkDaoImpl extends BaseDao implements DeepLinkDao {
                             android_custom_url, desktop_use_default, desktop_custom_url});
         } catch (DataAccessException e) {
             if (DaoUtil.isDuplicateInsert(e)) {
-                ApiLogger.info(new StringBuilder(128).append("Duplicate insert deepLink, id=").append(deeplink_id));
+                ApiLogger.warn(new StringBuilder(128).append("Duplicate insert deepLink, id=").append(deeplink_id));
                 throw new LMException(LMExceptionFactor.LM_FAILURE_DB_OP,
                         "duplicate insert deepLink table, id=" + deepLink.getDeeplinkId());
             } else {
+                ApiLogger.warn("DeepLinkDaoImpl.addDeepLink failed!", e);
                 throw new LMException(LMExceptionFactor.LM_FAILURE_DB_OP);
             }
         }
@@ -139,7 +140,7 @@ public class DeepLinkDaoImpl extends BaseDao implements DeepLinkDao {
         }
 
 
-        final List<DeepLink> deepLinks = new ArrayList<DeepLink>();
+        final List<DeepLink> deepLinks = new ArrayList<>();
         TableChannel tableChannel = tableContainer.getTableChannel("deeplink", GET_URL_INFO, appid, date);
         tableChannel.getJdbcTemplate().query(tableChannel.getSql(), new Object[] {deepLinkId, appid}, new RowMapper() {
             public Object mapRow(ResultSet resultSet, int i) throws SQLException {
@@ -178,7 +179,7 @@ public class DeepLinkDaoImpl extends BaseDao implements DeepLinkDao {
         String condition = "";
         start_date += " 00:00:00";
         end_date += " 23:59:59";
-        List<String> paramList = new ArrayList<String>();
+        List<String> paramList = new ArrayList<>();
         paramList.add(String.valueOf(appid));
         if (!Strings.isNullOrEmpty(start_date)) {
             condition += "and create_time >= ? ";
