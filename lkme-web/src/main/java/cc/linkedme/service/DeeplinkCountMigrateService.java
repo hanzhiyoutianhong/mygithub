@@ -19,11 +19,14 @@ import cc.linkedme.commons.shard.ShardingSupportHash;
 import cc.linkedme.dao.webapi.DeepLinkDateCountDao;
 import cc.linkedme.data.model.DeepLinkDateCount;
 import com.google.api.client.repackaged.com.google.common.base.Strings;
+import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
 
 /**
  * Created by LinkedME01 on 16/6/23.
  */
+
+@Service
 public class DeeplinkCountMigrateService {
     private final static String FILE_PATH = "/data1/count_data/";
     @Resource
@@ -51,6 +54,7 @@ public class DeeplinkCountMigrateService {
                         continue;
                     }
                     DeepLinkDateCount deepLinkDateCount = new DeepLinkDateCount();
+                    deepLinkDateCount.setDeeplinkId(Long.parseLong(lineArr[0].split("_")[1]));
                     deepLinkDateCount.setAppId(Integer.parseInt(lineArr[1]));
                     deepLinkDateCounts.put(lineArr[0], deepLinkDateCount);
                 } else {
@@ -69,17 +73,17 @@ public class DeeplinkCountMigrateService {
             }
 
         } catch (FileNotFoundException e) {
-            ApiLogger.error(String.format("", fileName), e);
+            ApiLogger.error(String.format("file not found, fileName = %s", fileName), e);
         } catch (IOException e) {
-            ApiLogger.error(String.format("", fileName), e);
+            ApiLogger.error(String.format("migrate data from redis to mysql failed, fileName = %s", fileName), e);
         } catch (Exception e) {
-
+            ApiLogger.error(String.format("migrate data from redis to mysql failed, fileName = %s", fileName), e);
         } finally {
             if (br != null) {
                 try {
                     br.close();
                 } catch (IOException e) {
-                    ApiLogger.error(String.format("", fileName), e);
+                    ApiLogger.error(String.format("close BufferedReader failed"), e);
                 }
             }
         }
@@ -95,25 +99,69 @@ public class DeeplinkCountMigrateService {
             Map<String, String> counts = entry.getValue();
             DeepLinkDateCount deepLinkDateCount = deepLinkDateCounts.get(key);
 
-            deepLinkDateCount.setClick(Long.parseLong(counts.get("click")));
-            deepLinkDateCount.setOpen(Long.parseLong(counts.get("open")));
-            deepLinkDateCount.setInstall(Long.parseLong(counts.get("install")));
+            if (!Strings.isNullOrEmpty(counts.get("click"))) {
+                deepLinkDateCount.setClick(Long.parseLong(counts.get("click")));
+            }
 
-            deepLinkDateCount.setIosClick(Long.parseLong(counts.get("ios_click")));
-            deepLinkDateCount.setIosOpen(Long.parseLong(counts.get("ios_open")));
-            deepLinkDateCount.setIosInstall(Long.parseLong(counts.get("ios_install")));
+            if (!Strings.isNullOrEmpty(counts.get("open"))) {
+                deepLinkDateCount.setOpen(Long.parseLong(counts.get("open")));
+            }
 
-            deepLinkDateCount.setAdrClick(Long.parseLong(counts.get("adr_click")));
-            deepLinkDateCount.setAdrOpen(Long.parseLong(counts.get("adr_open")));
-            deepLinkDateCount.setAdrInstall(Long.parseLong(counts.get("adr_install")));
+            if (!Strings.isNullOrEmpty(counts.get("install"))) {
+                deepLinkDateCount.setInstall(Long.parseLong(counts.get("install")));
+            }
 
-            deepLinkDateCount.setPcClick(Long.parseLong(counts.get("pc_click")));
-            deepLinkDateCount.setPcIosScan(Long.parseLong(counts.get("pc_ios_scan")));
-            deepLinkDateCount.setPcIosOpen(Long.parseLong(counts.get("pc_ios_open")));
-            deepLinkDateCount.setPcIosInstall(Long.parseLong(counts.get("pc_ios_install")));
-            deepLinkDateCount.setPcAdrScan(Long.parseLong(counts.get("pc_adr_scan")));
-            deepLinkDateCount.setPcAdrOpen(Long.parseLong(counts.get("pc_adr_open")));
-            deepLinkDateCount.setPcAdrInstall(Long.parseLong(counts.get("pc_adr_install")));
+            if (!Strings.isNullOrEmpty(counts.get("ios_click"))) {
+                deepLinkDateCount.setIosClick(Long.parseLong(counts.get("ios_click")));
+            }
+
+            if (!Strings.isNullOrEmpty(counts.get("ios_open"))) {
+                deepLinkDateCount.setIosOpen(Long.parseLong(counts.get("ios_open")));
+            }
+
+            if (!Strings.isNullOrEmpty(counts.get("ios_install"))) {
+                deepLinkDateCount.setIosInstall(Long.parseLong(counts.get("ios_install")));
+            }
+
+            if (!Strings.isNullOrEmpty(counts.get("adr_click"))) {
+                deepLinkDateCount.setAdrClick(Long.parseLong(counts.get("adr_click")));
+            }
+
+            if (!Strings.isNullOrEmpty(counts.get("adr_open"))) {
+                deepLinkDateCount.setAdrOpen(Long.parseLong(counts.get("adr_open")));
+            }
+
+            if (!Strings.isNullOrEmpty(counts.get("adr_install"))) {
+                deepLinkDateCount.setAdrInstall(Long.parseLong(counts.get("adr_install")));
+            }
+
+            if (!Strings.isNullOrEmpty(counts.get("pc_click"))) {
+                deepLinkDateCount.setPcClick(Long.parseLong(counts.get("pc_click")));
+            }
+
+            if (!Strings.isNullOrEmpty(counts.get("pc_ios_scan"))) {
+                deepLinkDateCount.setPcIosScan(Long.parseLong(counts.get("pc_ios_scan")));
+            }
+
+            if (!Strings.isNullOrEmpty(counts.get("pc_ios_open"))) {
+                deepLinkDateCount.setPcIosOpen(Long.parseLong(counts.get("pc_ios_open")));
+            }
+
+            if (!Strings.isNullOrEmpty(counts.get("pc_ios_install"))) {
+                deepLinkDateCount.setPcIosInstall(Long.parseLong(counts.get("pc_ios_install")));
+            }
+
+            if (!Strings.isNullOrEmpty(counts.get("pc_adr_scan"))) {
+                deepLinkDateCount.setPcAdrScan(Long.parseLong(counts.get("pc_adr_scan")));
+            }
+
+            if (!Strings.isNullOrEmpty(counts.get("pc_adr_open"))) {
+                deepLinkDateCount.setPcAdrOpen(Long.parseLong(counts.get("pc_adr_open")));
+            }
+
+            if (!Strings.isNullOrEmpty(counts.get("pc_adr_install"))) {
+                deepLinkDateCount.setPcAdrInstall(Long.parseLong(counts.get("pc_adr_install")));
+            }
 
         }
         deepLinkDateCountDao.addDeepLinksDateCounts(date, deepLinkDateCounts.values().toArray(new DeepLinkDateCount[0]));

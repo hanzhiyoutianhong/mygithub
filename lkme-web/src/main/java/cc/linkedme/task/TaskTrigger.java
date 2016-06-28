@@ -9,7 +9,7 @@ import java.util.concurrent.TimeUnit;
 
 public class TaskTrigger implements InitializingBean {
     private static final long DELAY_TIME = 60 * 1000;
-    private static final long EXEC_PERIOD_TIME = 2 * 60 * 1000;
+    private static final long EXEC_PERIOD_TIME = 60 * 60 * 1000;
     private static ScheduledThreadPoolExecutor exec = new ScheduledThreadPoolExecutor(1, new DiscardOldestPolicy());
 
     @Resource

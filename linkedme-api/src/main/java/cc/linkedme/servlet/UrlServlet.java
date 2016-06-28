@@ -1,6 +1,10 @@
 package cc.linkedme.servlet;
 
 import java.io.IOException;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -16,6 +20,7 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import cc.linkedme.commons.util.Util;
 import org.springframework.context.ApplicationContext;
 import org.springframework.web.context.support.WebApplicationContextUtils;
 
@@ -406,14 +411,15 @@ public class UrlServlet extends HttpServlet {
     }
 
     private void clickCount(long deepLinkId, String countType) {
-        // TODO 如果短链的访问量急剧增长,线程池扛不住,后续考虑推消息队列
+        String keyPrefix = Util.getCurrDate();
         deepLinkCountThreadPool.submit(new Callable<Void>() {
             @Override
             public Void call() throws Exception {
                 try {
                     // TODO 对deeplink_id的有效性做判断
                     JedisPort countClient = deepLinkCountShardingSupport.getClient(deepLinkId);
-                    countClient.hincrBy(String.valueOf(deepLinkId), countType, 1);
+                    countClient.hincrBy(String.valueOf(deepLinkId), countType, 1);  //统计总计数
+                    countClient.hincrBy(keyPrefix + "_" + deepLinkId, countType, 1);    //按天统计
                 } catch (Exception e) {
                     ApiLogger.warn("UrlServlet deepLinkCountThreadPool count failed", e);
                 }

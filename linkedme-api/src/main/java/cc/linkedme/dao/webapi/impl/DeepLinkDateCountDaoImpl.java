@@ -137,7 +137,7 @@ public class DeepLinkDateCountDaoImpl extends BaseDao implements DeepLinkDateCou
 
         String countDate = simpleDateFormat2.format(indexDate);
 
-        TableChannel tableChannel = tableContainer.getTableChannel("deepLinkDateCount", ADD_DEEPLINKS_DATE_COUNTS, 0L, indexDate);
+        TableChannel tableChannel = tableContainer.getTableChannel("deepLinkDateCount", ADD_DEEPLINKS_DATE_COUNTS, 0L, 0L);
         String sql = tableChannel.getSql();
 
         int[] multiResult = tableChannel.getJdbcTemplate().batchUpdate(sql, new BatchPreparedStatementSetter() {

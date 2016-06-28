@@ -23,10 +23,13 @@ public class DeepLinkCountMigrateTask implements Runnable {
 
         //call service
         Calendar calendar = Calendar.getInstance();
-        calendar.add(Calendar.DATE, -1); //得到前一天
-        Date date = calendar.getTime();
-        DateFormat df = new SimpleDateFormat("yyyyMMdd");
-        deeplinkCountMigrateService.migrateRedisCountDataToMysql(df.format(date));
+        int hour = calendar.get(Calendar.HOUR_OF_DAY);
+        if(hour == 1) {
+            calendar.add(Calendar.DATE, -1); //得到前一天
+            Date date = calendar.getTime();
+            DateFormat df = new SimpleDateFormat("yyyyMMdd");
+            deeplinkCountMigrateService.migrateRedisCountDataToMysql(df.format(date));
+        }
 
     }
 }

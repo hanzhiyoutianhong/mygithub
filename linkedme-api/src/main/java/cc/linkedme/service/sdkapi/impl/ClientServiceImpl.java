@@ -3,6 +3,7 @@ package cc.linkedme.service.sdkapi.impl;
 import cc.linkedme.commons.log.ApiLogger;
 import cc.linkedme.commons.redis.JedisPort;
 import cc.linkedme.commons.shard.ShardingSupportHash;
+import cc.linkedme.commons.util.Util;
 import cc.linkedme.dao.sdkapi.ClientDao;
 import cc.linkedme.data.model.ClientInfo;
 import cc.linkedme.data.model.DeepLink;
@@ -51,6 +52,7 @@ public class ClientServiceImpl implements ClientService {
 
             // count
             final String type = DeepLinkCount.getCountTypeFromOs(clientInfo.getOs(), "install");
+            String keyPrefix = Util.getCurrDate();
             deepLinkCountThreadPool.submit(new Callable<Void>() {
                 @Override
                 public Void call() throws Exception {
@@ -58,6 +60,7 @@ public class ClientServiceImpl implements ClientService {
                         // TODO 对deeplink_id的有效性做判断
                         JedisPort countClient = deepLinkCountShardingSupport.getClient(deepLinkId);
                         countClient.hincrBy(String.valueOf(deepLinkId), type, 1);
+                        countClient.hincrBy(keyPrefix + "_" + deepLinkId, type, 1);
                     } catch (Exception e) {
                         ApiLogger.warn("ClientServiceImpl.addClient deepLinkCountThreadPool count failed", e);
                     }
