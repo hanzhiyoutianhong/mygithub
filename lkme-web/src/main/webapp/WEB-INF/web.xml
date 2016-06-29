@@ -168,6 +168,25 @@
         <url-pattern>/t/*</url-pattern>
     </servlet-mapping>
 
+
+    <servlet>
+        <servlet-name>appleFileServlet</servlet-name>
+        <servlet-class>cc.linkedme.servlet.AppleFileServlet</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>appleFileServlet</servlet-name>
+        <url-pattern>/apple-app-site-association</url-pattern>
+    </servlet-mapping>
+
+    <servlet>
+        <servlet-name>androidFileServlet</servlet-name>
+        <servlet-class>cc.linkedme.servlet.AndroidFileServlet</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>androidFileServlet</servlet-name>
+        <url-pattern>/.well-known/assetlinks.json</url-pattern>
+    </servlet-mapping>
+
     <servlet-mapping>
         <servlet-name>default</servlet-name>
         <url-pattern>/js/*</url-pattern>
@@ -176,16 +195,6 @@
     <servlet-mapping>
         <servlet-name>default</servlet-name>
         <url-pattern>/img/*</url-pattern>
-    </servlet-mapping>
-
-    <servlet-mapping>
-        <servlet-name>default</servlet-name>
-        <url-pattern>/.well-known/assetlinks.json</url-pattern>
-    </servlet-mapping>
-
-    <servlet-mapping>
-        <servlet-name>default</servlet-name>
-        <url-pattern>/apple-app-site-association</url-pattern>
     </servlet-mapping>
 
     <servlet-mapping>
