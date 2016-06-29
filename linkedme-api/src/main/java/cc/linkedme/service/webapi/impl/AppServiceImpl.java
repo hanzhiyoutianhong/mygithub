@@ -3,17 +3,21 @@ package cc.linkedme.service.webapi.impl;
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.io.OutputStream;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
 import javax.annotation.Resource;
 
+import cc.linkedme.commons.util.Constants;
 import cc.linkedme.data.model.params.DashboardUrlParams;
 import com.google.common.base.Strings;
+import org.apache.commons.codec.binary.Base64;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang.ArrayUtils;
 
@@ -232,13 +236,13 @@ public class AppServiceImpl implements AppService {
                 client.hset("applinks.ios", appID, "/" + appIdentifier + "/*");
             }
 
-            // 更新assetlinks.json文件(Android app link)
+            // 更新assetlinks.json文件(Android app links)
             if (!Strings.isNullOrEmpty(appParams.android_package_name) && !Strings.isNullOrEmpty(appParams.android_sha256_fingerprints)) {
                 // updateAppLinksFile(Long.toString(appParams.app_id),
                 // appParams.android_package_name, appParams.android_sha256_fingerprints);
 
                 JedisPort client = linkedmeKeyShardingSupport.getClient(0);
-                client.hset("applinks.ios", String.valueOf(appParams.app_id),
+                client.hset("applinks.adr", String.valueOf(appParams.app_id),
                         appParams.android_package_name + "|" + appParams.android_sha256_fingerprints);
 
             }
@@ -289,8 +293,31 @@ public class AppServiceImpl implements AppService {
     }
 
     @Override
-    public String uploadImg(AppParams appParams, String imagePath) {
-        return appDao.uploadImg(appParams, imagePath);
+    public String uploadImg(AppParams appParams) {
+        String imageName = appParams.getApp_id() + Constants.APP_LOGO_IMG_TYPE;
+        byte[] bytes = KryoSerializationUtil.serializeObj(appParams.img_data.substring(23));
+        appInfoMemCache.set(imageName, bytes);
+        int result = appDao.uploadImg(appParams, bytes);
+        if (result > 0) {
+            return imageName;
+        }
+        return "";
+    }
+
+    @Override
+    public byte[] getAppImg(int appId, String type) {
+        byte[] picBytes = appInfoMemCache.get(appId + "." + type);
+        if (picBytes == null || picBytes.length == 0) {
+            picBytes = appDao.getAppImg(appId); // 从数据库里取
+        }
+        if (picBytes == null || picBytes.length == 0) {
+            return null;
+        } else {
+            appInfoMemCache.set(appId + "." + type, picBytes);
+        }
+        String picStr = KryoSerializationUtil.deserializeObj(picBytes, String.class);
+        Base64 base64 = new Base64();
+        return base64.decode(picStr);
     }
 
     private void updateAppLinksFile(String appID, String packageName, String sha256CertFingerprints) {

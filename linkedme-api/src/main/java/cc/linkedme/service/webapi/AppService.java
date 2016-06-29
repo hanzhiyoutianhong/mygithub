@@ -31,5 +31,7 @@ public interface AppService {
 
     void addUrlTags(DashboardUrlParams urlParams);
 
-    String uploadImg(AppParams appParams, String imagePath);
+    String uploadImg(AppParams appParams);
+
+    byte[] getAppImg(int appId, String type);
 }

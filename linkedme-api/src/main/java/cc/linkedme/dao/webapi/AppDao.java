@@ -22,9 +22,11 @@ public interface AppDao {
 
     int updateApp(final AppParams appParams);
 
-    List<UrlTagsInfo> getUrlTagsByAppId(AppParams appParams );
+    List<UrlTagsInfo> getUrlTagsByAppId(AppParams appParams);
 
     boolean configUrlTags(AppParams appParams);
 
-    String uploadImg(AppParams appParams, String imagePath);
+    int uploadImg(AppParams appParams, byte[] picDatas);
+
+    byte[] getAppImg(int appId);
 }
