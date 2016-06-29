@@ -295,7 +295,7 @@ public class AppServiceImpl implements AppService {
     @Override
     public String uploadImg(AppParams appParams) {
         String imageName = appParams.getApp_id() + Constants.APP_LOGO_IMG_TYPE;
-        byte[] bytes = KryoSerializationUtil.serializeObj(appParams.img_data.substring(23));
+        byte[] bytes = KryoSerializationUtil.serializeObj(appParams.img_data.substring(22));
         appInfoMemCache.set(imageName, bytes);
         int result = appDao.uploadImg(appParams, bytes);
         if (result > 0) {
@@ -311,7 +311,14 @@ public class AppServiceImpl implements AppService {
             picBytes = appDao.getAppImg(appId); // 从数据库里取
         }
         if (picBytes == null || picBytes.length == 0) {
-            return null;
+            //该App没有上传logo,则取默认图片
+            picBytes = appInfoMemCache.get("default." + type);
+            if (picBytes == null || picBytes.length == 0) {
+                picBytes = appDao.getAppImg(1); // 默认图片的id为1
+                if (picBytes != null && picBytes.length > 0) {
+                    appInfoMemCache.set("default." + type, picBytes);
+                }
+            }
         } else {
             appInfoMemCache.set(appId + "." + type, picBytes);
         }
