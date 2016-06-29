@@ -222,18 +222,25 @@ public class AppServiceImpl implements AppService {
             // 向mc中写入最新app信息
             setAppInfoToCache(appInfo);
 
-            // TODO 去重,要区分第一次更新和后续更新
             // 更新apple-app-site-association(ios universe link)
-
             if (!Strings.isNullOrEmpty(appParams.ios_app_prefix) && !Strings.isNullOrEmpty(appParams.ios_bundle_id)) {
                 String appID = appParams.ios_app_prefix + "." + appParams.ios_bundle_id;
                 String appIdentifier = Base62.encode(appParams.app_id);
-                updateAppleAssociationFile(appIdentifier, appID);
+                // updateAppleAssociationFile(appIdentifier, appID);
+
+                JedisPort client = linkedmeKeyShardingSupport.getClient(0);
+                client.hset("applinks.ios", appID, "/" + appIdentifier + "/*");
             }
 
             // 更新assetlinks.json文件(Android app link)
             if (!Strings.isNullOrEmpty(appParams.android_package_name) && !Strings.isNullOrEmpty(appParams.android_sha256_fingerprints)) {
-                updateAppLinksFile(Long.toString(appParams.app_id), appParams.android_package_name, appParams.android_sha256_fingerprints);
+                // updateAppLinksFile(Long.toString(appParams.app_id),
+                // appParams.android_package_name, appParams.android_sha256_fingerprints);
+
+                JedisPort client = linkedmeKeyShardingSupport.getClient(0);
+                client.hset("applinks.ios", String.valueOf(appParams.app_id),
+                        appParams.android_package_name + "|" + appParams.android_sha256_fingerprints);
+
             }
         }
         return result;
