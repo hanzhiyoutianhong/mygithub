@@ -162,7 +162,7 @@ public class AppServiceImpl implements AppService {
         // 删除apple-app-site-association中对应信息(ios universe link)
         if (!Strings.isNullOrEmpty(String.valueOf(appParams.app_id))) {
             JedisPort client = linkedmeKeyShardingSupport.getClient(0);
-            client.hdel("applinks_ios", appIdentifier);
+            client.hdel("applinks.ios", appIdentifier);
         }
 
         // 删除assetlinks.json文件中对应信息(Android app links)
