@@ -161,7 +161,6 @@ public class AppServiceImpl implements AppService {
         String appIdentifier = Base62.encode( appParams.app_id );
         // 删除apple-app-site-association中对应信息(ios universe link)
         if (!Strings.isNullOrEmpty(String.valueOf(appParams.app_id))) {
-            String appID = appParams.ios_app_prefix + "." + appParams.ios_bundle_id;
             JedisPort client = linkedmeKeyShardingSupport.getClient(0);
             client.hdel("applinks_ios", appIdentifier);
         }
