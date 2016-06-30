@@ -133,4 +133,8 @@ public class MsgUtils {
                 || McqMsgType.DELETE_CLIENT.getType() == type);
     }
 
+    public static boolean isCountType(int type) {
+        return McqMsgType.ADD_DEEPLINK_COUNT.getType() == type;
+    }
+
 }

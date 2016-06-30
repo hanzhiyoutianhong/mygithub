@@ -911,6 +911,21 @@ public class Util {
         return result;
     }
 
+    public static String formatLinkedmeKey(String linkedme_key) {
+        if (!Strings.isNullOrEmpty(linkedme_key)) {
+            String[] linkedme_keys = linkedme_key.split("_");
+            int length = linkedme_keys.length;
+            return linkedme_keys[length - 1];
+        } else {
+            return linkedme_key;
+        }
+    }
+
+    public static String getCurrDate() {
+        DateFormat df = new SimpleDateFormat("yyyy-MM-dd");
+        return df.format(Calendar.getInstance().getTime());
+    }
+
     public static void main(String args[]) {
         String start_month = "2016-06-20";
         String end_month = "2016-08-20";
@@ -934,21 +949,6 @@ public class Util {
         System.out.println(b);
         System.out.println(c);
         System.out.println(d);
-    }
-
-    public static String formatLinkedmeKey(String linkedme_key) {
-        if (!Strings.isNullOrEmpty(linkedme_key)) {
-            String[] linkedme_keys = linkedme_key.split("_");
-            int length = linkedme_keys.length;
-            return linkedme_keys[length - 1];
-        } else {
-            return linkedme_key;
-        }
-    }
-
-    public static String getCurrDate() {
-        DateFormat df = new SimpleDateFormat("yyyyMMdd");
-        return df.format(Calendar.getInstance().getTime());
     }
 
 }

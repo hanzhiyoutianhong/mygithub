@@ -66,7 +66,7 @@ public class Link {
         params.add(new BasicNameValuePair("desktop_use_default", String.valueOf(dashboardUrlParams.desktop_use_default)));
         params.add(new BasicNameValuePair("desktop_custom_url", String.valueOf(dashboardUrlParams.desktop_custom_url)));
 
-        Joiner joiner = Joiner.on("&").skipNulls();
+        Joiner joiner = Joiner.on(",").skipNulls();
         params.add(new BasicNameValuePair("feature", joiner.join(dashboardUrlParams.feature)));
         params.add(new BasicNameValuePair("campaign", joiner.join(dashboardUrlParams.campaign)));
         params.add(new BasicNameValuePair("stage", joiner.join(dashboardUrlParams.stage)));
@@ -130,12 +130,12 @@ public class Link {
     @POST
     @Produces(MediaType.APPLICATION_JSON)
     public String deleteUrl(DashboardUrlParams dashboardUrlParams, @Context HttpServletRequest request) {
-//        if (urlParams.deeplink_id <= 0) {
-//            throw new LMException(LMExceptionFactor.LM_ILLEGAL_PARAM_VALUE, "deeplink_id <= 0");
-//        }
-//        if (urlParams.app_id <= 0) {
-//            throw new LMException(LMExceptionFactor.LM_ILLEGAL_PARAM_VALUE, "app_id <= 0");
-//        }
+        // if (urlParams.deeplink_id <= 0) {
+        // throw new LMException(LMExceptionFactor.LM_ILLEGAL_PARAM_VALUE, "deeplink_id <= 0");
+        // }
+        // if (urlParams.app_id <= 0) {
+        // throw new LMException(LMExceptionFactor.LM_ILLEGAL_PARAM_VALUE, "app_id <= 0");
+        // }
 
         boolean result = deepLinkService.deleteDeepLink(dashboardUrlParams.deeplink_ids, dashboardUrlParams.app_id);
         return "{ \"ret\" : " + result + "}";
@@ -160,7 +160,7 @@ public class Link {
         urlParams.app_id = app_id;
         urlParams.user_id = user_id;
         urlParams.deeplink_id = deeplink_id;
-        String urlInfo = deepLinkService.getUrlInfo( urlParams );
+        String urlInfo = deepLinkService.getUrlInfo(urlParams);
 
         return urlInfo;
     }

@@ -2,6 +2,8 @@ package cc.linkedme.service;
 
 import javax.annotation.Resource;
 
+import cc.linkedme.dao.webapi.DeepLinkDateCountDao;
+import cc.linkedme.data.model.DeepLinkDateCount;
 import cc.linkedme.data.model.params.DashboardUrlParams;
 import org.springframework.stereotype.Service;
 
@@ -28,6 +30,9 @@ import net.sf.json.JSONObject;
 public class DeepLinkService {
     @Resource
     private DeepLinkDao deepLinkDao;
+
+    @Resource
+    private DeepLinkDateCountDao deepLinkDateCountDao;
 
     @Resource
     private MemCacheTemplate<byte[]> deepLinkMemCache;
@@ -166,6 +171,10 @@ public class DeepLinkService {
             deepLinkMemCache.delete(String.valueOf(dashboardUrlParams.deeplink_id));
         }
         return result;
+    }
+
+    public int addDeepLinkCount(DeepLinkDateCount deepLinkDateCount, String countType) {
+        return deepLinkDateCountDao.addDeepLinkDateCount(deepLinkDateCount, countType);
     }
 
 }
