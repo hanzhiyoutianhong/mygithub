@@ -96,10 +96,17 @@ public class Summary {
         if (addNum == 0L) addNum += (timestamp / 1000 - 1466691000L) * 5;
         if ((timestamp / 5000) != five_second_stamp) {
             five_second_stamp = timestamp / 5000;
-            if (five_second_stamp % 2 == 0) {
-                addNum += (long) (Math.random() * 10000);
+            int pct = (int)(Math.random() * 10);
+            if( pct == 1 ) {
+                addNum += (long) (Math.random() * 200000);
+            }
+            else if( pct == 2 ) {
+                addNum -= (long) (Math.random() * 190000);
+            }
+            if (pct % 2 == 0) {
+                addNum += (long) (Math.random() * 100000);
             } else {
-                addNum += (long) (-1 * Math.random() * 8000);
+                addNum += (long) (-1 * Math.random() * 90000);
             }
             sumOfDevices = addNum + (timestamp / 1000 - 1466397100L) * 10;
         }
