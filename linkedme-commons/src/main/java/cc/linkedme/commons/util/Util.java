@@ -9,14 +9,7 @@ import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.text.StringCharacterIterator;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Calendar;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.UUID;
+import java.util.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -28,6 +21,8 @@ import org.apache.commons.lang.ArrayUtils;
 import org.apache.commons.lang.StringUtils;
 
 import cc.linkedme.commons.log.ApiLogger;
+
+import javax.xml.crypto.Data;
 
 public class Util {
 
@@ -783,6 +778,14 @@ public class Util {
         }
     }
 
+    public static boolean isSameMonth(String startDate, String endDate) {
+        Calendar start = Calendar.getInstance();
+        start.setTime(timeStrToDate(startDate));
+        Calendar end = Calendar.getInstance();
+        end.setTime(timeStrToDate(endDate));
+        return start.get(Calendar.MONTH) == end.get(Calendar.MONTH) && start.get(Calendar.YEAR) == end.get(Calendar.YEAR);
+    }
+
     public static ArrayList<DateDuration> getBetweenMonths(String minDate, String maxDate) {
         ArrayList<DateDuration> result = new ArrayList<DateDuration>();
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
@@ -803,7 +806,6 @@ public class Util {
             end_date_min.setTime(sdf.parse(maxDate));
             end_date_min.set(Calendar.DAY_OF_MONTH, end_date_min.getActualMinimum(Calendar.DAY_OF_MONTH));
             end_date_max.setTime(sdf.parse(maxDate));
-
 
             min.setTime(sdf.parse(minDate));
             min.set(min.get(Calendar.YEAR), min.get(Calendar.MONTH), 1);

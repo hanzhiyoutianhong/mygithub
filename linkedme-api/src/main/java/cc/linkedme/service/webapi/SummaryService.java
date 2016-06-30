@@ -62,34 +62,13 @@ public class SummaryService {
     ShardingSupportHash<JedisPort> btnCountShardingSupport;
 
     public String getDeepLinksHistoryCounts(SummaryDeepLinkParams summaryDeepLinkParams) {
+
         List<DeepLinkDateCount> deepLinkDateCountList = new ArrayList<>();
-        SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd");
+        ArrayList<DateDuration> durations = Util.getBetweenMonths(summaryDeepLinkParams.startDate,summaryDeepLinkParams.endDate);
 
-        String startDate = summaryDeepLinkParams.startDate;
-        String endDate = summaryDeepLinkParams.endDate;
-
-        Date start = Util.timeStrToDate(summaryDeepLinkParams.startDate);
-        Date end = Util.timeStrToDate(summaryDeepLinkParams.endDate);
-
-        Calendar startCalendar = Calendar.getInstance();
-        startCalendar.setTime(start);
-
-        Calendar endCalendar = Calendar.getInstance();
-        endCalendar.setTime(end);
-
-        if (startCalendar.get(Calendar.MONTH) != endCalendar.get(Calendar.MONTH)) {
-
-            endCalendar.set(Calendar.DATE, 1);
+        for(DateDuration d : durations){
             deepLinkDateCountList.addAll(deepLinkDateCountDao.getDeepLinksDateCounts(summaryDeepLinkParams.appid,
-                    df.format(endCalendar.getTime()) + " 00:00:00", endDate + " 23:59:59"));
-
-            endCalendar.add(Calendar.DATE, -1);
-            deepLinkDateCountList.addAll(deepLinkDateCountDao.getDeepLinksDateCounts(summaryDeepLinkParams.appid, startDate + " 00:00:00",
-                    df.format(endCalendar.getTime()) + " 23:59:59"));
-
-        } else {
-            deepLinkDateCountList = deepLinkDateCountDao.getDeepLinksDateCounts(summaryDeepLinkParams.appid, startDate + " 00:00:00",
-                    endDate + " 23:59:59");
+                    d.getMin_date(), d.getMax_date()));
         }
 
         // 获取今天有计数的短链
@@ -149,33 +128,11 @@ public class SummaryService {
     public String getDeepLinkHistoryCount(SummaryDeepLinkParams summaryDeepLinkParams) {
 
         List<DeepLinkDateCount> deepLinkDateCountList = new ArrayList<>();
-        SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd");
 
-        String startDate = summaryDeepLinkParams.startDate;
-        String endDate = summaryDeepLinkParams.endDate;
-
-        Date start = Util.timeStrToDate(summaryDeepLinkParams.startDate);
-        Date end = Util.timeStrToDate(summaryDeepLinkParams.endDate);
-
-        Calendar startCalendar = Calendar.getInstance();
-        startCalendar.setTime(start);
-
-        Calendar endCalendar = Calendar.getInstance();
-        endCalendar.setTime(end);
-
-        if (startCalendar.get(Calendar.MONTH) != endCalendar.get(Calendar.MONTH)) {
-
-            endCalendar.set(Calendar.DATE, 1);
+        ArrayList<DateDuration> durations = Util.getBetweenMonths(summaryDeepLinkParams.startDate,summaryDeepLinkParams.endDate);
+        for(DateDuration d : durations){
             deepLinkDateCountList.addAll(deepLinkDateCountDao.getDeepLinkDateCount(summaryDeepLinkParams.appid,
-                    summaryDeepLinkParams.deepLinkId, df.format(endCalendar.getTime()) + " 00:00:00", endDate + " 23:59:59"));
-
-            endCalendar.add(Calendar.DATE, -1);
-            deepLinkDateCountList.addAll(deepLinkDateCountDao.getDeepLinkDateCount(summaryDeepLinkParams.appid,
-                    summaryDeepLinkParams.deepLinkId, startDate + " 00:00:00", df.format(endCalendar.getTime()) + " 23:59:59"));
-
-        } else {
-            deepLinkDateCountList = deepLinkDateCountDao.getDeepLinkDateCount(summaryDeepLinkParams.appid, summaryDeepLinkParams.deepLinkId,
-                    startDate + " 00:00:00", endDate + " 23:59:59");
+                    summaryDeepLinkParams.deepLinkId, d.getMin_date(), d.getMax_date()));
         }
 
         long iosClick = 0, iosOpen = 0, iosInstall = 0, adrClick = 0, adrOpen = 0, adrInstall = 0;
@@ -211,17 +168,6 @@ public class SummaryService {
 
     public String getDeepLinksCounts(int appId, String[] deepLinkIds, String startDate, String endDate) {
 
-        SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd");
-
-        Date start = Util.timeStrToDate(startDate);
-        Date end = Util.timeStrToDate(endDate);
-
-        Calendar startCalendar = Calendar.getInstance();
-        startCalendar.setTime(start);
-
-        Calendar endCalendar = Calendar.getInstance();
-        endCalendar.setTime(end);
-
         long iosClick = 0, iosOpen = 0, iosInstall = 0, adrClick = 0, adrOpen = 0, adrInstall = 0;
         long pcClick = 0, pcIosScan = 0, pcAdrScan = 0, pcIosOpen = 0, pcAdrOpen = 0, pcIosInstall = 0, pcAdrInstall = 0;
         // TODO 改成批量查询
@@ -230,19 +176,11 @@ public class SummaryService {
                 continue;
             }
             List<DeepLinkDateCount> allDeepLinkDateCount = new ArrayList<>(deepLinkIds.length);
-            if (startCalendar.get(Calendar.MONTH) != endCalendar.get(Calendar.MONTH)) {
 
-                endCalendar.set(Calendar.DATE, 1);
+            ArrayList<DateDuration> durations = Util.getBetweenMonths(startDate,endDate);
+            for(DateDuration d : durations){
                 allDeepLinkDateCount.addAll(deepLinkDateCountDao.getDeepLinkDateCount(appId, Long.parseLong(deepLinkId),
-                        df.format(endCalendar.getTime()) + " 00:00:00", endDate + " 23:59:59"));
-
-                endCalendar.add(Calendar.DATE, -1);
-                allDeepLinkDateCount.addAll(deepLinkDateCountDao.getDeepLinkDateCount(appId, Long.parseLong(deepLinkId),
-                        startDate + " 00:00:00", df.format(endCalendar.getTime()) + " 23:59:59"));
-
-            } else {
-                allDeepLinkDateCount.addAll(deepLinkDateCountDao.getDeepLinkDateCount(appId, Long.parseLong(deepLinkId),
-                        startDate + " 00:00:00", endDate + " 23:59:59"));
+                        d.getMin_date(), d.getMax_date()));
             }
 
             for (DeepLinkDateCount deepLinkDateCount : allDeepLinkDateCount) {
