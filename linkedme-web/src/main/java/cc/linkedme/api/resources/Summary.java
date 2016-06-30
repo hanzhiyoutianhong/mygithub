@@ -96,11 +96,10 @@ public class Summary {
         if (addNum == 0L) addNum += (timestamp / 1000 - 1466691000L) * 5;
         if ((timestamp / 5000) != five_second_stamp) {
             five_second_stamp = timestamp / 5000;
-            int pct = (int)(Math.random() * 10);
-            if( pct == 1 ) {
+            int pct = (int) (Math.random() * 10);
+            if (pct == 1) {
                 addNum += (long) (Math.random() * 200000);
-            }
-            else if( pct == 2 ) {
+            } else if (pct == 2) {
                 addNum -= (long) (Math.random() * 190000);
             }
             if (pct % 2 == 0) {

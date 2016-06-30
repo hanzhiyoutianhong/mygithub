@@ -43,7 +43,6 @@ public class MsgMcqProcessor extends McqProcessor {
     // 处理收到的消息
     @Override
     protected void handleMsq(final String msg) {
-        System.out.println("handleMsq msg:" + msg);
         String logMsg = new StringBuilder(256).append("key:").append(getReadKey()).append(" updateDb:").append(updateDb)
                 .append(" updateMc:").append(updateMc).append(" MsgProcessor recv:").append(msg).toString();
         ApiLogger.info(logMsg);
