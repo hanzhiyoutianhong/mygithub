@@ -158,7 +158,7 @@ public class AppServiceImpl implements AppService {
     public int deleteApp(AppParams appParams) {
         int result = appDao.delApp(appParams);
 
-        String appIdentifier = Base62.encode( appParams.app_id );
+        String appIdentifier = Base62.encode(appParams.app_id);
         // 删除apple-app-site-association中对应信息(ios universe link)
         if (!Strings.isNullOrEmpty(String.valueOf(appParams.app_id))) {
             JedisPort client = linkedmeKeyShardingSupport.getClient(0);
@@ -243,7 +243,7 @@ public class AppServiceImpl implements AppService {
             setAppInfoToCache(appInfo);
 
             // 更新apple-app-site-association(ios universe link)
-            String appIdentifier = Base62.encode( appParams.app_id );
+            String appIdentifier = Base62.encode(appParams.app_id);
             if (!Strings.isNullOrEmpty(appParams.ios_app_prefix) && !Strings.isNullOrEmpty(appParams.ios_bundle_id)) {
                 String appID = appParams.ios_app_prefix + "." + appParams.ios_bundle_id;
                 // updateAppleAssociationFile(appIdentifier, appID);
@@ -257,8 +257,7 @@ public class AppServiceImpl implements AppService {
                 // updateAppLinksFile(Long.toString(appParams.app_id),
                 // appParams.android_package_name, appParams.android_sha256_fingerprints);
                 JedisPort client = linkedmeKeyShardingSupport.getClient(0);
-                client.hset("applinks.adr", appIdentifier,
-                        appParams.android_package_name + "|" + appParams.android_sha256_fingerprints);
+                client.hset("applinks.adr", appIdentifier, appParams.android_package_name + "|" + appParams.android_sha256_fingerprints);
 
             }
         }
@@ -326,7 +325,7 @@ public class AppServiceImpl implements AppService {
             picBytes = appDao.getAppImg(appId); // 从数据库里取
         }
         if (picBytes == null || picBytes.length == 0) {
-            //该App没有上传logo,则取默认图片
+            // 该App没有上传logo,则取默认图片
             picBytes = appInfoMemCache.get("default." + type);
             if (picBytes == null || picBytes.length == 0) {
                 picBytes = appDao.getAppImg(1); // 默认图片的id为1
