@@ -9,6 +9,7 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import cc.linkedme.commons.util.Base62;
 import net.sf.json.JSONArray;
 import net.sf.json.JSONObject;
 import org.springframework.context.ApplicationContext;
@@ -67,7 +68,7 @@ public class AndroidFileServlet extends HttpServlet {
                 targetJson.put("sha256_cert_fingerprints", fingerprints);
 
                 JSONObject appItem = new JSONObject();
-                appItem.put("appID", entry.getKey());
+                appItem.put("appID", Base62.decode(entry.getKey()));
                 appItem.put("relation", relationJson);
                 appItem.put("target", targetJson);
                 appsJson.add(appItem);
