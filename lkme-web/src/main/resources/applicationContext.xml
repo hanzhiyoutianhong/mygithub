@@ -27,5 +27,4 @@
 
     <context:component-scan base-package="cc.linkedme.api.lkme.web"/>
 
-
 </beans>

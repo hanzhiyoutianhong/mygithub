@@ -2,15 +2,7 @@ package cc.linkedme.service.webapi;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 
 import javax.annotation.Resource;
 
@@ -70,8 +62,38 @@ public class SummaryService {
     ShardingSupportHash<JedisPort> btnCountShardingSupport;
 
     public String getDeepLinksHistoryCounts(SummaryDeepLinkParams summaryDeepLinkParams) {
-        List<DeepLinkDateCount> deepLinkDateCountList = deepLinkDateCountDao.getDeepLinksDateCounts(summaryDeepLinkParams.appid,
-                summaryDeepLinkParams.startDate, summaryDeepLinkParams.endDate);
+        List<DeepLinkDateCount> deepLinkDateCountList = new ArrayList<>();
+        SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd");
+
+        String startDate = summaryDeepLinkParams.startDate;
+        String endDate = summaryDeepLinkParams.endDate;
+
+        Date start = Util.timeStrToDate(summaryDeepLinkParams.startDate);
+        Date end = Util.timeStrToDate(summaryDeepLinkParams.endDate);
+
+        Calendar startCalendar = Calendar.getInstance();
+        startCalendar.setTime(start);
+
+        Calendar endCalendar = Calendar.getInstance();
+        endCalendar.setTime(end);
+
+        if (startCalendar.get(Calendar.MONTH) != endCalendar.get(Calendar.MONTH)) {
+
+            endCalendar.set(Calendar.DATE, 1);
+            deepLinkDateCountList.addAll(deepLinkDateCountDao.getDeepLinksDateCounts(summaryDeepLinkParams.appid,
+                    df.format(endCalendar.getTime()) + " 00:00:00", endDate + " 23:59:59"));
+
+            endCalendar.add(Calendar.DATE, -1);
+            deepLinkDateCountList.addAll(deepLinkDateCountDao.getDeepLinksDateCounts(summaryDeepLinkParams.appid, startDate + " 00:00:00",
+                    df.format(endCalendar.getTime()) + " 23:59:59"));
+
+        } else {
+            deepLinkDateCountList = deepLinkDateCountDao.getDeepLinksDateCounts(summaryDeepLinkParams.appid, startDate + " 00:00:00",
+                    endDate + " 23:59:59");
+        }
+
+        // 获取今天有计数的短链
+
         long iosClick = 0, iosOpen = 0, iosInstall = 0, adrClick = 0, adrOpen = 0, adrInstall = 0;
         long pcClick = 0, pcIosScan = 0, pcAdrScan = 0, pcIosOpen = 0, pcAdrOpen = 0, pcIosInstall = 0, pcAdrInstall = 0;
         Map<String, Map<String, Long>> allDateCounts = new HashMap<>();
@@ -91,7 +113,7 @@ public class SummaryService {
 
                 link_count++;
             }
-            
+
             if (invalidDeepLinkIdSet.contains(deepLinkDateCount.getDeeplinkId())) {
                 continue;
             }
@@ -125,8 +147,37 @@ public class SummaryService {
     }
 
     public String getDeepLinkHistoryCount(SummaryDeepLinkParams summaryDeepLinkParams) {
-        List<DeepLinkDateCount> deepLinkDateCountList = deepLinkDateCountDao.getDeepLinkDateCount(summaryDeepLinkParams.appid,
-                summaryDeepLinkParams.deepLinkId, summaryDeepLinkParams.startDate, summaryDeepLinkParams.endDate);
+
+        List<DeepLinkDateCount> deepLinkDateCountList = new ArrayList<>();
+        SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd");
+
+        String startDate = summaryDeepLinkParams.startDate;
+        String endDate = summaryDeepLinkParams.endDate;
+
+        Date start = Util.timeStrToDate(summaryDeepLinkParams.startDate);
+        Date end = Util.timeStrToDate(summaryDeepLinkParams.endDate);
+
+        Calendar startCalendar = Calendar.getInstance();
+        startCalendar.setTime(start);
+
+        Calendar endCalendar = Calendar.getInstance();
+        endCalendar.setTime(end);
+
+        if (startCalendar.get(Calendar.MONTH) != endCalendar.get(Calendar.MONTH)) {
+
+            endCalendar.set(Calendar.DATE, 1);
+            deepLinkDateCountList.addAll(deepLinkDateCountDao.getDeepLinkDateCount(summaryDeepLinkParams.appid,
+                    summaryDeepLinkParams.deepLinkId, df.format(endCalendar.getTime()) + " 00:00:00", endDate + " 23:59:59"));
+
+            endCalendar.add(Calendar.DATE, -1);
+            deepLinkDateCountList.addAll(deepLinkDateCountDao.getDeepLinkDateCount(summaryDeepLinkParams.appid,
+                    summaryDeepLinkParams.deepLinkId, startDate + " 00:00:00", df.format(endCalendar.getTime()) + " 23:59:59"));
+
+        } else {
+            deepLinkDateCountList = deepLinkDateCountDao.getDeepLinkDateCount(summaryDeepLinkParams.appid, summaryDeepLinkParams.deepLinkId,
+                    startDate + " 00:00:00", endDate + " 23:59:59");
+        }
+
         long iosClick = 0, iosOpen = 0, iosInstall = 0, adrClick = 0, adrOpen = 0, adrInstall = 0;
         long pcClick = 0, pcIosScan = 0, pcAdrScan = 0, pcIosOpen = 0, pcAdrOpen = 0, pcIosInstall = 0, pcAdrInstall = 0;
         Map<String, Map<String, Long>> allDateCounts = new HashMap<>();
@@ -145,8 +196,8 @@ public class SummaryService {
             pcClick += deepLinkDateCount.getPcClick();
             pcIosScan += deepLinkDateCount.getPcIosScan();
             pcAdrScan += deepLinkDateCount.getPcAdrScan();
-            pcIosOpen += deepLinkDateCount.getIosOpen();
-            pcAdrOpen += deepLinkDateCount.getAdrOpen();
+            pcIosOpen += deepLinkDateCount.getPcIosOpen();
+            pcAdrOpen += deepLinkDateCount.getPcAdrOpen();
             pcIosInstall += deepLinkDateCount.getPcIosInstall();
             pcAdrInstall += deepLinkDateCount.getPcAdrInstall();
 
@@ -159,18 +210,42 @@ public class SummaryService {
     }
 
     public String getDeepLinksCounts(int appId, String[] deepLinkIds, String startDate, String endDate) {
-        List<DeepLinkDateCount> allDeepLinkDateCount = new ArrayList<>(deepLinkIds.length);
+
+        SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd");
+
+        Date start = Util.timeStrToDate(startDate);
+        Date end = Util.timeStrToDate(endDate);
+
+        Calendar startCalendar = Calendar.getInstance();
+        startCalendar.setTime(start);
+
+        Calendar endCalendar = Calendar.getInstance();
+        endCalendar.setTime(end);
+
         long iosClick = 0, iosOpen = 0, iosInstall = 0, adrClick = 0, adrOpen = 0, adrInstall = 0;
         long pcClick = 0, pcIosScan = 0, pcAdrScan = 0, pcIosOpen = 0, pcAdrOpen = 0, pcIosInstall = 0, pcAdrInstall = 0;
-        //TODO 改成批量查询
+        // TODO 改成批量查询
         for (String deepLinkId : deepLinkIds) {
             if (Strings.isNullOrEmpty(deepLinkId)) {
                 continue;
             }
-            List<DeepLinkDateCount> deepLinkDateCountList =
-                    deepLinkDateCountDao.getDeepLinkDateCount(appId, Long.parseLong(deepLinkId), startDate, endDate);
-            allDeepLinkDateCount.addAll(deepLinkDateCountList);
-            for (DeepLinkDateCount deepLinkDateCount : deepLinkDateCountList) {
+            List<DeepLinkDateCount> allDeepLinkDateCount = new ArrayList<>(deepLinkIds.length);
+            if (startCalendar.get(Calendar.MONTH) != endCalendar.get(Calendar.MONTH)) {
+
+                endCalendar.set(Calendar.DATE, 1);
+                allDeepLinkDateCount.addAll(deepLinkDateCountDao.getDeepLinkDateCount(appId, Long.parseLong(deepLinkId),
+                        df.format(endCalendar.getTime()) + " 00:00:00", endDate + " 23:59:59"));
+
+                endCalendar.add(Calendar.DATE, -1);
+                allDeepLinkDateCount.addAll(deepLinkDateCountDao.getDeepLinkDateCount(appId, Long.parseLong(deepLinkId),
+                        startDate + " 00:00:00", df.format(endCalendar.getTime()) + " 23:59:59"));
+
+            } else {
+                allDeepLinkDateCount.addAll(deepLinkDateCountDao.getDeepLinkDateCount(appId, Long.parseLong(deepLinkId),
+                        startDate + " 00:00:00", endDate + " 23:59:59"));
+            }
+
+            for (DeepLinkDateCount deepLinkDateCount : allDeepLinkDateCount) {
                 iosClick += deepLinkDateCount.getIosClick();
                 iosOpen += deepLinkDateCount.getIosOpen();
                 iosInstall += deepLinkDateCount.getIosInstall();
@@ -182,8 +257,8 @@ public class SummaryService {
                 pcClick += deepLinkDateCount.getPcClick();
                 pcIosScan += deepLinkDateCount.getPcIosScan();
                 pcAdrScan += deepLinkDateCount.getPcAdrScan();
-                pcIosOpen += deepLinkDateCount.getIosOpen();
-                pcAdrOpen += deepLinkDateCount.getAdrOpen();
+                pcIosOpen += deepLinkDateCount.getPcIosOpen();
+                pcAdrOpen += deepLinkDateCount.getPcAdrOpen();
                 pcIosInstall += deepLinkDateCount.getPcIosInstall();
                 pcAdrInstall += deepLinkDateCount.getPcAdrInstall();
             }
@@ -310,19 +385,24 @@ public class SummaryService {
         boolean d = false;
         boolean e = false;
 
-        if (Strings.isNullOrEmpty(summaryDeepLinkParams.feature) || (deepLink.getFeature() != null && deepLink.getFeature().contains(summaryDeepLinkParams.feature))) {
+        if (Strings.isNullOrEmpty(summaryDeepLinkParams.feature)
+                || (deepLink.getFeature() != null && deepLink.getFeature().contains(summaryDeepLinkParams.feature))) {
             a = true;
         }
-        if (Strings.isNullOrEmpty(summaryDeepLinkParams.campaign) || (deepLink.getCampaign() != null && deepLink.getCampaign().contains(summaryDeepLinkParams.campaign))) {
+        if (Strings.isNullOrEmpty(summaryDeepLinkParams.campaign)
+                || (deepLink.getCampaign() != null && deepLink.getCampaign().contains(summaryDeepLinkParams.campaign))) {
             b = true;
         }
-        if (Strings.isNullOrEmpty(summaryDeepLinkParams.stage) || (deepLink.getStage() != null && deepLink.getStage().contains(summaryDeepLinkParams.stage))) {
+        if (Strings.isNullOrEmpty(summaryDeepLinkParams.stage)
+                || (deepLink.getStage() != null && deepLink.getStage().contains(summaryDeepLinkParams.stage))) {
             c = true;
         }
-        if (Strings.isNullOrEmpty(summaryDeepLinkParams.tags) || (deepLink.getTags() != null && deepLink.getTags().contains(summaryDeepLinkParams.tags))) {
+        if (Strings.isNullOrEmpty(summaryDeepLinkParams.tags)
+                || (deepLink.getTags() != null && deepLink.getTags().contains(summaryDeepLinkParams.tags))) {
             d = true;
         }
-        if (Strings.isNullOrEmpty(summaryDeepLinkParams.source) || (deepLink.getSource() != null && deepLink.getSource().equals(summaryDeepLinkParams.source))) {
+        if (Strings.isNullOrEmpty(summaryDeepLinkParams.source)
+                || (deepLink.getSource() != null && deepLink.getSource().equals(summaryDeepLinkParams.source))) {
             e = true;
         }
         return a && b && c && d && e;
@@ -826,6 +906,9 @@ public class SummaryService {
                     }
                 }
             });
+            if (list == null || list.size() == 0) {
+                continue;
+            }
             for (int i = 0; i < idList.size(); i++) {
                 Map<String, String> countMap = (Map<String, String>) list.get(i);
                 if (CollectionUtils.isEmpty(countMap)) {

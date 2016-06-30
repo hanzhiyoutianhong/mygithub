@@ -9,8 +9,7 @@ import java.sql.Date;
 /**
  * Created by LinkedME01 on 16/4/17.
  */
-@Entity
-@Table(name = "url_count_0", schema = "count_0", catalog = "")
+
 public class DeepLinkDateCount {
     private int appId;
     private long deeplinkId;

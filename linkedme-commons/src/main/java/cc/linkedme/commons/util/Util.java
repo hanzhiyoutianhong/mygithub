@@ -5,6 +5,7 @@ import java.lang.reflect.Array;
 import java.net.URLDecoder;
 import java.net.URLEncoder;
 import java.security.MessageDigest;
+import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.text.StringCharacterIterator;
@@ -815,7 +816,7 @@ public class Util {
             throw new LMException(LMExceptionFactor.LM_ILLEGAL_PARAM_VALUE, "Util.getBetweenMonths parse date failed");
         }
 
-        if( min.equals(max) ) {
+        if (min.equals(max)) {
             try {
                 DateDuration start_date_duration = new DateDuration();
                 start_date_duration.setMin_date(sdf.format(sdf.parse(minDate).getTime()));
@@ -825,12 +826,11 @@ public class Util {
                 ApiLogger.error("Util.getBetweenMonths parse time failed", e);
                 throw new LMException("Util.getBetweenMonths parse date failed");
             }
-        }
-        else {
+        } else {
             DateDuration start_date_duration = new DateDuration();
-            start_date_duration.setMin_date( sdf.format(start_date_min.getTime()));
-            start_date_duration.setMax_date( sdf.format(start_date_max.getTime()));
-            result.add( start_date_duration );
+            start_date_duration.setMin_date(sdf.format(start_date_min.getTime()));
+            start_date_duration.setMax_date(sdf.format(start_date_max.getTime()));
+            result.add(start_date_duration);
 
             min.set(min.get(Calendar.YEAR), min.get(Calendar.MONTH) + 1, 1);
             Calendar curr_min = min;
@@ -860,7 +860,7 @@ public class Util {
         return result;
     }
 
-    public boolean validateDeepLinkId( long deepLinkId ) {
+    public boolean validateDeepLinkId(long deepLinkId) {
         return deepLinkId <= maxDeepLinkId && deepLinkId >= minDeepLinkId;
     }
 
@@ -873,17 +873,17 @@ public class Util {
         Calendar end_date = Calendar.getInstance();
 
         try {
-            start_date.setTime( sdf.parse( minDate ) );
-            end_date.setTime( sdf.parse( maxDate ) );
+            start_date.setTime(sdf.parse(minDate));
+            end_date.setTime(sdf.parse(maxDate));
 
-            while( start_date.before(end_date) || start_date.equals(end_date) ) {
-                result.add( sdf.format(start_date.getTime() ) );
-                start_date.add( start_date.DATE, 1 );
+            while (start_date.before(end_date) || start_date.equals(end_date)) {
+                result.add(sdf.format(start_date.getTime()));
+                start_date.add(start_date.DATE, 1);
             }
 
-        } catch (ParseException e ) {
-            ApiLogger.error("Util.getBetweenMonths parse time failed", e );
-            throw new LMException(LMExceptionFactor.LM_ILLEGAL_PARAM_VALUE, "Util.getBetweenMonths parse time failed" );
+        } catch (ParseException e) {
+            ApiLogger.error("Util.getBetweenMonths parse time failed", e);
+            throw new LMException(LMExceptionFactor.LM_ILLEGAL_PARAM_VALUE, "Util.getBetweenMonths parse time failed");
         }
         return result;
     }
@@ -896,47 +896,19 @@ public class Util {
         Calendar end_date = Calendar.getInstance();
 
         try {
-            start_date.setTime( sdf.parse( minDate ) );
-            end_date.setTime( sdf.parse( maxDate ) );
+            start_date.setTime(sdf.parse(minDate));
+            end_date.setTime(sdf.parse(maxDate));
 
-            while( start_date.before(end_date) || start_date.equals(end_date) ) {
-                result.add( sdf.format(start_date.getTime() ) );
-                start_date.add( start_date.DATE, duration );
+            while (start_date.before(end_date) || start_date.equals(end_date)) {
+                result.add(sdf.format(start_date.getTime()));
+                start_date.add(start_date.DATE, duration);
             }
 
-        } catch (ParseException e ) {
-            ApiLogger.error("Util.getBetweenMonths parse time failed", e );
-            throw new LMException(LMExceptionFactor.LM_ILLEGAL_PARAM_VALUE, "Util.getBetweenMonths parse time failed" );
+        } catch (ParseException e) {
+            ApiLogger.error("Util.getBetweenMonths parse time failed", e);
+            throw new LMException(LMExceptionFactor.LM_ILLEGAL_PARAM_VALUE, "Util.getBetweenMonths parse time failed");
         }
         return result;
-    }
-
-    public static void main( String args[] ) {
-        String start_month = "2016-06-20";
-        String end_month = "2016-08-20";
-        int duration = 3;
-        List<String> months = getDays( start_month, end_month );
-        List<String> interval_days = getIntervalDays( start_month, end_month, duration );
-
-        for (int i = 0; i < interval_days.size(); i++) {
-            if( !months.isEmpty() )
-                System.out.println(interval_days.get(i) );
-        }
-
-        int a = ((true ? 1 : 0) << 3);
-        int b = (true ? 1 : 0) << 2;
-        int c = (true ? 1 : 0);
-
-        int ios_android_flag =
-                ((true ? 1 : 0) << 3) + ((true ? 1 : 0) << 2) + ((true ? 1 : 0) << 1)
-                        + (true ? 1 : 0);
-
-        int d = a + b + c;
-        System.out.println(ios_android_flag);
-        System.out.println(a);
-        System.out.println(b);
-        System.out.println(c);
-        System.out.println(d);
     }
 
     public static String formatLinkedmeKey(String linkedme_key) {
@@ -947,6 +919,36 @@ public class Util {
         } else {
             return linkedme_key;
         }
+    }
+
+    public static String getCurrDate() {
+        DateFormat df = new SimpleDateFormat("yyyy-MM-dd");
+        return df.format(Calendar.getInstance().getTime());
+    }
+
+    public static void main(String args[]) {
+        String start_month = "2016-06-20";
+        String end_month = "2016-08-20";
+        int duration = 3;
+        List<String> months = getDays(start_month, end_month);
+        List<String> interval_days = getIntervalDays(start_month, end_month, duration);
+
+        for (int i = 0; i < interval_days.size(); i++) {
+            if (!months.isEmpty()) System.out.println(interval_days.get(i));
+        }
+
+        int a = ((true ? 1 : 0) << 3);
+        int b = (true ? 1 : 0) << 2;
+        int c = (true ? 1 : 0);
+
+        int ios_android_flag = ((true ? 1 : 0) << 3) + ((true ? 1 : 0) << 2) + ((true ? 1 : 0) << 1) + (true ? 1 : 0);
+
+        int d = a + b + c;
+        System.out.println(ios_android_flag);
+        System.out.println(a);
+        System.out.println(b);
+        System.out.println(c);
+        System.out.println(d);
     }
 
 }

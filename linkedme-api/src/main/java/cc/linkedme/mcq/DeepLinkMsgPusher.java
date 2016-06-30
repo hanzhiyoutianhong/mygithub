@@ -1,5 +1,6 @@
 package cc.linkedme.mcq;
 
+import cc.linkedme.commons.json.JsonBuilder;
 import cc.linkedme.commons.mcq.writer.McqBaseWriter;
 import cc.linkedme.data.model.DeepLink;
 import jdk.nashorn.internal.ir.annotations.Reference;
@@ -19,4 +20,18 @@ public class DeepLinkMsgPusher {
         apiMcqWriter.writeMsg(deepLinkMsg);
     }
 
+    public void addDeepLinkCount(long deepLinkId, int appId, String date, String countType) {
+        JsonBuilder deepLinkCountJson = new JsonBuilder();
+        deepLinkCountJson.append("type", 31);
+
+        JsonBuilder info = new JsonBuilder();
+        info.append("deeplink_id", deepLinkId);
+        info.append("app_id", appId);
+        info.append("date", date);
+        info.append("count_type", countType);
+        deepLinkCountJson.append("info", info.flip());
+
+        String deepLinkCountMsg = deepLinkCountJson.flip().toString();
+        apiMcqWriter.writeMsg(deepLinkCountMsg);
+    }
 }

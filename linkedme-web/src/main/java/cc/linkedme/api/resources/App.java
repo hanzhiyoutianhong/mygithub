@@ -7,6 +7,7 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Random;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
@@ -260,12 +261,14 @@ public class App {
         if (Strings.isNullOrEmpty(appParams.img_encoding)) {
             throw new LMException(LMExceptionFactor.LM_ILLEGAL_PARAM_VALUE, "img encoding is null");
         }
-        // String basePath = request.getScheme() + "://" + request.getServerName() + ":"
-        // + request.getServerPort() + "/i/app/images/";
-        String basePath = "https://www.linkedme.cc/i/app/images/";
-        String imageName = appService.uploadImg(appParams, basePath);
+
+        String basePath = Constants.DASHBOARD_API_URL + "/app/images/";
+        String imageName = appService.uploadImg(appParams);
+        if (Strings.isNullOrEmpty(imageName)) {
+            throw new LMException(LMExceptionFactor.LM_SYS_ERROR, "upload img failed");
+        }
         JsonBuilder resultJson = new JsonBuilder();
-        resultJson.append("img_url", basePath + imageName);
+        resultJson.append("img_url", basePath + imageName + "?v=" + new Random().nextInt());
         return resultJson.flip().toString();
     }
 
@@ -276,24 +279,11 @@ public class App {
                         @PathParam("type") String type,
                         @Context HttpServletResponse response)
             throws IOException {
-        InputStream inputStream = null;
-        OutputStream out = null;
-        try {
-            File file = new File(Constants.ImgPath + imageName + "." + type);
-            inputStream = new FileInputStream(file);
-            out = response.getOutputStream();
-            // pic size = 1M
-            byte[] bytes = new byte[1024 * 1024];
-            int len;
-            while ((len = inputStream.read(bytes)) > 0) {
-                out.write(bytes, 0, len);
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-        } finally {
-            if (out != null) out.close();
-            if (inputStream != null) inputStream.close();
-        }
+        OutputStream out = response.getOutputStream();
+        byte[] bytes = appService.getAppImg(Integer.parseInt(imageName), type);
+        out.write(bytes);
+        out.flush();
+        out.close();
     }
 
 }
