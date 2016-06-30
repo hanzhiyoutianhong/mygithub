@@ -58,8 +58,8 @@ public class AppleFileServlet extends HttpServlet {
                 }
                 JSONObject appJson = new JSONObject();
                 JSONArray pathJson = new JSONArray();
-                pathJson.add(entry.getValue());
-                appJson.put("appID", entry.getKey());
+                pathJson.add("/" + entry.getKey() + "/*");
+                appJson.put("appID", entry.getValue());
                 appJson.put("paths", pathJson);
                 appDetailsJson.add(appJson);
                 appLinksJson.put("details", appDetailsJson);
