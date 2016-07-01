@@ -220,7 +220,7 @@ public class UrlServlet extends HttpServlet {
                         deepLinkId, userAgent));
                     response.sendRedirect(formatCustomUrl(url));
                     recordClickIntoProfile(start, countType);
-
+                    return;
                 }
                 
                 isCannotGoMarket = true;
@@ -265,7 +265,7 @@ public class UrlServlet extends HttpServlet {
                         deepLinkId, userAgent));
                     response.sendRedirect(formatCustomUrl(url));
                     recordClickIntoProfile(start, countType);
-
+                    return;
                 }
             }
 
