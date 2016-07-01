@@ -24,6 +24,8 @@ import javax.servlet.http.HttpServletResponse;
 import cc.linkedme.commons.util.Util;
 import cc.linkedme.mcq.ClientMsgPusher;
 import cc.linkedme.mcq.DeepLinkMsgPusher;
+
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.context.ApplicationContext;
 import org.springframework.web.context.support.WebApplicationContextUtils;
 
@@ -179,25 +181,6 @@ public class UrlServlet extends HttpServlet {
         if (osFamily.equals("iOS")) {
             isIOS = true;
 
-            if (appInfo.hasIos()) {
-                if ("apple_store".equals(appInfo.getIos_search_option())) {
-                    url = appInfo.getIos_store_url();
-                    isDownloadDirectly = true;
-                } else if ("custom_url".equals(appInfo.getIos_search_option())) {
-                    url = appInfo.getIos_custom_url();
-                    isCannotGoMarket = true;
-                    isDownloadDirectly = true;
-                }
-                scheme = appInfo.getIos_uri_scheme();
-                // universe link是否需要team_id, appInfo.getIos_team_id() != null
-                if (appInfo.getIos_bundle_id() != null && Integer.parseInt(osMajor) >= 9) {
-                    isUniversalLink = true;
-                }
-            } else {
-                url = appInfo.getIos_not_url();
-                isCannotGoMarket = true;
-            }
-
             if ("1".equals(urlScanParam)) {
                 countType = "pc_ios_scan";
                 apiName = "scan";
@@ -215,23 +198,39 @@ public class UrlServlet extends HttpServlet {
                 recordClickIntoProfile(start, countType);
                 return;
             }
+            
+            if (appInfo.hasIos()) {
+                if ("apple_store".equals(appInfo.getIos_search_option())) {
+                    url = appInfo.getIos_store_url();
+                    isDownloadDirectly = true;
+                } else if ("custom_url".equals(appInfo.getIos_search_option())) {
+                    url = appInfo.getIos_custom_url();
+                    isCannotGoMarket = true;
+                    isDownloadDirectly = true;
+                }
+                scheme = appInfo.getIos_uri_scheme();
+                // universe link是否需要team_id, appInfo.getIos_team_id() != null
+                if (appInfo.getIos_bundle_id() != null && Integer.parseInt(osMajor) >= 9) {
+                    isUniversalLink = true;
+                }
+            } else {
+                url = appInfo.getIos_not_url();
+                if(StringUtils.isNotBlank(url)){
+                    ApiLogger.biz(String.format("%s\t%s\t%s\t%s\t%s\t%s", request.getHeader("x-forwarded-for"), apiName, countType, appId,
+                        deepLinkId, userAgent));
+                    response.sendRedirect(formatCustomUrl(url));
+                    recordClickIntoProfile(start, countType);
+
+                }
+                
+                isCannotGoMarket = true;
+            }
+
+          
 
         } else if (osFamily.equals("Android")) {
             isAndroid = true;
-            if (appInfo.hasAndroid()) {
-                if ("google_play".equals(appInfo.getAndroid_search_option())) {
-                    url = appInfo.getGoogle_play_url();
-                    isDownloadDirectly = false;
-                } else if ("custom_url".equals(appInfo.getAndroid_search_option())) {
-                    url = appInfo.getAndroid_custom_url();
-                    isDownloadDirectly = true;
-                }
-                scheme = appInfo.getAndroid_uri_scheme();
-            } else {
-                url = appInfo.getAndroid_not_url();
-
-            }
-
+            
             if ("1".equals(urlScanParam)) {
                 countType = "pc_adr_scan";
                 apiName = "scan";
@@ -250,17 +249,48 @@ public class UrlServlet extends HttpServlet {
                 return;
             }
 
+            if (appInfo.hasAndroid()) {
+                if ("google_play".equals(appInfo.getAndroid_search_option())) {
+                    url = appInfo.getGoogle_play_url();
+                    isDownloadDirectly = false;
+                } else if ("custom_url".equals(appInfo.getAndroid_search_option())) {
+                    url = appInfo.getAndroid_custom_url();
+                    isDownloadDirectly = true;
+                }
+                scheme = appInfo.getAndroid_uri_scheme();
+            } else {
+                url = appInfo.getAndroid_not_url();
+                if(StringUtils.isNotBlank(url)){
+                    ApiLogger.biz(String.format("%s\t%s\t%s\t%s\t%s\t%s", request.getHeader("x-forwarded-for"), apiName, countType, appId,
+                        deepLinkId, userAgent));
+                    response.sendRedirect(formatCustomUrl(url));
+                    recordClickIntoProfile(start, countType);
+
+                }
+            }
+
+          
         } else {
             // 点击计数else,暂时都计pc
             countType = "pc_click";
 
-            if (deepLink.getSource() != null && deepLink.getSource().trim().toLowerCase().equals("dashboard")
-                    && !deepLink.isDesktop_use_default() && deepLink.getDesktop_custom_url() != null) {
-                clickCount(deepLinkId, appId, countType);
-                ApiLogger.biz(String.format("%s\t%s\t%s\t%s\t%s\t%s", request.getHeader("x-forwarded-for"), apiName, countType, appId,
-                        deepLinkId, userAgent));
-                response.sendRedirect(formatCustomUrl(deepLink.getDesktop_custom_url()));
-                return;
+            if (deepLink.getSource() != null && deepLink.getSource().trim().toLowerCase().equals("dashboard")) {
+
+                if (!deepLink.isDesktop_use_default() && deepLink.getDesktop_custom_url() != null) {
+                    clickCount(deepLinkId, appId, countType);
+                    ApiLogger.biz(String.format("%s\t%s\t%s\t%s\t%s\t%s", request.getHeader("x-forwarded-for"), apiName, countType, appId,
+                            deepLinkId, userAgent));
+
+                    response.sendRedirect(formatCustomUrl(deepLink.getDesktop_custom_url()));
+                    return;
+                } else if(!appInfo.isUse_default_landing_page() && StringUtils.isNotBlank(appInfo.getCustom_landing_page())){
+                    clickCount(deepLinkId, appId, countType);
+                    ApiLogger.biz(String.format("%s\t%s\t%s\t%s\t%s\t%s", request.getHeader("x-forwarded-for"), apiName, countType, appId,
+                            deepLinkId, userAgent));
+
+                    response.sendRedirect(formatCustomUrl(appInfo.getCustom_landing_page()));
+                    return;
+                }
             }
 
             // TODO 显示二维码代码 CodeServlet code.jsp
