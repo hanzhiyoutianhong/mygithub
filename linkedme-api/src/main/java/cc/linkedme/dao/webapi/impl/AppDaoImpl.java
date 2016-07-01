@@ -97,7 +97,7 @@ public class AppDaoImpl extends BaseDao implements AppDao {
         TableChannel tableChannel = tableContainer.getTableChannel("appInfo", GET_APPS_BY_USERID, appParams.user_id, appParams.user_id);
         JdbcTemplate jdbcTemplate = tableChannel.getJdbcTemplate();
         final List<AppInfo> appInfos = new ArrayList<AppInfo>();
-        jdbcTemplate.query(tableChannel.getSql(), new Object[] {appParams.user_id}, new RowMapper() {
+        jdbcTemplate.query(tableChannel.getSql(), new Object[]{appParams.user_id}, new RowMapper() {
             public Object mapRow(ResultSet resultSet, int i) throws SQLException {
                 AppInfo app = new AppInfo();
                 app.setApp_id(resultSet.getLong("id"));
@@ -140,7 +140,7 @@ public class AppDaoImpl extends BaseDao implements AppDao {
         JdbcTemplate jdbcTemplate = tableChannel.getJdbcTemplate();
 
         try {
-            result += jdbcTemplate.update(tableChannel.getSql(), new Object[] {appParams.user_id, appParams.app_id});
+            result += jdbcTemplate.update(tableChannel.getSql(), new Object[]{appParams.user_id, appParams.app_id});
         } catch (DataAccessException e) {
             throw new LMException(LMExceptionFactor.LM_FAILURE_DB_OP, "Failed to delete app" + appParams.app_id);
         }
@@ -152,7 +152,7 @@ public class AppDaoImpl extends BaseDao implements AppDao {
         JdbcTemplate jdbcTemplate = tableChannel.getJdbcTemplate();
 
         AppInfo appInfo = new AppInfo();
-        jdbcTemplate.query(tableChannel.getSql(), new Object[] {userId, appName}, new RowMapper() {
+        jdbcTemplate.query(tableChannel.getSql(), new Object[]{userId, appName}, new RowMapper() {
             public Object mapRow(ResultSet resultSet, int i) throws SQLException {
                 appInfo.setApp_name(resultSet.getString("app_name"));
                 return null;
@@ -171,7 +171,7 @@ public class AppDaoImpl extends BaseDao implements AppDao {
 
         List<AppInfo> appInfos = new ArrayList<>();
 
-        jdbcTemplate.query(tableChannel.getSql(), new Object[] {appParams.user_id, appParams.app_name}, new RowMapper() {
+        jdbcTemplate.query(tableChannel.getSql(), new Object[]{appParams.user_id, appParams.app_name}, new RowMapper() {
             public Object mapRow(ResultSet resultSet, int i) throws SQLException {
                 AppInfo appInfo = new AppInfo();
                 appInfo.setApp_id(resultSet.getLong("id"));
@@ -196,7 +196,7 @@ public class AppDaoImpl extends BaseDao implements AppDao {
         JdbcTemplate jdbcTemplate = tableChannel.getJdbcTemplate();
 
         final List<AppInfo> appInfos = new ArrayList<AppInfo>();
-        jdbcTemplate.query(tableChannel.getSql(), new Object[] {app_id}, new RowMapper() {
+        jdbcTemplate.query(tableChannel.getSql(), new Object[]{app_id}, new RowMapper() {
             public Object mapRow(ResultSet resultSet, int i) throws SQLException {
                 AppInfo app = new AppInfo();
                 app.setApp_id(app_id);
@@ -245,7 +245,7 @@ public class AppDaoImpl extends BaseDao implements AppDao {
                     tableContainer.getTableChannel("appInfo", UPDATE_APP_BY_APPID, appParams.user_id, appParams.user_id);
             JdbcTemplate jdbcTemplate = tableChannel.getJdbcTemplate();
 
-            Object[] values = new Object[] {appParams.app_name, appParams.type, appParams.ios_uri_scheme, appParams.ios_not_url,
+            Object[] values = new Object[]{appParams.app_name, appParams.type, appParams.ios_uri_scheme, appParams.ios_not_url,
                     appParams.ios_search_option, appParams.ios_store_url, appParams.ios_custom_url, appParams.ios_bundle_id,
                     appParams.ios_app_prefix, appParams.android_uri_scheme, appParams.android_not_url, appParams.android_search_option,
                     appParams.google_play_url, appParams.android_custom_url, appParams.android_package_name,
@@ -272,7 +272,7 @@ public class AppDaoImpl extends BaseDao implements AppDao {
         TableChannel tableChannel = tableContainer.getTableChannel("urlTags", GET_URL_TAGS_BY_APPID, 0L, 0L);
         JdbcTemplate jdbcTemplate = tableChannel.getJdbcTemplate();
         final List<UrlTagsInfo> urlTagsInfos = new ArrayList<UrlTagsInfo>();
-        jdbcTemplate.query(tableChannel.getSql(), new Object[] {appParams.app_id}, new RowMapper() {
+        jdbcTemplate.query(tableChannel.getSql(), new Object[]{appParams.app_id}, new RowMapper() {
 
             public Object mapRow(ResultSet resultSet, int i) throws SQLException {
                 do {
@@ -302,7 +302,7 @@ public class AppDaoImpl extends BaseDao implements AppDao {
 
         final List<UrlTagsInfo> urlTagsInfos = new ArrayList<UrlTagsInfo>();
 
-        jdbcTemplate.query(tableChannel.getSql(), new Object[] {appParams.app_id, appParams.type}, new RowMapper() {
+        jdbcTemplate.query(tableChannel.getSql(), new Object[]{appParams.app_id, appParams.type}, new RowMapper() {
 
             public Object mapRow(ResultSet resultSet, int i) throws SQLException {
                 do {
@@ -334,7 +334,7 @@ public class AppDaoImpl extends BaseDao implements AppDao {
                 JdbcTemplate jdbcTemplate_set = tableChannel_set.getJdbcTemplate();
 
                 try {
-                    result += jdbcTemplate_set.update(tableChannel_set.getSql(), new Object[] {appParams.app_id, values[i], type});
+                    result += jdbcTemplate_set.update(tableChannel_set.getSql(), new Object[]{appParams.app_id, values[i], type});
                 } catch (DataAccessException e) {
                     if (DaoUtil.isDuplicateInsert(e)) {
                         ApiLogger.warn(new StringBuilder(128).append("Duplicate insert url_tags_info table, tag_content= ")
@@ -359,7 +359,7 @@ public class AppDaoImpl extends BaseDao implements AppDao {
                 "insert into dashboard_0.app_logo_0 (app_id, pic_data) values(?, ?) on duplicate key update pic_data = values(pic_data) ";
         JdbcTemplate jdbcTemplate = tableChannel.getJdbcTemplate();
         try {
-            res += jdbcTemplate.update(sql, new Object[] {appParams.app_id, picDatas});
+            res += jdbcTemplate.update(sql, new Object[]{appParams.app_id, picDatas});
         } catch (DataAccessException e) {
             throw new LMException(LMExceptionFactor.LM_FAILURE_DB_OP, "Failed to update app_logo");
         }
@@ -371,7 +371,7 @@ public class AppDaoImpl extends BaseDao implements AppDao {
         TableChannel tableChannel = tableContainer.getTableChannel("appInfo", UPLOAD_IMG, 0L, 0L);
         String sql = "select pic_data from dashboard_0.app_logo_0 where app_id = ?";
         JdbcTemplate jdbcTemplate = tableChannel.getJdbcTemplate();
-        List<Object> picDatas = jdbcTemplate.query(sql, new Object[] {appId}, new RowMapper() {
+        List<Object> picDatas = jdbcTemplate.query(sql, new Object[]{appId}, new RowMapper() {
             public Object mapRow(ResultSet resultSet, int i) throws SQLException {
                 InputStream in = resultSet.getBinaryStream("pic_data");
                 try {
@@ -393,7 +393,7 @@ public class AppDaoImpl extends BaseDao implements AppDao {
         JdbcTemplate jdbcTemplate = tableChannel.getJdbcTemplate();
         int res = 0;
         final List<AppInfo> appInfos = new ArrayList<AppInfo>();
-        jdbcTemplate.query(tableChannel.getSql(), new Object[] {appParams.app_id, appParams.user_id}, new RowMapper() {
+        jdbcTemplate.query(tableChannel.getSql(), new Object[]{appParams.app_id, appParams.user_id}, new RowMapper() {
             @Override
             public Object mapRow(ResultSet resultSet, int i) throws SQLException {
                 AppInfo app = new AppInfo();
