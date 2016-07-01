@@ -220,30 +220,38 @@ public class AppServiceImpl implements AppService {
 
             Map<String, String> appDetails = client.hgetAll("applinks.ios");
 
-            String judgeVal = appDetails.isEmpty() ? null : appDetails.get(appIdentifier);
-
-            if (appDetails.containsValue(appID) && (judgeVal == null || !judgeVal.equals(appID))) {
-                throw new LMException(LMExceptionFactor.LM_ILLEGAL_PARAM_VALUE, "Duplicate prefix and bundle_id!");
-            } else
+            if (appDetails.isEmpty()) {
                 client.hset("applinks.ios", appIdentifier, appID);
+            } else {
+                String judgeVal = appDetails.get(appIdentifier);
+                if (appDetails.containsValue(appID) && (judgeVal == null || !judgeVal.equals(appID))) {
+                    throw new LMException(LMExceptionFactor.LM_ILLEGAL_PARAM_VALUE, "Duplicate prefix and bundle_id!");
+                } else {
+                    client.hset("applinks.ios", appIdentifier, appID);
+                }
+            }
         }
 
         // 更新assetlinks.json文件(Android app links)
         if (!Strings.isNullOrEmpty(appParams.android_package_name) && !Strings.isNullOrEmpty(appParams.android_sha256_fingerprints)) {
             // updateAppLinksFile(Long.toString(appParams.app_id),
             // appParams.android_package_name, appParams.android_sha256_fingerprints);
+
+            String target = appParams.android_package_name + "|" + appParams.android_sha256_fingerprints;
+
             JedisPort client = linkedmeKeyShardingSupport.getClient(0);
 
             Map<String, String> appDetails = client.hgetAll("applinks.adr");
 
-            String judgeVal = appDetails.isEmpty() ? null : appDetails.get(appIdentifier);
-
-            String target = appParams.android_package_name + "|" + appParams.android_sha256_fingerprints;
-
-            if (appDetails.containsValue(target) && (judgeVal == null || !judgeVal.equals(target))) {
-                throw new LMException(LMExceptionFactor.LM_ILLEGAL_PARAM_VALUE, "Duplicate package_name and sha256_fingerprints!");
-            } else
+            if (appDetails.isEmpty()) {
                 client.hset("applinks.adr", appIdentifier, target);
+            } else {
+                String judgeVal = appDetails.get(appIdentifier);
+                if (appDetails.containsValue(target) && (judgeVal == null || !judgeVal.equals(target))) {
+                    throw new LMException(LMExceptionFactor.LM_ILLEGAL_PARAM_VALUE, "Duplicate package_name and sha256_fingerprints!");
+                } else
+                    client.hset("applinks.adr", appIdentifier, target);
+            }
         }
 
         int result = appDao.updateApp(appParams);
