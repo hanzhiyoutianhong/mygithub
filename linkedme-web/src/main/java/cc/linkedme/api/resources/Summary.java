@@ -33,10 +33,10 @@ public class Summary {
     @Resource
     private SummaryService summaryService;
 
-    private static final long baseOfDevices = 2503030L;
-    private static long addNum = 0L;
+    private static final long baseOfDevices = 5503039L;
     private static long five_second_stamp = 1L;
     private static long sumOfDevices = 0L;
+    private static long resOfDevices = 0L;
 
     @Path("/counts")
     @GET
@@ -93,7 +93,8 @@ public class Summary {
     @Produces(MediaType.APPLICATION_JSON)
     public long getSumOfDevices() {
         long timestamp = System.currentTimeMillis();
-        if (addNum == 0L) addNum += (timestamp / 1000 - 1466691000L) * 10;
+        sumOfDevices = (timestamp / 1000 - 1466397100L) * 10;
+        long addNum = 0L;
         if ((timestamp / 5000) != five_second_stamp) {
             five_second_stamp = timestamp / 5000;
             int pct = (int) (Math.random() * 10);
@@ -101,15 +102,15 @@ public class Summary {
                 addNum += (long) (Math.random() * 80000);
             } else if (pct == 2) {
                 addNum -= (long) (Math.random() * 80000);
-            }
-            else if (pct % 2 == 0) {
+            } else if (pct % 2 == 0) {
                 addNum += (long) (Math.random() * 30000);
             } else {
                 addNum -= (long) (Math.random() * 30000);
             }
-            sumOfDevices = addNum + (timestamp / 1000 - 1466397100L) * 5;
+            resOfDevices = sumOfDevices + baseOfDevices + addNum;
         }
-        return sumOfDevices + baseOfDevices;
+
+        return resOfDevices;
     }
 
     @Path("/get_income_rank")
