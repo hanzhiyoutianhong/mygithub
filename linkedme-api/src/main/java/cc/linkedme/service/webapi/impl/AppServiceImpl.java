@@ -219,7 +219,9 @@ public class AppServiceImpl implements AppService {
             JedisPort client = linkedmeKeyShardingSupport.getClient(0);
 
             Map<String, String> appDetails = client.hgetAll("applinks.ios");
-            String judgeVal = appDetails.get(appIdentifier);
+
+            String judgeVal = appDetails.isEmpty() ? null : appDetails.get(appIdentifier);
+
             if (appDetails.containsValue(appID) && (judgeVal == null || !judgeVal.equals(appID))) {
                 throw new LMException(LMExceptionFactor.LM_ILLEGAL_PARAM_VALUE, "Duplicate prefix and bundle_id!");
             } else
@@ -234,8 +236,10 @@ public class AppServiceImpl implements AppService {
 
             Map<String, String> appDetails = client.hgetAll("applinks.adr");
 
+            String judgeVal = appDetails.isEmpty() ? null : appDetails.get(appIdentifier);
+
             String target = appParams.android_package_name + "|" + appParams.android_sha256_fingerprints;
-            String judgeVal = appDetails.get(appIdentifier);
+
             if (appDetails.containsValue(target) && (judgeVal == null || !judgeVal.equals(target))) {
                 throw new LMException(LMExceptionFactor.LM_ILLEGAL_PARAM_VALUE, "Duplicate package_name and sha256_fingerprints!");
             } else

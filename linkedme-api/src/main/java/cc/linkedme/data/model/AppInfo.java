@@ -41,7 +41,7 @@ public class AppInfo implements Serializable {
     private String android_sha256_fingerprints;
     private int ios_android_flag;
 
-    private boolean use_default_landing_page;
+    private boolean use_default_landing_page = true;
     private String custom_landing_page;
 
     public long getApp_id() {
