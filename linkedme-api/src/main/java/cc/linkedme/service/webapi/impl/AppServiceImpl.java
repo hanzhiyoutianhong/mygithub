@@ -240,7 +240,6 @@ public class AppServiceImpl implements AppService {
                 throw new LMException(LMExceptionFactor.LM_ILLEGAL_PARAM_VALUE, "Duplicate package_name and sha256_fingerprints!");
             } else
                 client.hset("applinks.adr", appIdentifier, target);
-
         }
 
         int result = appDao.updateApp(appParams);
