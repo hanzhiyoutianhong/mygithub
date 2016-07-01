@@ -20,6 +20,7 @@ import cc.linkedme.data.model.params.DashboardUrlParams;
 import com.google.common.base.Strings;
 import org.apache.commons.codec.binary.Base64;
 import org.apache.commons.collections.CollectionUtils;
+import org.apache.commons.collections.MapUtils;
 import org.apache.commons.lang.ArrayUtils;
 
 import com.esotericsoftware.kryo.KryoException;
@@ -219,8 +220,7 @@ public class AppServiceImpl implements AppService {
             JedisPort client = linkedmeKeyShardingSupport.getClient(0);
 
             Map<String, String> appDetails = client.hgetAll("applinks.ios");
-
-            if (appDetails.isEmpty()) {
+            if (appDetails == null || appDetails.size() == 0) {
                 client.hset("applinks.ios", appIdentifier, appID);
             } else {
                 String judgeVal = appDetails.get(appIdentifier);
@@ -243,7 +243,7 @@ public class AppServiceImpl implements AppService {
 
             Map<String, String> appDetails = client.hgetAll("applinks.adr");
 
-            if (appDetails.isEmpty()) {
+            if (appDetails == null || appDetails.size() == 0) {
                 client.hset("applinks.adr", appIdentifier, target);
             } else {
                 String judgeVal = appDetails.get(appIdentifier);
