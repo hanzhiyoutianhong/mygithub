@@ -10,6 +10,7 @@ import java.io.IOException;
 import java.io.OutputStream;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.Random;
 
 import javax.annotation.Resource;
@@ -209,6 +210,39 @@ public class AppServiceImpl implements AppService {
 
     public int updateApp(AppParams appParams) {
         // TODO 判断更新的app_name不能重复
+        // 更新apple-app-site-association(ios universe link)
+        String appIdentifier = Base62.encode(appParams.app_id);
+        if (!Strings.isNullOrEmpty(appParams.ios_app_prefix) && !Strings.isNullOrEmpty(appParams.ios_bundle_id)) {
+            String appID = appParams.ios_app_prefix + "." + appParams.ios_bundle_id;
+            // updateAppleAssociationFile(appIdentifier, appID);
+
+            JedisPort client = linkedmeKeyShardingSupport.getClient(0);
+
+            Map<String, String> appDetails = client.hgetAll("applinks.ios");
+            String judgeVal = appDetails.get(appIdentifier);
+            if (appDetails.containsValue(appID) && (judgeVal == null || !judgeVal.equals(appID))) {
+                throw new LMException(LMExceptionFactor.LM_ILLEGAL_PARAM_VALUE, "Duplicate prefix and bundle_id!");
+            } else
+                client.hset("applinks.ios", appIdentifier, appID);
+        }
+
+        // 更新assetlinks.json文件(Android app links)
+        if (!Strings.isNullOrEmpty(appParams.android_package_name) && !Strings.isNullOrEmpty(appParams.android_sha256_fingerprints)) {
+            // updateAppLinksFile(Long.toString(appParams.app_id),
+            // appParams.android_package_name, appParams.android_sha256_fingerprints);
+            JedisPort client = linkedmeKeyShardingSupport.getClient(0);
+
+            Map<String, String> appDetails = client.hgetAll("applinks.adr");
+
+            String target = appParams.android_package_name + "|" + appParams.android_sha256_fingerprints;
+            String judgeVal = appDetails.get(appIdentifier);
+            if (appDetails.containsValue(target) && (judgeVal == null || !judgeVal.equals(target))) {
+                throw new LMException(LMExceptionFactor.LM_ILLEGAL_PARAM_VALUE, "Duplicate package_name and sha256_fingerprints!");
+            } else
+                client.hset("applinks.adr", appIdentifier, target);
+
+        }
+
         int result = appDao.updateApp(appParams);
         if (result > 0) {
             AppInfo appInfo = new AppInfo();
@@ -241,25 +275,6 @@ public class AppServiceImpl implements AppService {
 
             // 向mc中写入最新app信息
             setAppInfoToCache(appInfo);
-
-            // 更新apple-app-site-association(ios universe link)
-            String appIdentifier = Base62.encode(appParams.app_id);
-            if (!Strings.isNullOrEmpty(appParams.ios_app_prefix) && !Strings.isNullOrEmpty(appParams.ios_bundle_id)) {
-                String appID = appParams.ios_app_prefix + "." + appParams.ios_bundle_id;
-                // updateAppleAssociationFile(appIdentifier, appID);
-
-                JedisPort client = linkedmeKeyShardingSupport.getClient(0);
-                client.hset("applinks.ios", appIdentifier, appID);
-            }
-
-            // 更新assetlinks.json文件(Android app links)
-            if (!Strings.isNullOrEmpty(appParams.android_package_name) && !Strings.isNullOrEmpty(appParams.android_sha256_fingerprints)) {
-                // updateAppLinksFile(Long.toString(appParams.app_id),
-                // appParams.android_package_name, appParams.android_sha256_fingerprints);
-                JedisPort client = linkedmeKeyShardingSupport.getClient(0);
-                client.hset("applinks.adr", appIdentifier, appParams.android_package_name + "|" + appParams.android_sha256_fingerprints);
-
-            }
         }
         return result;
     }
