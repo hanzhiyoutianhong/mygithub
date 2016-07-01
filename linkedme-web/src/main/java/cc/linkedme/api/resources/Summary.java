@@ -93,21 +93,21 @@ public class Summary {
     @Produces(MediaType.APPLICATION_JSON)
     public long getSumOfDevices() {
         long timestamp = System.currentTimeMillis();
-        if (addNum == 0L) addNum += (timestamp / 1000 - 1466691000L) * 5;
+        if (addNum == 0L) addNum += (timestamp / 1000 - 1466691000L) * 10;
         if ((timestamp / 5000) != five_second_stamp) {
             five_second_stamp = timestamp / 5000;
             int pct = (int) (Math.random() * 10);
             if (pct == 1) {
-                addNum += (long) (Math.random() * 200000);
+                addNum += (long) (Math.random() * 80000);
             } else if (pct == 2) {
-                addNum -= (long) (Math.random() * 190000);
+                addNum -= (long) (Math.random() * 80000);
             }
-            if (pct % 2 == 0) {
-                addNum += (long) (Math.random() * 100000);
+            else if (pct % 2 == 0) {
+                addNum += (long) (Math.random() * 30000);
             } else {
-                addNum += (long) (-1 * Math.random() * 90000);
+                addNum -= (long) (Math.random() * 30000);
             }
-            sumOfDevices = addNum + (timestamp / 1000 - 1466397100L) * 10;
+            sumOfDevices = addNum + (timestamp / 1000 - 1466397100L) * 5;
         }
         return sumOfDevices + baseOfDevices;
     }
