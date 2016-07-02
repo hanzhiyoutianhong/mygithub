@@ -21,6 +21,14 @@ public class TableItem implements Serializable {
     private boolean hierarchy = false;
 
 
+    public TableItem(String dbNamePrefix,int dbCount, String tableNamePrefix,String tableNamePostFix,int tableCount) {
+        this.dbCount = dbCount;
+        this.tableNamePostFix = tableNamePostFix;
+        this.tableCount = tableCount;
+        this.dbNamePrefix = dbNamePrefix;
+        this.tableNamePrefix = tableNamePrefix;
+    }
+
     public String getItemName() {
         return itemName;
     }
