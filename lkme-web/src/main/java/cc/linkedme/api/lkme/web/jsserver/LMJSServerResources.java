@@ -61,7 +61,7 @@ public class LMJSServerResources {
 
         String clientIP = request.getHeader("x-forwarded-for");
         ApiLogger.biz(String.format("%s\t%s\t%s\t%s\t%s", clientIP, "record_id", identity_id, app_id, deeplink_id));
-        return null;
+        return "{}";
     }
 
     @Path("/record_event")
