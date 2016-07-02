@@ -22,6 +22,8 @@ import java.util.regex.Pattern;
 
 import cc.linkedme.commons.exception.LMException;
 import cc.linkedme.commons.exception.LMExceptionFactor;
+import cc.linkedme.data.dao.strategy.TableItem;
+import cc.linkedme.data.dao.strategy.TableItemHlper;
 import cc.linkedme.data.dao.util.DateDuration;
 import com.google.common.base.Strings;
 import org.apache.commons.lang.ArrayUtils;
@@ -783,15 +785,43 @@ public class Util {
         }
     }
 
+    public static Calendar getCalendarWithDate(String date) {
+        Calendar calendar = Calendar.getInstance();
+        calendar.setTime(timeStrToDate(date));
+        return calendar;
+    }
+
     public static boolean isSameMonth(String startDate, String endDate) {
-        Calendar start = Calendar.getInstance();
-        start.setTime(timeStrToDate(startDate));
-        Calendar end = Calendar.getInstance();
-        end.setTime(timeStrToDate(endDate));
+        Calendar start = getCalendarWithDate(startDate);
+        Calendar end = getCalendarWithDate(endDate);
         return start.get(Calendar.MONTH) == end.get(Calendar.MONTH) && start.get(Calendar.YEAR) == end.get(Calendar.YEAR);
     }
 
+    public static boolean isValidDate(String startDate, String endDate) {
+        DateFormat dfs = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        Date start = null;
+        Date end = null;
+        try {
+            start = dfs.parse(startDate);
+            end = dfs.parse(endDate);
+        } catch (ParseException e) {
+            DateFormat df = new SimpleDateFormat("yyyy-MM-dd");
+            try {
+                start = df.parse(startDate);
+                end = df.parse(endDate);
+            } catch (ParseException e1) {
+                ApiLogger.error("Util.isValidDate parse date failed", e1);
+                throw new LMException(LMExceptionFactor.LM_ILLEGAL_PARAM_VALUE, "Util.isValidDate parse date failed");
+            }
+        }
+        return start.compareTo(end) < 1;
+    }
+
     public static ArrayList<DateDuration> getBetweenMonths(String minDate, String maxDate) {
+        if (!isValidDate(minDate, maxDate)) {
+            throw new LMException(LMExceptionFactor.LM_ILLEGAL_PARAM_VALUE, "minDate is after maxDate!");
+        }
+
         ArrayList<DateDuration> result = new ArrayList<DateDuration>();
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
 
@@ -933,6 +963,55 @@ public class Util {
         return df.format(Calendar.getInstance().getTime());
     }
 
+    public static Map<String,String> getDbTable(long dbId, long tableId, String type) {
+        Map<String,String> dbTable = new HashMap<>();
+        TableItem tableItem;
+        if ("deeplink".equals(type)) {
+            Date date = UuidHelper.getDateFromId(tableId);
+            tableItem = new TableItem("deeplink", 16, "deeplink_info", "yymm", 1);
+            dbTable.put("dbName",TableItemHlper.getDbName(tableItem, dbId));
+            dbTable.put("tbaleName",TableItemHlper.getTableName(tableItem, date));
+
+        } else if ("client".equals(type)) {
+            tableItem = new TableItem("client", 4, "client_info", null, 8);
+            dbTable.put("dbName",TableItemHlper.getDbName(tableItem, dbId));
+            dbTable.put("tbaleName",TableItemHlper.getTableName(tableItem, tableId));
+
+        } else if ("count".equals(type)) {
+            tableItem = new TableItem("count", 1, "url_count", "yymm", 1);
+            dbTable.put("dbName",TableItemHlper.getDbName(tableItem, dbId));
+            dbTable.put("tbaleName",TableItemHlper.getTableName(tableItem, tableId));
+        }
+        return dbTable;
+    }
+
+    public static List<String> getMonthBetween(String minDate, String maxDate) {
+        ArrayList<String> result = new ArrayList<String>();
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM");
+        SimpleDateFormat sdf1 = new SimpleDateFormat("yyMM");
+
+        Calendar min = Calendar.getInstance();
+        Calendar max = Calendar.getInstance();
+
+        try {
+            min.setTime(sdf.parse(minDate));
+            min.set(min.get(Calendar.YEAR), min.get(Calendar.MONTH), 1);
+
+            max.setTime(sdf.parse(maxDate));
+            max.set(max.get(Calendar.YEAR), max.get(Calendar.MONTH), 2);
+        } catch (ParseException e) {
+            ApiLogger.error("Util.getBetweenMonths parse time failed", e);
+            throw new LMException(LMExceptionFactor.LM_ILLEGAL_PARAM_VALUE, "Util.getBetweenMonths parse time failed");
+        }
+
+        Calendar curr = min;
+        while (curr.before(max)) {
+            result.add(sdf1.format(curr.getTime()));
+            curr.add(Calendar.MONTH, 1);
+        }
+        return result;
+    }
+
     public static void main(String args[]) {
         String start_month = "2016-06-20";
         String end_month = "2016-08-20";
@@ -956,6 +1035,11 @@ public class Util {
         System.out.println(b);
         System.out.println(c);
         System.out.println(d);
+
+        //根据appID和deepLinkId得到具体的库和表
+        System.out.println(Util.getDbTable(10170,3413620637564930L,"deeplink"));
+        //根据identityId得到具体的库和表
+        System.out.println(Util.getDbTable(3368955058323458L,3368955058323458L,"client"));
     }
 
 }

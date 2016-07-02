@@ -15,4 +15,6 @@ public interface DeepLinkDateCountDao {
     int addDeepLinksDateCounts(String date, DeepLinkDateCount[] deepLinksDateCounts);
 
     int addDeepLinkDateCount(DeepLinkDateCount deepLinkDateCount, String countType);
+
+    boolean deleteDeepLinkDateCounts(long appId,long deepLinkId);
 }

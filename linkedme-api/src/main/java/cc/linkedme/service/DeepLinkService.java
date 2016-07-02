@@ -40,6 +40,9 @@ public class DeepLinkService {
     @Resource
     private ShardingSupportHash<JedisPort> deepLinkShardingSupport;
 
+    @Resource
+    private ShardingSupportHash<JedisPort> deepLinkCountShardingSupport;
+
     public int addDeepLink(DeepLink deepLink) {
         int result = 0;
         // insert deepLink table;
@@ -100,6 +103,11 @@ public class DeepLinkService {
                 // TODO 删除redis里关于短链的相关信息,md5和deeplink_id的键值对
                 JedisPort redisClient = deepLinkShardingSupport.getClient(deepLink.getDeeplinkMd5());
                 redisClient.del(new String[] {deepLink.getDeeplinkMd5()});
+
+                if(deepLinkDateCountDao.deleteDeepLinkDateCounts(appId,deepLinkIds[i])){
+                    JedisPort countClient = deepLinkCountShardingSupport.getClient(deepLinkIds[i]);
+                    countClient.hdelAll(String.valueOf(deepLinkIds[i]));
+                }
             } else {
                 result = false;
                 break;
