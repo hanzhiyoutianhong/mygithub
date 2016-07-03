@@ -1,6 +1,7 @@
 package cc.linkedme.data.dao.strategy;
 
 import java.util.Date;
+import java.util.HashMap;
 import java.util.Map;
 
 import org.apache.commons.lang.ArrayUtils;
@@ -248,6 +249,11 @@ public final class TableItemHlper {
         calIndex(3317379083796775l);
         calTimeline(5553290834L);
         calIndex(5553290834L);
+
+        // 根据appID和deepLinkId得到deeplink具体的库和表
+        System.out.println(getDbTable(10170, 3413620637564930L, "deeplink"));
+        // 根据identityId得到client具体的库和表
+        System.out.println(getDbTable(3368955058323458L, 3368955058323458L, "client"));
     }
 
     private static void calTimeline(long id) {
@@ -284,6 +290,28 @@ public final class TableItemHlper {
         dbIndex = dbIndex / 1;
 
         System.out.println("content id:" + id + " result:" + dbIndex);
+    }
+
+    public static Map<String, String> getDbTable(long dbId, long tableId, String type) {
+        Map<String, String> dbTable = new HashMap<>();
+        TableItem tableItem;
+        if ("deeplink".equals(type)) {
+            Date date = UuidHelper.getDateFromId(tableId);
+            tableItem = new TableItem("deeplink", 16, "deeplink_info", "yymm", 1);
+            dbTable.put("dbName", TableItemHlper.getDbName(tableItem, dbId));
+            dbTable.put("tbaleName", TableItemHlper.getTableName(tableItem, date));
+
+        } else if ("client".equals(type)) {
+            tableItem = new TableItem("client", 4, "client_info", null, 8);
+            dbTable.put("dbName", TableItemHlper.getDbName(tableItem, dbId));
+            dbTable.put("tbaleName", TableItemHlper.getTableName(tableItem, tableId));
+
+        } else if ("count".equals(type)) {
+            tableItem = new TableItem("count", 1, "url_count", "yymm", 1);
+            dbTable.put("dbName", TableItemHlper.getDbName(tableItem, dbId));
+            dbTable.put("tbaleName", TableItemHlper.getTableName(tableItem, tableId));
+        }
+        return dbTable;
     }
 
 }
