@@ -94,6 +94,7 @@ function start() {
             DEBUG_ALERT("iOS major < 9: " + Params.ios_major);
             iframeDeepLinkLaunch(launchAppUrl, 2e3,
                 function () {
+                    lkmeAction.recordId();
                     var destination = lkmeAction.destination.iOSScheme;
                     gotoUrl(Params.forward_url, destination);
                 });
@@ -106,13 +107,15 @@ function start() {
             } else if (Params.isChrome()) {
                 DEBUG_ALERT("isChrome");
                 iOSChromeLaunch(a, function () {
-                    var destination = lkmeAction.destination.iOSBrowser.replace(/{browserName}/g, "chrome")
+                    lkmeAction.recordId();
+                    var destination = lkmeAction.destination.iOSBrowser.replace(/{browserName}/g, "chrome");
                     gotoUrl(Params.forward_url, destination);
                 });
             } else {
                 DEBUG_ALERT("isSafari or other browser");
                 iOSSafariLaunch(launchAppUrl, 2500, function () {
-                    var destination = lkmeAction.destination.iOSBrowser.replace(/{browserName}/g, "safari")
+                    lkmeAction.recordId();
+                    var destination = lkmeAction.destination.iOSBrowser.replace(/{browserName}/g, "safari");
                     gotoUrl(Params.forward_url, destination);
                 });
             }

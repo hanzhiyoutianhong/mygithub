@@ -160,7 +160,7 @@ public class UrlServlet extends HttpServlet {
             isValidIdentity = !Strings.isNullOrEmpty(deviceId);
         }
 
-        // 生成browser_fingerprint_id
+        // 生成browser_fingerprint_id, TODO: 测试Model字段; 测试浏览器Based Memory 100%匹配算法; 测试浏览器Cookie失效等各种情况;
         String clientIP = request.getHeader("x-forwarded-for");
         String browserFingerprintId = MD5Utils.md5(Joiner.on("&").skipNulls().join(appId, osFamily, osVersion, clientIP));
 
@@ -210,7 +210,9 @@ public class UrlServlet extends HttpServlet {
                 }
                 scheme = appInfo.getIos_uri_scheme();
                 // universe link是否需要team_id, appInfo.getIos_team_id() != null
-                if (appInfo.getIos_bundle_id() != null && Integer.parseInt(osMajor) >= 9) {
+                //TODO 添加universal link 参数检验
+                boolean ios_enable_ulink = ((appInfo.getIos_android_flag() & 4) >> 2) == 1;
+                if (ios_enable_ulink && appInfo.getIos_bundle_id() != null && Integer.parseInt(osMajor) >= 9) {
                     isUniversalLink = true;
                 }
             } else {
