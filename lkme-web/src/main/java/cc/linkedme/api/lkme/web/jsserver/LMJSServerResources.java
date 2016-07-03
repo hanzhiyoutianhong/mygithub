@@ -46,6 +46,7 @@ public class LMJSServerResources {
     @POST
     @Produces({MediaType.APPLICATION_JSON})
     public String recordId(@FormParam("identity_id") long identity_id,
+                           @FormParam("app_id") long app_id,
                            @FormParam("is_valid_identityid") boolean is_valid_identityid,
                            @FormParam("browser_fingerprint_id") String browser_fingerprint_id,
                            @FormParam("deeplink_id") long deeplink_id,
@@ -57,6 +58,9 @@ public class LMJSServerResources {
         jsRecordIdParams.browser_fingerprint_id = browser_fingerprint_id;
         jsRecordIdParams.deeplink_id = deeplink_id;
         jsService.recordId(jsRecordIdParams);
+
+        String clientIP = request.getHeader("x-forwarded-for");
+        ApiLogger.biz(String.format("%s\t%s\t%s\t%s\t%s", clientIP, "record_id", identity_id, app_id, deeplink_id));
         return "{}";
     }
 

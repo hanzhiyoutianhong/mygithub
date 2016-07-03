@@ -11,6 +11,7 @@ var lkmeAction = {
         androidLoadLandingPage: "dst_android_app_{dest}_landingpage",
         androidCannotLoadLandingPage: "dst_android_cannot_goto_{dest}_landingpage",
         androidGotoMarket: "dst_android_goto_market",
+        androidGotoDirectDownload: "dst_android_goto_direct_download_url",
         iOSPlatform: "dst_{channel}_ios",
         androidPlatform: "dst_{channel}_android",
         yybPlatform: "dst_{tx_channel}_yyb",
@@ -18,6 +19,7 @@ var lkmeAction = {
     },
     recordId: function () {
         var param = {
+            app_id: Params.app_id,
             identity_id: Params.identity_id,
             is_valid_identityid: Params.is_valid_identity,
             browser_fingerprint_id: Params.browser_fingerprint_id,
@@ -294,7 +296,7 @@ function gotoAndroidAppInstall() {
         lkmeAction.recordJSEvent(destination);
         $("#btnGotoLandingPage").click(function () {
             lkmeAction.recordJSUserClickEvent("gotoAndroidDirectDownload");
-            gotoUrl(Params.forward_url);
+            gotoUrl(Params.forward_url, lkmeAction.destination.androidGotoDirectDownload);
         });
     } else if (Params.isCannotGoMarket()) {
         destination = lkmeAction.destination.androidCannotLoadLandingPage.replace(/{dest}/g, "market");
