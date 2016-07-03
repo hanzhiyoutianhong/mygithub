@@ -2,6 +2,7 @@ package cc.linkedme.data.model;
 
 import cc.linkedme.commons.json.JsonBuilder;
 import cc.linkedme.commons.util.Base62;
+import cc.linkedme.commons.util.Constants;
 import net.sf.json.JSONObject;
 import net.sf.json.util.JSONBuilder;
 
@@ -40,7 +41,7 @@ public class AppInfo implements Serializable {
     private String android_sha256_fingerprints;
     private int ios_android_flag;
 
-    private boolean use_default_landing_page;
+    private boolean use_default_landing_page = true;
     private String custom_landing_page;
 
     public long getApp_id() {
@@ -310,7 +311,7 @@ public class AppInfo implements Serializable {
         resultJson.append("app_id", app_id);
         resultJson.append("app_identifier", Base62.encode(app_id));
         resultJson.append("app_name", app_name);
-        resultJson.append("app_logo", app_logo);
+        resultJson.append("app_logo", Constants.DASHBOARD_API_URL + "/app/images/" + app_id + Constants.APP_LOGO_IMG_TYPE);
         resultJson.append("lkme_key", app_key);
         resultJson.append("lkme_secret", app_secret);
         resultJson.append("link_setting", link_setting.flip());

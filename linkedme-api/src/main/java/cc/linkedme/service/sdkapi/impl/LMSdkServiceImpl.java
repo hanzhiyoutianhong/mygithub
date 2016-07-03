@@ -200,6 +200,7 @@ public class LMSdkServiceImpl implements LMSdkService {
 
                     clientRedisClient.sadd(deviceId + ".old", String.valueOf(identityId));
                     clientRedisClient.set(deviceId, identityId); // 更新<device_id, identity_id>
+                    clientRedisClient.set(identityId + ".di", deviceId);
                 }
             } else { // 之前存在identityId, 并有identityId与deepLink的键值对
                 deepLinkId = Long.parseLong(deepLinkIdStr);
@@ -364,7 +365,7 @@ public class LMSdkServiceImpl implements LMSdkService {
                 final String clickType = DeepLinkCount.getCountTypeFromOs(openParams.os, "click");
                 boolean isUpdateClickCount = isDirectForward;
                 long dpId = deepLinkId;
-                final int countAppId = (int)appId;
+                final int countAppId = (int) appId;
 
                 String date = Util.getCurrDate();
                 deepLinkMsgPusher.addDeepLinkCount(deepLinkId, (int) appId, date, openType);

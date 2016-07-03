@@ -11,6 +11,8 @@ var lkmeAction = {
         androidLoadLandingPage: "dst_android_app_{dest}_landingpage",
         androidCannotLoadLandingPage: "dst_android_cannot_goto_{dest}_landingpage",
         androidGotoMarket: "dst_android_goto_market",
+        androidGotoDirectDownload: "dst_android_goto_direct_download_url",
+        androidGotoChromeIntent: "dst_android_chrome_intent",
         iOSPlatform: "dst_{channel}_ios",
         androidPlatform: "dst_{channel}_android",
         yybPlatform: "dst_{tx_channel}_yyb",
@@ -18,6 +20,7 @@ var lkmeAction = {
     },
     recordId: function () {
         var param = {
+            app_id: Params.app_id,
             identity_id: Params.identity_id,
             is_valid_identityid: Params.is_valid_identity,
             browser_fingerprint_id: Params.browser_fingerprint_id,
@@ -94,6 +97,7 @@ function start() {
             DEBUG_ALERT("iOS major < 9: " + Params.ios_major);
             iframeDeepLinkLaunch(launchAppUrl, 2e3,
                 function () {
+                    lkmeAction.recordId();
                     var destination = lkmeAction.destination.iOSScheme;
                     gotoUrl(Params.forward_url, destination);
                 });
@@ -106,13 +110,15 @@ function start() {
             } else if (Params.isChrome()) {
                 DEBUG_ALERT("isChrome");
                 iOSChromeLaunch(a, function () {
-                    var destination = lkmeAction.destination.iOSBrowser.replace(/{browserName}/g, "chrome")
+                    lkmeAction.recordId();
+                    var destination = lkmeAction.destination.iOSBrowser.replace(/{browserName}/g, "chrome");
                     gotoUrl(Params.forward_url, destination);
                 });
             } else {
                 DEBUG_ALERT("isSafari or other browser");
                 iOSSafariLaunch(launchAppUrl, 2500, function () {
-                    var destination = lkmeAction.destination.iOSBrowser.replace(/{browserName}/g, "safari")
+                    lkmeAction.recordId();
+                    var destination = lkmeAction.destination.iOSBrowser.replace(/{browserName}/g, "safari");
                     gotoUrl(Params.forward_url, destination);
                 });
             }
@@ -135,6 +141,9 @@ function start() {
         } else if (Params.isUC()) {
             DEBUG_ALERT("UC browser");
             gotoUC(launchAppUrl);
+        } else if (Params.isChrome() && Params.chrome_major >= 25 && !Params.isMIUI()) {
+            DEBUG_ALERT("Chrome Intent");
+            gotoChromeIntent();
         } else {
             DEBUG_ALERT("default browser");
             iframeDeepLinkLaunch(launchAppUrl, 2e3, function () {
@@ -205,12 +214,11 @@ function iframeDeepLinkLaunch(a, b, c) {
 }
 
 function iOSChromeLaunch(a, b) {
-    deepLinkLocation = a;
     var c = null;
     try {
         lkmeAction.recordJSEvent(a);
         c = window.open(a);
-        env.windowChangeHistory();
+        window.history.replaceState("Object", "Title", "0");
     } catch (d) {
         DEBUG_ALERT("exception");
     }
@@ -218,8 +226,7 @@ function iOSChromeLaunch(a, b) {
 }
 
 function iOSSafariLaunch(a, b, c) {
-    deepLinkLocation = a;
-    DEBUG_ALERT(deepLinkLocation);
+    DEBUG_ALERT(a);
     lkmeAction.recordJSEvent(a);
     window.location = a;
     var d = setTimeout(function () {
@@ -245,6 +252,15 @@ function gotoUC(a) {
                 })) : setTimeout(d, 1e3);
         };
     d();
+}
+
+function gotoChromeIntent() {
+    lkmeAction.recordId();
+    var destination = lkmeAction.destination.androidGotoChromeIntent;
+    lkmeAction.recordJSEvent(destination);
+    var option = Params.host + "?click_id=" + Params.click_id;
+    var location = "intent://" + option + "#Intent;scheme=" + Params.uri_scheme + ";package=" + Params.package_name + ";S.browser_fallback_url=" + Params.forward_url + ";end";
+    window.location(location);
 }
 
 function gotoCannotForwardPage() {
@@ -291,7 +307,7 @@ function gotoAndroidAppInstall() {
         lkmeAction.recordJSEvent(destination);
         $("#btnGotoLandingPage").click(function () {
             lkmeAction.recordJSUserClickEvent("gotoAndroidDirectDownload");
-            gotoUrl(Params.forward_url);
+            gotoUrl(Params.forward_url, lkmeAction.destination.androidGotoDirectDownload);
         });
     } else if (Params.isCannotGoMarket()) {
         destination = lkmeAction.destination.androidCannotLoadLandingPage.replace(/{dest}/g, "market");
@@ -315,42 +331,45 @@ function gotoAndroidAppInstall() {
 }
 
 function clearTimeoutOnPageUnload(a) {
-    env.windowAddEventListener("pagehide",
+    window.addEventListener("pagehide",
         function () {
-            DEBUG_ALERT("window event pagehide"),
-                clearTimeout(a),
-                env.windowChangeHistory()
+            DEBUG_ALERT("window event pagehide");
+            clearTimeout(a);
+            window.history.replaceState("Object", "Title", "0");
         });
-    env.windowAddEventListener("blur",
+    window.addEventListener("blur",
         function () {
-            DEBUG_ALERT("window event blur"),
-                clearTimeout(a),
-                env.windowChangeHistory()
+            DEBUG_ALERT("window event blur");
+            clearTimeout(a);
+            window.history.replaceState("Object", "Title", "0");
         });
-    env.windowAddEventListener("unload",
+    window.addEventListener("unload",
         function () {
-            DEBUG_ALERT("window event unload"),
-                clearTimeout(a),
-                env.windowChangeHistory()
+            DEBUG_ALERT("window event unload");
+            clearTimeout(a);
+            window.history.replaceState("Object", "Title", "0");
         });
-    env.windowAddEventListener("beforeunload",
+    window.addEventListener("beforeunload",
         function () {
             DEBUG_ALERT("window event beforeunload")
         });
-    env.windowAddEventListener("focus",
+    window.addEventListener("focus",
         function () {
-            DEBUG_ALERT("window event focus")
+            DEBUG_ALERT("window event focus");
         });
-    env.windowAddEventListener("focusout",
+    window.addEventListener("focusout",
         function () {
-            DEBUG_ALERT("window event focusout"),
-                clearTimeout(a),
-                env.windowChangeHistory()
+            DEBUG_ALERT("window event focusout");
+            clearTimeout(a);
+            window.history.replaceState("Object", "Title", "0");
         });
     document.addEventListener("webkitvisibilitychange",
         function () {
-            DEBUG_ALERT("window event webkitvisibilitychange"),
-            document.webkitHidden && (clearTimeout(a), env.windowChangeHistory())
+            DEBUG_ALERT("window event webkitvisibilitychange");
+            if (document.webkitHidden) {
+                clearTimeout(a);
+                window.history.replaceState("Object", "Title", "0");
+            }
         });
 }
 
