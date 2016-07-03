@@ -19,16 +19,16 @@ public class JsServiceImpl implements JsService {
         String identityId = String.valueOf(jsRecordIdParams.identity_id);
         if (jsRecordIdParams.is_valid_identityid) {
             JedisPort identityRedisClient = clientShardingSupport.getClient(identityId);
-            boolean res = identityRedisClient.set(identityId + "dpi", jsRecordIdParams.deeplink_id);
+            boolean res = identityRedisClient.set(identityId + ".dpi", jsRecordIdParams.deeplink_id);
             if (res) {
-                identityRedisClient.expire(identityId, 2 * 60 * 60);
+                identityRedisClient.expire(identityId + ".dpi", 2 * 60 * 60);
             }
-        } else {
-            String browserFingerprintId = jsRecordIdParams.browser_fingerprint_id;
-            JedisPort browseFingerprintIdRedisClient = clientShardingSupport.getClient(browserFingerprintId);
-            browseFingerprintIdRedisClient.hset(browserFingerprintId, "iid", identityId);
-            browseFingerprintIdRedisClient.hset(browserFingerprintId, "did", jsRecordIdParams.deeplink_id);
-            browseFingerprintIdRedisClient.expire(browserFingerprintId, 2 * 60 * 60); // 设置过期时间
         }
+        String browserFingerprintId = jsRecordIdParams.browser_fingerprint_id;
+        JedisPort browseFingerprintIdRedisClient = clientShardingSupport.getClient(browserFingerprintId);
+        browseFingerprintIdRedisClient.hset(browserFingerprintId, "iid", identityId);
+        browseFingerprintIdRedisClient.hset(browserFingerprintId, "did", jsRecordIdParams.deeplink_id);
+        browseFingerprintIdRedisClient.expire(browserFingerprintId, 2 * 60 * 60); // 设置过期时间
+
     }
 }

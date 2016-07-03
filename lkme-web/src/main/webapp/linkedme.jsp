@@ -29,10 +29,10 @@
             installStatus: '${AppInsStatus}',
             button_text: '${Download_btn_text}',
             visit_id: '${visitId}',
-            deeplink_id:'${deepLinkId}',
-            browser_fingerprint_id:'${browserFingerprintId}',
-            identity_id:'${identityId}',
-            is_valid_identity:'${isValidIdentity}',
+            deeplink_id: '${deepLinkId}',
+            browser_fingerprint_id: '${browserFingerprintId}',
+            identity_id: '${identityId}',
+            is_valid_identity: '${isValidIdentity}',
 
             isIOS: function () {
                 return 'true' == '${isIOS}';
@@ -57,6 +57,9 @@
             },
             isUC: function () {
                 return 'true' == '${isUC}';
+            },
+            isMIUI: function () {
+                return 'true' == '${isMIUI}';
             },
             isUniversalLink: function () {
                 return 'true' == '${isUniversalLink}';
