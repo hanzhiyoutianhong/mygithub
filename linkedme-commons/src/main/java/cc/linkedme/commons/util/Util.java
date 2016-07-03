@@ -22,8 +22,6 @@ import java.util.regex.Pattern;
 
 import cc.linkedme.commons.exception.LMException;
 import cc.linkedme.commons.exception.LMExceptionFactor;
-import cc.linkedme.data.dao.strategy.TableItem;
-import cc.linkedme.data.dao.strategy.TableItemHlper;
 import cc.linkedme.data.dao.util.DateDuration;
 import com.google.common.base.Strings;
 import org.apache.commons.lang.ArrayUtils;
@@ -963,28 +961,6 @@ public class Util {
         return df.format(Calendar.getInstance().getTime());
     }
 
-    public static Map<String,String> getDbTable(long dbId, long tableId, String type) {
-        Map<String,String> dbTable = new HashMap<>();
-        TableItem tableItem;
-        if ("deeplink".equals(type)) {
-            Date date = UuidHelper.getDateFromId(tableId);
-            tableItem = new TableItem("deeplink", 16, "deeplink_info", "yymm", 1);
-            dbTable.put("dbName",TableItemHlper.getDbName(tableItem, dbId));
-            dbTable.put("tbaleName",TableItemHlper.getTableName(tableItem, date));
-
-        } else if ("client".equals(type)) {
-            tableItem = new TableItem("client", 4, "client_info", null, 8);
-            dbTable.put("dbName",TableItemHlper.getDbName(tableItem, dbId));
-            dbTable.put("tbaleName",TableItemHlper.getTableName(tableItem, tableId));
-
-        } else if ("count".equals(type)) {
-            tableItem = new TableItem("count", 1, "url_count", "yymm", 1);
-            dbTable.put("dbName",TableItemHlper.getDbName(tableItem, dbId));
-            dbTable.put("tbaleName",TableItemHlper.getTableName(tableItem, tableId));
-        }
-        return dbTable;
-    }
-
     public static List<String> getMonthBetween(String minDate, String maxDate) {
         ArrayList<String> result = new ArrayList<String>();
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM");
@@ -1035,11 +1011,6 @@ public class Util {
         System.out.println(b);
         System.out.println(c);
         System.out.println(d);
-
-        //根据appID和deepLinkId得到具体的库和表
-        System.out.println(Util.getDbTable(10170,3413620637564930L,"deeplink"));
-        //根据identityId得到具体的库和表
-        System.out.println(Util.getDbTable(3368955058323458L,3368955058323458L,"client"));
     }
 
 }

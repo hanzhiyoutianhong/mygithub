@@ -219,23 +219,14 @@ public class DeepLinkDateCountDaoImpl extends BaseDao implements DeepLinkDateCou
         return result;
     }
 
-    public boolean deleteDeepLinkDateCounts(long appId, long deepLinkId) {
+    public boolean deleteDeepLinkDateCounts(long appId, long deepLinkId, String date) {
         int result = 0;
-        Date date = UuidHelper.getDateFromId(deepLinkId);
-        Date current = new Date();
-        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
-        String crateDate = sdf.format(date);
-        String currentDate = sdf.format(current);
-        TableChannel tableChannel = null;
-        List<DateDuration> dateDurationList = Util.getBetweenMonths(crateDate, currentDate);
-        for (DateDuration d : dateDurationList) {
-            tableChannel = tableContainer.getTableChannel("deepLinkDateCount", DELETE_DEEPLINKS_DATE_COUNTS, appId,
-                    Util.timeStrToDate(d.getMin_date()));
-            try {
-                result += tableChannel.getJdbcTemplate().update(tableChannel.getSql(), new Object[] {appId,deepLinkId});
-            } catch (DataAccessException e) {
-                throw new LMException(LMExceptionFactor.LM_FAILURE_DB_OP, "Failed to delete deeplink_datecount,deeplink_id = " + deepLinkId);
-            }
+        TableChannel tableChannel =
+                tableContainer.getTableChannel("deepLinkDateCount", DELETE_DEEPLINKS_DATE_COUNTS, appId, Util.timeStrToDate(date));
+        try {
+            result += tableChannel.getJdbcTemplate().update(tableChannel.getSql(), new Object[] {appId, deepLinkId});
+        } catch (DataAccessException e) {
+            throw new LMException(LMExceptionFactor.LM_FAILURE_DB_OP, "Failed to delete deeplink_datecount,deeplink_id = " + deepLinkId);
         }
         return result > 0;
     }

@@ -2,7 +2,10 @@ package cc.linkedme.service;
 
 import javax.annotation.Resource;
 
+import cc.linkedme.commons.util.Util;
+import cc.linkedme.commons.util.UuidHelper;
 import cc.linkedme.dao.webapi.DeepLinkDateCountDao;
+import cc.linkedme.data.dao.util.DateDuration;
 import cc.linkedme.data.model.DeepLinkDateCount;
 import cc.linkedme.data.model.params.DashboardUrlParams;
 import org.springframework.stereotype.Service;
@@ -21,6 +24,10 @@ import cc.linkedme.data.model.DeepLink;
 import cc.linkedme.data.model.params.UrlParams;
 import net.sf.json.JSONArray;
 import net.sf.json.JSONObject;
+
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.List;
 
 /**
  * Created by LinkedME01 on 16/3/10.
@@ -104,9 +111,20 @@ public class DeepLinkService {
                 JedisPort redisClient = deepLinkShardingSupport.getClient(deepLink.getDeeplinkMd5());
                 redisClient.del(new String[] {deepLink.getDeeplinkMd5()});
 
-                if(deepLinkDateCountDao.deleteDeepLinkDateCounts(appId,deepLinkIds[i])){
-                    JedisPort countClient = deepLinkCountShardingSupport.getClient(deepLinkIds[i]);
-                    countClient.hdelAll(String.valueOf(deepLinkIds[i]));
+                Date date = UuidHelper.getDateFromId(deepLinkIds[i]);
+
+
+                Date current = new Date();
+                SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+                String crateDate = sdf.format(date);
+                String currentDate = sdf.format(current);
+                List<DateDuration> dateDurationList = Util.getBetweenMonths(crateDate, currentDate);
+
+                for (DateDuration d : dateDurationList) {
+                    if (deepLinkDateCountDao.deleteDeepLinkDateCounts(appId, deepLinkIds[i], d.getMin_date())) {
+                        JedisPort countClient = deepLinkCountShardingSupport.getClient(deepLinkIds[i]);
+                        countClient.hdelAll(String.valueOf(deepLinkIds[i]));
+                    }
                 }
             } else {
                 result = false;
