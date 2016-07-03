@@ -1,11 +1,14 @@
 package cc.linkedme.dao.webapi.impl;
 
+import cc.linkedme.commons.exception.LMException;
+import cc.linkedme.commons.exception.LMExceptionFactor;
 import cc.linkedme.commons.log.ApiLogger;
 import cc.linkedme.commons.util.Util;
 import cc.linkedme.dao.BaseDao;
 import cc.linkedme.dao.webapi.DeepLinkDateCountDao;
 import cc.linkedme.data.dao.strategy.TableChannel;
 import cc.linkedme.data.model.DeepLinkDateCount;
+import org.springframework.dao.DataAccessException;
 import org.springframework.jdbc.core.BatchPreparedStatementSetter;
 import org.springframework.jdbc.core.RowMapper;
 
@@ -26,6 +29,7 @@ public class DeepLinkDateCountDaoImpl extends BaseDao implements DeepLinkDateCou
     private static final String GET_DEEPLINKS_DATE_COUNTS_BY_APPID = "GET_DEEPLINKS_DATE_COUNTS_BY_APPID";
     private static final String ADD_DEEPLINKS_DATE_COUNTS = "ADD_DEEPLINKS_DATE_COUNTS";
     private static final String ADD_DEEPLINK_DATE_COUNT = "ADD_DEEPLINK_DATE_COUNT";
+    private static final String DELETE_DEEPLINKS_DATE_COUNTS = "DELETE_DEEPLINKS_DATE_COUNTS";
 
     @Override
     public List<DeepLinkDateCount> getDeepLinkDateCount(int appId, long deepLinkId, String startDate, String endDate) {
@@ -211,5 +215,17 @@ public class DeepLinkDateCountDaoImpl extends BaseDao implements DeepLinkDateCou
             ApiLogger.error("DeepLinkDateCountDaoImpl.addDeepLinkDateCount add count failed!", e);
         }
         return result;
+    }
+
+    public boolean deleteDeepLinkDateCounts(long appId, long deepLinkId, String date) {
+        int result = 0;
+        TableChannel tableChannel =
+                tableContainer.getTableChannel("deepLinkDateCount", DELETE_DEEPLINKS_DATE_COUNTS, appId, Util.timeStrToDate(date));
+        try {
+            result += tableChannel.getJdbcTemplate().update(tableChannel.getSql(), new Object[] {appId, deepLinkId});
+        } catch (DataAccessException e) {
+            throw new LMException(LMExceptionFactor.LM_FAILURE_DB_OP, "Failed to delete deeplink_datecount,deeplink_id = " + deepLinkId);
+        }
+        return result > 0;
     }
 }

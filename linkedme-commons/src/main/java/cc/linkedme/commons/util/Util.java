@@ -783,15 +783,43 @@ public class Util {
         }
     }
 
+    public static Calendar getCalendarWithDate(String date) {
+        Calendar calendar = Calendar.getInstance();
+        calendar.setTime(timeStrToDate(date));
+        return calendar;
+    }
+
     public static boolean isSameMonth(String startDate, String endDate) {
-        Calendar start = Calendar.getInstance();
-        start.setTime(timeStrToDate(startDate));
-        Calendar end = Calendar.getInstance();
-        end.setTime(timeStrToDate(endDate));
+        Calendar start = getCalendarWithDate(startDate);
+        Calendar end = getCalendarWithDate(endDate);
         return start.get(Calendar.MONTH) == end.get(Calendar.MONTH) && start.get(Calendar.YEAR) == end.get(Calendar.YEAR);
     }
 
+    public static boolean isValidDate(String startDate, String endDate) {
+        DateFormat dfs = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        Date start = null;
+        Date end = null;
+        try {
+            start = dfs.parse(startDate);
+            end = dfs.parse(endDate);
+        } catch (ParseException e) {
+            DateFormat df = new SimpleDateFormat("yyyy-MM-dd");
+            try {
+                start = df.parse(startDate);
+                end = df.parse(endDate);
+            } catch (ParseException e1) {
+                ApiLogger.error("Util.isValidDate parse date failed", e1);
+                throw new LMException(LMExceptionFactor.LM_ILLEGAL_PARAM_VALUE, "Util.isValidDate parse date failed");
+            }
+        }
+        return start.compareTo(end) < 1;
+    }
+
     public static ArrayList<DateDuration> getBetweenMonths(String minDate, String maxDate) {
+        if (!isValidDate(minDate, maxDate)) {
+            throw new LMException(LMExceptionFactor.LM_ILLEGAL_PARAM_VALUE, "minDate is after maxDate!");
+        }
+
         ArrayList<DateDuration> result = new ArrayList<DateDuration>();
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
 
@@ -931,6 +959,33 @@ public class Util {
     public static String getCurrDate() {
         DateFormat df = new SimpleDateFormat("yyyy-MM-dd");
         return df.format(Calendar.getInstance().getTime());
+    }
+
+    public static List<String> getMonthBetween(String minDate, String maxDate) {
+        ArrayList<String> result = new ArrayList<String>();
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM");
+        SimpleDateFormat sdf1 = new SimpleDateFormat("yyMM");
+
+        Calendar min = Calendar.getInstance();
+        Calendar max = Calendar.getInstance();
+
+        try {
+            min.setTime(sdf.parse(minDate));
+            min.set(min.get(Calendar.YEAR), min.get(Calendar.MONTH), 1);
+
+            max.setTime(sdf.parse(maxDate));
+            max.set(max.get(Calendar.YEAR), max.get(Calendar.MONTH), 2);
+        } catch (ParseException e) {
+            ApiLogger.error("Util.getBetweenMonths parse time failed", e);
+            throw new LMException(LMExceptionFactor.LM_ILLEGAL_PARAM_VALUE, "Util.getBetweenMonths parse time failed");
+        }
+
+        Calendar curr = min;
+        while (curr.before(max)) {
+            result.add(sdf1.format(curr.getTime()));
+            curr.add(Calendar.MONTH, 1);
+        }
+        return result;
     }
 
     public static void main(String args[]) {
