@@ -100,4 +100,41 @@ public class Parser {
         }
         deviceParser = DeviceParser.fromList(deviceParserConfigs);
     }
+
+    public static void main(String[] args) {
+        try {
+            Parser parser = new Parser();
+            Client client1 = parser.parseUA("Mozilla/5.0 (Linux; Android 6.0.1; MI 5 Build/MXB48T) AppleWebKit/537.36 (KHTML, like Gecko) Version/4.0 Chrome/37.0.0.0 Mobile MQQBrowser/6.2 TBS/036524 Safari/537.36 MicroMessenger/6.3.18.800 NetType/WIFI Language/zh_CN");
+            System.out.println(client1.userAgent);
+            System.out.println(client1.os);
+            System.out.println(client1.device);
+            System.out.println("----");
+            Client client2 = parser.parseUA("Mozilla/5.0 (Linux; U; Android 6.0.1; zh-cn; MI 5 Build/MXB48T) AppleWebKit/537.36 (KHTML, like Gecko) Version/4.0 Chrome/46.0.2490.85 Mobile Safari/537.36 XiaoMi/MiuiBrowser/8.0.9");
+            System.out.println(client2.userAgent);
+            System.out.println(client2.os);
+            System.out.println(client2.device);
+
+            System.out.println("----");
+            Client client3 = parser.parseUA("Mozilla/5.0 (Linux; U; Android 5.1.1; zh-cn; YQ607 Build/LMY47V) AppleWebKit/534.30 (KHTML, like Gecko) Version/4.0 Mobile Safari/534.30 SogouMSE,SogouMobileBrowser/4.2.6");
+            System.out.println(client3.userAgent);
+            System.out.println(client3.os);
+            System.out.println(client3.device);
+
+            System.out.println("----");
+            Client client4 = parser.parseUA("Mozilla/5.0 (iPhone; CPU iPhone OS 9_3_1 like Mac OS X) AppleWebKit/601.1.46 (KHTML, like Gecko) Mobile/13E238 MicroMessenger/6.3.16 NetType/WIFI Language/zh_CN");
+            System.out.println(client4.userAgent);
+            System.out.println(client4.os);
+            System.out.println(client4.device);
+
+            System.out.println("----");
+            Client client5 = parser.parseUA("Mozilla/5.0 (iPhone; CPU iPhone OS 9_3_1 like Mac OS X) AppleWebKit/601.1.46 (KHTML, like Gecko) Version/9.0 Mobile/13E238 Safari/601.1");
+            System.out.println(client5.userAgent);
+            System.out.println(client5.os);
+            System.out.println(client5.device);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+
+    }
 }

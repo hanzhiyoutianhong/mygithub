@@ -60,7 +60,8 @@ public class LMJSServerResources {
         jsService.recordId(jsRecordIdParams);
 
         String clientIP = request.getHeader("x-forwarded-for");
-        ApiLogger.biz(String.format("%s\t%s\t%s\t%s\t%s", clientIP, "record_id", identity_id, app_id, deeplink_id));
+        String isValidIdentityIdForLog = "is_valid_identityid=" + is_valid_identityid;
+        ApiLogger.biz(String.format("%s\t%s\t%s\t%s\t%s\t%s\t%s", clientIP, "record_id", identity_id, app_id, deeplink_id, browser_fingerprint_id, isValidIdentityIdForLog));
         return "{}";
     }
 

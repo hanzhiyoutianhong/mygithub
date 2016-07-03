@@ -408,6 +408,7 @@ public class UrlServlet extends HttpServlet {
         request.setAttribute("isFirefox", isFirefox);
         request.setAttribute("isChrome", isChrome);
         request.setAttribute("isUC", isUC);
+        request.setAttribute("isMIUI", isMIUI);
         request.setAttribute("isYYBAvailable", yybAvailable);
 
         request.setAttribute("isUniversalLink", isUniversalLink);
@@ -424,14 +425,16 @@ public class UrlServlet extends HttpServlet {
 
         request.setAttribute("DEBUG", DEBUG);
 
-        if ((!isWechat) && (!isWeibo) && isAndroid && isChrome && userAgentMajor >= 25 && !isMIUI) {
-            String location = "intent://linkedme?click_id=" + uriArr[2] + "#Intent;scheme=" + scheme + ";package="
-                    + appInfo.getAndroid_package_name() + ";S.browser_fallback_url=" + url + ";end";
-            response.setStatus(307);
-            response.setHeader("Location", location);
-            // response.sendRedirect(location);
-            return;
-        }
+        // if ((!isWechat) && (!isWeibo) && isAndroid && isChrome && userAgentMajor >= 25 &&
+        // !isMIUI) {
+        // String location = "intent://linkedme?click_id=" + uriArr[2] + "#Intent;scheme=" + scheme
+        // + ";package="
+        // + appInfo.getAndroid_package_name() + ";S.browser_fallback_url=" + url + ";end";
+        // response.setStatus(307);
+        // response.setHeader("Location", location);
+        // // response.sendRedirect(location);
+        // return;
+        // }
 
         RequestDispatcher dispatcher = request.getRequestDispatcher("/linkedme.jsp");
         dispatcher.forward(request, response);
