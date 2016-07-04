@@ -131,6 +131,32 @@ public class Parser {
             System.out.println(client5.userAgent);
             System.out.println(client5.os);
             System.out.println(client5.device);
+
+            System.out.println("----");
+            Client client6 = parser.parseUA(" Mozilla/5.0 (Linux; Android 5.1.1; KIW-AL10 Build/HONORKIW-AL10) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/51.0.2704.81 Mobile Safari/537.36");
+            System.out.println(client6.userAgent);
+            System.out.println(client6.os);
+            System.out.println(client6.device);
+
+
+            System.out.println("----");
+            Client client7 = parser.parseUA(" Mozilla/5.0 (Linux; U; Android 4.4.2; zh-cn; MX4 Build/KOT49H) AppleWebKit/537.36 (KHTML, like Gecko) Version/4.0 Mobile Safari/537.36");
+            System.out.println(client7.userAgent);
+            System.out.println(client7.os);
+            System.out.println(client7.device);
+
+            System.out.println("----");
+            Client client8 = parser.parseUA("Mozilla/5.0 (Linux; U; Android 4.4.4; zh-CN; MX4 Pro Build/KTU84P) AppleWebKit/534.30 (KHTML, like Gecko) Version/4.0 UCBrowser/10.10.3.810 U3/0.8.0 Mobile Safari/534.30");
+            System.out.println(client8.userAgent);
+            System.out.println(client8.os);
+            System.out.println(client8.device);
+
+            System.out.println("----");
+            Client client9 = parser.parseUA("Mozilla/5.0 (Linux; U; Android 4.4.4; zh-CN; MX4 Pro Build/KTU84P) AppleWebKit/534.30 (KHTML, like Gecko) Version/4.0 UCBrowser/10.10.3.810 U3/0.8.0 Mobile Safari/534.30");
+            System.out.println(client9.userAgent);
+            System.out.println(client9.os);
+            System.out.println(client9.device);
+
         } catch (Exception e) {
             e.printStackTrace();
         }

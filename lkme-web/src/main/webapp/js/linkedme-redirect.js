@@ -8,6 +8,15 @@ function DEBUG_ALERT(msg) {
     }
 }
 
+function gotoChromeIntent() {
+    lkmeAction.recordId();
+    var destination = lkmeAction.destination.androidGotoChromeIntent;
+    lkmeAction.recordJSEvent(destination);
+    var option = Params.host + "?click_id=" + Params.click_id;
+    var location = "intent://" + option + "#Intent;scheme=" + Params.uri_scheme + ";package=" + Params.package_name + ";S.browser_fallback_url=" + Params.forward_url + ";end";
+    window.location(location);
+}
+
 function start() {
     if ("" !== Params.button_text) {
         downloadAPK = Params.button_text;

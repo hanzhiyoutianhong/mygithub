@@ -1,19 +1,28 @@
 package cc.linkedme.api.lkme.web.jsserver;
 
+import java.net.URI;
+import java.net.URISyntaxException;
+
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
-import javax.ws.rs.*;
+import javax.ws.rs.FormParam;
+import javax.ws.rs.GET;
+import javax.ws.rs.POST;
+import javax.ws.rs.Path;
+import javax.ws.rs.Produces;
+import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
-import javax.xml.ws.spi.http.HttpContext;
+import javax.ws.rs.core.Response;
+
+import net.sf.json.JSONObject;
+
+import org.springframework.stereotype.Component;
 
 import cc.linkedme.commons.log.ApiLogger;
 import cc.linkedme.data.model.params.JsActionsParams;
 import cc.linkedme.data.model.params.JsRecordIdParams;
 import cc.linkedme.service.sdkapi.JsService;
-import net.sf.json.JSONObject;
-
-import org.springframework.stereotype.Component;
 
 @Path("js")
 @Component
@@ -63,6 +72,40 @@ public class LMJSServerResources {
         String isValidIdentityIdForLog = "is_valid_identityid=" + is_valid_identityid;
         ApiLogger.biz(String.format("%s\t%s\t%s\t%s\t%s\t%s\t%s", clientIP, "record_id", identity_id, app_id, deeplink_id, browser_fingerprint_id, isValidIdentityIdForLog));
         return "{}";
+    }
+    
+    @Path("/record_id_and_redirect")
+    @GET
+    public Response recordIdAndRedirect(@QueryParam("identity_id") long identity_id,
+                           @QueryParam("app_id") long app_id,
+                           @QueryParam("is_valid_identityid") boolean is_valid_identityid,
+                           @QueryParam("browser_fingerprint_id") String browser_fingerprint_id,
+                           @QueryParam("deeplink_id") long deeplink_id,
+                           @QueryParam("url") String url,
+                           @Context HttpServletRequest request){
+        
+        JsRecordIdParams jsRecordIdParams = new JsRecordIdParams();
+        jsRecordIdParams.identity_id = identity_id;
+        jsRecordIdParams.is_valid_identityid = is_valid_identityid;
+        jsRecordIdParams.browser_fingerprint_id = browser_fingerprint_id;
+        jsRecordIdParams.deeplink_id = deeplink_id;
+        jsService.recordId(jsRecordIdParams);
+        
+        String clientIP = request.getHeader("x-forwarded-for");
+        String isValidIdentityIdForLog = "is_valid_identityid=" + is_valid_identityid;
+        ApiLogger.biz(String.format("%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s", clientIP, "record_id_and_redirect", identity_id, app_id, deeplink_id,
+                browser_fingerprint_id, isValidIdentityIdForLog, url));
+       
+        URI downloadUri = null;
+        try {
+            //设计专门的错误提示页
+            downloadUri = new URI("http://www.linkedme.cc");
+            downloadUri = new URI(url);
+        } catch (URISyntaxException e) {
+            ApiLogger.warn("download url(" + url + ") error", e);
+        }
+        
+        return Response.temporaryRedirect(downloadUri).build();
     }
 
     @Path("/record_event")

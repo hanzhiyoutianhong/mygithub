@@ -262,7 +262,7 @@ public class App {
             throw new LMException(LMExceptionFactor.LM_ILLEGAL_PARAM_VALUE, "img encoding is null");
         }
 
-        String basePath = Constants.DASHBOARD_API_URL + "/app/images/";
+        String basePath = Constants.LOGO_BASE_URL;
         String imageName = appService.uploadImg(appParams);
         if (Strings.isNullOrEmpty(imageName)) {
             throw new LMException(LMExceptionFactor.LM_SYS_ERROR, "upload img failed");
@@ -270,20 +270,6 @@ public class App {
         JsonBuilder resultJson = new JsonBuilder();
         resultJson.append("img_url", basePath + imageName + "?v=" + new Random().nextInt());
         return resultJson.flip().toString();
-    }
-
-
-    @Path("/images/{name}.{type}")
-    @GET
-    public void showImg(@PathParam("name") String imageName,
-                        @PathParam("type") String type,
-                        @Context HttpServletResponse response)
-            throws IOException {
-        OutputStream out = response.getOutputStream();
-        byte[] bytes = appService.getAppImg(Integer.parseInt(imageName), type);
-        out.write(bytes);
-        out.flush();
-        out.close();
     }
 
 }
