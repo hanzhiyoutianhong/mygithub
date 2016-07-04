@@ -7,9 +7,11 @@ import cc.linkedme.commons.util.UseTimeStasticsMonitor;
 import cc.linkedme.data.model.ClientInfo;
 import cc.linkedme.data.model.DeepLink;
 import cc.linkedme.data.model.DeepLinkDateCount;
+import cc.linkedme.data.model.FingerPrintInfo;
 import cc.linkedme.mcq.MsgUtils;
 import cc.linkedme.service.DeepLinkService;
 import cc.linkedme.service.sdkapi.ClientService;
+import cc.linkedme.service.sdkapi.FingerPrintService;
 import net.sf.json.JSONObject;
 
 import javax.annotation.Resource;
@@ -38,6 +40,9 @@ public class MsgMcqProcessor extends McqProcessor {
 
     @Resource
     private ClientService clientService;
+
+    @Resource
+    private FingerPrintService fingerPrintService;
 
 
     // 处理收到的消息
@@ -83,6 +88,8 @@ public class MsgMcqProcessor extends McqProcessor {
         } else if (MsgUtils.isCountType(type)) {
             // 短链计数
             result = processCountMsg(type, info);
+        } else if (MsgUtils.isFingerPrintType(type)) {
+            result = processFingerPrintMsg(type, info);
         }
         return result;
     }
@@ -131,6 +138,20 @@ public class MsgMcqProcessor extends McqProcessor {
         return result;
     }
 
+    private int processFingerPrintMsg(int type, JSONObject info) {
+        int result = ApiUtil.MQ_PROCESS_ABORT;
+
+        FingerPrintInfo fingerPrintInfo = new FingerPrintInfo();
+        fingerPrintInfo.setDeviceId(info.getString("device_id"));
+        fingerPrintInfo.setDeviceType(info.getInt("device_id_type"));
+        fingerPrintInfo.setIdentityId(info.getLong("identity_id"));
+
+        if (type == 41) {
+            result = addFingerPrint(fingerPrintInfo);
+        }
+        return result;
+    }
+
     private int addDeepLink(DeepLink deepLink) {
         int result = 0;
         if (updateDb) {
@@ -152,6 +173,18 @@ public class MsgMcqProcessor extends McqProcessor {
         if (updateDb) {
             result = clientService.addClient(clientInfo, deepLinkId);
         }
+        if (updateMc) {
+
+        }
+        return result;
+    }
+
+    private int addFingerPrint(FingerPrintInfo fingerPrintInfo) {
+        int result = 0;
+        if (updateDb) {
+            result = fingerPrintService.addFingerPrint(fingerPrintInfo);
+        }
+
         if (updateMc) {
 
         }

@@ -3,6 +3,7 @@ package cc.linkedme.mcq;
 import cc.linkedme.commons.json.JsonBuilder;
 import cc.linkedme.data.model.ClientInfo;
 import cc.linkedme.data.model.DeepLink;
+import cc.linkedme.data.model.FingerPrintInfo;
 import net.sf.json.JSONObject;
 
 /**
@@ -38,6 +39,18 @@ public class MsgUtils {
 
         deepLinkMsg.append("info", info.flip());
         return deepLinkMsg.flip().toString();
+    }
+
+    public static String toFingerPrintMsgJson(FingerPrintInfo fingerPrintInfo) {
+        JsonBuilder fingerPrintMsg = new JsonBuilder();
+        fingerPrintMsg.append("type", 41);
+        JsonBuilder info = new JsonBuilder();
+        info.append( "device_id", fingerPrintInfo.getDeviceId());
+        info.append( "device_id_type", fingerPrintInfo.getDeviceType());
+        info.append( "identity_id", fingerPrintInfo.getIdentityId());
+
+        fingerPrintMsg.append("info", info.flip());
+        return fingerPrintMsg.flip().toString();
     }
 
     public static DeepLink toDeepLinkObj(JSONObject deepLinkMsg) {
@@ -135,6 +148,10 @@ public class MsgUtils {
 
     public static boolean isCountType(int type) {
         return McqMsgType.ADD_DEEPLINK_COUNT.getType() == type;
+    }
+
+    public static boolean isFingerPrintType(int type) {
+        return (McqMsgType.ADD_FINGER_PRINT.getType() == type );
     }
 
 }

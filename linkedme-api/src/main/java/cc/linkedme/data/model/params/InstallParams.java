@@ -11,6 +11,7 @@ import org.codehaus.jackson.annotate.JsonIgnoreProperties;
 public class InstallParams extends BaseParams{
 
     public String device_id;
+    public String devicd_id_type;
 
     public int device_type;
     public String device_brand;
@@ -44,6 +45,14 @@ public class InstallParams extends BaseParams{
 
     public void setDevice_id(String device_id) {
         this.device_id = device_id;
+    }
+
+    public String getDevicd_id_type() {
+        return devicd_id_type;
+    }
+
+    public void setDevicd_id_type(String devicd_id_type) {
+        this.devicd_id_type = devicd_id_type;
     }
 
     public int getDevice_type() {

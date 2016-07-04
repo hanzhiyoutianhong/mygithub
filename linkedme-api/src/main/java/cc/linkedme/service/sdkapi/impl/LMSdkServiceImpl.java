@@ -17,6 +17,7 @@ import cc.linkedme.dao.sdkapi.ClientDao;
 import cc.linkedme.data.model.ClientInfo;
 import cc.linkedme.data.model.DeepLink;
 import cc.linkedme.data.model.DeepLinkCount;
+import cc.linkedme.data.model.FingerPrintInfo;
 import cc.linkedme.data.model.params.CloseParams;
 import cc.linkedme.data.model.params.InstallParams;
 import cc.linkedme.data.model.params.OpenParams;
@@ -28,6 +29,7 @@ import cc.linkedme.exception.LMException;
 import cc.linkedme.exception.LMExceptionFactor;
 import cc.linkedme.mcq.ClientMsgPusher;
 import cc.linkedme.mcq.DeepLinkMsgPusher;
+import cc.linkedme.mcq.FingerPrintMsgPusher;
 import cc.linkedme.service.DeepLinkService;
 import cc.linkedme.service.sdkapi.LMSdkService;
 
@@ -60,6 +62,9 @@ public class LMSdkServiceImpl implements LMSdkService {
 
     @Resource
     private ClientMsgPusher clientMsgPusher;
+
+    @Resource
+    private FingerPrintMsgPusher fingerPrintMsgPusher;
 
     @Resource
     private ShardingSupportHash<JedisPort> deepLinkShardingSupport;
@@ -152,6 +157,7 @@ public class LMSdkServiceImpl implements LMSdkService {
         }
 
         String deviceId = installParams.device_id;
+        int deviceType = installParams.device_type;
         JedisPort clientRedisClient = clientShardingSupport.getClient(deviceId);
         String identityIdStr = clientRedisClient.get(deviceId);
         long identityId = 0;
@@ -160,6 +166,8 @@ public class LMSdkServiceImpl implements LMSdkService {
         String deviceFingerprintId = "d";
         String browserFingerprintId = "b";
         String installType = "other";
+
+        FingerPrintInfo fingerPrintInfo = new FingerPrintInfo();
 
         if (Strings.isNullOrEmpty(identityIdStr)) { // 之前不存在<device, identityId>
             // device_fingerprint_id 与 browse_fingerprint_id匹配逻辑
@@ -240,6 +248,11 @@ public class LMSdkServiceImpl implements LMSdkService {
         // 写mcq
         clientInfo.setIdentityId(identityId);
         clientMsgPusher.addClient(clientInfo, fromDeepLinkId);
+
+        fingerPrintInfo.setIdentityId(identityId);
+        fingerPrintInfo.setDeviceId(deviceId);
+        fingerPrintInfo.setDeviceType(deviceType);
+        fingerPrintMsgPusher.addFingerPrint(fingerPrintInfo);
 
         String sessionId = String.valueOf(System.currentTimeMillis());
         JSONObject resultJson = new JSONObject();
@@ -576,4 +589,6 @@ public class LMSdkServiceImpl implements LMSdkService {
     }
 
 
+    public void setFingerPrintMsgPusher(FingerPrintMsgPusher fingerPrintMsgPusher) {
+    }
 }
