@@ -20,9 +20,8 @@ public class TableItem implements Serializable {
     private Map<String, JdbcTemplate[]> jdbcTemplateCluster;
     private boolean hierarchy = false;
 
-
     public TableItem() {}
-
+    
     public TableItem(String dbNamePrefix, int dbCount, String tableNamePrefix, String tableNamePostFix, int tableCount) {
         this.dbCount = dbCount;
         this.tableNamePostFix = tableNamePostFix;
