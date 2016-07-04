@@ -141,9 +141,6 @@ function start() {
         } else if (Params.isUC()) {
             DEBUG_ALERT("UC browser");
             gotoUC(launchAppUrl);
-        } else if (Params.isChrome() && Params.chrome_major >= 25 && !Params.isMIUI()) {
-            DEBUG_ALERT("Chrome Intent");
-            gotoChromeIntent();
         } else {
             DEBUG_ALERT("default browser");
             iframeDeepLinkLaunch(launchAppUrl, 2e3, function () {
@@ -252,15 +249,6 @@ function gotoUC(a) {
                 })) : setTimeout(d, 1e3);
         };
     d();
-}
-
-function gotoChromeIntent() {
-    lkmeAction.recordId();
-    var destination = lkmeAction.destination.androidGotoChromeIntent;
-    lkmeAction.recordJSEvent(destination);
-    var option = Params.host + "?click_id=" + Params.click_id;
-    var location = "intent://" + option + "#Intent;scheme=" + Params.uri_scheme + ";package=" + Params.package_name + ";S.browser_fallback_url=" + Params.forward_url + ";end";
-    window.location(location);
 }
 
 function gotoCannotForwardPage() {
