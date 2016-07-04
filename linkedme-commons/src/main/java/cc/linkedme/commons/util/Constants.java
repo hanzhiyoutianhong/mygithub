@@ -12,7 +12,7 @@ public class Constants {
 
     public static final String CREATE_URL_API = DEEPLINK_HTTP_PREFIX + LIVE_TEST_API_FLAG + "/sdk/url";
     public static final String DASHBOARD_API_URL = LINKEDME_HTTPS_PREFIX + LIVE_TEST_API_FLAG;
-    public static final String LOGO_BASE_URL = DASHBOARD_API_URL + "/sdk/images/";
+    public static final String LOGO_BASE_URL = DEEPLINK_HTTP_PREFIX + LIVE_TEST_API_FLAG + "/sdk/images/";
     public static final String APP_LOGO_IMG_TYPE = ".png";
 
     public static final boolean enableProfiling = true;
