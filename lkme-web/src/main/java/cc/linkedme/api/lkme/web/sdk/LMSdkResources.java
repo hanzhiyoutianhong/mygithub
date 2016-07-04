@@ -11,19 +11,24 @@ import cc.linkedme.data.model.AppListInfo;
 import cc.linkedme.data.model.params.*;
 import cc.linkedme.service.sdkapi.AppListService;
 import cc.linkedme.service.sdkapi.LMSdkService;
+import cc.linkedme.service.webapi.AppService;
 import com.google.common.base.Strings;
 import net.sf.json.JSONObject;
 import org.springframework.stereotype.Component;
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import javax.ws.rs.FormParam;
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
+import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
+import java.io.IOException;
+import java.io.OutputStream;
 import java.util.ArrayList;
 
 @Path("sdk")
@@ -32,12 +37,15 @@ public class LMSdkResources {
 
     @Resource
     private LMSdkService lmSdkService;
+
     @Resource
     private AppListService appListService;
 
     @Resource
     private SignAuthService signAuthService;
 
+    @Resource
+    private AppService appService;
 
     @Path("/webinit")
     @GET
@@ -448,5 +456,18 @@ public class LMSdkResources {
             return "{\"ret\":\"true\"}";
         else
             return "{\"ret\":\"error\"}";
+    }
+
+    @Path("/images/{name}.{type}")
+    @GET
+    public void showImg(@PathParam("name") String imageName,
+                        @PathParam("type") String type,
+                        @Context HttpServletResponse response)
+            throws IOException {
+        OutputStream out = response.getOutputStream();
+        byte[] bytes = appService.getAppImg(Integer.parseInt(imageName), type);
+        out.write(bytes);
+        out.flush();
+        out.close();
     }
 }
