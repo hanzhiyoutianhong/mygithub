@@ -411,7 +411,8 @@ public class UrlServlet extends HttpServlet {
 
         if ((!isWechat) && (!isWeibo) && isAndroid && isChrome && userAgentMajor >= 25 && !isMIUI) {
 
-            String browser_fallback_url = new StringBuilder(Constants.DEEPLINK_HTTP_PREFIX).append("i/js/record_id_and_redirect?")
+            String browser_fallback_url = new StringBuilder(Constants.DEEPLINK_HTTP_PREFIX)
+                    .append(Constants.LIVE_TEST_API_FLAG).append("/js/record_id_and_redirect?")
                     .append("identity_id=").append(identityId).append("&")
                     .append("app_id=").append(appId).append("&")
                     .append("is_valid_identityid=").append(isValidIdentity).append("&")
@@ -424,7 +425,6 @@ public class UrlServlet extends HttpServlet {
                             + appInfo.getAndroid_package_name() + ";S.browser_fallback_url=" + browser_fallback_url + ";end";
             response.setStatus(307);
             response.setHeader("Location", location);
-            response.sendRedirect(location);
 
             return;
         }
