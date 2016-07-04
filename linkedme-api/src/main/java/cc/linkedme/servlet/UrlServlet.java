@@ -16,17 +16,9 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import cc.linkedme.commons.util.Util;
-import cc.linkedme.data.model.params.JsRecordIdParams;
-import cc.linkedme.mcq.DeepLinkMsgPusher;
-
-import cc.linkedme.service.sdkapi.JsService;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.context.ApplicationContext;
 import org.springframework.web.context.support.WebApplicationContextUtils;
-
-import com.google.api.client.repackaged.com.google.common.base.Strings;
-import com.google.common.base.Joiner;
 
 import cc.linkedme.commons.cookie.CookieHelper;
 import cc.linkedme.commons.log.ApiLogger;
@@ -40,12 +32,18 @@ import cc.linkedme.commons.useragent.UserAgent;
 import cc.linkedme.commons.util.Base62;
 import cc.linkedme.commons.util.Constants;
 import cc.linkedme.commons.util.MD5Utils;
+import cc.linkedme.commons.util.Util;
 import cc.linkedme.commons.util.UuidHelper;
 import cc.linkedme.commons.uuid.UuidCreator;
 import cc.linkedme.data.model.AppInfo;
 import cc.linkedme.data.model.DeepLink;
+import cc.linkedme.mcq.DeepLinkMsgPusher;
 import cc.linkedme.service.DeepLinkService;
+import cc.linkedme.service.sdkapi.JsService;
 import cc.linkedme.service.webapi.AppService;
+
+import com.google.api.client.repackaged.com.google.common.base.Strings;
+import com.google.common.base.Joiner;
 
 /**
  * Created by LinkedME01 on 16/4/1.
@@ -412,22 +410,22 @@ public class UrlServlet extends HttpServlet {
         request.setAttribute("DEBUG", DEBUG);
 
         if ((!isWechat) && (!isWeibo) && isAndroid && isChrome && userAgentMajor >= 25 && !isMIUI) {
-            // 因为不确定chrome能否打开app,所以先记录<browser-fingerprint-id,deeplinkId>
-            JsRecordIdParams jsRecordIdParams = new JsRecordIdParams();
-            jsRecordIdParams.identity_id = Long.parseLong(identityId);
-            jsRecordIdParams.is_valid_identityid = isValidIdentity;
-            jsRecordIdParams.browser_fingerprint_id = browserFingerprintId;
-            jsRecordIdParams.deeplink_id = deepLinkId;
-            jsService.recordId(jsRecordIdParams);
-            ApiLogger.biz(String.format("%s\t%s\t%s\t%s\t%s\t%s\t%s", clientIP, "record_id", identityId, appId, deepLinkId,
-                    browserFingerprintId, isValidIdentity));
 
-            String location = "intent://linkedme?click_id=" + uriArr[2] + "#Intent;scheme=" + scheme + ";package="
-                    + appInfo.getAndroid_package_name() + ";S.browser_fallback_url=" + url + ";end";
-
+            String browser_fallback_url = new StringBuilder(Constants.DEEPLINK_HTTP_PREFIX)
+                    .append(Constants.LIVE_TEST_API_FLAG).append("/js/record_id_and_redirect?")
+                    .append("identity_id=").append(identityId).append("&")
+                    .append("app_id=").append(appId).append("&")
+                    .append("is_valid_identityid=").append(isValidIdentity).append("&")
+                    .append("browser_fingerprint_id=").append(browserFingerprintId).append("&")
+                    .append("deeplink_id=").append(deepLinkId).append("&")
+                    .append("url=").append(url).toString();
+                    
+            String location =
+                    "intent://linkedme?click_id=" + uriArr[2] + "#Intent;scheme=" + scheme + ";package="
+                            + appInfo.getAndroid_package_name() + ";S.browser_fallback_url=" + browser_fallback_url + ";end";
             response.setStatus(307);
             response.setHeader("Location", location);
-            // response.sendRedirect(location);
+
             return;
         }
 
