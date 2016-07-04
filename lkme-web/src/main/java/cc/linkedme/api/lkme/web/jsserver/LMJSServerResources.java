@@ -99,7 +99,7 @@ public class LMJSServerResources {
         URI downloadUri = null;
         try {
             //设计专门的错误提示页
-            downloadUri = new URI("www.linkedme.cc");
+            downloadUri = new URI("http://www.linkedme.cc");
             downloadUri = new URI(url);
         } catch (URISyntaxException e) {
             ApiLogger.warn("download url(" + url + ") error", e);
