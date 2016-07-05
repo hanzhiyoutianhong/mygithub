@@ -186,7 +186,7 @@ public class DeepLinkService {
         }
         resultJson.put("tags", tagArray);// "tags":["tags1", "tags2"]
 
-        resultJson.put("source", "dashboard");
+        resultJson.put("source", deepLinkInfo.getSource());
         resultJson.put("params", deepLinkInfo.getParams());
         return resultJson.toString();
     }
