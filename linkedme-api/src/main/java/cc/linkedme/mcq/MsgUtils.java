@@ -46,20 +46,24 @@ public class MsgUtils {
         fingerPrintMsg.append("type", 41);
         JsonBuilder info = new JsonBuilder();
         info.append("device_id", fingerPrintInfo.getDeviceId());
-        info.append("device_id_type", fingerPrintInfo.getDeviceType());
+        info.append("device_type", fingerPrintInfo.getDeviceType());
         info.append("identity_id", fingerPrintInfo.getIdentityId());
-
+        info.append("current_time", fingerPrintInfo.getCurrentTime());
         fingerPrintMsg.append("info", info.flip());
         return fingerPrintMsg.flip().toString();
     }
 
-    public static String delFingerPrintMsgJson(FingerPrintInfo fingerPrintInfo) {
+    public static String updateFingerPrintMsgJson(FingerPrintInfo oldFingerPrintInfo, FingerPrintInfo newFingerPrintInfo) {
         JsonBuilder fingerPrintMsg = new JsonBuilder();
         fingerPrintMsg.append("type", 42);
         JsonBuilder info = new JsonBuilder();
-        info.append("device_id", fingerPrintInfo.getDeviceId());
-        info.append("device_id_type", fingerPrintInfo.getDeviceType());
-        info.append("identity_id", fingerPrintInfo.getIdentityId());
+        info.append("old_device_id", oldFingerPrintInfo.getDeviceId());
+        info.append("old_device_type", oldFingerPrintInfo.getDeviceType());
+        info.append("old_identity_id", oldFingerPrintInfo.getIdentityId());
+        info.append("new_device_id", newFingerPrintInfo.getDeviceId());
+        info.append("new_device_type", newFingerPrintInfo.getDeviceType());
+        info.append("new_identity_id", newFingerPrintInfo.getIdentityId());
+        info.append("current_time", oldFingerPrintInfo.getCurrentTime());
 
         fingerPrintMsg.append("info", info.flip());
         return fingerPrintMsg.flip().toString();
@@ -163,7 +167,7 @@ public class MsgUtils {
     }
 
     public static boolean isFingerPrintType(int type) {
-        return (McqMsgType.ADD_FINGER_PRINT.getType() == type || McqMsgType.DEL_FINGER_PRINT.getType() == type);
+        return (McqMsgType.ADD_FINGER_PRINT.getType() == type || McqMsgType.UPDATE_FINGER_PRINT.getType() == type);
     }
 
 }

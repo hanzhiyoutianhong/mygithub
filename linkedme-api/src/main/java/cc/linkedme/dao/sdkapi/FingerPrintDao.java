@@ -9,4 +9,6 @@ public interface FingerPrintDao {
     int addFingerPrint(FingerPrintInfo fingerPrintInfo);
 
     int delFingerPrint(FingerPrintInfo fingerPrintInfo);
+
+    FingerPrintInfo getFingerPrint(FingerPrintInfo fingerPrintInfo);
 }

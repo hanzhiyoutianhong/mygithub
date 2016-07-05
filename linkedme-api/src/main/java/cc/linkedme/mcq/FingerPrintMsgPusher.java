@@ -18,8 +18,8 @@ public class FingerPrintMsgPusher {
         apiMcqWriter.writeMsg(fingerPrintInfoMsg);
     }
 
-    public void delFingerPrint(FingerPrintInfo fingerPrintInfo) {
-        String fingerPrintInfoMsg = MsgUtils.delFingerPrintMsgJson(fingerPrintInfo);
+    public void updateFingerPrint(FingerPrintInfo oldFingerPrintInfo, FingerPrintInfo newFingerPrintInfo) {
+        String fingerPrintInfoMsg = MsgUtils.updateFingerPrintMsgJson(oldFingerPrintInfo, newFingerPrintInfo);
         apiMcqWriter.writeMsg(fingerPrintInfoMsg);
     }
 }
