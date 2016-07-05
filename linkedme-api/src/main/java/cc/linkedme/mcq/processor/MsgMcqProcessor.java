@@ -123,7 +123,7 @@ public class MsgMcqProcessor extends McqProcessor {
     }
 
     private int processCountMsg(int type, JSONObject info) {
-        //TODO 可以改成批量插入計數
+        // TODO 可以改成批量插入計數
         int result = ApiUtil.MQ_PROCESS_ABORT;
 
         DeepLinkDateCount deepLinkDateCount = new DeepLinkDateCount();

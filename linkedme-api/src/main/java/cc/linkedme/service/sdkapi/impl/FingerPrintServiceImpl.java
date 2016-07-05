@@ -17,7 +17,7 @@ import java.util.concurrent.TimeUnit;
 /**
  * Created by vontroy on 16-7-4.
  */
-public class FingerPrintServiceImpl implements FingerPrintService{
+public class FingerPrintServiceImpl implements FingerPrintService {
     @Resource
     private FingerPrintDao fingerPrintDao;
 

@@ -212,14 +212,14 @@ public class LMSdkServiceImpl implements LMSdkService {
 
                     clientRedisClient.sadd(deviceId + ".old", String.valueOf(identityId));
 
-                    //写mcq, 删除无效键值对
+                    // 写mcq, 删除无效键值对
                     fingerPrintInfo = toFingerPrintInfo(identityId, deviceId, deviceType);
                     fingerPrintMsgPusher.delFingerPrint(fingerPrintInfo);
 
                     clientRedisClient.set(deviceId, newIdentityId); // 更新<device_id, identity_id>
                     clientRedisClient.set(newIdentityId + ".di", deviceId);
 
-                    //写mcq,存储新的键值对
+                    // 写mcq,存储新的键值对
                     fingerPrintInfo = toFingerPrintInfo(newIdentityId, deviceId, deviceType);
                     fingerPrintMsgPusher.addFingerPrint(fingerPrintInfo);
 
@@ -606,6 +606,5 @@ public class LMSdkServiceImpl implements LMSdkService {
     }
 
 
-    public void setFingerPrintMsgPusher(FingerPrintMsgPusher fingerPrintMsgPusher) {
-    }
+    public void setFingerPrintMsgPusher(FingerPrintMsgPusher fingerPrintMsgPusher) {}
 }
