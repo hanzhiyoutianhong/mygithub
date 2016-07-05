@@ -218,6 +218,7 @@ public class UrlServlet extends HttpServlet {
                     ApiLogger.biz(String.format("%s\t%s\t%s\t%s\t%s\t%s", clientIP, apiName, countType, appId, deepLinkId, userAgent));
                     response.sendRedirect(formatCustomUrl(url));
                     recordClickIntoProfile(start, countType);
+                    clickCount(deepLinkId, appId, countType);
                     return;
                 }
 
@@ -262,6 +263,7 @@ public class UrlServlet extends HttpServlet {
                             deepLinkId, userAgent));
                     response.sendRedirect(formatCustomUrl(url));
                     recordClickIntoProfile(start, countType);
+                    clickCount(deepLinkId, appId, countType);
                     return;
                 }
             }
