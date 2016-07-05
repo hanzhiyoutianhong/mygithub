@@ -1,20 +1,14 @@
 package cc.linkedme.data.model;
 
-import javax.persistence.Basic;
-import javax.persistence.Entity;
-import javax.persistence.Id;
 import java.sql.Timestamp;
 
 /**
  * Created by LinkedME00 on 16/3/19.
  */
-@Entity
-@javax.persistence.Table(name = "client_info_0", schema = "client_0", catalog = "")
 public class ClientInfo {
     private long identityId;
 
-    @Id
-    @javax.persistence.Column(name = "identity_id")
+
     public long getIdentityId() {
         return identityId;
     }
@@ -25,8 +19,6 @@ public class ClientInfo {
 
     private String linkedmeKey;
 
-    @Basic
-    @javax.persistence.Column(name = "linkedme_key")
     public String getLinkedmeKey() {
         return linkedmeKey;
     }
@@ -37,8 +29,6 @@ public class ClientInfo {
 
     private String deviceId;
 
-    @Basic
-    @javax.persistence.Column(name = "device_id")
     public String getDeviceId() {
         return deviceId;
     }
@@ -49,8 +39,6 @@ public class ClientInfo {
 
     private int deviceType;
 
-    @Basic
-    @javax.persistence.Column(name = "device_type")
     public int getDeviceType() {
         return deviceType;
     }
@@ -61,8 +49,6 @@ public class ClientInfo {
 
     private String deviceModel;
 
-    @Basic
-    @javax.persistence.Column(name = "device_model")
     public String getDeviceModel() {
         return deviceModel;
     }
@@ -73,8 +59,6 @@ public class ClientInfo {
 
     private String deviceBrand;
 
-    @Basic
-    @javax.persistence.Column(name = "device_brand")
     public String getDeviceBrand() {
         return deviceBrand;
     }
@@ -85,8 +69,6 @@ public class ClientInfo {
 
     private boolean hasBlutooth;
 
-    @Basic
-    @javax.persistence.Column(name = "has_blutooth")
     public boolean getHasBlutooth() {
         return hasBlutooth;
     }
@@ -97,8 +79,6 @@ public class ClientInfo {
 
     private boolean hasNfc;
 
-    @Basic
-    @javax.persistence.Column(name = "has_nfc")
     public boolean getHasNfc() {
         return hasNfc;
     }
@@ -109,8 +89,6 @@ public class ClientInfo {
 
     private boolean hasSim;
 
-    @Basic
-    @javax.persistence.Column(name = "has_sim")
     public boolean getHasSim() {
         return hasSim;
     }
@@ -121,8 +99,6 @@ public class ClientInfo {
 
     private String os;
 
-    @Basic
-    @javax.persistence.Column(name = "os")
     public String getOs() {
         return os;
     }
@@ -133,8 +109,6 @@ public class ClientInfo {
 
     private String osVersion;
 
-    @Basic
-    @javax.persistence.Column(name = "os_version")
     public String getOsVersion() {
         return osVersion;
     }
@@ -145,8 +119,7 @@ public class ClientInfo {
 
     private int screenDpi;
 
-    @Basic
-    @javax.persistence.Column(name = "screen_dpi")
+
     public int getScreenDpi() {
         return screenDpi;
     }
@@ -157,8 +130,6 @@ public class ClientInfo {
 
     private int screenHeight;
 
-    @Basic
-    @javax.persistence.Column(name = "screen_height")
     public int getScreenHeight() {
         return screenHeight;
     }
@@ -169,8 +140,7 @@ public class ClientInfo {
 
     private int screenWidth;
 
-    @Basic
-    @javax.persistence.Column(name = "screen_width")
+
     public int getScreenWidth() {
         return screenWidth;
     }
@@ -181,8 +151,6 @@ public class ClientInfo {
 
     private boolean isWifi;
 
-    @Basic
-    @javax.persistence.Column(name = "is_wifi")
     public boolean getIsWifi() {
         return isWifi;
     }
@@ -193,8 +161,6 @@ public class ClientInfo {
 
     private boolean isReferable;
 
-    @Basic
-    @javax.persistence.Column(name = "is_referable")
     public boolean getIsReferable() {
         return isReferable;
     }
@@ -205,8 +171,6 @@ public class ClientInfo {
 
     private boolean latVal;
 
-    @Basic
-    @javax.persistence.Column(name = "lat_val")
     public boolean getLatVal() {
         return latVal;
     }
@@ -217,8 +181,6 @@ public class ClientInfo {
 
     private String carrier;
 
-    @Basic
-    @javax.persistence.Column(name = "carrier")
     public String getCarrier() {
         return carrier;
     }
@@ -229,8 +191,6 @@ public class ClientInfo {
 
     private String appVersion;
 
-    @Basic
-    @javax.persistence.Column(name = "app_version")
     public String getAppVersion() {
         return appVersion;
     }
@@ -241,8 +201,7 @@ public class ClientInfo {
 
     private int sdkUpdate;
 
-    @Basic
-    @javax.persistence.Column(name = "sdk_update")
+
     public int getSdkUpdate() {
         return sdkUpdate;
     }
@@ -253,8 +212,6 @@ public class ClientInfo {
 
     private String iosTeamId;
 
-    @Basic
-    @javax.persistence.Column(name = "ios_team_id")
     public String getIosTeamId() {
         return iosTeamId;
     }
@@ -265,8 +222,6 @@ public class ClientInfo {
 
     private String iosBundleId;
 
-    @Basic
-    @javax.persistence.Column(name = "ios_bundle_id")
     public String getIosBundleId() {
         return iosBundleId;
     }
@@ -277,8 +232,6 @@ public class ClientInfo {
 
     private Timestamp timestamp;
 
-    @Basic
-    @javax.persistence.Column(name = "timestamp")
     public Timestamp getTimestamp() {
         return timestamp;
     }
