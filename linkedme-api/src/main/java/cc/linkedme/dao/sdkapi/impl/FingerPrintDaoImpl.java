@@ -12,14 +12,16 @@ import org.springframework.jdbc.core.RowMapper;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 
 /**
  * Created by vontroy on 16-7-4.
  */
 public class FingerPrintDaoImpl extends BaseDao implements FingerPrintDao {
     private static final String ADD_FINGER_PRINT_INFO = "ADD_FINGER_PRINT_INFO";
-    private static final String DEL_FINGER_PRINT_INFO = "DEL_FINGER_PRINT_INFO";
     private static final String GET_FINGER_PRINT_INFO = "GET_FINGER_PRINT_INFO";
+    private static final String SET_VALID_STATUS = "SET_VALID_STATUS";
 
     public FingerPrintInfo getFingerPrint(FingerPrintInfo fingerPrintInfo) {
         long identityId = fingerPrintInfo.getIdentityId();
@@ -37,18 +39,40 @@ public class FingerPrintDaoImpl extends BaseDao implements FingerPrintDao {
                     resultInfo.setIdentityId(identityId);
                     resultInfo.setDeviceType(deviceType);
                     resultInfo.setDeviceId(deviceId);
+                    resultInfo.setValid_status(resultSet.getInt("valid_status"));
                     return null;
                 }
             });
         } catch (DataAccessException e) {
-            ApiLogger.error("FingerPrintDaoImpl.delFingerPrint Database Access Error");
+            ApiLogger.error("FingerPrintDaoImpl.getFingerPrint Database Access Error");
             throw e;
         }
 
         return resultInfo;
     }
 
-    public int addFingerPrint(FingerPrintInfo fingerPrintInfo) {
+    public int setValidStatusById( FingerPrintInfo fingerPrintInfo, int val ) {
+        int result = 0;
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        Date currentTime = new Date();
+        String updateTime = sdf.format(currentTime);
+
+        int id = fingerPrintInfo.getId();
+        long identityId = fingerPrintInfo.getIdentityId();
+
+
+        TableChannel tableChannel = tableContainer.getTableChannel("fingerPrintInfo", SET_VALID_STATUS, identityId, identityId);
+
+        try {
+            result += tableChannel.getJdbcTemplate().update(tableChannel.getSql(), new Object[] {val, updateTime, id});
+        } catch (DataAccessException e) {
+            ApiLogger.error("FingerPrintDaoImpl.setValidStatusById Database Access Error");
+            throw e;
+        }
+        return result;
+    }
+
+    public int addFingerPrint(FingerPrintInfo fingerPrintInfo, int val) {
         int result = 0;
 
         long identityId = fingerPrintInfo.getIdentityId();
@@ -59,29 +83,9 @@ public class FingerPrintDaoImpl extends BaseDao implements FingerPrintDao {
         TableChannel tableChannel = tableContainer.getTableChannel("fingerPrintInfo", ADD_FINGER_PRINT_INFO, identityId, identityId);
 
         try {
-            result += tableChannel.getJdbcTemplate().update(tableChannel.getSql(), new Object[] {deviceId, deviceType, identityId, currentTime, currentTime});
+            result += tableChannel.getJdbcTemplate().update(tableChannel.getSql(), new Object[] {deviceId, deviceType, identityId, currentTime, currentTime, val});
         } catch (DataAccessException e) {
-            ApiLogger.error("FingerPrintDaoImpl.delFingerPrint Database Access Error");
-            throw e;
-        }
-        return result;
-
-    }
-
-    public int delFingerPrint(FingerPrintInfo fingerPrintInfo) {
-        int result = 0;
-
-        long identityId = fingerPrintInfo.getIdentityId();
-        String deviceId = fingerPrintInfo.getDeviceId();
-        int deviceType = fingerPrintInfo.getDeviceType();
-        String currentTime = fingerPrintInfo.getCurrentTime();
-
-        TableChannel tableChannel = tableContainer.getTableChannel("fingerPrintInfo", DEL_FINGER_PRINT_INFO, identityId, identityId);
-
-        try {
-            result += tableChannel.getJdbcTemplate().update(tableChannel.getSql(), new Object[] {0, currentTime, identityId, deviceId, deviceType, 1});
-        } catch (DataAccessException e) {
-            ApiLogger.error("FingerPrintDaoImpl.delFingerPrint Database Access Error");
+            ApiLogger.error("FingerPrintDaoImpl.addFingerPrint Database Access Error");
             throw e;
         }
         return result;

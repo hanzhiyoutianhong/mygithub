@@ -196,7 +196,7 @@ public class MsgMcqProcessor extends McqProcessor {
     private int addFingerPrint(FingerPrintInfo fingerPrintInfo) {
         int result = 0;
         if (updateDb) {
-            result = fingerPrintService.addFingerPrint(fingerPrintInfo);
+            result = fingerPrintService.addFingerPrint(fingerPrintInfo, 1);
         }
 
         if (updateMc) {
@@ -208,8 +208,8 @@ public class MsgMcqProcessor extends McqProcessor {
     private int updateFingerPrint(FingerPrintInfo oldFingerPrintInfo, FingerPrintInfo newFingerPrintInfo) {
         int result = 0;
         if (updateDb) {
-            result += fingerPrintService.delFingerPrint(oldFingerPrintInfo);
-            result += fingerPrintService.addFingerPrint(newFingerPrintInfo);
+            result += fingerPrintService.addFingerPrint(oldFingerPrintInfo, 0);
+            result += fingerPrintService.addFingerPrint(newFingerPrintInfo, 1);
         }
 
         if (updateMc) {

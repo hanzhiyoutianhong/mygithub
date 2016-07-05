@@ -8,6 +8,7 @@ public class FingerPrintInfo {
     private String deviceId;
     private int deviceType;
     private long identityId;
+    private int valid_status;
     private String currentTime;
 
     public int getId() {
@@ -40,6 +41,14 @@ public class FingerPrintInfo {
 
     public void setIdentityId(long identityId) {
         this.identityId = identityId;
+    }
+
+    public int getValid_status() {
+        return valid_status;
+    }
+
+    public void setValid_status(int valid_status) {
+        this.valid_status = valid_status;
     }
 
     public String getCurrentTime() {
