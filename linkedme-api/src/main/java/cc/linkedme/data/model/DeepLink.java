@@ -1,24 +1,22 @@
 package cc.linkedme.data.model;
 
+import java.io.Serializable;
+import java.sql.Timestamp;
+
+import net.sf.json.JSONArray;
 import cc.linkedme.commons.serialization.KryoSerializationUtil;
 import cc.linkedme.commons.util.Base62;
 import cc.linkedme.commons.util.Constants;
 import cc.linkedme.commons.util.Util;
+
 import com.alibaba.fastjson.JSONObject;
 import com.google.api.client.repackaged.com.google.common.base.Strings;
-import net.sf.json.JSONArray;
-
-import javax.persistence.Basic;
-import javax.persistence.Column;
-import javax.persistence.Id;
-import java.io.Serializable;
-import java.sql.Timestamp;
 
 /**
  * Created by LinkedME01 on 16/3/19.
  */
 
-public class DeepLink implements Serializable{
+public class DeepLink implements Serializable {
 
     private long deeplinkId;
     private String deeplinkMd5;
@@ -42,16 +40,16 @@ public class DeepLink implements Serializable{
     private boolean ios_use_default;
     private String ios_custom_url;
     private boolean android_use_default;
-    private String  android_custom_url;
-    private boolean  desktop_use_default;
-    private String  desktop_custom_url;
+    private String android_custom_url;
+    private boolean desktop_use_default;
+    private String desktop_custom_url;
 
     private DeepLinkCount deepLinkCount;
 
     public DeepLink() {}
 
     public DeepLink(long deeplinkId, String deeplinkMd5, long appId, String linkedmeKey, long identityId, String tags, String alias,
-                                   String channel, String feature, String stage, String campaign, String params, String source, String sdkVersion) {
+            String channel, String feature, String stage, String campaign, String params, String source, String sdkVersion) {
         this.deeplinkId = deeplinkId;
         this.deeplinkMd5 = deeplinkMd5;
         this.identityId = identityId;
@@ -68,8 +66,7 @@ public class DeepLink implements Serializable{
         this.sdkVersion = sdkVersion;
     }
 
-    @Id
-    @Column(name = "deeplink_id")
+
     public long getDeeplinkId() {
         return deeplinkId;
     }
@@ -78,8 +75,6 @@ public class DeepLink implements Serializable{
         this.deeplinkId = deeplinkId;
     }
 
-    @Basic
-    @Column(name = "deeplink_md5")
     public String getDeeplinkMd5() {
         return deeplinkMd5;
     }
@@ -88,8 +83,6 @@ public class DeepLink implements Serializable{
         this.deeplinkMd5 = deeplinkMd5;
     }
 
-    @Basic
-    @Column(name = "linkedme_key")
     public String getLinkedmeKey() {
         return linkedmeKey;
     }
@@ -98,8 +91,6 @@ public class DeepLink implements Serializable{
         this.linkedmeKey = linkedmeKey;
     }
 
-    @Basic
-    @Column(name = "identity_id")
     public long getIdentityId() {
         return identityId;
     }
@@ -108,8 +99,6 @@ public class DeepLink implements Serializable{
         this.identityId = identityId;
     }
 
-    @Basic
-    @Column(name = "create_time")
     public String getCreateTime() {
         return createTime;
     }
@@ -118,8 +107,6 @@ public class DeepLink implements Serializable{
         this.createTime = createTime;
     }
 
-    @Basic
-    @Column(name = "tags")
     public String getTags() {
         return tags;
     }
@@ -128,8 +115,6 @@ public class DeepLink implements Serializable{
         this.tags = tags;
     }
 
-    @Basic
-    @Column(name = "alias")
     public String getAlias() {
         return alias;
     }
@@ -138,8 +123,6 @@ public class DeepLink implements Serializable{
         this.alias = alias;
     }
 
-    @Basic
-    @Column(name = "channel")
     public String getChannel() {
         return channel;
     }
@@ -148,8 +131,6 @@ public class DeepLink implements Serializable{
         this.channel = channel;
     }
 
-    @Basic
-    @Column(name = "feature")
     public String getFeature() {
         return feature;
     }
@@ -158,8 +139,6 @@ public class DeepLink implements Serializable{
         this.feature = feature;
     }
 
-    @Basic
-    @Column(name = "stage")
     public String getStage() {
         return stage;
     }
@@ -168,8 +147,6 @@ public class DeepLink implements Serializable{
         this.stage = stage;
     }
 
-    @Basic
-    @Column(name = "campaign")
     public String getCampaign() {
         return campaign;
     }
@@ -178,8 +155,6 @@ public class DeepLink implements Serializable{
         this.campaign = campaign;
     }
 
-    @Basic
-    @Column(name = "source")
     public String getSource() {
         return source;
     }
@@ -188,8 +163,6 @@ public class DeepLink implements Serializable{
         this.source = source;
     }
 
-    @Basic
-    @Column(name = "sdk_version")
     public String getSdkVersion() {
         return sdkVersion;
     }
@@ -198,8 +171,6 @@ public class DeepLink implements Serializable{
         this.sdkVersion = sdkVersion;
     }
 
-    @Basic
-    @Column(name = "update_time")
     public Timestamp getUpdateTime() {
         return updateTime;
     }
@@ -208,8 +179,6 @@ public class DeepLink implements Serializable{
         this.updateTime = updateTime;
     }
 
-    @Basic
-    @Column(name = "state")
     public int getState() {
         return state;
     }
@@ -265,7 +234,7 @@ public class DeepLink implements Serializable{
         int result = (int) (deeplinkId ^ (deeplinkId >>> 32));
         result = 31 * result + (deeplinkMd5 != null ? deeplinkMd5.hashCode() : 0);
         result = 31 * result + (linkedmeKey != null ? linkedmeKey.hashCode() : 0);
-        result = 31 * result + (identityId != 0 ? ((Long)identityId).hashCode() : 0);
+        result = 31 * result + (identityId != 0 ? ((Long) identityId).hashCode() : 0);
         result = 31 * result + (createTime != null ? createTime.hashCode() : 0);
         result = 31 * result + (tags != null ? tags.hashCode() : 0);
         result = 31 * result + (alias != null ? alias.hashCode() : 0);
@@ -372,7 +341,7 @@ public class DeepLink implements Serializable{
         jsonObject.put("creation_time", createTime);
         jsonObject.put("source", source);
 
-        if(deepLinkCount != null) {
+        if (deepLinkCount != null) {
             JSONObject iosCount = new JSONObject();
             iosCount.put("ios_click", deepLinkCount.getIos_click());
             iosCount.put("ios_install", deepLinkCount.getIos_install());
@@ -404,7 +373,7 @@ public class DeepLink implements Serializable{
     }
 
     public static void main(String[] args) {
-        String[] channel = new String[]{"aa", "bb"};
+        String[] channel = new String[] {"aa", "bb"};
         JSONArray jarr = JSONArray.fromObject(channel);
         System.out.println(jarr.toString());
 

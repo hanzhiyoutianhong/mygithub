@@ -2,18 +2,9 @@ package cc.linkedme.data.model;
 
 import net.sf.json.JSONObject;
 
-import javax.persistence.Basic;
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.Id;
-import javax.persistence.Table;
-import java.sql.Timestamp;
-
 /**
  * Created by LinkedME01 on 16/4/7.
  */
-@Entity
-@Table(name = "button_info_0", schema = "button_0", catalog = "")
 public class ButtonInfo {
     private String btnId;
     private String btnName;
@@ -27,8 +18,7 @@ public class ButtonInfo {
 
     private ConsumerAppInfo consumerAppInfo;
 
-    @Id
-    @Column(name = "btn_id")
+
     public String getBtnId() {
         return btnId;
     }
@@ -37,8 +27,6 @@ public class ButtonInfo {
         this.btnId = btnId;
     }
 
-    @Basic
-    @Column(name = "btn_name")
     public String getBtnName() {
         return btnName;
     }
@@ -47,8 +35,7 @@ public class ButtonInfo {
         this.btnName = btnName;
     }
 
-    @Basic
-    @Column(name = "app_id")
+
     public long getAppId() {
         return appId;
     }
@@ -57,8 +44,7 @@ public class ButtonInfo {
         this.appId = appId;
     }
 
-    @Basic
-    @Column(name = "consumer_app_id")
+
     public long getConsumerAppId() {
         return consumerAppId;
     }
@@ -67,8 +53,7 @@ public class ButtonInfo {
         this.consumerAppId = consumerAppId;
     }
 
-    @Basic
-    @Column(name = "btn_category")
+
     public String getBtnCategory() {
         return btnCategory;
     }
@@ -77,8 +62,6 @@ public class ButtonInfo {
         this.btnCategory = btnCategory;
     }
 
-    @Basic
-    @Column(name = "creation_time")
     public String getCreationTime() {
         return creationTime;
     }
@@ -87,8 +70,7 @@ public class ButtonInfo {
         this.creationTime = creationTime;
     }
 
-    @Basic
-    @Column(name = "check_status")
+
     public int getCheckStatus() {
         return checkStatus;
     }
@@ -97,8 +79,6 @@ public class ButtonInfo {
         this.checkStatus = checkStatus;
     }
 
-    @Basic
-    @Column(name = "online_status")
     public int getOnlineStatus() {
         return onlineStatus;
     }
