@@ -2,6 +2,8 @@ package cc.linkedme.mcq.processor;
 
 import cc.linkedme.commons.log.ApiLogger;
 import cc.linkedme.commons.mcq.reader.McqProcessor;
+import cc.linkedme.commons.switcher.Switcher;
+import cc.linkedme.commons.switcher.SwitcherManagerFactoryLoader;
 import cc.linkedme.commons.util.ApiUtil;
 import cc.linkedme.commons.util.UseTimeStasticsMonitor;
 import cc.linkedme.data.model.ClientInfo;
@@ -22,6 +24,8 @@ import java.util.LinkedList;
  */
 public class MsgMcqProcessor extends McqProcessor {
     public static final UseTimeStasticsMonitor McqProcMonitor = new UseTimeStasticsMonitor("McqProcMonitor"); // mcq处理统计
+    private static Switcher deepLinkCountSwitcher = SwitcherManagerFactoryLoader.getSwitcherManagerFactory().getSwitcherManager()
+            .registerSwitcher("linkedme.deeplink.count.enable", true);
 
     /**
      * 是否更新db
@@ -87,7 +91,12 @@ public class MsgMcqProcessor extends McqProcessor {
             result = processClientMsg(type, info);
         } else if (MsgUtils.isCountType(type)) {
             // 短链计数
-            result = processCountMsg(type, info);
+            if (deepLinkCountSwitcher.isOpen()) {
+                result = processCountMsg(type, info);
+            } else {
+                // 计数降级后,直接打印日志(或者写入降级队列),后续通过日志回放消息来修复数据
+                ApiLogger.info("Degrade DB Deeplink Count Msg:" + mcqMsg);
+            }
         } else if (MsgUtils.isFingerPrintType(type)) {
             result = processFingerPrintMsg(type, info);
         }
@@ -148,8 +157,7 @@ public class MsgMcqProcessor extends McqProcessor {
             fingerPrintInfo.setIdentityId(info.getLong("identity_id"));
             fingerPrintInfo.setCurrentTime(info.getString("current_time"));
             result = addFingerPrint(fingerPrintInfo);
-        }
-        else if (type == 42) {
+        } else if (type == 42) {
             FingerPrintInfo oldFingerPrintInfo = new FingerPrintInfo();
             oldFingerPrintInfo.setDeviceId(info.getString("old_device_id"));
             oldFingerPrintInfo.setDeviceType(info.getInt("old_device_type"));

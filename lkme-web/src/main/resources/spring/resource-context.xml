@@ -31,8 +31,8 @@
         </property>
     </bean>
 
-    <bean id="console" class="cc.linkedme.commons.switcher.console.ConsoleServer" destroy-method="shutdown">
-        <!--init-method="startup"-->
+    <bean id="console" class="cc.linkedme.commons.switcher.console.ConsoleServer" init-method="startup" destroy-method="shutdown">
+        <!--""-->
         <constructor-arg>
             <value>${lkme.sonsole.port}</value> <!-- server port -->
         </constructor-arg>

@@ -1,10 +1,5 @@
 package cc.linkedme.data.model;
 
-import javax.persistence.Basic;
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.Table;
-import java.sql.Date;
 
 /**
  * Created by LinkedME01 on 16/4/17.

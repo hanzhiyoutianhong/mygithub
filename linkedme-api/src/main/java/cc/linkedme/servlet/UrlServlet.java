@@ -130,7 +130,12 @@ public class UrlServlet extends HttpServlet {
 
         // useAgent
         // 使用yaml解析user agent,测试匹配优先级,速度,打日志统计时间,优化正则表达式(单个正则表达式,优先级);
+        boolean hasQQUrlManager = false;
         String userAgent = request.getHeader("user-agent");
+        if (userAgent.contains("QQ-URL-Manager")){
+            hasQQUrlManager = true;
+        }
+
         Client client = userAgentParser.parseUA(userAgent);
 
         // old:userAgent只会匹配一个family, eg,ua里既带wechat信息,又带chrome信息,返回结果只有chrome,导致后边分支判断不准
@@ -188,7 +193,9 @@ public class UrlServlet extends HttpServlet {
 
             if (deepLink.getSource() != null && deepLink.getSource().trim().toLowerCase().equals("dashboard")
                     && !deepLink.isIos_use_default() && deepLink.getIos_custom_url() != null) {
-                clickCount(deepLinkId, appId, countType);
+                if (!hasQQUrlManager) {
+                    clickCount(deepLinkId, appId, countType);
+                }
                 ApiLogger.biz(String.format("%s\t%s\t%s\t%s\t%s\t%s", clientIP, apiName, countType, appId, deepLinkId, userAgent));
                 response.sendRedirect(formatCustomUrl(deepLink.getIos_custom_url()));
                 // invoke ProfileUtil
@@ -217,6 +224,7 @@ public class UrlServlet extends HttpServlet {
                 if (StringUtils.isNotBlank(url)) {
                     ApiLogger.biz(String.format("%s\t%s\t%s\t%s\t%s\t%s", clientIP, apiName, countType, appId, deepLinkId, userAgent));
                     response.sendRedirect(formatCustomUrl(url));
+                    clickCount(deepLinkId, appId, countType);
                     recordClickIntoProfile(start, countType);
                     clickCount(deepLinkId, appId, countType);
                     return;
@@ -239,7 +247,9 @@ public class UrlServlet extends HttpServlet {
 
             if (deepLink.getSource() != null && deepLink.getSource().trim().toLowerCase().equals("dashboard")
                     && !deepLink.isAndroid_use_default() && deepLink.getAndroid_custom_url() != null) {
-                clickCount(deepLinkId, appId, countType);
+                if (!hasQQUrlManager) {
+                    clickCount(deepLinkId, appId, countType);
+                }
                 ApiLogger.biz(String.format("%s\t%s\t%s\t%s\t%s\t%s", clientIP, apiName, countType, appId, deepLinkId, userAgent));
                 response.sendRedirect(formatCustomUrl(deepLink.getAndroid_custom_url()));
                 // invoke ProfileUtil
@@ -262,6 +272,7 @@ public class UrlServlet extends HttpServlet {
                     ApiLogger.biz(String.format("%s\t%s\t%s\t%s\t%s\t%s", request.getHeader("x-forwarded-for"), apiName, countType, appId,
                             deepLinkId, userAgent));
                     response.sendRedirect(formatCustomUrl(url));
+                    clickCount(deepLinkId, appId, countType);
                     recordClickIntoProfile(start, countType);
                     clickCount(deepLinkId, appId, countType);
                     return;
@@ -276,13 +287,17 @@ public class UrlServlet extends HttpServlet {
             if (deepLink.getSource() != null && deepLink.getSource().trim().toLowerCase().equals("dashboard")) {
 
                 if (!deepLink.isDesktop_use_default() && deepLink.getDesktop_custom_url() != null) {
-                    clickCount(deepLinkId, appId, countType);
+                    if (!hasQQUrlManager) {
+                        clickCount(deepLinkId, appId, countType);
+                    }
                     ApiLogger.biz(String.format("%s\t%s\t%s\t%s\t%s\t%s", clientIP, apiName, countType, appId, deepLinkId, userAgent));
 
                     response.sendRedirect(formatCustomUrl(deepLink.getDesktop_custom_url()));
                     return;
                 } else if (!appInfo.isUse_default_landing_page() && StringUtils.isNotBlank(appInfo.getCustom_landing_page())) {
-                    clickCount(deepLinkId, appId, countType);
+                    if (!hasQQUrlManager) {
+                        clickCount(deepLinkId, appId, countType);
+                    }
                     ApiLogger.biz(String.format("%s\t%s\t%s\t%s\t%s\t%s", clientIP, apiName, countType, appId, deepLinkId, userAgent));
 
                     response.sendRedirect(formatCustomUrl(appInfo.getCustom_landing_page()));
@@ -294,7 +309,9 @@ public class UrlServlet extends HttpServlet {
             String location = "https://lkme.cc/code.jsp";
             String codeUrl = Constants.DEEPLINK_HTTPS_PREFIX + request.getRequestURI() + "?scan=1";
 
-            clickCount(deepLinkId, appId, countType);
+            if (!hasQQUrlManager) {
+                clickCount(deepLinkId, appId, countType);
+            }
             ApiLogger.biz(String.format("%s\t%s\t%s\t%s\t%s\t%s", clientIP, apiName, countType, appId, deepLinkId, userAgent));
 
             response.sendRedirect(location + "?code_url=" + codeUrl);
@@ -309,7 +326,9 @@ public class UrlServlet extends HttpServlet {
         String visitId = request.getParameter("visit_id");
         if (visitId == null) {
             // 点击计数
-            clickCount(deepLinkId, appId, countType);
+            if (!hasQQUrlManager) {
+                clickCount(deepLinkId, appId, countType);
+            }
             // 记录日志
             ApiLogger.biz(String.format("%s\t%s\t%s\t%s\t%s\t%s", clientIP, apiName, countType, appId, deepLinkId, userAgent));
 
@@ -413,18 +432,14 @@ public class UrlServlet extends HttpServlet {
 
         if ((!isWechat) && (!isWeibo) && isAndroid && isChrome && userAgentMajor >= 25 && !isMIUI) {
 
-            String browser_fallback_url = new StringBuilder(Constants.DEEPLINK_HTTP_PREFIX)
-                    .append(Constants.LIVE_TEST_API_FLAG).append("/js/record_id_and_redirect?")
-                    .append("identity_id=").append(identityId).append("&")
-                    .append("app_id=").append(appId).append("&")
-                    .append("is_valid_identityid=").append(isValidIdentity).append("&")
-                    .append("browser_fingerprint_id=").append(browserFingerprintId).append("&")
-                    .append("deeplink_id=").append(deepLinkId).append("&")
-                    .append("url=").append(url).toString();
-                    
-            String location =
-                    "intent://linkedme?click_id=" + uriArr[2] + "#Intent;scheme=" + scheme + ";package="
-                            + appInfo.getAndroid_package_name() + ";S.browser_fallback_url=" + browser_fallback_url + ";end";
+            String browser_fallback_url = new StringBuilder(Constants.DEEPLINK_HTTP_PREFIX).append(Constants.LIVE_TEST_API_FLAG)
+                    .append("/js/record_id_and_redirect?").append("identity_id=").append(identityId).append("&").append("app_id=")
+                    .append(appId).append("&").append("is_valid_identityid=").append(isValidIdentity).append("&")
+                    .append("browser_fingerprint_id=").append(browserFingerprintId).append("&").append("deeplink_id=").append(deepLinkId)
+                    .append("&").append("url=").append(url).toString();
+
+            String location = "intent://linkedme?click_id=" + uriArr[2] + "#Intent;scheme=" + scheme + ";package="
+                    + appInfo.getAndroid_package_name() + ";S.browser_fallback_url=" + browser_fallback_url + ";end";
             response.setStatus(307);
             response.setHeader("Location", location);
 
