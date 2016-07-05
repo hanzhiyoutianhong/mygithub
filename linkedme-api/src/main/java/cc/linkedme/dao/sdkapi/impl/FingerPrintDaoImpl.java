@@ -14,6 +14,7 @@ import org.springframework.dao.DataAccessException;
  */
 public class FingerPrintDaoImpl extends BaseDao implements FingerPrintDao {
     private static final String ADD_FINGER_PRINT_INFO = "ADD_FINGER_PRINT_INFO";
+    private static final String DEL_FINGER_PRINT_INFO = "DEL_FINGER_PRINT_INFO";
 
     public int addFingerPrint(FingerPrintInfo fingerPrintInfo) {
         int result = 0;
@@ -34,5 +35,25 @@ public class FingerPrintDaoImpl extends BaseDao implements FingerPrintDao {
         }
         return result;
 
+    }
+
+    public int delFingerPrint(FingerPrintInfo fingerPrintInfo) {
+        int result = 0;
+        if (fingerPrintInfo == null) {
+            ApiLogger.error("FingerPrintDaoImpl.addFingerPrint fingerPrintInfo is null, add failed");
+        }
+
+        long identityId = fingerPrintInfo.getIdentityId();
+        String deviceId = fingerPrintInfo.getDeviceId();
+        int deviceType = fingerPrintInfo.getDeviceType();
+
+        TableChannel tableChannel = tableContainer.getTableChannel("fingerPrintInfo", DEL_FINGER_PRINT_INFO, identityId, identityId);
+
+        try {
+            result += tableChannel.getJdbcTemplate().update(tableChannel.getSql(), new Object[] {0, identityId, deviceId, deviceType, 1});
+        } catch (DataAccessException e) {
+            throw e;
+        }
+        return result;
     }
 }

@@ -41,9 +41,21 @@ public class MsgUtils {
         return deepLinkMsg.flip().toString();
     }
 
-    public static String toFingerPrintMsgJson(FingerPrintInfo fingerPrintInfo) {
+    public static String addFingerPrintMsgJson(FingerPrintInfo fingerPrintInfo) {
         JsonBuilder fingerPrintMsg = new JsonBuilder();
         fingerPrintMsg.append("type", 41);
+        JsonBuilder info = new JsonBuilder();
+        info.append( "device_id", fingerPrintInfo.getDeviceId());
+        info.append( "device_id_type", fingerPrintInfo.getDeviceType());
+        info.append( "identity_id", fingerPrintInfo.getIdentityId());
+
+        fingerPrintMsg.append("info", info.flip());
+        return fingerPrintMsg.flip().toString();
+    }
+
+    public static String delFingerPrintMsgJson(FingerPrintInfo fingerPrintInfo) {
+        JsonBuilder fingerPrintMsg = new JsonBuilder();
+        fingerPrintMsg.append("type", 42);
         JsonBuilder info = new JsonBuilder();
         info.append( "device_id", fingerPrintInfo.getDeviceId());
         info.append( "device_id_type", fingerPrintInfo.getDeviceType());
@@ -151,7 +163,7 @@ public class MsgUtils {
     }
 
     public static boolean isFingerPrintType(int type) {
-        return (McqMsgType.ADD_FINGER_PRINT.getType() == type );
+        return (McqMsgType.ADD_FINGER_PRINT.getType() == type || McqMsgType.DEL_FINGER_PRINT.getType() == type);
     }
 
 }

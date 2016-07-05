@@ -21,10 +21,13 @@ public class FingerPrintServiceImpl implements FingerPrintService{
     @Resource
     private FingerPrintDao fingerPrintDao;
 
-    public FingerPrintServiceImpl(){}
-
     public int addFingerPrint(FingerPrintInfo fingerPrintInfo) {
         int result = fingerPrintDao.addFingerPrint(fingerPrintInfo);
+        return result;
+    }
+
+    public int delFingerPrint(FingerPrintInfo fingerPrintInfo) {
+        int result = fingerPrintDao.delFingerPrint(fingerPrintInfo);
         return result;
     }
 }

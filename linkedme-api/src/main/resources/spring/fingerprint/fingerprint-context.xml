@@ -32,10 +32,9 @@
         <property name="sqls">
             <map>
                 <entry key="ADD_FINGER_PRINT_INFO"
-                       value="insert into $db$.$tb$ (device_id, device_id_type, identity_id) values(?, ?, ?)"/>
-                <entry key="UPDATE_FINGER_PRINT_STATUS"
-                       value="update $db$.$tb$ set valid_status=? where identity_id = ? and device_id = ? and device_id_type = ? and valid_status = ?"/>
-                <entry key="GET_FINGER_PRINT_INFO" value="select id from $db$.$tb$ where device_id = ? and device_id_type = ? and identity_id = ?"/>
+                       value="insert ignore into $db$.$tb$ (device_id, device_type, identity_id) values(?, ?, ?)"/>
+                <entry key="DEL_FINGER_PRINT_INFO"
+                       value="update $db$.$tb$ set valid_status=? where identity_id = ? and device_id = ? and device_type = ? and valid_status = ?"/>
             </map>
         </property>
         <property name="jdbcTemplates">

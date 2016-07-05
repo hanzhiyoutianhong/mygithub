@@ -148,6 +148,8 @@ public class MsgMcqProcessor extends McqProcessor {
 
         if (type == 41) {
             result = addFingerPrint(fingerPrintInfo);
+        } else if (type == 42) {
+            result = delFingerPrint(fingerPrintInfo);
         }
         return result;
     }
@@ -183,6 +185,18 @@ public class MsgMcqProcessor extends McqProcessor {
         int result = 0;
         if (updateDb) {
             result = fingerPrintService.addFingerPrint(fingerPrintInfo);
+        }
+
+        if (updateMc) {
+
+        }
+        return result;
+    }
+
+    private int delFingerPrint(FingerPrintInfo fingerPrintInfo) {
+        int result = 0;
+        if (updateDb) {
+            result = fingerPrintService.delFingerPrint(fingerPrintInfo);
         }
 
         if (updateMc) {

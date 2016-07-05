@@ -7,4 +7,6 @@ import cc.linkedme.data.model.FingerPrintInfo;
  */
 public interface FingerPrintService {
     int addFingerPrint(FingerPrintInfo fingerPrintInfo);
+
+    int delFingerPrint(FingerPrintInfo fingerPrintInfo);
 }
