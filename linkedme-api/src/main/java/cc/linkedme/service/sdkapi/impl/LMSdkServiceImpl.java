@@ -177,9 +177,12 @@ public class LMSdkServiceImpl implements LMSdkService {
                 // 匹配不成功, 生成identity_id
                 identityId = uuidCreator.nextId(1); // 1表示发号器的identity_id业务
             }
-            clientRedisClient.set(deviceId, identityId);// 记录<device_id, identity_id>
-            JedisPort identityRedisClient = clientShardingSupport.getClient(identityId);
-            identityRedisClient.set(identityId + ".di", deviceId); // 记录<identity_id, device_id>
+            if ((("ios".equals(installParams.os.trim().toLowerCase())) && (installParams.device_type == 24))
+                    || (("android".equals(installParams.os.trim().toLowerCase())) && (installParams.device_type == 12))) {
+                clientRedisClient.set(deviceId, identityId);// 记录<device_id, identity_id>
+                JedisPort identityRedisClient = clientShardingSupport.getClient(identityId);
+                identityRedisClient.set(identityId + ".di", deviceId); // 记录<identity_id, device_id>
+            }
         } else { // 之前存在<device, identityId>
             identityId = Long.parseLong(identityIdStr);
             JedisPort identityRedisClient = clientShardingSupport.getClient(identityId);
@@ -198,9 +201,12 @@ public class LMSdkServiceImpl implements LMSdkService {
                     deepLinkId = Long.parseLong(deepLinkIdStr);
                     deepLink = deepLinkService.getDeepLinkInfo(deepLinkId, appId);
 
-                    clientRedisClient.sadd(deviceId + ".old", String.valueOf(identityId));
-                    clientRedisClient.set(deviceId, identityId); // 更新<device_id, identity_id>
-                    clientRedisClient.set(identityId + ".di", deviceId);
+                    if ((("ios".equals(installParams.os.trim().toLowerCase())) && (installParams.device_type == 24))
+                            || (("android".equals(installParams.os.trim().toLowerCase())) && (installParams.device_type == 12))) {
+                        clientRedisClient.sadd(deviceId + ".old", String.valueOf(identityId));
+                        clientRedisClient.set(deviceId, identityId); // 更新<device_id, identity_id>
+                        clientRedisClient.set(identityId + ".di", deviceId);
+                    }
                 }
             } else { // 之前存在identityId, 并有identityId与deepLink的键值对
                 deepLinkId = Long.parseLong(deepLinkIdStr);
