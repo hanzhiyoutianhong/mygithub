@@ -1,17 +1,9 @@
 package cc.linkedme.data.model;
 
-import javax.persistence.Basic;
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.Id;
-import javax.persistence.Table;
-import java.sql.Date;
 
 /**
  * Created by LinkedME01 on 16/4/12.
  */
-@Entity
-@Table(name = "button_count_0", schema = "count_0", catalog = "")
 public class ButtonCount {
     private long appId;
     private String btnId;
@@ -25,8 +17,6 @@ public class ButtonCount {
     private int orderCount;
     private float income;
 
-    @Id
-    @Column(name = "app_id")
     public long getAppId() {
         return appId;
     }
@@ -35,8 +25,6 @@ public class ButtonCount {
         this.appId = appId;
     }
 
-    @Basic
-    @Column(name = "btn_id")
     public String getBtnId() {
         return btnId;
     }
@@ -45,8 +33,6 @@ public class ButtonCount {
         this.btnId = btnId;
     }
 
-    @Basic
-    @Column(name = "consumer_id")
     public long getConsumerId() {
         return consumerId;
     }
@@ -55,8 +41,6 @@ public class ButtonCount {
         this.consumerId = consumerId;
     }
 
-    @Basic
-    @Column(name = "date")
     public String getDate() {
         return date;
     }
@@ -65,8 +49,6 @@ public class ButtonCount {
         this.date = date;
     }
 
-    @Basic
-    @Column(name = "view_count")
     public int getViewCount() {
         return viewCount;
     }
@@ -75,8 +57,7 @@ public class ButtonCount {
         this.viewCount = viewCount;
     }
 
-    @Basic
-    @Column(name = "click_count")
+
     public int getClickCount() {
         return clickCount;
     }
@@ -85,8 +66,7 @@ public class ButtonCount {
         this.clickCount = clickCount;
     }
 
-    @Basic
-    @Column(name = "open_app_count")
+
     public int getOpenAppCount() {
         return openAppCount;
     }
@@ -95,8 +75,6 @@ public class ButtonCount {
         this.openAppCount = openAppCount;
     }
 
-    @Basic
-    @Column(name = "open_web_count")
     public int getOpenWebCount() {
         return openWebCount;
     }
@@ -105,8 +83,6 @@ public class ButtonCount {
         this.openWebCount = openWebCount;
     }
 
-    @Basic
-    @Column(name = "order_count")
     public int getOrderCount() {
         return orderCount;
     }
@@ -115,8 +91,7 @@ public class ButtonCount {
         this.orderCount = orderCount;
     }
 
-    @Basic
-    @Column(name = "income")
+
     public float getIncome() {
         return income;
     }
