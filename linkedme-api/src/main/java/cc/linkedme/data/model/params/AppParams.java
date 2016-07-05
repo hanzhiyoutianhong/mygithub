@@ -41,7 +41,7 @@ public class AppParams {
     public boolean android_enable_applinks;
     public String android_sha256_fingerprints;
 
-    public boolean use_default_landing_page;
+    public boolean use_default_landing_page = true;
     public boolean is_yyb_available;
     public String custom_landing_page;
 
