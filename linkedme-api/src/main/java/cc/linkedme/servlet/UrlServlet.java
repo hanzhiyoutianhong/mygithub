@@ -130,10 +130,10 @@ public class UrlServlet extends HttpServlet {
 
         // useAgent
         // 使用yaml解析user agent,测试匹配优先级,速度,打日志统计时间,优化正则表达式(单个正则表达式,优先级);
-        boolean hasQQ_URL_Manager = false;
+        boolean hasQQUrlManager = false;
         String userAgent = request.getHeader("user-agent");
         if (userAgent.contains("QQ-URL-Manager")){
-            hasQQ_URL_Manager = true;
+            hasQQUrlManager = true;
         }
 
         Client client = userAgentParser.parseUA(userAgent);
@@ -193,7 +193,7 @@ public class UrlServlet extends HttpServlet {
 
             if (deepLink.getSource() != null && deepLink.getSource().trim().toLowerCase().equals("dashboard")
                     && !deepLink.isIos_use_default() && deepLink.getIos_custom_url() != null) {
-                if (!hasQQ_URL_Manager) {
+                if (!hasQQUrlManager) {
                     clickCount(deepLinkId, appId, countType);
                 }
                 ApiLogger.biz(String.format("%s\t%s\t%s\t%s\t%s\t%s", clientIP, apiName, countType, appId, deepLinkId, userAgent));
@@ -245,7 +245,7 @@ public class UrlServlet extends HttpServlet {
 
             if (deepLink.getSource() != null && deepLink.getSource().trim().toLowerCase().equals("dashboard")
                     && !deepLink.isAndroid_use_default() && deepLink.getAndroid_custom_url() != null) {
-                if (!hasQQ_URL_Manager) {
+                if (!hasQQUrlManager) {
                     clickCount(deepLinkId, appId, countType);
                 }
                 ApiLogger.biz(String.format("%s\t%s\t%s\t%s\t%s\t%s", clientIP, apiName, countType, appId, deepLinkId, userAgent));
@@ -283,7 +283,7 @@ public class UrlServlet extends HttpServlet {
             if (deepLink.getSource() != null && deepLink.getSource().trim().toLowerCase().equals("dashboard")) {
 
                 if (!deepLink.isDesktop_use_default() && deepLink.getDesktop_custom_url() != null) {
-                    if (!hasQQ_URL_Manager) {
+                    if (!hasQQUrlManager) {
                         clickCount(deepLinkId, appId, countType);
                     }
                     ApiLogger.biz(String.format("%s\t%s\t%s\t%s\t%s\t%s", clientIP, apiName, countType, appId, deepLinkId, userAgent));
@@ -291,7 +291,7 @@ public class UrlServlet extends HttpServlet {
                     response.sendRedirect(formatCustomUrl(deepLink.getDesktop_custom_url()));
                     return;
                 } else if (!appInfo.isUse_default_landing_page() && StringUtils.isNotBlank(appInfo.getCustom_landing_page())) {
-                    if (!hasQQ_URL_Manager) {
+                    if (!hasQQUrlManager) {
                         clickCount(deepLinkId, appId, countType);
                     }
                     ApiLogger.biz(String.format("%s\t%s\t%s\t%s\t%s\t%s", clientIP, apiName, countType, appId, deepLinkId, userAgent));
@@ -305,7 +305,7 @@ public class UrlServlet extends HttpServlet {
             String location = "https://lkme.cc/code.jsp";
             String codeUrl = Constants.DEEPLINK_HTTPS_PREFIX + request.getRequestURI() + "?scan=1";
 
-            if (!hasQQ_URL_Manager) {
+            if (!hasQQUrlManager) {
                 clickCount(deepLinkId, appId, countType);
             }
             ApiLogger.biz(String.format("%s\t%s\t%s\t%s\t%s\t%s", clientIP, apiName, countType, appId, deepLinkId, userAgent));
@@ -322,7 +322,7 @@ public class UrlServlet extends HttpServlet {
         String visitId = request.getParameter("visit_id");
         if (visitId == null) {
             // 点击计数
-            if (!hasQQ_URL_Manager) {
+            if (!hasQQUrlManager) {
                 clickCount(deepLinkId, appId, countType);
             }
             // 记录日志
