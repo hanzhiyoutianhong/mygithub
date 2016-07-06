@@ -11,11 +11,11 @@
     <bean class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">
         <property name="locations">
             <list>
-                <value>classpath:live/jdbc.properties</value>
-                <value>classpath:live/mc.properties</value>
-                <value>classpath:live/redis.properties</value>
-                <value>classpath:live/mcq.properties</value>
-                <value>classpath:live/console.properties</value>
+                <value>classpath:jdbc.properties</value>
+                <value>classpath:mc.properties</value>
+                <value>classpath:redis.properties</value>
+                <value>classpath:mcq.properties</value>
+                <value>classpath:console.properties</value>
             </list>
         </property>
     </bean>
