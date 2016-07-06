@@ -78,7 +78,7 @@ public class MsgMcqProcessor extends McqProcessor {
     }
 
     public int process(String mcqMsg) throws Exception {
-        int result = 0;
+        int result = ApiUtil.MQ_PROCESS_RETRY;
         // 根据不同的消息作不同的处理
         JSONObject msgJson = JSONObject.fromObject(mcqMsg);
         int type = msgJson.getInt("type");
@@ -94,8 +94,7 @@ public class MsgMcqProcessor extends McqProcessor {
             if (deepLinkCountSwitcher.isOpen()) {
                 result = processCountMsg(type, info);
             } else {
-                // 计数降级后,直接打印日志(或者写入降级队列),后续通过日志回放消息来修复数据
-                ApiLogger.info("Degrade DB Deeplink Count Msg:" + mcqMsg);
+                result = ApiUtil.MQ_PROCESS_DEGRADATION;
             }
         } else if (MsgUtils.isFingerPrintType(type)) {
             result = processFingerPrintMsg(type, info);

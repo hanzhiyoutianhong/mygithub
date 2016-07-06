@@ -68,10 +68,14 @@
 
     <wfc:mysql id="datasources_app_0_m" parent="dataSource"
                strategy="master">
+        <property name="user" value="${app.datasource.user}"/>
+        <property name="password" value="${app.datasource.pwd}"/>
         <property name="jdbcUrl" value="${app.datasource.master_0.jdbcUrl}"/>
     </wfc:mysql>
     <wfc:mysql id="datasources_app_0_s" parent="dataSource"
                strategy="slave">
+        <property name="user" value="${app.datasource.user}"/>
+        <property name="password" value="${app.datasource.pwd}"/>
         <property name="jdbcUrl" value="${app.datasource.slave_0.jdbcUrl}"/>
     </wfc:mysql>
 
@@ -88,10 +92,14 @@
 
     <wfc:mysql id="datasources_user_0_m" parent="dataSource"
                strategy="master">
+        <property name="user" value="${user.datasource.user}"/>
+        <property name="password" value="${user.datasource.pwd}"/>
         <property name="jdbcUrl" value="${user.datasource.master_0.jdbcUrl}"/>
     </wfc:mysql>
     <wfc:mysql id="datasources_user_0_s" parent="dataSource"
                strategy="slave">
+        <property name="user" value="${user.datasource.user}"/>
+        <property name="password" value="${user.datasource.pwd}"/>
         <property name="jdbcUrl" value="${user.datasource.slave_0.jdbcUrl}"/>
     </wfc:mysql>
 
