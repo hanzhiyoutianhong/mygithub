@@ -1,6 +1,6 @@
 var lkmeAction = {
-    recordIdUrl: "/i/js/record_id",
-    recordJsEventUrl: "/i/js/record_event",
+    recordIdUrl: "/" + Params.live_test_flag + "/js/record_id",
+    recordJsEventUrl: "/" + Params.live_test_flag + "/js/record_event",
     recordJsUserClickEventUrl: "/i/js/record_click_event",
     destination: {
         iOSScheme: "dst_ios_scheme",
