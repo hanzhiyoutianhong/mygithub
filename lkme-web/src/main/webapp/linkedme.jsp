@@ -30,6 +30,7 @@
             identity_id: '${identityId}',
             is_valid_identity: '${isValidIdentity}',
             is_pc_scan: '${isPcScan}',
+            live_test_flag: '${liveTestFlag}',
 
             isIOS: function () {
                 return 'true' == '${isIOS}';
