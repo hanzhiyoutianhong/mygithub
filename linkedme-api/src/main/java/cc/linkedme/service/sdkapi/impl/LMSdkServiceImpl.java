@@ -157,7 +157,6 @@ public class LMSdkServiceImpl implements LMSdkService {
         }
 
         String deviceId = installParams.device_id;
-        int deviceType = installParams.device_type;
         JedisPort clientRedisClient = clientShardingSupport.getClient(deviceId);
         String identityIdStr = clientRedisClient.get(deviceId);
         long identityId = 0;
@@ -255,8 +254,8 @@ public class LMSdkServiceImpl implements LMSdkService {
         clientMsgPusher.addClient(clientInfo, fromDeepLinkId);
 
         // 写mcq,存储键值对
-        FingerPrintInfo oldFingerPrintInfo = toFingerPrintInfo(identityId, deviceId, deviceType);
-        FingerPrintInfo newFingerPrintInfo = toFingerPrintInfo(newIdentityId, deviceId, deviceType);
+        FingerPrintInfo oldFingerPrintInfo = toFingerPrintInfo(identityId, deviceId, installParams.device_type);
+        FingerPrintInfo newFingerPrintInfo = toFingerPrintInfo(newIdentityId, deviceId, installParams.device_type);
         fingerPrintMsgPusher.updateFingerPrint(oldFingerPrintInfo, newFingerPrintInfo);
 
 
