@@ -23,6 +23,13 @@ public class JsServiceImpl implements JsService {
             if (res) {
                 identityRedisClient.expire(identityId + ".dpi", 2 * 60 * 60);
             }
+            
+            if(jsRecordIdParams.is_pc_scan){
+                res = identityRedisClient.set(identityId + ".scan", "1");
+                if(res){
+                    identityRedisClient.expire(identityId + ".scan", 2 * 60 * 60);
+                }
+            }
         }
         String browserFingerprintId = jsRecordIdParams.browser_fingerprint_id;
         JedisPort browseFingerprintIdRedisClient = clientShardingSupport.getClient(browserFingerprintId);

@@ -2,6 +2,8 @@ package cc.linkedme.service.sdkapi.impl;
 
 import javax.annotation.Resource;
 
+import org.apache.commons.lang3.StringUtils;
+
 import cc.linkedme.commons.log.ApiLogger;
 import cc.linkedme.commons.redis.JedisPort;
 import cc.linkedme.commons.shard.ShardingSupportHash;
@@ -33,9 +35,9 @@ import cc.linkedme.service.sdkapi.LMSdkService;
 
 import com.google.common.base.Joiner;
 import com.google.common.base.Strings;
+
 import net.sf.json.JSONArray;
 import net.sf.json.JSONObject;
-import org.apache.commons.lang.StringUtils;
 
 import java.net.URI;
 import java.text.SimpleDateFormat;
@@ -150,6 +152,7 @@ public class LMSdkServiceImpl implements LMSdkService {
         if (appIdStr != null) {
             appId = Long.parseLong(appIdStr);
         }
+        String scanPrefix = "";
 
         String deviceId = installParams.device_id;
         JedisPort clientRedisClient = clientShardingSupport.getClient(deviceId);
@@ -211,6 +214,10 @@ public class LMSdkServiceImpl implements LMSdkService {
             } else { // 之前存在identityId, 并有identityId与deepLink的键值对
                 deepLinkId = Long.parseLong(deepLinkIdStr);
                 deepLink = deepLinkService.getDeepLinkInfo(deepLinkId, appId);
+                
+                if(identityRedisClient.exists(identityIdStr + ".scan")){
+                    scanPrefix = "pc_";
+                }
             }
         }
 
@@ -222,9 +229,8 @@ public class LMSdkServiceImpl implements LMSdkService {
         } else {
             browserFingerprintId = deviceFingerprintId;
             
-            String scanPrefix = "";
             JedisPort dfpIdRedisClient = clientShardingSupport.getClient(deviceFingerprintId);
-            if(dfpIdRedisClient.hexists(deviceFingerprintId, "scan")){
+            if(StringUtils.isBlank(scanPrefix) && dfpIdRedisClient.hexists(deviceFingerprintId, "scan")){
                 scanPrefix = "pc_";
             }
             installType = scanPrefix + DeepLinkCount.getCountTypeFromOs(installParams.os, "install");
