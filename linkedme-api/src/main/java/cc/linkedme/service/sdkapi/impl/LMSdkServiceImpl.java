@@ -218,6 +218,9 @@ public class LMSdkServiceImpl implements LMSdkService {
                 if(identityRedisClient.exists(identityIdStr + ".scan")){
                     scanPrefix = "pc_";
                 }
+                
+                //清理redis中对应的identityId.dpi和identityId.scan
+                identityRedisClient.del(identityIdStr + ".dpi", identityIdStr + ".scan");
             }
         }
 
