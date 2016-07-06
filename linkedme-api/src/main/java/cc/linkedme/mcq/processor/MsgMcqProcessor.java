@@ -2,6 +2,8 @@ package cc.linkedme.mcq.processor;
 
 import cc.linkedme.commons.log.ApiLogger;
 import cc.linkedme.commons.mcq.reader.McqProcessor;
+import cc.linkedme.commons.switcher.Switcher;
+import cc.linkedme.commons.switcher.SwitcherManagerFactoryLoader;
 import cc.linkedme.commons.util.ApiUtil;
 import cc.linkedme.commons.util.UseTimeStasticsMonitor;
 import cc.linkedme.data.model.ClientInfo;
@@ -20,6 +22,8 @@ import java.util.LinkedList;
  */
 public class MsgMcqProcessor extends McqProcessor {
     public static final UseTimeStasticsMonitor McqProcMonitor = new UseTimeStasticsMonitor("McqProcMonitor"); // mcq处理统计
+    private static Switcher deepLinkCountSwitcher = SwitcherManagerFactoryLoader.getSwitcherManagerFactory().getSwitcherManager()
+            .registerSwitcher("linkedme.deeplink.count.enable", true);
 
     /**
      * 是否更新db
@@ -69,7 +73,7 @@ public class MsgMcqProcessor extends McqProcessor {
     }
 
     public int process(String mcqMsg) throws Exception {
-        int result = 0;
+        int result = ApiUtil.MQ_PROCESS_RETRY;
         // 根据不同的消息作不同的处理
         JSONObject msgJson = JSONObject.fromObject(mcqMsg);
         int type = msgJson.getInt("type");
@@ -82,7 +86,11 @@ public class MsgMcqProcessor extends McqProcessor {
             result = processClientMsg(type, info);
         } else if (MsgUtils.isCountType(type)) {
             // 短链计数
-            result = processCountMsg(type, info);
+            if (deepLinkCountSwitcher.isOpen()) {
+                result = processCountMsg(type, info);
+            } else {
+                result = ApiUtil.MQ_PROCESS_DEGRADATION;
+            }
         }
         return result;
     }
@@ -116,7 +124,7 @@ public class MsgMcqProcessor extends McqProcessor {
     }
 
     private int processCountMsg(int type, JSONObject info) {
-        //TODO 可以改成批量插入計數
+        // TODO 可以改成批量插入計數
         int result = ApiUtil.MQ_PROCESS_ABORT;
 
         DeepLinkDateCount deepLinkDateCount = new DeepLinkDateCount();

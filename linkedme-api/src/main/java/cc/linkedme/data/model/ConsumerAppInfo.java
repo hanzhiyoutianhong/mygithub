@@ -2,17 +2,9 @@ package cc.linkedme.data.model;
 
 import cc.linkedme.commons.json.JsonBuilder;
 
-import javax.persistence.Basic;
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.Id;
-import javax.persistence.Table;
-
 /**
  * Created by LinkedME01 on 16/4/8.
  */
-@Entity
-@Table(name = "consumer_info_0", schema = "consumer_0", catalog = "")
 public class ConsumerAppInfo {
     private long appId;
     private String appName;
@@ -31,8 +23,6 @@ public class ConsumerAppInfo {
     private String serverToken;
     private int status;
 
-    @Id
-    @Column(name = "app_id")
     public long getAppId() {
         return appId;
     }
@@ -41,8 +31,6 @@ public class ConsumerAppInfo {
         this.appId = appId;
     }
 
-    @Basic
-    @Column(name = "app_name")
     public String getAppName() {
         return appName;
     }
@@ -51,8 +39,6 @@ public class ConsumerAppInfo {
         this.appName = appName;
     }
 
-    @Basic
-    @Column(name = "app_logo_url")
     public String getAppLogoUrl() {
         return appLogoUrl;
     }
@@ -61,8 +47,6 @@ public class ConsumerAppInfo {
         this.appLogoUrl = appLogoUrl;
     }
 
-    @Basic
-    @Column(name = "category")
     public String getCategory() {
         return category;
     }
@@ -71,8 +55,6 @@ public class ConsumerAppInfo {
         this.category = category;
     }
 
-    @Basic
-    @Column(name = "online_time")
     public String getOnlineTime() {
         return onlineTime;
     }
@@ -81,8 +63,7 @@ public class ConsumerAppInfo {
         this.onlineTime = onlineTime;
     }
 
-    @Basic
-    @Column(name = "ios_code")
+
     public String getIosCode() {
         return iosCode;
     }
@@ -91,8 +72,6 @@ public class ConsumerAppInfo {
         this.iosCode = iosCode;
     }
 
-    @Basic
-    @Column(name = "android_code")
     public String getAndroidCode() {
         return androidCode;
     }
@@ -101,8 +80,6 @@ public class ConsumerAppInfo {
         this.androidCode = androidCode;
     }
 
-    @Basic
-    @Column(name = "android_config")
     public String getAndroidConfig() {
         return androidConfig;
     }
@@ -111,8 +88,6 @@ public class ConsumerAppInfo {
         this.androidConfig = androidConfig;
     }
 
-    @Basic
-    @Column(name = "scheme_url")
     public String getSchemeUrl() {
         return schemeUrl;
     }
@@ -121,8 +96,6 @@ public class ConsumerAppInfo {
         this.schemeUrl = schemeUrl;
     }
 
-    @Basic
-    @Column(name = "custom_url")
     public String getCustomUrl() {
         return customUrl;
     }
@@ -131,8 +104,6 @@ public class ConsumerAppInfo {
         this.customUrl = customUrl;
     }
 
-    @Basic
-    @Column(name = "default_url")
     public String getDefaultUrl() {
         return defaultUrl;
     }
@@ -141,8 +112,6 @@ public class ConsumerAppInfo {
         this.defaultUrl = defaultUrl;
     }
 
-    @Basic
-    @Column(name = "bundle_id")
     public String getBundleId() {
         return bundleId;
     }
@@ -151,8 +120,7 @@ public class ConsumerAppInfo {
         this.bundleId = bundleId;
     }
 
-    @Basic
-    @Column(name = "package_name")
+
     public String getPackageName() {
         return packageName;
     }
@@ -161,8 +129,6 @@ public class ConsumerAppInfo {
         this.packageName = packageName;
     }
 
-    @Basic
-    @Column(name = "client_id")
     public String getClientId() {
         return clientId;
     }
@@ -171,8 +137,6 @@ public class ConsumerAppInfo {
         this.clientId = clientId;
     }
 
-    @Basic
-    @Column(name = "server_token")
     public String getServerToken() {
         return serverToken;
     }
@@ -181,8 +145,6 @@ public class ConsumerAppInfo {
         this.serverToken = serverToken;
     }
 
-    @Basic
-    @Column(name = "status")
     public int getStatus() {
         return status;
     }

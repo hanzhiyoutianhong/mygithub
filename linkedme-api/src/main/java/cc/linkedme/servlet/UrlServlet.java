@@ -224,6 +224,7 @@ public class UrlServlet extends HttpServlet {
                 if (StringUtils.isNotBlank(url)) {
                     ApiLogger.biz(String.format("%s\t%s\t%s\t%s\t%s\t%s", clientIP, apiName, countType, appId, deepLinkId, userAgent));
                     response.sendRedirect(formatCustomUrl(url));
+                    clickCount(deepLinkId, appId, countType);
                     recordClickIntoProfile(start, countType);
                     return;
                 }
@@ -270,6 +271,7 @@ public class UrlServlet extends HttpServlet {
                     ApiLogger.biz(String.format("%s\t%s\t%s\t%s\t%s\t%s", request.getHeader("x-forwarded-for"), apiName, countType, appId,
                             deepLinkId, userAgent));
                     response.sendRedirect(formatCustomUrl(url));
+                    clickCount(deepLinkId, appId, countType);
                     recordClickIntoProfile(start, countType);
                     return;
                 }
@@ -379,7 +381,7 @@ public class UrlServlet extends HttpServlet {
         request.setAttribute("Pkg", appInfo.getAndroid_package_name());
         request.setAttribute("BundleID", appInfo.getIos_bundle_id());
         request.setAttribute("AppID", appId);
-        request.setAttribute("IconUrl", Constants.DASHBOARD_API_URL + "/app/images/" + appId + Constants.APP_LOGO_IMG_TYPE);
+        request.setAttribute("IconUrl", Constants.LOGO_BASE_URL + appId + Constants.APP_LOGO_IMG_TYPE);
         request.setAttribute("Url", url);
         request.setAttribute("Match_id", uriArr[2]);
 
@@ -423,23 +425,20 @@ public class UrlServlet extends HttpServlet {
         request.setAttribute("browserFingerprintId", browserFingerprintId);
         request.setAttribute("identityId", identityId);
         request.setAttribute("isValidIdentity", isValidIdentity);
+        request.setAttribute("liveTestFlag", Constants.LIVE_TEST_API_FLAG);
 
         request.setAttribute("DEBUG", DEBUG);
 
         if ((!isWechat) && (!isWeibo) && isAndroid && isChrome && userAgentMajor >= 25 && !isMIUI) {
 
-            String browser_fallback_url = new StringBuilder(Constants.DEEPLINK_HTTP_PREFIX)
-                    .append(Constants.LIVE_TEST_API_FLAG).append("/js/record_id_and_redirect?")
-                    .append("identity_id=").append(identityId).append("&")
-                    .append("app_id=").append(appId).append("&")
-                    .append("is_valid_identityid=").append(isValidIdentity).append("&")
-                    .append("browser_fingerprint_id=").append(browserFingerprintId).append("&")
-                    .append("deeplink_id=").append(deepLinkId).append("&")
-                    .append("url=").append(url).toString();
-                    
-            String location =
-                    "intent://linkedme?click_id=" + uriArr[2] + "#Intent;scheme=" + scheme + ";package="
-                            + appInfo.getAndroid_package_name() + ";S.browser_fallback_url=" + browser_fallback_url + ";end";
+            String browser_fallback_url = new StringBuilder(Constants.DEEPLINK_HTTP_PREFIX).append(Constants.LIVE_TEST_API_FLAG)
+                    .append("/js/record_id_and_redirect?").append("identity_id=").append(identityId).append("&").append("app_id=")
+                    .append(appId).append("&").append("is_valid_identityid=").append(isValidIdentity).append("&")
+                    .append("browser_fingerprint_id=").append(browserFingerprintId).append("&").append("deeplink_id=").append(deepLinkId)
+                    .append("&").append("url=").append(url).toString();
+
+            String location = "intent://linkedme?click_id=" + uriArr[2] + "#Intent;scheme=" + scheme + ";package="
+                    + appInfo.getAndroid_package_name() + ";S.browser_fallback_url=" + browser_fallback_url + ";end";
             response.setStatus(307);
             response.setHeader("Location", location);
 
