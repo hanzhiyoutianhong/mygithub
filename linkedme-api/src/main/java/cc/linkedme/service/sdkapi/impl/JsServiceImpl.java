@@ -28,6 +28,9 @@ public class JsServiceImpl implements JsService {
         JedisPort browseFingerprintIdRedisClient = clientShardingSupport.getClient(browserFingerprintId);
         browseFingerprintIdRedisClient.hset(browserFingerprintId, "iid", identityId);
         browseFingerprintIdRedisClient.hset(browserFingerprintId, "did", jsRecordIdParams.deeplink_id);
+        if(jsRecordIdParams.is_pc_scan){
+            browseFingerprintIdRedisClient.hset(browserFingerprintId, "scan", "1");
+        }
         browseFingerprintIdRedisClient.expire(browserFingerprintId, 2 * 60 * 60); // 设置过期时间
 
     }

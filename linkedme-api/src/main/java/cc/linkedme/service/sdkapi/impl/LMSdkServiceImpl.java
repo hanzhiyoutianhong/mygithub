@@ -221,9 +221,14 @@ public class LMSdkServiceImpl implements LMSdkService {
             params = "";
         } else {
             browserFingerprintId = deviceFingerprintId;
-            installType = DeepLinkCount.getCountTypeFromOs(installParams.os, "install");
-
-            final String type = DeepLinkCount.getCountTypeFromOs(clientInfo.getOs(), "install");
+            
+            String scanPrefix = "";
+            JedisPort dfpIdRedisClient = clientShardingSupport.getClient(deviceFingerprintId);
+            if(dfpIdRedisClient.hexists(deviceFingerprintId, "scan")){
+                scanPrefix = "pc_";
+            }
+            installType = scanPrefix + DeepLinkCount.getCountTypeFromOs(installParams.os, "install");
+            final String type = scanPrefix + DeepLinkCount.getCountTypeFromOs(clientInfo.getOs(), "install");
 
             String date = Util.getCurrDate();
             deepLinkMsgPusher.addDeepLinkCount(deepLinkId, (int) appId, date, type);

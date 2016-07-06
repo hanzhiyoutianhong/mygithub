@@ -103,7 +103,8 @@ public class UrlServlet extends HttpServlet {
         // eg, https://lkme.cc/hafzh/fhza80af?scan=0; appId, deeplinkId;
         String uri = request.getRequestURI();
         String urlScanParam = request.getParameter("scan");
-
+        boolean isPcScan = "1".equals(urlScanParam);
+        
         String[] uriArr = uri.split("/");
         if (uriArr.length < 3) {
             response.sendRedirect("/deeplink_error.jsp"); // TODO 重定向为默认配置页面
@@ -403,6 +404,7 @@ public class UrlServlet extends HttpServlet {
 
         request.setAttribute("isIOS", isIOS);
         request.setAttribute("isAndroid", isAndroid);
+        request.setAttribute("isPcScan", isPcScan);
 
         request.setAttribute("isWechat", isWechat);
         request.setAttribute("isWeibo", isWeibo);

@@ -14,4 +14,5 @@ public class JsRecordIdParams {
     public boolean is_valid_identityid;
     public String browser_fingerprint_id;
     public long deeplink_id;
+    public boolean is_pc_scan;
 }
