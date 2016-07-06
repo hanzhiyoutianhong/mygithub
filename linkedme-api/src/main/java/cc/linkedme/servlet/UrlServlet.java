@@ -425,6 +425,7 @@ public class UrlServlet extends HttpServlet {
         request.setAttribute("browserFingerprintId", browserFingerprintId);
         request.setAttribute("identityId", identityId);
         request.setAttribute("isValidIdentity", isValidIdentity);
+        request.setAttribute("liveTestFlag", Constants.LIVE_TEST_API_FLAG);
 
         request.setAttribute("DEBUG", DEBUG);
 

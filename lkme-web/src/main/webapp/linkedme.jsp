@@ -29,6 +29,7 @@
             browser_fingerprint_id: '${browserFingerprintId}',
             identity_id: '${identityId}',
             is_valid_identity: '${isValidIdentity}',
+            live_test_flag: '${liveTestFlag}',
 
             isIOS: function () {
                 return 'true' == '${isIOS}';
