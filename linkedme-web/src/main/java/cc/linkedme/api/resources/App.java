@@ -262,7 +262,7 @@ public class App {
             throw new LMException(LMExceptionFactor.LM_ILLEGAL_PARAM_VALUE, "img encoding is null");
         }
 
-        String basePath = Constants.LOGO_BASE_URL;
+        String basePath = Constants.LOGO_HTTPS_BASE_URL;
         String imageName = appService.uploadImg(appParams);
         if (Strings.isNullOrEmpty(imageName)) {
             throw new LMException(LMExceptionFactor.LM_SYS_ERROR, "upload img failed");

@@ -311,7 +311,7 @@ public class AppInfo implements Serializable {
         resultJson.append("app_id", app_id);
         resultJson.append("app_identifier", Base62.encode(app_id));
         resultJson.append("app_name", app_name);
-        resultJson.append("app_logo", Constants.LOGO_BASE_URL + app_id + Constants.APP_LOGO_IMG_TYPE);
+        resultJson.append("app_logo", Constants.LOGO_HTTPS_BASE_URL + app_id + Constants.APP_LOGO_IMG_TYPE);
         resultJson.append("lkme_key", app_key);
         resultJson.append("lkme_secret", app_secret);
         resultJson.append("link_setting", link_setting.flip());
