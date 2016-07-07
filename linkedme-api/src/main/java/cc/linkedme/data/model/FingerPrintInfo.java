@@ -10,6 +10,7 @@ public class FingerPrintInfo {
     private long identityId;
     private long newIdentityId;
     private int valid_status;
+    private int stage;
     private String currentTime;
 
     public int getId() {
@@ -58,6 +59,14 @@ public class FingerPrintInfo {
 
     public void setValid_status(int valid_status) {
         this.valid_status = valid_status;
+    }
+
+    public int getStage() {
+        return stage;
+    }
+
+    public void setStage(int stage) {
+        this.stage = stage;
     }
 
     public String getCurrentTime() {

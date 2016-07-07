@@ -24,7 +24,7 @@ public class FingerPrintServiceImpl implements FingerPrintService {
     private FingerPrintDao fingerPrintDao;
 
     public FingerPrintInfo getFingerPrint(FingerPrintInfo fingerPrintInfo) {
-        if(fingerPrintInfo == null ) {
+        if (fingerPrintInfo == null) {
             ApiLogger.error("FingerPrintDaoImpl.addFingerPrint fingerPrintInfo is null, get failed");
         }
 
@@ -33,26 +33,31 @@ public class FingerPrintServiceImpl implements FingerPrintService {
         return resultInfo;
     }
 
-    public int setValidStatus( FingerPrintInfo fingerPrintInfo, int val ) {
-        if( fingerPrintInfo.getId() <= 1 ) {
-            ApiLogger.error("Invalid FingerPrint id, update valid status failed" );
+    public int setValidStatus(FingerPrintInfo fingerPrintInfo, int val) {
+        if (fingerPrintInfo.getId() <= 1) {
+            ApiLogger.error("Invalid FingerPrint id, update valid status failed");
         }
-        return fingerPrintDao.setValidStatusById( fingerPrintInfo, val );
+        return fingerPrintDao.setValidStatusById(fingerPrintInfo, val);
     }
 
-    public int addFingerPrint(FingerPrintInfo fingerPrintInfo, int val) {
-        FingerPrintInfo existedFingerPrintInfo = getFingerPrint(fingerPrintInfo);
+    public int addFingerPrint(FingerPrintInfo fingerPrintInfo) {
+        FingerPrintInfo newFingerPrintInfo = fingerPrintInfo;
         if (fingerPrintInfo == null) {
             ApiLogger.error("FingerPrintDaoImpl.addFingerPrint fingerPrintInfo is null, add failed");
         }
         int result = 0;
-        if(existedFingerPrintInfo.getId() == -1 ) {
-            result += fingerPrintDao.addFingerPrint(fingerPrintInfo, val);
-        } else {
-            if(existedFingerPrintInfo.getValid_status() != val)
-                setValidStatus(existedFingerPrintInfo, val);
-            result = 1;
+
+        if (fingerPrintInfo.getStage() == 1) {
+            FingerPrintInfo existedFingerPrintInfo = getFingerPrint(fingerPrintInfo);
+            if (existedFingerPrintInfo.getId() == -1) {
+                result += fingerPrintDao.addFingerPrint(newFingerPrintInfo, 0);
+            } else {
+                if (existedFingerPrintInfo.getValid_status() != 0) result += setValidStatus(existedFingerPrintInfo, 0);
+            }
+            newFingerPrintInfo.setIdentityId(fingerPrintInfo.getNewIdentityId());
         }
+        result += fingerPrintDao.addFingerPrint(newFingerPrintInfo, 1);
+
         return result;
     }
 }

@@ -148,28 +148,20 @@ public class MsgMcqProcessor extends McqProcessor {
 
     private int processFingerPrintMsg(int type, JSONObject info) {
         int result = ApiUtil.MQ_PROCESS_ABORT;
-
+        FingerPrintInfo fingerPrintInfo = new FingerPrintInfo();
+        int stage = info.getInt("stage");
         if (type == 41) {
-            FingerPrintInfo fingerPrintInfo = new FingerPrintInfo();
             fingerPrintInfo.setDeviceId(info.getString("device_id"));
             fingerPrintInfo.setDeviceType(info.getInt("device_type"));
             fingerPrintInfo.setIdentityId(info.getLong("identity_id"));
             fingerPrintInfo.setCurrentTime(info.getString("current_time"));
-            result = addFingerPrint(fingerPrintInfo);
-        } else if (type == 42) {
-            FingerPrintInfo oldFingerPrintInfo = new FingerPrintInfo();
-            oldFingerPrintInfo.setDeviceId(info.getString("old_device_id"));
-            oldFingerPrintInfo.setDeviceType(info.getInt("old_device_type"));
-            oldFingerPrintInfo.setIdentityId(info.getLong("old_identity_id"));
-            oldFingerPrintInfo.setCurrentTime(info.getString("current_time"));
-
-            FingerPrintInfo newFingerPrintInfo = new FingerPrintInfo();
-            newFingerPrintInfo.setDeviceId(info.getString("new_device_id"));
-            newFingerPrintInfo.setDeviceType(info.getInt("new_device_type"));
-            newFingerPrintInfo.setIdentityId(info.getLong("new_identity_id"));
-            newFingerPrintInfo.setCurrentTime(info.getString("current_time"));
-            result += updateFingerPrint(oldFingerPrintInfo, newFingerPrintInfo);
+            fingerPrintInfo.setStage(stage);
+            if (stage == 1) {
+                fingerPrintInfo.setNewIdentityId(info.getLong("new_identity_id"));
+            }
+            result = updateFingerPrint(fingerPrintInfo);
         }
+
         return result;
     }
 
@@ -200,23 +192,12 @@ public class MsgMcqProcessor extends McqProcessor {
         return result;
     }
 
-    private int addFingerPrint(FingerPrintInfo fingerPrintInfo) {
+    private int updateFingerPrint(FingerPrintInfo fingerPrintInfo) {
         int result = 0;
         if (updateDb) {
-            result = fingerPrintService.addFingerPrint(fingerPrintInfo, 1);
-        }
-
-        if (updateMc) {
-
-        }
-        return result;
-    }
-
-    private int updateFingerPrint(FingerPrintInfo oldFingerPrintInfo, FingerPrintInfo newFingerPrintInfo) {
-        int result = 0;
-        if (updateDb) {
-            result += fingerPrintService.addFingerPrint(oldFingerPrintInfo, 0);
-            result += fingerPrintService.addFingerPrint(newFingerPrintInfo, 1);
+            if (fingerPrintInfo.getStage() != -1) {
+                result += fingerPrintService.addFingerPrint(fingerPrintInfo);
+            }
         }
 
         if (updateMc) {

@@ -162,12 +162,14 @@ public class LMSdkServiceImpl implements LMSdkService {
         long identityId = 0;
         long newIdentityId = 0;
         long deepLinkId = 0;
+        int stage = -1;
         DeepLink deepLink = null;
         String deviceFingerprintId = "d";
         String browserFingerprintId = "b";
         String installType = "other";
 
         if (Strings.isNullOrEmpty(identityIdStr)) { // 之前不存在<device, identityId>
+            stage = 0;
             // device_fingerprint_id 与 browse_fingerprint_id匹配逻辑
             deviceFingerprintId =
                     createFingerprintId(String.valueOf(appId), installParams.os, installParams.os_version, installParams.clientIP);
@@ -203,6 +205,7 @@ public class LMSdkServiceImpl implements LMSdkService {
                 deepLinkIdStr = dfpIdRedisClient.hget(deviceFingerprintId, "did");
 
                 if (identityIdStr != null && deepLinkIdStr != null) { // 匹配成功
+                    stage = 1;
                     newIdentityId = Long.parseLong(identityIdStr);
                     deepLinkId = Long.parseLong(deepLinkIdStr);
                     deepLink = deepLinkService.getDeepLinkInfo(deepLinkId, appId);
@@ -210,11 +213,13 @@ public class LMSdkServiceImpl implements LMSdkService {
                     if ((("ios".equals(installParams.os.trim().toLowerCase())) && (installParams.device_type == 24))
                             || (("android".equals(installParams.os.trim().toLowerCase())) && (installParams.device_type == 12))) {
                         clientRedisClient.sadd(deviceId + ".old", String.valueOf(identityId));
-                        clientRedisClient.set(deviceId, newIdentityId); // 更新<device_id, identity_id>
+                        clientRedisClient.set(deviceId, newIdentityId); // 更新<device_id,
+                                                                        // identity_id>
                         clientRedisClient.set(identityId + ".di", deviceId);
                     }
                 }
             } else { // 之前存在identityId, 并有identityId与deepLink的键值对
+                stage = -1;
                 deepLinkId = Long.parseLong(deepLinkIdStr);
                 deepLink = deepLinkService.getDeepLinkInfo(deepLinkId, appId);
             }
@@ -254,8 +259,11 @@ public class LMSdkServiceImpl implements LMSdkService {
         clientMsgPusher.addClient(clientInfo, fromDeepLinkId);
 
         // 写mcq,存储键值对
-        FingerPrintInfo fingerPrintInfo = toFingerPrintInfo(identityId, newIdentityId, deviceId, installParams.device_type);
-        fingerPrintMsgPusher.updateFingerPrint(fingerPrintInfo);
+        if ((("ios".equals(installParams.os.trim().toLowerCase())) && (installParams.device_type == 24))
+                || (("android".equals(installParams.os.trim().toLowerCase())) && (installParams.device_type == 12))) {
+            FingerPrintInfo fingerPrintInfo = toFingerPrintInfo(identityId, newIdentityId, deviceId, installParams.device_type, stage);
+            fingerPrintMsgPusher.updateFingerPrint(fingerPrintInfo);
+        }
 
 
         String sessionId = String.valueOf(System.currentTimeMillis());
@@ -280,7 +288,7 @@ public class LMSdkServiceImpl implements LMSdkService {
         return resultJson.toString();
     }
 
-    private FingerPrintInfo toFingerPrintInfo(long identityId, long newIdentityId, String deviceId, int deviceType) {
+    private FingerPrintInfo toFingerPrintInfo(long identityId, long newIdentityId, String deviceId, int deviceType, int stage) {
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
         Date currentTime = new Date();
 
@@ -290,6 +298,7 @@ public class LMSdkServiceImpl implements LMSdkService {
         fingerPrintInfo.setNewIdentityId(newIdentityId);
         fingerPrintInfo.setDeviceId(deviceId);
         fingerPrintInfo.setDeviceType(deviceType);
+        fingerPrintInfo.setStage(stage);
         return fingerPrintInfo;
     }
 
