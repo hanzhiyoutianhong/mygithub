@@ -157,7 +157,7 @@ public class MsgUtils {
     }
 
     public static boolean isFingerPrintType(int type) {
-        return (McqMsgType.ADD_FINGER_PRINT.getType() == type);
+        return (McqMsgType.UPDATE_FINGER_PRINT.getType() == type);
     }
 
 }
