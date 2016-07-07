@@ -254,9 +254,8 @@ public class LMSdkServiceImpl implements LMSdkService {
         clientMsgPusher.addClient(clientInfo, fromDeepLinkId);
 
         // 写mcq,存储键值对
-        FingerPrintInfo oldFingerPrintInfo = toFingerPrintInfo(identityId, deviceId, installParams.device_type);
-        FingerPrintInfo newFingerPrintInfo = toFingerPrintInfo(newIdentityId, deviceId, installParams.device_type);
-        fingerPrintMsgPusher.updateFingerPrint(oldFingerPrintInfo, newFingerPrintInfo);
+        FingerPrintInfo fingerPrintInfo = toFingerPrintInfo(identityId, newIdentityId, deviceId, installParams.device_type);
+        fingerPrintMsgPusher.updateFingerPrint(fingerPrintInfo);
 
 
         String sessionId = String.valueOf(System.currentTimeMillis());
@@ -281,13 +280,14 @@ public class LMSdkServiceImpl implements LMSdkService {
         return resultJson.toString();
     }
 
-    private FingerPrintInfo toFingerPrintInfo(long identityId, String deviceId, int deviceType) {
+    private FingerPrintInfo toFingerPrintInfo(long identityId, long newIdentityId, String deviceId, int deviceType) {
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
         Date currentTime = new Date();
 
         FingerPrintInfo fingerPrintInfo = new FingerPrintInfo();
         fingerPrintInfo.setCurrentTime(sdf.format(currentTime));
         fingerPrintInfo.setIdentityId(identityId);
+        fingerPrintInfo.setNewIdentityId(newIdentityId);
         fingerPrintInfo.setDeviceId(deviceId);
         fingerPrintInfo.setDeviceType(deviceType);
         return fingerPrintInfo;
