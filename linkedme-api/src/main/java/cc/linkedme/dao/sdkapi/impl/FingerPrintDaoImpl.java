@@ -1,5 +1,7 @@
 package cc.linkedme.dao.sdkapi.impl;
 
+import cc.linkedme.commons.exception.LMException;
+import cc.linkedme.commons.exception.LMExceptionFactor;
 import cc.linkedme.commons.log.ApiLogger;
 import cc.linkedme.commons.util.Util;
 import cc.linkedme.dao.BaseDao;
@@ -45,8 +47,8 @@ public class FingerPrintDaoImpl extends BaseDao implements FingerPrintDao {
                 }
             });
         } catch (DataAccessException e) {
-            ApiLogger.error("FingerPrintDaoImpl.getFingerPrint Database Access Error");
-            throw e;
+            ApiLogger.error("FingerPrintDaoImpl.getFingerPrint Database Access Error", e);
+            throw new LMException(LMExceptionFactor.LM_FAILURE_DB_OP);
         }
 
         return resultInfo;
@@ -67,8 +69,8 @@ public class FingerPrintDaoImpl extends BaseDao implements FingerPrintDao {
         try {
             result += tableChannel.getJdbcTemplate().update(tableChannel.getSql(), new Object[] {val, updateTime, identityId, deviceId, deviceType});
         } catch (DataAccessException e) {
-            ApiLogger.error("FingerPrintDaoImpl.setValidStatusById Database Access Error");
-            throw e;
+            ApiLogger.error("FingerPrintDaoImpl.setValidStatusById Database Access Error", e);
+            throw new LMException(LMExceptionFactor.LM_FAILURE_DB_OP);
         }
         return result;
     }
@@ -86,8 +88,8 @@ public class FingerPrintDaoImpl extends BaseDao implements FingerPrintDao {
         try {
             result += tableChannel.getJdbcTemplate().update(tableChannel.getSql(), new Object[] {deviceId, deviceType, identityId, currentTime, currentTime, val});
         } catch (DataAccessException e) {
-            ApiLogger.error("FingerPrintDaoImpl.addFingerPrint Database Access Error");
-            throw e;
+            ApiLogger.error("FingerPrintDaoImpl.addFingerPrint Database Access Error", e);
+            throw new LMException(LMExceptionFactor.LM_FAILURE_DB_OP);
         }
         return result;
     }
