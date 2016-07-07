@@ -259,11 +259,8 @@ public class LMSdkServiceImpl implements LMSdkService {
         clientMsgPusher.addClient(clientInfo, fromDeepLinkId);
 
         // 写mcq,存储键值对
-        if ((("ios".equals(installParams.os.trim().toLowerCase())) && (installParams.device_type == 24))
-                || (("android".equals(installParams.os.trim().toLowerCase())) && (installParams.device_type == 12))) {
-            FingerPrintInfo fingerPrintInfo = toFingerPrintInfo(identityId, newIdentityId, deviceId, installParams.device_type, stage);
-            fingerPrintMsgPusher.updateFingerPrint(fingerPrintInfo);
-        }
+        FingerPrintInfo fingerPrintInfo = toFingerPrintInfo(identityId, newIdentityId, deviceId, installParams.device_type, stage);
+        fingerPrintMsgPusher.updateFingerPrint(fingerPrintInfo);
 
 
         String sessionId = String.valueOf(System.currentTimeMillis());

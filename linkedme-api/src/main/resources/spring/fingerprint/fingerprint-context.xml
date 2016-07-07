@@ -36,7 +36,7 @@
                 <entry key="GET_FINGER_PRINT_INFO"
                        value="select * from $db$.$tb$ where identity_id = ? and device_id = ? and device_type = ?" />
                 <entry key="SET_VALID_STATUS"
-                       value="update $db$.$tb$ set valid_status = ?, update_time = ? where id = ?"/>
+                       value="update $db$.$tb$ set valid_status = ?, update_time = ? where identity_id = ? and device_id = ? and device_type = ?"/>
             </map>
         </property>
         <property name="jdbcTemplates">
