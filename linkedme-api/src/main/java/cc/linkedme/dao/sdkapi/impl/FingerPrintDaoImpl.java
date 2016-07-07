@@ -31,7 +31,7 @@ public class FingerPrintDaoImpl extends BaseDao implements FingerPrintDao {
         String deviceId = fingerPrintInfo.getDeviceId();
         int deviceType = fingerPrintInfo.getDeviceType();
 
-        TableChannel tableChannel = tableContainer.getTableChannel("fingerPrintInfo", GET_FINGER_PRINT_INFO, (long)Util.crc32(deviceId.getBytes()), (long)Util.crc32(deviceId.getBytes()));
+        TableChannel tableChannel = tableContainer.getTableChannel("fingerPrintInfo", GET_FINGER_PRINT_INFO, deviceId, deviceId);
 
         FingerPrintInfo resultInfo = new FingerPrintInfo();
 
@@ -64,7 +64,7 @@ public class FingerPrintDaoImpl extends BaseDao implements FingerPrintDao {
         int deviceType = fingerPrintInfo.getDeviceType();
         String deviceId = fingerPrintInfo.getDeviceId();
 
-        TableChannel tableChannel = tableContainer.getTableChannel("fingerPrintInfo", SET_VALID_STATUS, (long)Util.crc32(deviceId.getBytes()), (long)Util.crc32(deviceId.getBytes()));
+        TableChannel tableChannel = tableContainer.getTableChannel("fingerPrintInfo", SET_VALID_STATUS, deviceId, deviceId);
 
         try {
             result += tableChannel.getJdbcTemplate().update(tableChannel.getSql(), new Object[] {val, updateTime, identityId, deviceId, deviceType});
@@ -83,7 +83,7 @@ public class FingerPrintDaoImpl extends BaseDao implements FingerPrintDao {
         int deviceType = fingerPrintInfo.getDeviceType();
         String currentTime = fingerPrintInfo.getCurrentTime();
 
-        TableChannel tableChannel = tableContainer.getTableChannel("fingerPrintInfo", ADD_FINGER_PRINT_INFO, (long)Util.crc32(deviceId.getBytes()), (long)Util.crc32(deviceId.getBytes()));
+        TableChannel tableChannel = tableContainer.getTableChannel("fingerPrintInfo", ADD_FINGER_PRINT_INFO, deviceId, deviceId);
 
         try {
             result += tableChannel.getJdbcTemplate().update(tableChannel.getSql(), new Object[] {deviceId, deviceType, identityId, currentTime, currentTime, val});
