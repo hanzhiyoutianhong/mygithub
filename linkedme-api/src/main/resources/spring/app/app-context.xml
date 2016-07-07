@@ -43,7 +43,7 @@
 
                 <entry key="GET_IMG" value="select app_logo from $db$.$tb$ where id = ? and user_id = ?"/>
 
-                <entry key="VALIDATE_APP_NAME" value="select id from $db$.$tb$ where user_id = ? and app_name = ?"/>
+                <entry key="VALIDATE_APP_NAME" value="select id from $db$.$tb$ where user_id = ? and app_name = ? and valid_status = '1'"/>
             </map>
         </property>
         <property name="jdbcTemplates">
