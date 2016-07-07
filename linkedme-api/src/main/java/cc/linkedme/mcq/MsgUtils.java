@@ -51,7 +51,7 @@ public class MsgUtils {
         info.append("identity_id", fingerPrintInfo.getIdentityId());
         info.append("stage", fingerPrintInfo.getStage());
         info.append("current_time", fingerPrintInfo.getCurrentTime());
-        if (fingerPrintInfo.getStage() == 1) {
+        if (fingerPrintInfo.getStage() == FingerPrintInfo.ADD_FINGERPRINT_INFO) {
             info.append("new_identity_id", fingerPrintInfo.getNewIdentityId());
         }
 

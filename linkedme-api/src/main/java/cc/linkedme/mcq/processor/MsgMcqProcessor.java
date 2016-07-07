@@ -195,7 +195,7 @@ public class MsgMcqProcessor extends McqProcessor {
     private int updateFingerPrint(FingerPrintInfo fingerPrintInfo) {
         int result = 0;
         if (updateDb) {
-            if (fingerPrintInfo.getStage() != -1) {
+            if (fingerPrintInfo.getStage() != FingerPrintInfo.NO_OPTIONS) {
                 result += fingerPrintService.addFingerPrint(fingerPrintInfo);
             }
         }

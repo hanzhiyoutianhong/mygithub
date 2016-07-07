@@ -47,12 +47,14 @@ public class FingerPrintServiceImpl implements FingerPrintService {
         }
         int result = 0;
 
-        if (fingerPrintInfo.getStage() == 1) {
+        if (fingerPrintInfo.getStage() == FingerPrintInfo.UPDATE_FINGERPRINT_INFO) {
             FingerPrintInfo existedFingerPrintInfo = getFingerPrint(fingerPrintInfo);
             if (existedFingerPrintInfo.getId() == -1) {
                 result += fingerPrintDao.addFingerPrint(newFingerPrintInfo, 0);
             } else {
-                if (existedFingerPrintInfo.getValid_status() != 0) result += setValidStatus(existedFingerPrintInfo, 0);
+                if (existedFingerPrintInfo.getValid_status() != 0) {
+                    result += setValidStatus(existedFingerPrintInfo, 0);
+                }
             }
             newFingerPrintInfo.setIdentityId(fingerPrintInfo.getNewIdentityId());
         }

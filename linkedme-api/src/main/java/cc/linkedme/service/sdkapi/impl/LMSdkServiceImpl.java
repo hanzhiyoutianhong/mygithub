@@ -169,7 +169,7 @@ public class LMSdkServiceImpl implements LMSdkService {
         String installType = "other";
 
         if (Strings.isNullOrEmpty(identityIdStr)) { // 之前不存在<device, identityId>
-            stage = 0;
+            stage = FingerPrintInfo.ADD_FINGERPRINT_INFO;
             // device_fingerprint_id 与 browse_fingerprint_id匹配逻辑
             deviceFingerprintId =
                     createFingerprintId(String.valueOf(appId), installParams.os, installParams.os_version, installParams.clientIP);
@@ -205,7 +205,7 @@ public class LMSdkServiceImpl implements LMSdkService {
                 deepLinkIdStr = dfpIdRedisClient.hget(deviceFingerprintId, "did");
 
                 if (identityIdStr != null && deepLinkIdStr != null) { // 匹配成功
-                    stage = 1;
+                    stage = FingerPrintInfo.UPDATE_FINGERPRINT_INFO;
                     newIdentityId = Long.parseLong(identityIdStr);
                     deepLinkId = Long.parseLong(deepLinkIdStr);
                     deepLink = deepLinkService.getDeepLinkInfo(deepLinkId, appId);
@@ -219,7 +219,7 @@ public class LMSdkServiceImpl implements LMSdkService {
                     }
                 }
             } else { // 之前存在identityId, 并有identityId与deepLink的键值对
-                stage = -1;
+                stage = FingerPrintInfo.NO_OPTIONS;
                 deepLinkId = Long.parseLong(deepLinkIdStr);
                 deepLink = deepLinkService.getDeepLinkInfo(deepLinkId, appId);
             }

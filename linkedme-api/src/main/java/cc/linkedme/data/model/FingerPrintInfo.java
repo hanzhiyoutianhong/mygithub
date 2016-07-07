@@ -4,6 +4,10 @@ package cc.linkedme.data.model;
  * Created by vontroy on 16-7-4.
  */
 public class FingerPrintInfo {
+    public final static int ADD_FINGERPRINT_INFO = 0;
+    public final static int UPDATE_FINGERPRINT_INFO = 1;
+    public final static int NO_OPTIONS = -1;
+
     private int id = -1;
     private String deviceId;
     private int deviceType;
