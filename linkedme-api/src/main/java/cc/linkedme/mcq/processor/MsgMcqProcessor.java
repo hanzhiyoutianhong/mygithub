@@ -9,9 +9,11 @@ import cc.linkedme.commons.util.UseTimeStasticsMonitor;
 import cc.linkedme.data.model.ClientInfo;
 import cc.linkedme.data.model.DeepLink;
 import cc.linkedme.data.model.DeepLinkDateCount;
+import cc.linkedme.data.model.FingerPrintInfo;
 import cc.linkedme.mcq.MsgUtils;
 import cc.linkedme.service.DeepLinkService;
 import cc.linkedme.service.sdkapi.ClientService;
+import cc.linkedme.service.sdkapi.FingerPrintService;
 import net.sf.json.JSONObject;
 
 import javax.annotation.Resource;
@@ -42,6 +44,9 @@ public class MsgMcqProcessor extends McqProcessor {
 
     @Resource
     private ClientService clientService;
+
+    @Resource
+    private FingerPrintService fingerPrintService;
 
 
     // 处理收到的消息
@@ -91,6 +96,8 @@ public class MsgMcqProcessor extends McqProcessor {
             } else {
                 result = ApiUtil.MQ_PROCESS_DEGRADATION;
             }
+        } else if (MsgUtils.isFingerPrintType(type)) {
+            result = processFingerPrintMsg(type, info);
         }
         return result;
     }
@@ -139,6 +146,25 @@ public class MsgMcqProcessor extends McqProcessor {
         return result;
     }
 
+    private int processFingerPrintMsg(int type, JSONObject info) {
+        int result = ApiUtil.MQ_PROCESS_ABORT;
+        FingerPrintInfo fingerPrintInfo = new FingerPrintInfo();
+        int stage = info.getInt("stage");
+        if (type == 41) {
+            fingerPrintInfo.setDeviceId(info.getString("device_id"));
+            fingerPrintInfo.setDeviceType(info.getInt("device_type"));
+            fingerPrintInfo.setIdentityId(info.getLong("identity_id"));
+            fingerPrintInfo.setCurrentTime(info.getString("current_time"));
+            fingerPrintInfo.setStage(stage);
+            if (stage == 1) {
+                fingerPrintInfo.setNewIdentityId(info.getLong("new_identity_id"));
+            }
+            result = updateFingerPrint(fingerPrintInfo);
+        }
+
+        return result;
+    }
+
     private int addDeepLink(DeepLink deepLink) {
         int result = 0;
         if (updateDb) {
@@ -160,6 +186,20 @@ public class MsgMcqProcessor extends McqProcessor {
         if (updateDb) {
             result = clientService.addClient(clientInfo, deepLinkId);
         }
+        if (updateMc) {
+
+        }
+        return result;
+    }
+
+    private int updateFingerPrint(FingerPrintInfo fingerPrintInfo) {
+        int result = 0;
+        if (updateDb) {
+            if (fingerPrintInfo.getStage() != FingerPrintInfo.NO_OPTIONS) {
+                result += fingerPrintService.addFingerPrint(fingerPrintInfo);
+            }
+        }
+
         if (updateMc) {
 
         }

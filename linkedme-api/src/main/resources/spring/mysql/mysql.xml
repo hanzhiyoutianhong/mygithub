@@ -264,4 +264,25 @@
             </list>
         </property>
     </bean>
+
+    <!-- ########### fingerPrint mysql ###########-->
+    <wfc:mysql id="finger_print_0_m" parent="dataSource"
+               strategy="master">
+        <property name="jdbcUrl" value="${finger_print.datasource.master_0.jdbcUrl}"/>
+    </wfc:mysql>
+    <wfc:mysql id="finger_print_0_s" parent="dataSource"
+               strategy="slave">
+        <property name="jdbcUrl" value="${finger_print.datasource.slave_0.jdbcUrl}"/>
+    </wfc:mysql>
+
+    <bean id="finger_print_jdbctemplate_0" class="cc.linkedme.data.dao.util.JdbcTemplate">
+        <property name="dataSource">
+            <ref bean="finger_print_0_m"/>
+        </property>
+        <property name="dataSourceSlaves">
+            <list>
+                <ref bean="finger_print_0_s"/>
+            </list>
+        </property>
+    </bean>
 </beans>

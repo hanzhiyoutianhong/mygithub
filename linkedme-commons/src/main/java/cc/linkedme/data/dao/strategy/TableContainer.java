@@ -5,6 +5,7 @@ import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.atomic.AtomicLong;
 
+import cc.linkedme.commons.util.Util;
 import org.apache.commons.collections.MapUtils;
 
 import cc.linkedme.data.dao.util.JdbcTemplate;
@@ -31,6 +32,12 @@ public class TableContainer {
 
     public void setTablesItems(Map<String, TableItem> tablesItems) {
         this.tablesItems = tablesItems;
+    }
+
+    public TableChannel getTableChannel(String tableItemName, String sqlName, String dbStrategyId, String tableStrategyId) {
+        TableChannel channel = getTableChannel(tableItemName, sqlName, (long) Util.crc32(dbStrategyId.getBytes()), (long)Util.crc32(tableStrategyId.getBytes()));
+
+        return channel;
     }
 
     public TableChannel getTableChannel(String tableItemName, String sqlName, Long dbStrategyId, Long tableStrategyId) {

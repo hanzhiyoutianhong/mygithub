@@ -226,6 +226,7 @@ public class UrlServlet extends HttpServlet {
                     response.sendRedirect(formatCustomUrl(url));
                     clickCount(deepLinkId, appId, countType);
                     recordClickIntoProfile(start, countType);
+                    clickCount(deepLinkId, appId, countType);
                     return;
                 }
 
@@ -273,6 +274,7 @@ public class UrlServlet extends HttpServlet {
                     response.sendRedirect(formatCustomUrl(url));
                     clickCount(deepLinkId, appId, countType);
                     recordClickIntoProfile(start, countType);
+                    clickCount(deepLinkId, appId, countType);
                     return;
                 }
             }
