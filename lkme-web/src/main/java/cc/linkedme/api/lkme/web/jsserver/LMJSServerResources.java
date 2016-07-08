@@ -59,6 +59,7 @@ public class LMJSServerResources {
                            @FormParam("is_valid_identityid") boolean is_valid_identityid,
                            @FormParam("browser_fingerprint_id") String browser_fingerprint_id,
                            @FormParam("deeplink_id") long deeplink_id,
+                           @FormParam("is_pc_scan") boolean is_pc_scan,
                            @Context HttpServletRequest request) {
 
         JsRecordIdParams jsRecordIdParams = new JsRecordIdParams();
@@ -66,6 +67,7 @@ public class LMJSServerResources {
         jsRecordIdParams.is_valid_identityid = is_valid_identityid;
         jsRecordIdParams.browser_fingerprint_id = browser_fingerprint_id;
         jsRecordIdParams.deeplink_id = deeplink_id;
+        jsRecordIdParams.is_pc_scan = is_pc_scan;
         jsService.recordId(jsRecordIdParams);
 
         String clientIP = request.getHeader("x-forwarded-for");
