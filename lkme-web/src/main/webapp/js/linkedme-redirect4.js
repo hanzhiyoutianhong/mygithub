@@ -24,7 +24,8 @@ var lkmeAction = {
             identity_id: Params.identity_id,
             is_valid_identityid: Params.is_valid_identity,
             browser_fingerprint_id: Params.browser_fingerprint_id,
-            deeplink_id: Params.deeplink_id
+            deeplink_id: Params.deeplink_id,
+            is_pc_scan: Params.is_pc_scan
         };
         $.ajax({
             method: "POST",

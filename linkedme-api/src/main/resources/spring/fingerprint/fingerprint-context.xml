@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:schemaLocation="
+       http://www.springframework.org/schema/beans
+       http://www.springframework.org/schema/beans/spring-beans.xsd ">
+
+
+
+    <bean id="fingerprintService" class="cc.linkedme.service.sdkapi.impl.FingerPrintServiceImpl" />
+    <bean id="fingerPrintMsgPusher" class="cc.linkedme.mcq.FingerPrintMsgPusher"/>
+
+    <bean id="FingerPrintDao" class="cc.linkedme.dao.sdkapi.impl.FingerPrintDaoImpl">
+        <property name="tableContainer">
+            <bean class="cc.linkedme.data.dao.strategy.TableContainer">
+                <property name="tablesItems">
+                    <map>
+                        <entry key="fingerPrintInfo" value-ref="fingerPrintInfo"/>
+                    </map>
+                </property>
+            </bean>
+        </property>
+    </bean>
+
+    <bean id="fingerPrintInfo" class="cc.linkedme.data.dao.strategy.TableItem">
+        <property name="itemName" value="fingerPrintInfo"/>
+        <property name="dbNamePrefix" value="fingerprint"/>
+        <property name="dbCount" value="4"/>
+
+        <property name="tableNamePrefix" value="fingerprint_info"/>
+        <property name="tableCount" value="8"/>
+        <property name="sqls">
+            <map>
+                <entry key="ADD_FINGER_PRINT_INFO"
+                       value="insert into $db$.$tb$ (device_id, device_type, identity_id, create_time, update_time, valid_status) values(?, ?, ?, ?, ?, ?)"/>
+                <entry key="GET_FINGER_PRINT_INFO"
+                       value="select * from $db$.$tb$ where identity_id = ? and device_id = ? and device_type = ?" />
+                <entry key="SET_VALID_STATUS"
+                       value="update $db$.$tb$ set valid_status = ?, update_time = ? where identity_id = ? and device_id = ? and device_type = ?"/>
+            </map>
+        </property>
+        <property name="jdbcTemplates">
+            <list>
+                <ref bean="finger_print_jdbctemplate_0"/>
+            </list>
+        </property>
+    </bean>
+    <bean id="lmSdkService" class="cc.linkedme.service.sdkapi.impl.LMSdkServiceImpl" />
+
+</beans>

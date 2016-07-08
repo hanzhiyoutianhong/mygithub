@@ -59,7 +59,7 @@ public class LMSdkResources {
         }
 
         WebInitParams webInitParams = new WebInitParams();
-        webInitParams.setLinkedmeKey(linkedmeKey);
+        webInitParams.setLinkedmeKey(Util.formatLinkedmeKey(linkedmeKey));
         webInitParams.setIdentityId(identityId);
 
         String clientIP = request.getHeader("x-forwarded-for");
@@ -85,7 +85,7 @@ public class LMSdkResources {
 
         String clientIP = request.getHeader("x-forwarded-for");
         WebCloseParams webCloseParams = new WebCloseParams();
-        webCloseParams.setLinkedmeKey(linkedmeKey);
+        webCloseParams.setLinkedmeKey(Util.formatLinkedmeKey(linkedmeKey));
         webCloseParams.setSessionId(sessionId);
         webCloseParams.setIdentityId(identityId);
         webCloseParams.setTimestamp(timestamp);
@@ -445,7 +445,7 @@ public class LMSdkResources {
             appListInfo.setOs(jsonObject.get("os").toString());
             appListInfo.setSdkVersion(appListParams.sdk_version);
             appListInfo.setRetryTimes(appListParams.retry_times);
-            appListInfo.setLinkedmeKey(appListParams.linkedme_key);
+            appListInfo.setLinkedmeKey(Util.formatLinkedmeKey(appListParams.linkedme_key));
             appListInfo.setSign(appListParams.sign);
 
             appListInfos.add(appListInfo);

@@ -103,7 +103,8 @@ public class UrlServlet extends HttpServlet {
         // eg, https://lkme.cc/hafzh/fhza80af?scan=0; appId, deeplinkId;
         String uri = request.getRequestURI();
         String urlScanParam = request.getParameter("scan");
-
+        boolean isPcScan = "1".equals(urlScanParam);
+        
         String[] uriArr = uri.split("/");
         if (uriArr.length < 3) {
             response.sendRedirect("/deeplink_error.jsp"); // TODO 重定向为默认配置页面
@@ -226,6 +227,7 @@ public class UrlServlet extends HttpServlet {
                     response.sendRedirect(formatCustomUrl(url));
                     clickCount(deepLinkId, appId, countType);
                     recordClickIntoProfile(start, countType);
+                    clickCount(deepLinkId, appId, countType);
                     return;
                 }
 
@@ -273,6 +275,7 @@ public class UrlServlet extends HttpServlet {
                     response.sendRedirect(formatCustomUrl(url));
                     clickCount(deepLinkId, appId, countType);
                     recordClickIntoProfile(start, countType);
+                    clickCount(deepLinkId, appId, countType);
                     return;
                 }
             }
@@ -381,7 +384,7 @@ public class UrlServlet extends HttpServlet {
         request.setAttribute("Pkg", appInfo.getAndroid_package_name());
         request.setAttribute("BundleID", appInfo.getIos_bundle_id());
         request.setAttribute("AppID", appId);
-        request.setAttribute("IconUrl", Constants.LOGO_BASE_URL + appId + Constants.APP_LOGO_IMG_TYPE);
+        request.setAttribute("IconUrl", Constants.LOGO_HTTP_BASE_URL + appId + Constants.APP_LOGO_IMG_TYPE);
         request.setAttribute("Url", url);
         request.setAttribute("Match_id", uriArr[2]);
 
@@ -403,6 +406,7 @@ public class UrlServlet extends HttpServlet {
 
         request.setAttribute("isIOS", isIOS);
         request.setAttribute("isAndroid", isAndroid);
+        request.setAttribute("isPcScan", isPcScan);
 
         request.setAttribute("isWechat", isWechat);
         request.setAttribute("isWeibo", isWeibo);

@@ -2,6 +2,8 @@ package cc.linkedme.service.sdkapi.impl;
 
 import javax.annotation.Resource;
 
+import org.apache.commons.lang3.StringUtils;
+
 import cc.linkedme.commons.log.ApiLogger;
 import cc.linkedme.commons.redis.JedisPort;
 import cc.linkedme.commons.shard.ShardingSupportHash;
@@ -17,6 +19,7 @@ import cc.linkedme.dao.sdkapi.ClientDao;
 import cc.linkedme.data.model.ClientInfo;
 import cc.linkedme.data.model.DeepLink;
 import cc.linkedme.data.model.DeepLinkCount;
+import cc.linkedme.data.model.FingerPrintInfo;
 import cc.linkedme.data.model.params.CloseParams;
 import cc.linkedme.data.model.params.InstallParams;
 import cc.linkedme.data.model.params.OpenParams;
@@ -28,14 +31,15 @@ import cc.linkedme.exception.LMException;
 import cc.linkedme.exception.LMExceptionFactor;
 import cc.linkedme.mcq.ClientMsgPusher;
 import cc.linkedme.mcq.DeepLinkMsgPusher;
+import cc.linkedme.mcq.FingerPrintMsgPusher;
 import cc.linkedme.service.DeepLinkService;
 import cc.linkedme.service.sdkapi.LMSdkService;
 
 import com.google.common.base.Joiner;
 import com.google.common.base.Strings;
+
 import net.sf.json.JSONArray;
 import net.sf.json.JSONObject;
-import org.apache.commons.lang.StringUtils;
 
 import java.net.URI;
 import java.text.SimpleDateFormat;
@@ -60,6 +64,9 @@ public class LMSdkServiceImpl implements LMSdkService {
 
     @Resource
     private ClientMsgPusher clientMsgPusher;
+
+    @Resource
+    private FingerPrintMsgPusher fingerPrintMsgPusher;
 
     @Resource
     private ShardingSupportHash<JedisPort> deepLinkShardingSupport;
@@ -150,18 +157,22 @@ public class LMSdkServiceImpl implements LMSdkService {
         if (appIdStr != null) {
             appId = Long.parseLong(appIdStr);
         }
+        String scanPrefix = "";
 
         String deviceId = installParams.device_id;
         JedisPort clientRedisClient = clientShardingSupport.getClient(deviceId);
         String identityIdStr = clientRedisClient.get(deviceId);
         long identityId = 0;
+        long newIdentityId = 0;
         long deepLinkId = 0;
+        int stage = -1;
         DeepLink deepLink = null;
         String deviceFingerprintId = "d";
         String browserFingerprintId = "b";
         String installType = "other";
 
         if (Strings.isNullOrEmpty(identityIdStr)) { // 之前不存在<device, identityId>
+            stage = FingerPrintInfo.ADD_FINGERPRINT_INFO;
             // device_fingerprint_id 与 browse_fingerprint_id匹配逻辑
             deviceFingerprintId =
                     createFingerprintId(String.valueOf(appId), installParams.os, installParams.os_version, installParams.clientIP);
@@ -197,20 +208,30 @@ public class LMSdkServiceImpl implements LMSdkService {
                 deepLinkIdStr = dfpIdRedisClient.hget(deviceFingerprintId, "did");
 
                 if (identityIdStr != null && deepLinkIdStr != null) { // 匹配成功
-                    identityId = Long.parseLong(identityIdStr);
+                    stage = FingerPrintInfo.UPDATE_FINGERPRINT_INFO;
+                    newIdentityId = Long.parseLong(identityIdStr);
                     deepLinkId = Long.parseLong(deepLinkIdStr);
                     deepLink = deepLinkService.getDeepLinkInfo(deepLinkId, appId);
 
                     if ((("ios".equals(installParams.os.trim().toLowerCase())) && (installParams.device_type == 24))
                             || (("android".equals(installParams.os.trim().toLowerCase())) && (installParams.device_type == 12))) {
                         clientRedisClient.sadd(deviceId + ".old", String.valueOf(identityId));
-                        clientRedisClient.set(deviceId, identityId); // 更新<device_id, identity_id>
+                        clientRedisClient.set(deviceId, newIdentityId); // 更新<device_id,
+                                                                        // identity_id>
                         clientRedisClient.set(identityId + ".di", deviceId);
                     }
                 }
             } else { // 之前存在identityId, 并有identityId与deepLink的键值对
+                stage = FingerPrintInfo.NO_OPTIONS;
                 deepLinkId = Long.parseLong(deepLinkIdStr);
                 deepLink = deepLinkService.getDeepLinkInfo(deepLinkId, appId);
+                
+                if(identityRedisClient.exists(identityIdStr + ".scan")){
+                    scanPrefix = "pc_";
+                }
+                
+                //清理redis中对应的identityId.dpi和identityId.scan
+                identityRedisClient.del(identityIdStr + ".dpi", identityIdStr + ".scan");
             }
         }
 
@@ -221,9 +242,13 @@ public class LMSdkServiceImpl implements LMSdkService {
             params = "";
         } else {
             browserFingerprintId = deviceFingerprintId;
-            installType = DeepLinkCount.getCountTypeFromOs(installParams.os, "install");
-
-            final String type = DeepLinkCount.getCountTypeFromOs(clientInfo.getOs(), "install");
+            
+            JedisPort dfpIdRedisClient = clientShardingSupport.getClient(deviceFingerprintId);
+            if(StringUtils.isBlank(scanPrefix) && dfpIdRedisClient.hexists(deviceFingerprintId, "scan")){
+                scanPrefix = "pc_";
+            }
+            installType = scanPrefix + DeepLinkCount.getCountTypeFromOs(installParams.os, "install");
+            final String type = scanPrefix + DeepLinkCount.getCountTypeFromOs(clientInfo.getOs(), "install");
 
             String date = Util.getCurrDate();
             deepLinkMsgPusher.addDeepLinkCount(deepLinkId, (int) appId, date, type);
@@ -247,6 +272,11 @@ public class LMSdkServiceImpl implements LMSdkService {
         clientInfo.setIdentityId(identityId);
         clientMsgPusher.addClient(clientInfo, fromDeepLinkId);
 
+        // 写mcq,存储键值对
+        FingerPrintInfo fingerPrintInfo = toFingerPrintInfo(identityId, newIdentityId, deviceId, installParams.device_type, stage);
+        fingerPrintMsgPusher.updateFingerPrint(fingerPrintInfo);
+
+
         String sessionId = String.valueOf(System.currentTimeMillis());
         JSONObject resultJson = new JSONObject();
         resultJson.put("session_id", sessionId);
@@ -267,6 +297,20 @@ public class LMSdkServiceImpl implements LMSdkService {
                 installParams.sdk_version, log.toString()));
 
         return resultJson.toString();
+    }
+
+    private FingerPrintInfo toFingerPrintInfo(long identityId, long newIdentityId, String deviceId, int deviceType, int stage) {
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        Date currentTime = new Date();
+
+        FingerPrintInfo fingerPrintInfo = new FingerPrintInfo();
+        fingerPrintInfo.setCurrentTime(sdf.format(currentTime));
+        fingerPrintInfo.setIdentityId(identityId);
+        fingerPrintInfo.setNewIdentityId(newIdentityId);
+        fingerPrintInfo.setDeviceId(deviceId);
+        fingerPrintInfo.setDeviceType(deviceType);
+        fingerPrintInfo.setStage(stage);
+        return fingerPrintInfo;
     }
 
     private static String createFingerprintId(String appId, String os, String os_version, String clientIP) {
@@ -580,6 +624,5 @@ public class LMSdkServiceImpl implements LMSdkService {
         }
 
     }
-
 
 }
