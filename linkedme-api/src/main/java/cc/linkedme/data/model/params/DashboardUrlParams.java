@@ -4,7 +4,8 @@ import javax.xml.bind.annotation.XmlRootElement;
 
 import net.sf.json.JSONObject;
 
-import org.codehaus.jackson.annotate.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+
 
 /**
  * Created by LinkedME01 on 16/3/23.
