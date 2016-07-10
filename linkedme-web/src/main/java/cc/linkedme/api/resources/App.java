@@ -51,7 +51,6 @@ public class App {
     @Path("/create_app")
     @POST
     @Produces(MediaType.APPLICATION_JSON)
-
     public String createApp(AppParams appParam, @Context HttpServletRequest request) {
         if (appParam.user_id <= 0) {
             throw new LMException(LMExceptionFactor.LM_ILLEGAL_PARAM_VALUE, "invalid user id");

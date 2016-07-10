@@ -1,17 +1,18 @@
 package cc.linkedme.data.model.params;
 
-import net.sf.json.JSONObject;
-import org.codehaus.jackson.annotate.JsonIgnoreProperties;
-
 import javax.xml.bind.annotation.XmlRootElement;
+
+import net.sf.json.JSONObject;
+
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 /**
  * Created by LinkedME01 on 16/3/18.
  */
-
 @XmlRootElement
-@JsonIgnoreProperties(ignoreUnknown = true)
+@JsonIgnoreProperties(ignoreUnknown=true)
 public class AppParams {
+    
     public long app_id;
     public long user_id;
     public String app_name;
@@ -315,4 +316,5 @@ public class AppParams {
     public void setApp_logo(String app_logo) {
         this.app_logo = app_logo;
     }
+    
 }
