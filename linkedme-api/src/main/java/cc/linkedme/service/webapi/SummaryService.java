@@ -64,11 +64,11 @@ public class SummaryService {
     public String getDeepLinksHistoryCounts(SummaryDeepLinkParams summaryDeepLinkParams) {
 
         List<DeepLinkDateCount> deepLinkDateCountList = new ArrayList<>();
-        ArrayList<DateDuration> durations = Util.getBetweenMonths(summaryDeepLinkParams.startDate,summaryDeepLinkParams.endDate);
+        ArrayList<DateDuration> durations = Util.getBetweenMonths(summaryDeepLinkParams.startDate, summaryDeepLinkParams.endDate);
 
-        for(DateDuration d : durations){
-            deepLinkDateCountList.addAll(deepLinkDateCountDao.getDeepLinksDateCounts(summaryDeepLinkParams.appid,
-                    d.getMin_date(), d.getMax_date()));
+        for (DateDuration d : durations) {
+            deepLinkDateCountList
+                    .addAll(deepLinkDateCountDao.getDeepLinksDateCounts(summaryDeepLinkParams.appid, d.getMin_date(), d.getMax_date()));
         }
 
         // 获取今天有计数的短链
@@ -129,8 +129,8 @@ public class SummaryService {
 
         List<DeepLinkDateCount> deepLinkDateCountList = new ArrayList<>();
 
-        ArrayList<DateDuration> durations = Util.getBetweenMonths(summaryDeepLinkParams.startDate,summaryDeepLinkParams.endDate);
-        for(DateDuration d : durations){
+        ArrayList<DateDuration> durations = Util.getBetweenMonths(summaryDeepLinkParams.startDate, summaryDeepLinkParams.endDate);
+        for (DateDuration d : durations) {
             deepLinkDateCountList.addAll(deepLinkDateCountDao.getDeepLinkDateCount(summaryDeepLinkParams.appid,
                     summaryDeepLinkParams.deepLinkId, d.getMin_date(), d.getMax_date()));
         }
@@ -177,10 +177,10 @@ public class SummaryService {
             }
             List<DeepLinkDateCount> allDeepLinkDateCount = new ArrayList<>(deepLinkIds.length);
 
-            ArrayList<DateDuration> durations = Util.getBetweenMonths(startDate,endDate);
-            for(DateDuration d : durations){
-                allDeepLinkDateCount.addAll(deepLinkDateCountDao.getDeepLinkDateCount(appId, Long.parseLong(deepLinkId),
-                        d.getMin_date(), d.getMax_date()));
+            ArrayList<DateDuration> durations = Util.getBetweenMonths(startDate, endDate);
+            for (DateDuration d : durations) {
+                allDeepLinkDateCount.addAll(
+                        deepLinkDateCountDao.getDeepLinkDateCount(appId, Long.parseLong(deepLinkId), d.getMin_date(), d.getMax_date()));
             }
 
             for (DeepLinkDateCount deepLinkDateCount : allDeepLinkDateCount) {
@@ -641,8 +641,12 @@ public class SummaryService {
         if (dplCountMap.get(DeepLinkCount.CountType.pc_adr_open.toString()) != null) {
             dplc.setPc_adr_open(Integer.parseInt(dplCountMap.get(DeepLinkCount.CountType.pc_adr_open.toString())));
         }
-        // dplc.setPc_ios_install(dplCountMap.get(DeepLinkCount.CountType.pc_ios_install));
-        // dplc.setPc_adr_install(dplCountMap.get(DeepLinkCount.CountType.pc_adr_install));
+        if (dplCountMap.get(DeepLinkCount.CountType.pc_ios_install.toString()) != null) {
+            dplc.setPc_ios_install(Integer.parseInt(dplCountMap.get(DeepLinkCount.CountType.pc_ios_install.toString())));
+        }
+        if (dplCountMap.get(DeepLinkCount.CountType.pc_adr_install.toString()) != null) {
+            dplc.setPc_adr_install(Integer.parseInt(dplCountMap.get(DeepLinkCount.CountType.pc_adr_install.toString())));
+        }
     }
 
     public String getButtonsIncome(SummaryButtonParams summaryButtonParams) {

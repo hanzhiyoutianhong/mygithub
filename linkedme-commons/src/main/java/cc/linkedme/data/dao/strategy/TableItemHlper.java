@@ -4,6 +4,7 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
+import cc.linkedme.commons.util.Base62;
 import org.apache.commons.lang.ArrayUtils;
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.lang.time.DateFormatUtils;
@@ -251,7 +252,9 @@ public final class TableItemHlper {
         calIndex(5553290834L);
 
         // 根据appID和deepLinkId得到deeplink具体的库和表
-        System.out.println(getDbTable(10170, 3413620637564930L, "deeplink"));
+        System.out.println(getDbTable(10229, 3447411577978882L, "deeplink"));
+        System.out.println(Base62.decode("zeC"));
+        System.out.println(Base62.decode("UuZVEcvm7"));
         // 根据identityId得到client具体的库和表
         System.out.println(getDbTable(3368955058323458L, 3368955058323458L, "client"));
     }

@@ -4,7 +4,7 @@ var lkmeAction = {
     recordJsUserClickEventUrl: "/" + Params.live_test_flag + "/js/record_click_event",
     destination: {
         iOSScheme: "dst_ios_scheme",
-        iOSUniversalLink: "dst_ios_universe_links",
+        iOSUniversalLink: "dst_ios_universal_links",
         iOSBrowser: "dst_ios_{browserName}_browser",
         androidBrowser: "dst_android_{browserName}_browser",
         androidCannotForward: "dst_android_cannot_forward_goto_app_{dest}",
