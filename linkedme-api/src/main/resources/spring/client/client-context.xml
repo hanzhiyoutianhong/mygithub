@@ -9,6 +9,7 @@
     <bean id="clientMsgPusher" class="cc.linkedme.mcq.ClientMsgPusher" />
     <bean id="clientService" class="cc.linkedme.service.sdkapi.impl.ClientServiceImpl" />
 
+
     <bean id="clientDao" class="cc.linkedme.dao.sdkapi.impl.ClientDaoImpl">
         <property name="tableContainer">
             <bean class="cc.linkedme.data.dao.strategy.TableContainer">

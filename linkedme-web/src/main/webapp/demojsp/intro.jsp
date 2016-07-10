@@ -12,22 +12,7 @@
     <meta charset="utf-8" />
     <link href="<%=basePath %>demoh5/CSS/LinkedMe.css" rel="stylesheet" />
     <meta name="viewport" content="initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no">
-    <script>
-        linkedme.init("linkedme_test_7e289a2484f4368dbafbd1e5c7d06903", null, null);
-        var data = {};
-        data.params = "{'control':'LinkedME','View':'Summary'}";
-
-        linkedme.link(data, function(err, data){
-        if(err){
-        // 生成深度链接失败，返回错误对象err
-        } else {
-        // 生成深度链接成功，深度链接可以通过data.url得到
-        // 使用深度链接代码
-        var btn = document.getElementById('link');
-        btn.setAttribute('href', data.url);
-        }
-        }, false);
-    </script>
+    <script src="https://lkme.cc/js/linkedme.min.demo.js" ></script>
 </head>
 <body>
     <div id="lb" class="banner">
@@ -51,6 +36,20 @@
                 //var search = location.search;
                 //var linkedme = /^\?linkedme=(.*)/.exec(search);
                 //linkedme && btn.setAttribute('href', search.split('&')[0].replace("?linkedme=",""));
+                linkedme.init("linkedme_test_7e289a2484f4368dbafbd1e5c7d06903", null, null);
+                var data = {};
+                data.params = '{"control":"LinkedME","View":"https://www.linkedme.cc/iosdemo/intro.jsp"}';
+
+                linkedme.link(data, function(err, data){
+                if(err){
+                // 生成深度链接失败，返回错误对象err
+                } else {
+                // 生成深度链接成功，深度链接可以通过data.url得到
+                // 使用深度链接代码
+                var btn = document.getElementById('link');
+                btn.setAttribute('href', data.url);
+                }
+                }, false);
             </script>
         </div>
         <div style="clear:both"></div>

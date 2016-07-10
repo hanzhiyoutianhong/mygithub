@@ -224,17 +224,16 @@ public class UrlServlet extends HttpServlet {
                 url = appInfo.getIos_not_url();
                 if (StringUtils.isNotBlank(url)) {
                     ApiLogger.biz(String.format("%s\t%s\t%s\t%s\t%s\t%s", clientIP, apiName, countType, appId, deepLinkId, userAgent));
+                    if (!hasQQUrlManager) {
+                        clickCount(deepLinkId, appId, countType);
+                    }
                     response.sendRedirect(formatCustomUrl(url));
-                    clickCount(deepLinkId, appId, countType);
                     recordClickIntoProfile(start, countType);
                     return;
                 }
 
                 isCannotGoMarket = true;
             }
-
-
-
         } else if (osFamily.equals("Android")) {
             isAndroid = true;
 
@@ -271,20 +270,19 @@ public class UrlServlet extends HttpServlet {
                 if (StringUtils.isNotBlank(url)) {
                     ApiLogger.biz(String.format("%s\t%s\t%s\t%s\t%s\t%s", request.getHeader("x-forwarded-for"), apiName, countType, appId,
                             deepLinkId, userAgent));
+                    if (!hasQQUrlManager) {
+                        clickCount(deepLinkId, appId, countType);
+                    }
                     response.sendRedirect(formatCustomUrl(url));
-                    clickCount(deepLinkId, appId, countType);
                     recordClickIntoProfile(start, countType);
                     return;
                 }
             }
-
-
         } else {
             // 点击计数else,暂时都计pc
             countType = "pc_click";
 
             if (deepLink.getSource() != null && deepLink.getSource().trim().toLowerCase().equals("dashboard")) {
-
                 if (!deepLink.isDesktop_use_default() && deepLink.getDesktop_custom_url() != null) {
                     if (!hasQQUrlManager) {
                         clickCount(deepLinkId, appId, countType);
@@ -382,7 +380,7 @@ public class UrlServlet extends HttpServlet {
         request.setAttribute("Pkg", appInfo.getAndroid_package_name());
         request.setAttribute("BundleID", appInfo.getIos_bundle_id());
         request.setAttribute("AppID", appId);
-        request.setAttribute("IconUrl", Constants.LOGO_BASE_URL + appId + Constants.APP_LOGO_IMG_TYPE);
+        request.setAttribute("IconUrl", Constants.LOGO_HTTP_BASE_URL + appId + Constants.APP_LOGO_IMG_TYPE);
         request.setAttribute("Url", url);
         request.setAttribute("Match_id", uriArr[2]);
 
@@ -432,7 +430,6 @@ public class UrlServlet extends HttpServlet {
         request.setAttribute("DEBUG", DEBUG);
 
         if ((!isWechat) && (!isWeibo) && isAndroid && isChrome && userAgentMajor >= 25 && !isMIUI) {
-
             String browser_fallback_url = new StringBuilder(Constants.DEEPLINK_HTTP_PREFIX).append(Constants.LIVE_TEST_API_FLAG)
                     .append("/js/record_id_and_redirect?").append("identity_id=").append(identityId).append("&").append("app_id=")
                     .append(appId).append("&").append("is_valid_identityid=").append(isValidIdentity).append("&")
