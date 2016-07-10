@@ -74,7 +74,7 @@ public class AndroidFileServlet extends HttpServlet {
                 appsJson.add(appItem);
             }
         }
-
+        response.setContentType("application/json");
         response.getWriter().write(appsJson.toString());
     }
 
