@@ -84,7 +84,11 @@ public class DeepLinkService {
                 // throw new KryoException("deserializeObj error.", e);
             }
             if (deepLink != null) {
-                return deepLink;
+                if(deepLink.getAppId() == appId || deepLink.getAppId() == 10230){
+                    return deepLink;
+                }else{
+                    return null;
+                }
             }
         }
 
