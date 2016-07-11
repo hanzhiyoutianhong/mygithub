@@ -5,7 +5,6 @@ import cc.linkedme.dao.webapi.BtnCountDao;
 import cc.linkedme.data.dao.strategy.TableChannel;
 import cc.linkedme.data.dao.util.JdbcTemplate;
 import cc.linkedme.data.model.ButtonCount;
-import cc.linkedme.data.model.params.SummaryButtonParams;
 import com.google.api.client.repackaged.com.google.common.base.Strings;
 import org.springframework.jdbc.core.RowMapper;
 

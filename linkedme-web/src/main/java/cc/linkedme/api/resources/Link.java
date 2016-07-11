@@ -11,6 +11,7 @@ import cc.linkedme.service.webapi.AppService;
 import cc.linkedme.service.webapi.SummaryService;
 import com.google.api.client.repackaged.com.google.common.base.Strings;
 import com.google.common.base.Joiner;
+import net.sf.json.JSONArray;
 import net.sf.json.JSONObject;
 import org.apache.http.NameValuePair;
 import org.apache.http.ParseException;
@@ -57,6 +58,11 @@ public class Link {
     @POST
     @Produces({MediaType.APPLICATION_JSON})
     public String createUrl(DashboardUrlParams dashboardUrlParams, @Context HttpServletRequest request) {
+        JSONArray jsonArray = getCheckParamResult(dashboardUrlParams);
+        if(jsonArray.size() > 0) {
+            return jsonArray.toString();
+        }
+
         List<NameValuePair> params = new ArrayList<NameValuePair>();
         params.add(new BasicNameValuePair("app_id", String.valueOf(dashboardUrlParams.app_id)));
         params.add(new BasicNameValuePair("ios_use_default", String.valueOf(dashboardUrlParams.ios_use_default)));
@@ -169,11 +175,13 @@ public class Link {
     @POST
     @Produces(MediaType.APPLICATION_JSON)
     public String urlUpdate(DashboardUrlParams dashboardUrlParams, @Context HttpServletRequest request) {// 忽略type和link_label
+        JSONArray jsonArray = getCheckParamResult(dashboardUrlParams);
         if (dashboardUrlParams.deeplink_id <= 0) {
-            throw new LMException(LMExceptionFactor.LM_ILLEGAL_PARAM_VALUE, "deeplink_id <= 0");
-        }
-        if (dashboardUrlParams.app_id <= 0) {
-            throw new LMException(LMExceptionFactor.LM_ILLEGAL_PARAM_VALUE, "app_id <= 0");
+            JSONObject jsonObject = new JSONObject();
+            jsonObject.put("err_code", 40001);
+            jsonObject.put("err_param", "deeplink_id");
+            jsonObject.put("err_msg", "深度链接ID不能为空!");
+            jsonArray.add(jsonObject);
         }
 
         boolean res = deepLinkService.updateUrl(dashboardUrlParams);
@@ -186,5 +194,48 @@ public class Link {
         jsonObject.put("ret", res);
 
         return jsonObject.toString();
+    }
+
+    private JSONArray getCheckParamResult(DashboardUrlParams dashboardUrlParams) {
+        JSONArray jsonArray = new JSONArray();
+        if (dashboardUrlParams.app_id <= 0) {
+            JSONObject jsonObject = new JSONObject();
+            jsonObject.put("err_code", 40001);
+            jsonObject.put("err_param", "app_id");
+            jsonObject.put("err_msg", "App ID无效!");
+            jsonArray.add(jsonObject);
+        }
+
+        if (!dashboardUrlParams.ios_use_default) {
+            if (Strings.isNullOrEmpty(dashboardUrlParams.ios_custom_url)) {
+                JSONObject jsonObject = new JSONObject();
+                jsonObject.put("err_code", 40001);
+                jsonObject.put("err_param", "ios_custom_url");
+                jsonObject.put("err_msg", "自定义URL不能为空!");
+                jsonArray.add(jsonObject);
+            }
+        }
+
+        if (!dashboardUrlParams.android_use_default) {
+            if (Strings.isNullOrEmpty(dashboardUrlParams.android_custom_url)) {
+                JSONObject jsonObject = new JSONObject();
+                jsonObject.put("err_code", 40001);
+                jsonObject.put("err_param", "android_custom_url");
+                jsonObject.put("err_msg", "自定义URL不能为空!");
+                jsonArray.add(jsonObject);
+            }
+        }
+
+        if (!dashboardUrlParams.desktop_use_default) {
+            if (Strings.isNullOrEmpty(dashboardUrlParams.desktop_custom_url)) {
+                JSONObject jsonObject = new JSONObject();
+                jsonObject.put("err_code", 40001);
+                jsonObject.put("err_param", "desktop_custom_url");
+                jsonObject.put("err_msg", "自定义URL不能为空!");
+                jsonArray.add(jsonObject);
+            }
+        }
+
+        return jsonArray;
     }
 }
