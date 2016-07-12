@@ -16,6 +16,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import cc.linkedme.commons.util.Util;
+
 import org.apache.commons.collections.map.HashedMap;
 import org.apache.commons.io.IOUtils;
 import org.apache.mina.util.byteaccess.ByteArray;
@@ -55,6 +56,14 @@ public class AppDaoImpl extends BaseDao implements AppDao {
     private static final String UPLOAD_IMG = "UPLOAD_IMG";
     private static final String GET_IMG = "GET_IMG";
 
+    private static final String IS_IOS_URI_SCHEME_EXIST = "IS_IOS_URI_SCHEME_EXIST";
+    private static final String IS_ANDROID_URI_SCHEME_EXIST = "IS_ANDROID_URI_SCHEME_EXIST";
+    private static final String IS_ANDROID_PACKAKGE_NAME_EXIST = "IS_ANDROID_PACKAKGE_NAME_EXIST";
+    private static final String IS_IOS_BUNDLEID_EXIST = "IS_IOS_BUNDLEID_EXIST";
+    private static final String IS_IOS_APP_PREFIX_EXIST = "IS_IOS_APP_PREFIX_EXIST";
+    private static final String IS_ANDROID_SHA256_EXIST = "IS_ANDROID_SHA256_EXIST";
+
+    
     public int insertApp(AppInfo appInfo) {
         int result = 0;
         if (appInfo == null) {
@@ -422,4 +431,60 @@ public class AppDaoImpl extends BaseDao implements AppDao {
         boolean flag = file.delete();
         return flag ? 1 : -1;
     }
+
+    @Override
+    public boolean isAndroidUriSchemeExsit(String androidUriScheme, long appId) {
+        return isAppPropertyValueExist(IS_ANDROID_URI_SCHEME_EXIST, androidUriScheme, appId);
+    }
+
+    @Override
+    public boolean isIosUriSchemeExsit(String iosUriScheme, long appId) {
+        return isAppPropertyValueExist(IS_IOS_URI_SCHEME_EXIST, iosUriScheme, appId);
+    }
+
+    @Override
+    public boolean isAndroidPackageNameExist(String androidPackageName, long appId) {
+        return isAppPropertyValueExist(IS_ANDROID_PACKAKGE_NAME_EXIST, androidPackageName, appId);
+    }
+
+    @Override
+    public boolean isIosBundleIdExist(String iosBundleId, long appId) {
+        return isAppPropertyValueExist(IS_IOS_BUNDLEID_EXIST, iosBundleId, appId);
+    }
+
+    @Override
+    public boolean isIosAppPrefixExist(String iosAppPrefix, long appId) {
+        return isAppPropertyValueExist(IS_IOS_APP_PREFIX_EXIST, iosAppPrefix, appId);
+    }
+
+    @Override
+    public boolean isAndroidSha256Exist(String androidSha256Fingerprints, long appId) {
+        return isAppPropertyValueExist(IS_ANDROID_SHA256_EXIST, androidSha256Fingerprints, appId);
+    }
+
+    private boolean isAppPropertyValueExist(String sql, String propertyValue, long appId) {
+
+        TableChannel tableChannel = tableContainer.getTableChannel("appInfo", sql, 0L, 0L);
+        JdbcTemplate jdbcTemplate = tableChannel.getJdbcTemplate();
+
+        @SuppressWarnings("unchecked")
+        List<AppInfo> appInfos = jdbcTemplate.query(tableChannel.getSql(), new Object[] {propertyValue}, new RowMapper<AppInfo>() {
+            public AppInfo mapRow(ResultSet resultSet, int i) throws SQLException {
+                AppInfo appInfo = new AppInfo();
+                appInfo.setApp_id(resultSet.getLong("id"));
+                return appInfo;
+            }
+        });
+
+        if (appInfos.size() < 1) {
+            return false;
+        }
+
+        if (appInfos.size() == 1 && appInfos.get(0).getApp_id() == appId) {
+            return false;
+        }
+
+        return true;
+    }
+    
 }

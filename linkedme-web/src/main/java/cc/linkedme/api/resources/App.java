@@ -1,31 +1,25 @@
 package cc.linkedme.api.resources;
 
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
-import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 
-import org.apache.commons.lang.StringUtils;
-import org.springframework.stereotype.Component;
+import net.sf.json.JSONArray;
+import net.sf.json.JSONObject;
 
-import com.google.api.client.repackaged.com.google.common.base.Strings;
+import org.apache.commons.lang3.StringUtils;
+import org.springframework.stereotype.Component;
 
 import cc.linkedme.commons.exception.LMException;
 import cc.linkedme.commons.exception.LMExceptionFactor;
@@ -35,8 +29,8 @@ import cc.linkedme.data.model.AppInfo;
 import cc.linkedme.data.model.UrlTagsInfo;
 import cc.linkedme.data.model.params.AppParams;
 import cc.linkedme.service.webapi.AppService;
-import net.sf.json.JSONArray;
-import net.sf.json.JSONObject;
+
+import com.google.api.client.repackaged.com.google.common.base.Strings;
 
 /**
  * Created by LinkedME01 on 16/3/17.
@@ -137,12 +131,11 @@ public class App {
 
         if(!Strings.isNullOrEmpty(appParams.lkme_key)){
             appParams.lkme_key = appParams.lkme_key.substring(appParams.lkme_key.length()-32,appParams.lkme_key.length());
-
         }
         if(!Strings.isNullOrEmpty(appParams.lkme_secret)){
             appParams.lkme_secret = appParams.lkme_secret.substring(appParams.lkme_secret.length()-32,appParams.lkme_secret.length());
-
         }
+        
         JSONObject linkSettingJson = appParams.link_setting;
         JSONObject iosJson = linkSettingJson.getJSONObject("ios");
         JSONObject adrJson = linkSettingJson.getJSONObject("android");
@@ -154,7 +147,7 @@ public class App {
         appParams.ios_search_option = iosJson.getString("ios_search_option");
         appParams.ios_store_url = iosJson.getString("ios_store_url");
         appParams.ios_custom_url = iosJson.getString("ios_custom_url");
-        appParams.ios_enable_ulink = iosJson.getBoolean("ios_enable_ulink");
+        appParams.ios_enable_ulink = true;
         appParams.ios_bundle_id = iosJson.getString("ios_bundle_id");
         appParams.ios_app_prefix = iosJson.getString("ios_app_prefix");
 
@@ -165,7 +158,7 @@ public class App {
         appParams.google_play_url = adrJson.getString("google_play_url");
         appParams.android_custom_url = adrJson.getString("android_custom_url");
         appParams.android_package_name = adrJson.getString("android_package_name");
-        appParams.android_enable_applinks = adrJson.getBoolean("android_enable_applinks");
+        appParams.android_enable_applinks = true;
         appParams.android_sha256_fingerprints = adrJson.getString("android_sha256_fingerprints");
 
         appParams.use_default_landing_page = desktopJson.getBoolean("use_default_landing_page");
@@ -177,6 +170,56 @@ public class App {
                 + (appParams.android_enable_applinks ? 1 : 0);
 
         appParams.ios_android_flag = ios_android_flag;
+
+     // dashboard　uri_scheme、package_name、bundle_id、App Prefix判重
+        JSONArray errors = new JSONArray();
+        if (appParams.has_android && StringUtils.isBlank(appParams.getAndroid_uri_scheme())) {
+            errors.add(getErrorJson("android_uri_scheme", "请配置URI Scheme"));
+        } else if (appParams.has_android && appParams.getAndroid_uri_scheme().endsWith("://")){
+            errors.add(getErrorJson("android_uri_scheme", "URI Scheme的结尾不需要\"://\""));
+        } else if (appParams.has_android && appService.isAndroidUriSchemeExsit(appParams.getAndroid_uri_scheme(), appParams.getApp_id())) {
+            errors.add(getErrorJson("android_uri_scheme", "该URI Scheme已被占用，请重新配置"));
+        }
+
+        if (appParams.has_ios && StringUtils.isBlank(appParams.getIos_uri_scheme())) {
+            errors.add(getErrorJson("ios_uri_scheme", "请配置URI Scheme"));
+        } else if (appParams.has_ios && appParams.getIos_uri_scheme().endsWith("://")){
+            errors.add(getErrorJson("ios_uri_scheme", "URI Scheme的结尾不需要\"://\""));
+        } else if (appParams.has_ios && appService.isIosUriSchemeExsit(appParams.getIos_uri_scheme(), appParams.getApp_id())) {
+            errors.add(getErrorJson("ios_uri_scheme", "该URI Scheme已被占用，请重新配置"));
+        } else if (appParams.has_android && appParams.has_ios && !appParams.getIos_uri_scheme().equals(appParams.getAndroid_uri_scheme())) {
+            errors.add(getErrorJson("ios_uri_scheme", "andorid和ios的URI Scheme应该保持一致"));
+        }
+
+        if (appParams.has_ios && StringUtils.isBlank(appParams.getIos_bundle_id())) {
+            errors.add(getErrorJson("ios_bundle_id", "请配置Bundle ID"));
+        } else if (appParams.has_ios && appService.isIosBundleIdExist(appParams.getIos_bundle_id(), appParams.getApp_id())) {
+            errors.add(getErrorJson("ios_bundle_id", "该Bundle ID已被占用，请重新配置"));
+        }
+
+        if (appParams.has_ios && StringUtils.isBlank(appParams.getIos_app_prefix())) {
+            errors.add(getErrorJson("ios_app_prefix", "请配置Apple App Prefix"));
+        } else if (appParams.has_ios && appService.isIosAppPrefixExist(appParams.getIos_app_prefix(), appParams.getApp_id())) {
+            errors.add(getErrorJson("ios_app_prefix", "该Apple App Prefix已被占用，请重新配置"));
+        }
+
+
+        if (appParams.has_android && StringUtils.isBlank(appParams.getAndroid_package_name())) {
+            errors.add(getErrorJson("android_package_name", "请配置Package Name"));
+        } else if (appParams.has_android && appService.isAndroidPackageNameExist(appParams.getAndroid_package_name(), appParams.getApp_id())) {
+            errors.add(getErrorJson("android_package_name", "该Package Name已存在，请重新配置"));
+        }
+
+
+        if (appParams.has_android && StringUtils.isBlank(appParams.getAndroid_sha256_fingerprints())) {
+            errors.add(getErrorJson("android_package_name", "请配置Android中的SHA256证书"));
+        } else if (appParams.has_android && appService.isAndroidSha256Exist(appParams.getAndroid_sha256_fingerprints(), appParams.getApp_id())) {
+            errors.add(getErrorJson("android_package_name", "该Android中的SHA256证书已存在，请重新配置"));
+        }
+       
+        if(errors.size() > 0){
+            return errors.toString();
+        }
 
         int result = appService.updateApp(appParams);
 
@@ -270,5 +313,16 @@ public class App {
         resultJson.append("img_url", basePath + imageName + "?v=" + new Random().nextInt());
         return resultJson.flip().toString();
     }
+    
+    
+    private JSONObject getErrorJson(String errorParam, String errorMsg){
+        JSONObject error = new JSONObject();
+        error.put("err_code", 40001);
+        error.put("err_param", errorParam);
+        error.put("err_msg", errorMsg);
+        
+        return error;
+    }
 
+    
 }
