@@ -68,6 +68,7 @@ public class AppleFileServlet extends HttpServlet {
         }
         JSONObject rootJson = new JSONObject();
         rootJson.put("applinks", appLinksJson);
+        response.setContentType("application/json");
         response.getWriter().write(rootJson.toString());
     }
 
