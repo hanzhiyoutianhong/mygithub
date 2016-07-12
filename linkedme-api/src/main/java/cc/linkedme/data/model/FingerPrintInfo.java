@@ -4,9 +4,7 @@ package cc.linkedme.data.model;
  * Created by vontroy on 16-7-4.
  */
 public class FingerPrintInfo {
-    public final static int ADD_FINGERPRINT_INFO = 0;
-    public final static int UPDATE_FINGERPRINT_INFO = 1;
-    public final static int NO_OPTIONS = -1;
+    public enum OperationType {ADD, UPDATE, NONE}
 
     private int id = -1;
     private String deviceId;
@@ -14,7 +12,7 @@ public class FingerPrintInfo {
     private long identityId;
     private long newIdentityId;
     private int valid_status;
-    private int stage;
+    private OperationType operationType;
     private String currentTime;
 
     public int getId() {
@@ -65,12 +63,12 @@ public class FingerPrintInfo {
         this.valid_status = valid_status;
     }
 
-    public int getStage() {
-        return stage;
+    public OperationType getOperationType() {
+        return operationType;
     }
 
-    public void setStage(int stage) {
-        this.stage = stage;
+    public void setOperationType(OperationType operationType) {
+        this.operationType = operationType;
     }
 
     public String getCurrentTime() {
