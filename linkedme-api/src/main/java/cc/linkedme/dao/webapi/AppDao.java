@@ -29,4 +29,14 @@ public interface AppDao {
     int uploadImg(AppParams appParams, byte[] picDatas);
 
     byte[] getAppImg(int appId);
+
+
+    public boolean isAndroidUriSchemeExsit(String androidUriScheme, long appId);
+    
+    public boolean isIosUriSchemeExsit(String iosUriScheme, long appId);
+
+    public boolean isAndroidPackageNameExist(String androidPackageName, long appId);
+
+    public boolean isIosBundleIdExist(String iosBundleId, long appId);
+
 }

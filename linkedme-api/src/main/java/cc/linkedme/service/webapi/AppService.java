@@ -33,4 +33,33 @@ public interface AppService {
     String uploadImg(AppParams appParams);
 
     byte[] getAppImg(int appId, String type);
+
+    
+    /**
+     * 校验android uri scheme是否为预留或者注册过
+     * @return　如果为uri scheme为预留或者被注册过，返回true；否则，返回false
+     */
+    public boolean isAndroidUriSchemeExsit(String androidUriScheme, long appId);
+
+
+    /**
+     * 校验ios uri scheme是否为预留或者注册过 
+     * @return　如果为uri scheme为预留或者被注册过，返回true；否则，返回false
+     */
+    public boolean isIosUriSchemeExsit(String iosUriScheme, long appId);
+
+
+    /**
+     * 校验android　package name是否为预留或者注册过
+     * @return　如果为预留或者被注册过，返回true；否则，返回false
+     */
+    public boolean isAndroidPackageNameExist(String androidPackageName, long appId);
+
+
+    /**
+     * 校验ios bundle id是否被注册过
+     * @return　如果被注册过，返回true；否则，返回false
+     */
+    public boolean isIosBundleIdExist(String iosBundleId, long appId);    
+
 }

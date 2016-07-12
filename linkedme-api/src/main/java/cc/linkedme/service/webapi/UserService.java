@@ -25,4 +25,7 @@ public interface UserService {
     boolean resetForgottenPwd(UserParams userParams);
 
     boolean requestDemo(DemoRequestParams demoRequestParams);
+
+    boolean validatePassword(String email ,String password);
+
 }
