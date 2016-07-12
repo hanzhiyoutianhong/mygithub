@@ -162,14 +162,14 @@ public class LMSdkServiceImpl implements LMSdkService {
         long identityId = 0;
         long newIdentityId = 0;
         long deepLinkId = 0;
-        int stage = -1;
+        FingerPrintInfo.OperationType operationType = FingerPrintInfo.OperationType.NONE;
         DeepLink deepLink = null;
         String deviceFingerprintId = "d";
         String browserFingerprintId = "b";
         String installType = "other";
 
         if (Strings.isNullOrEmpty(identityIdStr)) { // 之前不存在<device, identityId>
-            stage = FingerPrintInfo.ADD_FINGERPRINT_INFO;
+            operationType = FingerPrintInfo.OperationType.ADD;
             // device_fingerprint_id 与 browse_fingerprint_id匹配逻辑
             deviceFingerprintId =
                     createFingerprintId(String.valueOf(appId), installParams.os, installParams.os_version, installParams.clientIP);
@@ -205,7 +205,7 @@ public class LMSdkServiceImpl implements LMSdkService {
                 deepLinkIdStr = dfpIdRedisClient.hget(deviceFingerprintId, "did");
 
                 if (identityIdStr != null && deepLinkIdStr != null) { // 匹配成功
-                    stage = FingerPrintInfo.UPDATE_FINGERPRINT_INFO;
+                    operationType = FingerPrintInfo.OperationType.UPDATE;
                     newIdentityId = Long.parseLong(identityIdStr);
                     deepLinkId = Long.parseLong(deepLinkIdStr);
                     deepLink = deepLinkService.getDeepLinkInfo(deepLinkId, appId);
@@ -219,7 +219,7 @@ public class LMSdkServiceImpl implements LMSdkService {
                     }
                 }
             } else { // 之前存在identityId, 并有identityId与deepLink的键值对
-                stage = FingerPrintInfo.NO_OPTIONS;
+                operationType = FingerPrintInfo.OperationType.NONE;
                 deepLinkId = Long.parseLong(deepLinkIdStr);
                 deepLink = deepLinkService.getDeepLinkInfo(deepLinkId, appId);
             }
@@ -259,7 +259,7 @@ public class LMSdkServiceImpl implements LMSdkService {
         clientMsgPusher.addClient(clientInfo, fromDeepLinkId);
 
         // 写mcq,存储键值对
-        FingerPrintInfo fingerPrintInfo = toFingerPrintInfo(identityId, newIdentityId, deviceId, installParams.device_type, stage);
+        FingerPrintInfo fingerPrintInfo = toFingerPrintInfo(identityId, newIdentityId, deviceId, installParams.device_type, operationType);
         fingerPrintMsgPusher.updateFingerPrint(fingerPrintInfo);
 
 
@@ -285,7 +285,7 @@ public class LMSdkServiceImpl implements LMSdkService {
         return resultJson.toString();
     }
 
-    private FingerPrintInfo toFingerPrintInfo(long identityId, long newIdentityId, String deviceId, int deviceType, int stage) {
+    private FingerPrintInfo toFingerPrintInfo(long identityId, long newIdentityId, String deviceId, int deviceType, FingerPrintInfo.OperationType operationType) {
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
         Date currentTime = new Date();
 
@@ -295,7 +295,7 @@ public class LMSdkServiceImpl implements LMSdkService {
         fingerPrintInfo.setNewIdentityId(newIdentityId);
         fingerPrintInfo.setDeviceId(deviceId);
         fingerPrintInfo.setDeviceType(deviceType);
-        fingerPrintInfo.setStage(stage);
+        fingerPrintInfo.setOperationType(operationType);
         return fingerPrintInfo;
     }
 
