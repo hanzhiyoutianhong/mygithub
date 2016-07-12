@@ -42,9 +42,9 @@ public class User {
         JSONArray jsonArray = new JSONArray();
 
         if (Strings.isNullOrEmpty(userParams.email)) {
-            jsonArray.add(emailIsNull());
+            jsonArray.add(getErrorMsg("40000","email","未填写邮箱!"));
         }else if(userService.validateEmail(userParams)){
-            jsonArray.add(emailExist());
+            jsonArray.add(getErrorMsg("40004","email","邮箱已被注册"));
         }else{
             userParams.email = userParams.email.toLowerCase();
         }
@@ -71,18 +71,18 @@ public class User {
         boolean emailIsValid = false;
 
         if (Strings.isNullOrEmpty(userParams.email)) {
-            jsonArray.add(emailIsNull());
+            jsonArray.add(getErrorMsg("40000","email","未填写邮箱!"));
         }else if(!userService.validateEmail(userParams)){
-            jsonArray.add(emailNotExist());
+            jsonArray.add(getErrorMsg("40005","email","邮箱不存在!"));
         }else{
             emailIsValid = true;
             userParams.email = userParams.email.toLowerCase();
         }
 
         if(Strings.isNullOrEmpty(userParams.pwd)){
-            jsonArray.add(passwordIsNull());
+            jsonArray.add(getErrorMsg("40006","pwd","密码为空!"));
         }else if(emailIsValid && !userService.validatePassword(userParams.email,userParams.pwd)){
-            jsonArray.add(passwordErr());
+            jsonArray.add(getErrorMsg("40006","pwd","密码错误!"));
         }
 
         if(jsonArray.size() > 0){
@@ -152,22 +152,22 @@ public class User {
         boolean emailIsValid = false;
 
         if (Strings.isNullOrEmpty(userParams.email)) {
-            jsonArray.add(emailIsNull());
+            jsonArray.add(getErrorMsg("40000","email","未填写邮箱!"));
         }else if(!userService.validateEmail(userParams)){
-            jsonArray.add(emailNotExist());
+            jsonArray.add(getErrorMsg("40005","email","邮箱不存在!"));
         }else{
             emailIsValid = true;
             userParams.email = userParams.email.toLowerCase();
         }
 
         if(Strings.isNullOrEmpty(userParams.old_pwd)){
-            jsonArray.add(oldPasswordIsNull());
+            jsonArray.add(getErrorMsg("40006","old_pwd","旧密码为空!"));
         }else if(emailIsValid && !userService.validatePassword(userParams.email,userParams.old_pwd)){
-            jsonArray.add(oldPasswordErr());
+            jsonArray.add(getErrorMsg("40006","old_pwd","旧密码错误!"));
         }
 
         if(Strings.isNullOrEmpty(userParams.new_pwd)){
-            jsonArray.add(newPasswordIsNull());
+            jsonArray.add(getErrorMsg("40006","new_pwd","新密码为空!"));
         }
 
         if(jsonArray.size() > 0){
@@ -190,9 +190,9 @@ public class User {
 
         JSONArray jsonArray = new JSONArray();
         if (userParams.email == null) {
-            jsonArray.add(emailIsNull());
+            jsonArray.add(getErrorMsg("40000","email","未填写邮箱!"));
         }else if(!userService.validateEmail(userParams)){
-            jsonArray.add(emailNotExist());
+            jsonArray.add(getErrorMsg("40005","email","邮箱不存在!"));
         }else{
             userParams.email = userParams.email.toLowerCase();
         }
@@ -215,7 +215,7 @@ public class User {
     public String set_password(UserParams userParams, @Context HttpServletRequest request) {
         JSONArray jsonArray = new JSONArray();
         if (Strings.isNullOrEmpty(userParams.new_pwd)) {
-            jsonArray.add(passwordIsNull());
+            jsonArray.add(getErrorMsg("40006","new_pwd","新密码为空!"));
         }
         if(jsonArray.size() > 0){
             return jsonArray.toString();
@@ -239,67 +239,11 @@ public class User {
         return resultJson.flip().toString();
     }
 
-    public JSONObject emailIsNull(){
+    public JSONObject getErrorMsg(String errCode,String errParam,String errMsg){
         JSONObject jsonObject = new JSONObject();
-        jsonObject.put("err_code","40000");
-        jsonObject.put("err_param","email");
-        jsonObject.put("err_msg","未填写邮箱!");
-        return jsonObject;
-    }
-
-    public JSONObject emailNotExist(){
-        JSONObject jsonObject = new JSONObject();
-        jsonObject.put("err_code","40005");
-        jsonObject.put("err_param","email");
-        jsonObject.put("err_msg","邮箱不存在!");
-        return jsonObject;
-    }
-
-    public JSONObject emailExist(){
-        JSONObject jsonObject = new JSONObject();
-        jsonObject.put("err_code","40004");
-        jsonObject.put("err_param","email");
-        jsonObject.put("err_msg","邮箱已被注册");
-        return jsonObject;
-    }
-
-    public JSONObject passwordErr(){
-        JSONObject jsonObject = new JSONObject();
-        jsonObject.put("err_code","40006");
-        jsonObject.put("err_param","pwd");
-        jsonObject.put("err_msg","密码错误!");
-        return jsonObject;
-    }
-
-    public JSONObject passwordIsNull(){
-        JSONObject jsonObject = new JSONObject();
-        jsonObject.put("err_code","40006");
-        jsonObject.put("err_param","pwd");
-        jsonObject.put("err_msg","密码为空!");
-        return jsonObject;
-    }
-
-    public JSONObject oldPasswordIsNull(){
-        JSONObject jsonObject = new JSONObject();
-        jsonObject.put("err_code","40006");
-        jsonObject.put("err_param","pwd");
-        jsonObject.put("err_msg","旧密码为空!");
-        return jsonObject;
-    }
-
-    public JSONObject oldPasswordErr(){
-        JSONObject jsonObject = new JSONObject();
-        jsonObject.put("err_code","40006");
-        jsonObject.put("err_param","pwd");
-        jsonObject.put("err_msg","旧密码错误!");
-        return jsonObject;
-    }
-
-    public JSONObject newPasswordIsNull(){
-        JSONObject jsonObject = new JSONObject();
-        jsonObject.put("err_code","40006");
-        jsonObject.put("err_param","pwd");
-        jsonObject.put("err_msg","新密码为空!");
+        jsonObject.put("err_code",errCode);
+        jsonObject.put("err_param",errParam);
+        jsonObject.put("err_msg",errMsg);
         return jsonObject;
     }
 
