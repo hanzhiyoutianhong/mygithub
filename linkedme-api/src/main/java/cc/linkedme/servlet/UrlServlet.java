@@ -104,7 +104,7 @@ public class UrlServlet extends HttpServlet {
         String uri = request.getRequestURI();
         String urlScanParam = request.getParameter("scan");
         boolean isPcScan = "1".equals(urlScanParam);
-        
+
         String[] uriArr = uri.split("/");
         if (uriArr.length < 3) {
             response.sendRedirect("/deeplink_error.jsp"); // TODO 重定向为默认配置页面
@@ -133,7 +133,7 @@ public class UrlServlet extends HttpServlet {
         // 使用yaml解析user agent,测试匹配优先级,速度,打日志统计时间,优化正则表达式(单个正则表达式,优先级);
         boolean hasQQUrlManager = false;
         String userAgent = request.getHeader("user-agent");
-        if (userAgent.contains("QQ-URL-Manager")){
+        if (userAgent.contains("QQ-URL-Manager")) {
             hasQQUrlManager = true;
         }
 
@@ -146,9 +146,16 @@ public class UrlServlet extends HttpServlet {
         for (UserAgent ua : userAgentList) {
             uaMap.put(ua.family, ua);
         }
-        String osFamily = client.os.family;
+        String osFamily = "other";
+        if (client != null && client.os != null && client.os.family != null) {
+            osFamily = client.os.family;
+        }
         String osMajor = client.os.major;
         String osVersion = Joiner.on(".").skipNulls().join(client.os.major, client.os.minor, client.os.patch);
+        String deviceModel = "other";
+        if (client != null && client.device != null && client.device.family != null) {
+            deviceModel = client.device.family.trim().toLowerCase();
+        }
 
         // 如果没有cookie,设置cookie
         String identityId = CookieHelper.getCookieValue(request, CookieHelper.getCookieName());
@@ -166,7 +173,7 @@ public class UrlServlet extends HttpServlet {
         // 生成browser_fingerprint_id, TODO: 测试Model字段; 测试浏览器Based Memory 100%匹配算法;
         // 测试浏览器Cookie失效等各种情况;
         String clientIP = request.getHeader("x-forwarded-for");
-        String browserFingerprintId = MD5Utils.md5(Joiner.on("&").skipNulls().join(appId, osFamily, osVersion, clientIP));
+        String browserFingerprintId = MD5Utils.md5(Joiner.on("&").skipNulls().join(appId, osFamily, osVersion, deviceModel, clientIP));
 
         boolean isUniversalLink = false;
         boolean isDownloadDirectly = false;

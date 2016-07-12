@@ -26,6 +26,4 @@ public interface LMSdkService {
 
     void close(CloseParams CloseParams);
 
-    String preInstall(PreInstallParams preInstallParams);
-
 }

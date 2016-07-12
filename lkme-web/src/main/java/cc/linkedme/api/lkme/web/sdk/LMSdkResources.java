@@ -398,26 +398,6 @@ public class LMSdkResources {
 
     }
 
-
-    @Path("/preInstall")
-    @POST
-    @Produces({MediaType.APPLICATION_JSON})
-    public String preInstall(PreInstallParams preInstallParams, @Context HttpServletRequest request) {
-        preInstallParams.clientIP = request.getHeader("x-forwarded-for");
-        String identityId = lmSdkService.preInstall(preInstallParams);
-        String result = "{\"identity_id\":" + identityId + "}";
-        return result;
-    }
-
-    @Path("/preOpen")
-    @POST
-    @Produces({MediaType.APPLICATION_JSON})
-    public String preOpen(PreOpenParams preOpenParams, @Context HttpServletRequest request) {
-        ApiLogger.info("sdk/preOpen,deepLinkId:" + Base62.decode(preOpenParams.click_id) + ",destination:" + preOpenParams.destination
-                + ",lkme_tag:" + preOpenParams.lkme_tag);
-        return "{}";
-    }
-
     @Path("/applist")
     @POST
     @Produces({MediaType.APPLICATION_JSON})
