@@ -17,7 +17,9 @@ import javax.annotation.Resource;
 
 import cc.linkedme.commons.util.Constants;
 import cc.linkedme.data.model.params.DashboardUrlParams;
+
 import com.google.common.base.Strings;
+
 import org.apache.commons.codec.binary.Base64;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.collections.MapUtils;
@@ -63,6 +65,25 @@ public class AppServiceImpl implements AppService {
     @Resource
     private ShardingSupportHash<JedisPort> linkedmeKeyShardingSupport;
 
+    
+    //一方面验证预留的(暂时不做处理，优先级低)，一方面验证库中已经注册的
+    public boolean isAndroidUriSchemeExsit(String androidUriScheme, long appId){
+        return appDao.isAndroidUriSchemeExsit(androidUriScheme, appId);
+    }
+    
+
+    public boolean isIosUriSchemeExsit(String iosUriScheme, long appId){
+        return appDao.isIosUriSchemeExsit(iosUriScheme, appId);
+    }
+    
+    public boolean isAndroidPackageNameExist(String androidPackageName, long appId){
+        return appDao.isAndroidPackageNameExist(androidPackageName, appId);
+    }
+    
+    public boolean isIosBundleIdExist(String iosBundleId, long appId){
+        return appDao.isIosBundleIdExist(iosBundleId, appId);
+    }    
+    
     private void updateAppleAssociationFile(String appIdentifier, String appID) {
         BufferedReader br = null;
         String fileName = "/data1/tomcat8080/webapps/ROOT/apple-app-site-association";

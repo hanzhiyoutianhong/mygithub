@@ -52,6 +52,12 @@ public class AppDaoImpl extends BaseDao implements AppDao {
     private static final String UPLOAD_IMG = "UPLOAD_IMG";
     private static final String GET_IMG = "GET_IMG";
 
+    private static final String IS_IOS_URI_SCHEME_EXIST = "IS_IOS_URI_SCHEME_EXIST";
+    private static final String IS_ANDROID_URI_SCHEME_EXIST = "IS_ANDROID_URI_SCHEME_EXIST";
+    private static final String IS_ANDROID_PACKAKGE_NAME_EXIST = "IS_ANDROID_PACKAKGE_NAME_EXIST";
+    private static final String IS_IOS_BUNDLEID_EXIST = "IS_IOS_BUNDLEID_EXIST";
+
+    
     public int insertApp(AppInfo appInfo) {
         int result = 0;
         if (appInfo == null) {
@@ -419,4 +425,50 @@ public class AppDaoImpl extends BaseDao implements AppDao {
         boolean flag = file.delete();
         return flag ? 1 : -1;
     }
+
+    @Override
+    public boolean isAndroidUriSchemeExsit(String androidUriScheme, long appId) {
+        return isAppPropertyValueExist(IS_ANDROID_URI_SCHEME_EXIST, androidUriScheme, appId);
+    }
+
+    @Override
+    public boolean isIosUriSchemeExsit(String iosUriScheme, long appId) {
+        return isAppPropertyValueExist(IS_IOS_URI_SCHEME_EXIST, iosUriScheme, appId);
+    }
+
+    @Override
+    public boolean isAndroidPackageNameExist(String androidPackageName, long appId) {
+        return isAppPropertyValueExist(IS_ANDROID_PACKAKGE_NAME_EXIST, androidPackageName, appId);
+    }
+
+    @Override
+    public boolean isIosBundleIdExist(String iosBundleId, long appId) {
+        return isAppPropertyValueExist(IS_IOS_BUNDLEID_EXIST, iosBundleId, appId);
+    }
+
+    private boolean isAppPropertyValueExist(String sql, String propertyValue, long appId) {
+
+        TableChannel tableChannel = tableContainer.getTableChannel("appInfo", sql, 0L, 0L);
+        JdbcTemplate jdbcTemplate = tableChannel.getJdbcTemplate();
+
+        @SuppressWarnings("unchecked")
+        List<AppInfo> appInfos = jdbcTemplate.query(tableChannel.getSql(), new Object[] {propertyValue}, new RowMapper<AppInfo>() {
+            public AppInfo mapRow(ResultSet resultSet, int i) throws SQLException {
+                AppInfo appInfo = new AppInfo();
+                appInfo.setApp_id(resultSet.getLong("id"));
+                return appInfo;
+            }
+        });
+
+        if (appInfos.size() < 1) {
+            return false;
+        }
+
+        if (appInfos.size() == 1 && appInfos.get(0).getApp_id() == appId) {
+            return false;
+        }
+
+        return true;
+    }
+    
 }
