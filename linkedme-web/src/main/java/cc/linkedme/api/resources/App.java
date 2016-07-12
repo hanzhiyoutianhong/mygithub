@@ -203,6 +203,14 @@ public class App {
             errors.add(getErrorJson("android_package_name", "该Package Name已存在，请重新配置"));
         }
 
+        if (appParams.has_ios && StringUtils.isBlank(appParams.getIos_app_prefix())) {
+            errors.add(getErrorJson("ios_app_prefix", "请配置Apple App Prefix"));
+        }
+
+        if (appParams.has_android && StringUtils.isBlank(appParams.getAndroid_sha256_fingerprints())) {
+            errors.add(getErrorJson("android_sha256_fingerprints", "请配置Android的SHA256证书"));
+        }
+
         if(errors.size() > 0){
             return errors.toString();
         }
