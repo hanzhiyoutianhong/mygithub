@@ -10,6 +10,8 @@ import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 
+import com.alibaba.fastjson.JSONArray;
+import com.alibaba.fastjson.JSONObject;
 import org.springframework.stereotype.Component;
 
 import cc.linkedme.commons.exception.LMException;
@@ -36,11 +38,20 @@ public class User {
     @POST
     @Produces({MediaType.APPLICATION_JSON})
     public String register(UserParams userParams, @Context HttpServletRequest request) {
-        if (userParams.email != null)
+        JSONArray jsonArray = new JSONArray();
+
+        if (Strings.isNullOrEmpty(userParams.email)) {
+            jsonArray.add(getErrorMsg("40000","email","未填写邮箱!"));
+        }else if(userService.validateEmail(userParams)){
+            jsonArray.add(getErrorMsg("40004","email","邮箱已被注册"));
+        }else{
             userParams.email = userParams.email.toLowerCase();
-        else {
-            throw new LMException(LMExceptionFactor.LM_ILLEGAL_PARAM_VALUE, "Email should not be empty");
         }
+
+        if(jsonArray.size() > 0){
+            return jsonArray.toString();
+        }
+
         if (userService.userRegister(userParams)) {
             JsonBuilder resultJson = new JsonBuilder();
             resultJson.append("ret", "true");
@@ -55,11 +66,28 @@ public class User {
     @Produces({MediaType.APPLICATION_JSON})
 
     public String login(UserParams userParams, @Context HttpServletRequest request) {
-        if (userParams.email != null)
+        JSONArray jsonArray = new JSONArray();
+        boolean emailIsValid = false;
+
+        if (Strings.isNullOrEmpty(userParams.email)) {
+            jsonArray.add(getErrorMsg("40000","email","未填写邮箱!"));
+        }else if(!userService.validateEmail(userParams)){
+            jsonArray.add(getErrorMsg("40005","email","邮箱不存在!"));
+        }else{
+            emailIsValid = true;
             userParams.email = userParams.email.toLowerCase();
-        else {
-            throw new LMException(LMExceptionFactor.LM_ILLEGAL_PARAM_VALUE, "Email should not be empty");
         }
+
+        if(Strings.isNullOrEmpty(userParams.pwd)){
+            jsonArray.add(getErrorMsg("40006","pwd","密码为空!"));
+        }else if(emailIsValid && !userService.validatePassword(userParams.email,userParams.pwd)){
+            jsonArray.add(getErrorMsg("40006","pwd","密码错误!"));
+        }
+
+        if(jsonArray.size() > 0){
+            return jsonArray.toString();
+        }
+
         String email = userParams.email;
         UserInfo userInfo = userService.userLogin(userParams);
         JsonBuilder resultJson = new JsonBuilder();
@@ -119,10 +147,30 @@ public class User {
     @POST
     @Produces({MediaType.APPLICATION_JSON})
     public String change_password(UserParams userParams, @Context HttpServletRequest request) {
-        if (userParams.email != null)
+        JSONArray jsonArray = new JSONArray();
+        boolean emailIsValid = false;
+
+        if (Strings.isNullOrEmpty(userParams.email)) {
+            jsonArray.add(getErrorMsg("40000","email","未填写邮箱!"));
+        }else if(!userService.validateEmail(userParams)){
+            jsonArray.add(getErrorMsg("40005","email","邮箱不存在!"));
+        }else{
+            emailIsValid = true;
             userParams.email = userParams.email.toLowerCase();
-        else {
-            throw new LMException(LMExceptionFactor.LM_ILLEGAL_PARAM_VALUE, "Email should not be empty");
+        }
+
+        if(Strings.isNullOrEmpty(userParams.old_pwd)){
+            jsonArray.add(getErrorMsg("40006","old_pwd","旧密码为空!"));
+        }else if(emailIsValid && !userService.validatePassword(userParams.email,userParams.old_pwd)){
+            jsonArray.add(getErrorMsg("40006","old_pwd","旧密码错误!"));
+        }
+
+        if(Strings.isNullOrEmpty(userParams.new_pwd)){
+            jsonArray.add(getErrorMsg("40006","new_pwd","新密码为空!"));
+        }
+
+        if(jsonArray.size() > 0){
+            return jsonArray.toString();
         }
 
         if (userService.resetUserPwd(userParams)) {
@@ -138,10 +186,17 @@ public class User {
     @POST
     @Produces({MediaType.APPLICATION_JSON})
     public String forgot_password(UserParams userParams, @Context HttpServletRequest request) {
-        if (userParams.email != null)
+
+        JSONArray jsonArray = new JSONArray();
+        if (userParams.email == null) {
+            jsonArray.add(getErrorMsg("40000","email","未填写邮箱!"));
+        }else if(!userService.validateEmail(userParams)){
+            jsonArray.add(getErrorMsg("40005","email","邮箱不存在!"));
+        }else{
             userParams.email = userParams.email.toLowerCase();
-        else {
-            throw new LMException(LMExceptionFactor.LM_ILLEGAL_PARAM_VALUE, "Email should not be empty");
+        }
+        if(jsonArray.size() > 0){
+            return jsonArray.toString();
         }
 
         if (userService.forgotPwd(userParams)) {
@@ -157,10 +212,13 @@ public class User {
     @POST
     @Produces({MediaType.APPLICATION_JSON})
     public String set_password(UserParams userParams, @Context HttpServletRequest request) {
+        JSONArray jsonArray = new JSONArray();
         if (Strings.isNullOrEmpty(userParams.new_pwd)) {
-            throw new LMException(LMExceptionFactor.LM_ILLEGAL_PARAM_VALUE, "Email should not be empty");
+            jsonArray.add(getErrorMsg("40006","new_pwd","新密码为空!"));
         }
-
+        if(jsonArray.size() > 0){
+            return jsonArray.toString();
+        }
         if (userService.resetForgottenPwd(userParams)) {
             JsonBuilder resultJson = new JsonBuilder();
             resultJson.append("ret", "true");
@@ -178,6 +236,14 @@ public class User {
         JsonBuilder resultJson = new JsonBuilder();
         resultJson.append("ret", result);
         return resultJson.flip().toString();
+    }
+
+    public JSONObject getErrorMsg(String errCode,String errParam,String errMsg){
+        JSONObject jsonObject = new JSONObject();
+        jsonObject.put("err_code",errCode);
+        jsonObject.put("err_param",errParam);
+        jsonObject.put("err_msg",errMsg);
+        return jsonObject;
     }
 
 }
