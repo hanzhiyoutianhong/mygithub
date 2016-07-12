@@ -2,6 +2,8 @@ package cc.linkedme.service.sdkapi.impl;
 
 import javax.annotation.Resource;
 
+import cc.linkedme.commons.exception.LMException;
+import cc.linkedme.commons.exception.LMExceptionFactor;
 import org.apache.commons.lang3.StringUtils;
 
 import cc.linkedme.commons.log.ApiLogger;
@@ -27,8 +29,6 @@ import cc.linkedme.data.model.params.PreInstallParams;
 import cc.linkedme.data.model.params.UrlParams;
 import cc.linkedme.data.model.params.WebCloseParams;
 import cc.linkedme.data.model.params.WebInitParams;
-import cc.linkedme.exception.LMException;
-import cc.linkedme.exception.LMExceptionFactor;
 import cc.linkedme.mcq.ClientMsgPusher;
 import cc.linkedme.mcq.DeepLinkMsgPusher;
 import cc.linkedme.mcq.FingerPrintMsgPusher;
@@ -225,12 +225,12 @@ public class LMSdkServiceImpl implements LMSdkService {
                 stage = FingerPrintInfo.NO_OPTIONS;
                 deepLinkId = Long.parseLong(deepLinkIdStr);
                 deepLink = deepLinkService.getDeepLinkInfo(deepLinkId, appId);
-                
-                if(identityRedisClient.exists(identityIdStr + ".scan")){
+
+                if (identityRedisClient.exists(identityIdStr + ".scan")) {
                     scanPrefix = "pc_";
                 }
-                
-                //清理redis中对应的identityId.dpi和identityId.scan
+
+                // 清理redis中对应的identityId.dpi和identityId.scan
                 identityRedisClient.del(identityIdStr + ".dpi", identityIdStr + ".scan");
             }
         }
@@ -242,9 +242,9 @@ public class LMSdkServiceImpl implements LMSdkService {
             params = "";
         } else {
             browserFingerprintId = deviceFingerprintId;
-            
+
             JedisPort dfpIdRedisClient = clientShardingSupport.getClient(deviceFingerprintId);
-            if(StringUtils.isBlank(scanPrefix) && dfpIdRedisClient.hexists(deviceFingerprintId, "scan")){
+            if (StringUtils.isBlank(scanPrefix) && dfpIdRedisClient.hexists(deviceFingerprintId, "scan")) {
                 scanPrefix = "pc_";
             }
             installType = scanPrefix + DeepLinkCount.getCountTypeFromOs(installParams.os, "install");
@@ -539,7 +539,7 @@ public class LMSdkServiceImpl implements LMSdkService {
         long appId = urlParams.app_id; // web创建url传appid, sdk创建url不传appid
         if (appId <= 0) {
             if (Strings.isNullOrEmpty(urlParams.linkedme_key)) {
-                throw new LMException(LMExceptionFactor.LM_ILLEGAL_PARAMETER_VALUE, "linkedme_key is invalid");
+                throw new LMException(LMExceptionFactor.LM_ILLEGAL_PARAM_VALUE, "linkedme_key is invalid");
             }
             JedisPort linkedmeKeyClient = linkedmeKeyShardingSupport.getClient(urlParams.linkedme_key);
             String appIdStr = linkedmeKeyClient.hget(urlParams.linkedme_key, "appid");
@@ -549,7 +549,7 @@ public class LMSdkServiceImpl implements LMSdkService {
         }
         if (appId <= 0) {
             String msg = ("Dashboard".equals(urlParams.source)) ? "app_id = 0" : "linkedme_key is invalid";
-            throw new LMException(LMExceptionFactor.LM_ILLEGAL_PARAMETER_VALUE, msg);
+            throw new LMException(LMExceptionFactor.LM_ILLEGAL_PARAM_VALUE, msg);
         }
         if (id != null) {
             String link = Base62.encode(Long.parseLong(id));

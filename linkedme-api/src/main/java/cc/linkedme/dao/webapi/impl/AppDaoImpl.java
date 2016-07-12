@@ -9,16 +9,13 @@ import java.sql.Timestamp;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import cc.linkedme.commons.util.Util;
 import org.apache.commons.collections.map.HashedMap;
 import org.apache.commons.io.IOUtils;
-import org.apache.mina.util.byteaccess.ByteArray;
 import org.springframework.dao.DataAccessException;
 import org.springframework.jdbc.core.RowMapper;
 
