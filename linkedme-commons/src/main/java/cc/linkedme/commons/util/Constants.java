@@ -7,7 +7,6 @@ public class Constants {
 
     public static final String DEEPLINK_HTTPS_PREFIX = "https://lkme.cc";
     public static final String LIVE_TEST_API_FLAG = "i";
-
     
     public static final String DEEPLINK_HTTP_PREFIX = "http://lkme.cc/";
     public static final String LINKEDME_HTTPS_PREFIX = "https://www.linkedme.cc/";
@@ -18,6 +17,8 @@ public class Constants {
     public static final String LOGO_HTTPS_BASE_URL = DEEPLINK_HTTPS_PREFIX +"/"+ LIVE_TEST_API_FLAG + "/sdk/images/";
     public static final String LOGO_HTTP_BASE_URL = DEEPLINK_HTTP_PREFIX + LIVE_TEST_API_FLAG + "/sdk/images/";
     public static final String APP_LOGO_IMG_TYPE = ".png";
+    
+    public static final String BTN_CLICK_URL = DEEPLINK_HTTP_PREFIX + LIVE_TEST_API_FLAG + "/ride/click_btn";
 
     public static final boolean enableProfiling = true;
 

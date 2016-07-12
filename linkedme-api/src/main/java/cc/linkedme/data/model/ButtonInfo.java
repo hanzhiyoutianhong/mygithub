@@ -14,7 +14,6 @@ public class ButtonInfo {
     private String creationTime;
     private int checkStatus;
     private int onlineStatus;
-    private int consumerOnlineStatus;
 
     private ConsumerAppInfo consumerAppInfo;
 
@@ -83,13 +82,7 @@ public class ButtonInfo {
         return onlineStatus;
     }
 
-    public int getConsumerOnlineStatus() {
-        return consumerOnlineStatus;
-    }
-
-    public void setConsumerOnlineStatus(int consumerOnlineStatus) {
-        this.consumerOnlineStatus = consumerOnlineStatus;
-    }
+ 
 
     public void setOnlineStatus(int onlineStatus) {
         this.onlineStatus = onlineStatus;
