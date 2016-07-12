@@ -49,9 +49,9 @@ public class MsgUtils {
         info.append("device_id", fingerPrintInfo.getDeviceId());
         info.append("device_type", fingerPrintInfo.getDeviceType());
         info.append("identity_id", fingerPrintInfo.getIdentityId());
-        info.append("stage", fingerPrintInfo.getStage());
+        info.append("operation_type", fingerPrintInfo.getOperationType().toString());
         info.append("current_time", fingerPrintInfo.getCurrentTime());
-        if (fingerPrintInfo.getStage() == FingerPrintInfo.ADD_FINGERPRINT_INFO) {
+        if (fingerPrintInfo.getOperationType() == FingerPrintInfo.OperationType.ADD) {
             info.append("new_identity_id", fingerPrintInfo.getNewIdentityId());
         }
 

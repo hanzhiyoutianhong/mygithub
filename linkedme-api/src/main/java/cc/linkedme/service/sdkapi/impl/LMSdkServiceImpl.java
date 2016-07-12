@@ -2,6 +2,8 @@ package cc.linkedme.service.sdkapi.impl;
 
 import javax.annotation.Resource;
 
+import cc.linkedme.commons.exception.LMException;
+import cc.linkedme.commons.exception.LMExceptionFactor;
 import org.apache.commons.lang3.StringUtils;
 
 import cc.linkedme.commons.log.ApiLogger;
@@ -27,8 +29,6 @@ import cc.linkedme.data.model.params.PreInstallParams;
 import cc.linkedme.data.model.params.UrlParams;
 import cc.linkedme.data.model.params.WebCloseParams;
 import cc.linkedme.data.model.params.WebInitParams;
-import cc.linkedme.exception.LMException;
-import cc.linkedme.exception.LMExceptionFactor;
 import cc.linkedme.mcq.ClientMsgPusher;
 import cc.linkedme.mcq.DeepLinkMsgPusher;
 import cc.linkedme.mcq.FingerPrintMsgPusher;
@@ -165,14 +165,14 @@ public class LMSdkServiceImpl implements LMSdkService {
         long identityId = 0;
         long newIdentityId = 0;
         long deepLinkId = 0;
-        int stage = -1;
+        FingerPrintInfo.OperationType operationType = FingerPrintInfo.OperationType.NONE;
         DeepLink deepLink = null;
         String deviceFingerprintId = "d";
         String browserFingerprintId = "b";
         String installType = "other";
 
         if (Strings.isNullOrEmpty(identityIdStr)) { // 之前不存在<device, identityId>
-            stage = FingerPrintInfo.ADD_FINGERPRINT_INFO;
+            operationType = FingerPrintInfo.OperationType.ADD;
             // device_fingerprint_id 与 browse_fingerprint_id匹配逻辑
             deviceFingerprintId =
                     createFingerprintId(String.valueOf(appId), installParams.os, installParams.os_version, installParams.clientIP);
@@ -208,7 +208,7 @@ public class LMSdkServiceImpl implements LMSdkService {
                 deepLinkIdStr = dfpIdRedisClient.hget(deviceFingerprintId, "did");
 
                 if (identityIdStr != null && deepLinkIdStr != null) { // 匹配成功
-                    stage = FingerPrintInfo.UPDATE_FINGERPRINT_INFO;
+                    operationType = FingerPrintInfo.OperationType.UPDATE;
                     newIdentityId = Long.parseLong(identityIdStr);
                     deepLinkId = Long.parseLong(deepLinkIdStr);
                     deepLink = deepLinkService.getDeepLinkInfo(deepLinkId, appId);
@@ -222,15 +222,15 @@ public class LMSdkServiceImpl implements LMSdkService {
                     }
                 }
             } else { // 之前存在identityId, 并有identityId与deepLink的键值对
-                stage = FingerPrintInfo.NO_OPTIONS;
+                operationType = FingerPrintInfo.OperationType.NONE;
                 deepLinkId = Long.parseLong(deepLinkIdStr);
                 deepLink = deepLinkService.getDeepLinkInfo(deepLinkId, appId);
-                
-                if(identityRedisClient.exists(identityIdStr + ".scan")){
+
+                if (identityRedisClient.exists(identityIdStr + ".scan")) {
                     scanPrefix = "pc_";
                 }
-                
-                //清理redis中对应的identityId.dpi和identityId.scan
+
+                // 清理redis中对应的identityId.dpi和identityId.scan
                 identityRedisClient.del(identityIdStr + ".dpi", identityIdStr + ".scan");
             }
         }
@@ -242,9 +242,9 @@ public class LMSdkServiceImpl implements LMSdkService {
             params = "";
         } else {
             browserFingerprintId = deviceFingerprintId;
-            
+
             JedisPort dfpIdRedisClient = clientShardingSupport.getClient(deviceFingerprintId);
-            if(StringUtils.isBlank(scanPrefix) && dfpIdRedisClient.hexists(deviceFingerprintId, "scan")){
+            if (StringUtils.isBlank(scanPrefix) && dfpIdRedisClient.hexists(deviceFingerprintId, "scan")) {
                 scanPrefix = "pc_";
             }
             installType = scanPrefix + DeepLinkCount.getCountTypeFromOs(installParams.os, "install");
@@ -273,7 +273,7 @@ public class LMSdkServiceImpl implements LMSdkService {
         clientMsgPusher.addClient(clientInfo, fromDeepLinkId);
 
         // 写mcq,存储键值对
-        FingerPrintInfo fingerPrintInfo = toFingerPrintInfo(identityId, newIdentityId, deviceId, installParams.device_type, stage);
+        FingerPrintInfo fingerPrintInfo = toFingerPrintInfo(identityId, newIdentityId, deviceId, installParams.device_type, operationType);
         fingerPrintMsgPusher.updateFingerPrint(fingerPrintInfo);
 
 
@@ -299,7 +299,7 @@ public class LMSdkServiceImpl implements LMSdkService {
         return resultJson.toString();
     }
 
-    private FingerPrintInfo toFingerPrintInfo(long identityId, long newIdentityId, String deviceId, int deviceType, int stage) {
+    private FingerPrintInfo toFingerPrintInfo(long identityId, long newIdentityId, String deviceId, int deviceType, FingerPrintInfo.OperationType operationType) {
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
         Date currentTime = new Date();
 
@@ -309,7 +309,7 @@ public class LMSdkServiceImpl implements LMSdkService {
         fingerPrintInfo.setNewIdentityId(newIdentityId);
         fingerPrintInfo.setDeviceId(deviceId);
         fingerPrintInfo.setDeviceType(deviceType);
-        fingerPrintInfo.setStage(stage);
+        fingerPrintInfo.setOperationType(operationType);
         return fingerPrintInfo;
     }
 
@@ -539,7 +539,7 @@ public class LMSdkServiceImpl implements LMSdkService {
         long appId = urlParams.app_id; // web创建url传appid, sdk创建url不传appid
         if (appId <= 0) {
             if (Strings.isNullOrEmpty(urlParams.linkedme_key)) {
-                throw new LMException(LMExceptionFactor.LM_ILLEGAL_PARAMETER_VALUE, "linkedme_key is invalid");
+                throw new LMException(LMExceptionFactor.LM_ILLEGAL_PARAM_VALUE, "linkedme_key is invalid");
             }
             JedisPort linkedmeKeyClient = linkedmeKeyShardingSupport.getClient(urlParams.linkedme_key);
             String appIdStr = linkedmeKeyClient.hget(urlParams.linkedme_key, "appid");
@@ -549,7 +549,7 @@ public class LMSdkServiceImpl implements LMSdkService {
         }
         if (appId <= 0) {
             String msg = ("Dashboard".equals(urlParams.source)) ? "app_id = 0" : "linkedme_key is invalid";
-            throw new LMException(LMExceptionFactor.LM_ILLEGAL_PARAMETER_VALUE, msg);
+            throw new LMException(LMExceptionFactor.LM_ILLEGAL_PARAM_VALUE, msg);
         }
         if (id != null) {
             String link = Base62.encode(Long.parseLong(id));

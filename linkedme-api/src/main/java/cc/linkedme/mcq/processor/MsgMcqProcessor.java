@@ -149,14 +149,13 @@ public class MsgMcqProcessor extends McqProcessor {
     private int processFingerPrintMsg(int type, JSONObject info) {
         int result = ApiUtil.MQ_PROCESS_ABORT;
         FingerPrintInfo fingerPrintInfo = new FingerPrintInfo();
-        int stage = info.getInt("stage");
         if (type == 41) {
             fingerPrintInfo.setDeviceId(info.getString("device_id"));
             fingerPrintInfo.setDeviceType(info.getInt("device_type"));
             fingerPrintInfo.setIdentityId(info.getLong("identity_id"));
             fingerPrintInfo.setCurrentTime(info.getString("current_time"));
-            fingerPrintInfo.setStage(stage);
-            if (stage == 1) {
+            fingerPrintInfo.setOperationType(FingerPrintInfo.OperationType.valueOf(info.getString("operation_type")));
+            if (fingerPrintInfo.getOperationType() == FingerPrintInfo.OperationType.UPDATE) {
                 fingerPrintInfo.setNewIdentityId(info.getLong("new_identity_id"));
             }
             result = updateFingerPrint(fingerPrintInfo);
@@ -195,7 +194,7 @@ public class MsgMcqProcessor extends McqProcessor {
     private int updateFingerPrint(FingerPrintInfo fingerPrintInfo) {
         int result = 0;
         if (updateDb) {
-            if (fingerPrintInfo.getStage() != FingerPrintInfo.NO_OPTIONS) {
+            if (fingerPrintInfo.getOperationType() != FingerPrintInfo.OperationType.NONE) {
                 result += fingerPrintService.addFingerPrint(fingerPrintInfo);
             }
         }

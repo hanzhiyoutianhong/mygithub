@@ -5,17 +5,12 @@ import cc.linkedme.dao.BaseDao;
 import cc.linkedme.dao.sdkapi.DeepLinkParamDao;
 import cc.linkedme.data.dao.strategy.TableChannel;
 import cc.linkedme.data.dao.util.DaoUtil;
-import cc.linkedme.data.dao.util.JdbcTemplate;
-import cc.linkedme.data.model.AppInfo;
 import cc.linkedme.data.model.DeepLink;
 import org.springframework.dao.DataAccessException;
 import org.springframework.jdbc.core.ResultSetExtractor;
-import org.springframework.jdbc.core.RowMapper;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.ArrayList;
-import java.util.List;
 
 /**
  * Created by LinkedME01 on 16/3/19.
