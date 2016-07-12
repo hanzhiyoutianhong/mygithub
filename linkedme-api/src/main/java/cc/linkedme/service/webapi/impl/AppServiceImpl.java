@@ -82,16 +82,7 @@ public class AppServiceImpl implements AppService {
     
     public boolean isIosBundleIdExist(String iosBundleId, long appId){
         return appDao.isIosBundleIdExist(iosBundleId, appId);
-    }
-    
-    public boolean isIosAppPrefixExist(String iosAppPrefix, long appId){
-        return appDao.isIosAppPrefixExist(iosAppPrefix, appId);
-    }
-    
-    public boolean isAndroidSha256Exist(String androidSha256Fingerprints, long appId){
-        return appDao.isAndroidSha256Exist(androidSha256Fingerprints, appId);
-    }
-    
+    }    
     
     private void updateAppleAssociationFile(String appIdentifier, String appID) {
         BufferedReader br = null;

@@ -49,9 +49,6 @@
                 <entry key="IS_ANDROID_URI_SCHEME_EXIST" value="select id from $db$.$tb$ where android_uri_scheme = ?"/>
                 <entry key="IS_ANDROID_PACKAKGE_NAME_EXIST" value="select id from $db$.$tb$ where android_package_name = ?"/>
                 <entry key="IS_IOS_BUNDLEID_EXIST" value="select id from $db$.$tb$ where ios_bundle_id = ?"/>
-                <entry key="IS_IOS_APP_PREFIX_EXIST" value="select id from $db$.$tb$ where ios_app_prefix = ?"/>
-                <entry key="IS_ANDROID_SHA256_EXIST" value="select id from $db$.$tb$ where android_sha256_fingerprints = ?"/>
-
             </map>
         </property>
         <property name="jdbcTemplates">

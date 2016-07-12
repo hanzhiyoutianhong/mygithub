@@ -60,8 +60,6 @@ public class AppDaoImpl extends BaseDao implements AppDao {
     private static final String IS_ANDROID_URI_SCHEME_EXIST = "IS_ANDROID_URI_SCHEME_EXIST";
     private static final String IS_ANDROID_PACKAKGE_NAME_EXIST = "IS_ANDROID_PACKAKGE_NAME_EXIST";
     private static final String IS_IOS_BUNDLEID_EXIST = "IS_IOS_BUNDLEID_EXIST";
-    private static final String IS_IOS_APP_PREFIX_EXIST = "IS_IOS_APP_PREFIX_EXIST";
-    private static final String IS_ANDROID_SHA256_EXIST = "IS_ANDROID_SHA256_EXIST";
 
     
     public int insertApp(AppInfo appInfo) {
@@ -450,16 +448,6 @@ public class AppDaoImpl extends BaseDao implements AppDao {
     @Override
     public boolean isIosBundleIdExist(String iosBundleId, long appId) {
         return isAppPropertyValueExist(IS_IOS_BUNDLEID_EXIST, iosBundleId, appId);
-    }
-
-    @Override
-    public boolean isIosAppPrefixExist(String iosAppPrefix, long appId) {
-        return isAppPropertyValueExist(IS_IOS_APP_PREFIX_EXIST, iosAppPrefix, appId);
-    }
-
-    @Override
-    public boolean isAndroidSha256Exist(String androidSha256Fingerprints, long appId) {
-        return isAppPropertyValueExist(IS_ANDROID_SHA256_EXIST, androidSha256Fingerprints, appId);
     }
 
     private boolean isAppPropertyValueExist(String sql, String propertyValue, long appId) {

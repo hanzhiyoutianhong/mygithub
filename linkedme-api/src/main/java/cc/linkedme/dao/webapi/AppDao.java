@@ -39,7 +39,4 @@ public interface AppDao {
 
     public boolean isIosBundleIdExist(String iosBundleId, long appId);
 
-    public boolean isIosAppPrefixExist(String iosAppPrefix, long appId);
-
-    public boolean isAndroidSha256Exist(String androidSha256Fingerprints, long appId);
 }

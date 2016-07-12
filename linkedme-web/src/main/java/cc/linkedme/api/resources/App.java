@@ -196,27 +196,13 @@ public class App {
         } else if (appParams.has_ios && appService.isIosBundleIdExist(appParams.getIos_bundle_id(), appParams.getApp_id())) {
             errors.add(getErrorJson("ios_bundle_id", "该Bundle ID已被占用，请重新配置"));
         }
-
-        if (appParams.has_ios && StringUtils.isBlank(appParams.getIos_app_prefix())) {
-            errors.add(getErrorJson("ios_app_prefix", "请配置Apple App Prefix"));
-        } else if (appParams.has_ios && appService.isIosAppPrefixExist(appParams.getIos_app_prefix(), appParams.getApp_id())) {
-            errors.add(getErrorJson("ios_app_prefix", "该Apple App Prefix已被占用，请重新配置"));
-        }
-
-
+       
         if (appParams.has_android && StringUtils.isBlank(appParams.getAndroid_package_name())) {
             errors.add(getErrorJson("android_package_name", "请配置Package Name"));
         } else if (appParams.has_android && appService.isAndroidPackageNameExist(appParams.getAndroid_package_name(), appParams.getApp_id())) {
             errors.add(getErrorJson("android_package_name", "该Package Name已存在，请重新配置"));
         }
 
-
-        if (appParams.has_android && StringUtils.isBlank(appParams.getAndroid_sha256_fingerprints())) {
-            errors.add(getErrorJson("android_package_name", "请配置Android中的SHA256证书"));
-        } else if (appParams.has_android && appService.isAndroidSha256Exist(appParams.getAndroid_sha256_fingerprints(), appParams.getApp_id())) {
-            errors.add(getErrorJson("android_package_name", "该Android中的SHA256证书已存在，请重新配置"));
-        }
-       
         if(errors.size() > 0){
             return errors.toString();
         }

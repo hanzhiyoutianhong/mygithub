@@ -60,23 +60,6 @@ public interface AppService {
      * 校验ios bundle id是否被注册过
      * @return　如果被注册过，返回true；否则，返回false
      */
-    public boolean isIosBundleIdExist(String iosBundleId, long appId);
-
-    
-    /**
-     * 校验ios app prefix是否被注过
-     * @param iosAppPrefix
-     * @return 如果被注册过，返回true；否则，返回false
-     */
-    public boolean isIosAppPrefixExist(String iosAppPrefix, long appId);
-    
-    
-    /**
-     * 校验android sha256 fingerprints是否被注册过
-     * @param androidSha256Fingerprints
-     * @return 如果被注册过，返回true；否则，返回false
-     */
-    public boolean isAndroidSha256Exist(String androidSha256Fingerprints, long appId);
-    
+    public boolean isIosBundleIdExist(String iosBundleId, long appId);    
 
 }
