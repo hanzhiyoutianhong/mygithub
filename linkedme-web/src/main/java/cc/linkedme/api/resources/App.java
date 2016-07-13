@@ -211,6 +211,22 @@ public class App {
             errors.add(getErrorJson("android_sha256_fingerprints", "请配置Android的SHA256证书"));
         }
 
+        if ( appParams.ios_search_option.equals("apple_store") && StringUtils.isBlank(appParams.getIos_store_url())) {
+            errors.add(getErrorJson("ios_store_url", "请配置您的App在Apple Store中的下载链接"));
+        } else if( appParams.ios_search_option.equals("custom_url") && StringUtils.isBlank(appParams.getIos_custom_url())) {
+            errors.add(getErrorJson("ios_custom_url", "请配置您的iOS App的自定义下载链接"));
+        }
+
+        if( appParams.android_search_option.equals("google_play") && StringUtils.isBlank(appParams.getGoogle_play_url())) {
+            errors.add(getErrorJson("google_play_url", "请配置您的App在Android应用商店的下载链接"));
+        } else if( appParams.android_search_option.equals("custom_url") && StringUtils.isBlank(appParams.getAndroid_custom_url())) {
+            errors.add(getErrorJson("android_custom_url", "请配置您的Android App的自定义下载链接"));
+        }
+
+        if( !appParams.use_default_landing_page && StringUtils.isBlank(appParams.getCustom_landing_page())) {
+            errors.add(getErrorJson("custom_landing_page", "请配置PC端的自定义跳转链接"));
+        }
+
         if (appService.isAppNameExist(appParams)) {
             errors.add(getErrorJson("app_name", "您的账号下已存在相同的App名称，请重新配置"));
         }
