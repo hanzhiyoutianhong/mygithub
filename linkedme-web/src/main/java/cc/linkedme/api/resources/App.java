@@ -211,6 +211,9 @@ public class App {
             errors.add(getErrorJson("android_sha256_fingerprints", "请配置Android的SHA256证书"));
         }
 
+        if (appService.isAppNameExist(appParams)) {
+            errors.add(getErrorJson("app_name", "您的账号下已存在相同的App名称，请重新配置"));
+        }
         if(errors.size() > 0){
             return errors.toString();
         }
