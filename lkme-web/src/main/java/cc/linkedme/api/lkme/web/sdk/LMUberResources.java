@@ -25,7 +25,7 @@ import cc.linkedme.uber.rides.service.UberService;
 
 import com.google.common.base.Strings;
 
-@Path("ride")
+@Path("btn/ride")
 @Component
 public class LMUberResources {
     
@@ -36,7 +36,7 @@ public class LMUberResources {
     private SignAuthService signAuthService;
 
     
-    @Path("/get_btn_status")
+    @Path("/status")
     @GET
     @Produces({MediaType.APPLICATION_JSON})
     public String getBtnStatus(@QueryParam("btn_id") String btnId,
@@ -79,7 +79,7 @@ public class LMUberResources {
 
     
     
-    @Path("/init_btn")
+    @Path("/init")
     @POST
     @Produces({MediaType.APPLICATION_JSON})
     public String initButton(@FormParam("pickup_lng") double pickup_lng, 
@@ -144,7 +144,7 @@ public class LMUberResources {
     }
 
 
-    @Path("/click_btn")
+    @Path("/click")
     @POST
     @Produces(MediaType.APPLICATION_JSON)
     public String clickBtn(
