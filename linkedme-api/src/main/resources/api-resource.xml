@@ -8,14 +8,14 @@
         http://www.springframework.org/schema/context
         http://www.springframework.org/schema/context/spring-context.xsd">
 
-    <import resource="classpath:spring/deeplink/deeplink-context.xml" />
-    <import resource="classpath:spring/deeplink/deeplink-datecount-context.xml" />
-    <import resource="classpath:spring/app/app-context.xml" />
+    <import resource="classpath:spring/deeplink/deeplink-context.xml"/>
+    <import resource="classpath:spring/deeplink/deeplink-datecount-context.xml"/>
+    <import resource="classpath:spring/app/app-context.xml"/>
     <import resource="classpath:spring/user/user-content.xml"/>
-    <import resource="classpath:spring/client/client-context.xml" />
-    <import resource="classpath:spring/button/btn-context.xml" />
-    <import resource="classpath:spring/button/btn-count-context.xml" />
-    <import resource="classpath:spring/consumer/consumer-context.xml" />
+    <import resource="classpath:spring/client/client-context.xml"/>
+    <import resource="classpath:spring/button/btn-context.xml"/>
+    <import resource="classpath:spring/button/btn-count-context.xml"/>
+    <import resource="classpath:spring/consumer/consumer-context.xml"/>
     <import resource="classpath:spring/applist/applist-context.xml"/>
     <import resource="classpath:spring/fingerprint/fingerprint-context.xml"/>
     <import resource="classpath:spring/js/js.xml"/>
@@ -24,12 +24,13 @@
     <import resource="spring/redis/redis.xml"/>
     <import resource="spring/mysql/mysql.xml"/>
     <import resource="spring/mc/mc.xml"/>
-    <import resource="spring/mcq/mcq-context.xml" />
+    <import resource="spring/mcq/mcq-context.xml"/>
 
     <context:component-scan base-package="cc.linkedme.service"/>
     <context:component-scan base-package="cc.linkedme.dao"/>
     <context:component-scan base-package="cc.linkedme.uber.rides.service"/>
     <context:component-scan base-package="cc.linkedme.auth"/>
 
-    <bean id="authFilter" class="cc.linkedme.auth.AuthFilter" />
+    <bean id="authFilter" class="cc.linkedme.auth.AuthFilter"/>
+    <bean id="sdkAuthFilter" class="cc.linkedme.auth.SdkAuthFilter"/>
 </beans>

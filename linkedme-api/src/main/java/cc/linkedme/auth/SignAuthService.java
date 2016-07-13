@@ -8,7 +8,6 @@ import java.util.List;
 import javax.servlet.ServletRequest;
 import javax.servlet.ServletResponse;
 
-import cc.linkedme.commons.util.ArrayUtil;
 import org.apache.commons.lang.StringUtils;
 import org.springframework.stereotype.Service;
 
