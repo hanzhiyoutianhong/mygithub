@@ -45,10 +45,10 @@
 
                 <entry key="VALIDATE_APP_NAME" value="select id from $db$.$tb$ where user_id = ? and app_name = ? and valid_status = '1'"/>
                 
-                <entry key="IS_IOS_URI_SCHEME_EXIST" value="select id from $db$.$tb$ where ios_uri_scheme = ?"/>
-                <entry key="IS_ANDROID_URI_SCHEME_EXIST" value="select id from $db$.$tb$ where android_uri_scheme = ?"/>
-                <entry key="IS_ANDROID_PACKAKGE_NAME_EXIST" value="select id from $db$.$tb$ where android_package_name = ?"/>
-                <entry key="IS_IOS_BUNDLEID_EXIST" value="select id from $db$.$tb$ where ios_bundle_id = ?"/>
+                <entry key="IS_IOS_URI_SCHEME_EXIST" value="select id from $db$.$tb$ where ios_uri_scheme = ? and valid_status = '1' "/>
+                <entry key="IS_ANDROID_URI_SCHEME_EXIST" value="select id from $db$.$tb$ where android_uri_scheme = ? and valid_status = '1' "/>
+                <entry key="IS_ANDROID_PACKAKGE_NAME_EXIST" value="select id from $db$.$tb$ where android_package_name = ? and valid_status = '1' "/>
+                <entry key="IS_IOS_BUNDLEID_EXIST" value="select id from $db$.$tb$ where ios_bundle_id = ? and valid_status = '1' "/>
             </map>
         </property>
         <property name="jdbcTemplates">

@@ -2,9 +2,9 @@ package cc.linkedme.data.model.params;
 
 import javax.xml.bind.annotation.XmlRootElement;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import net.sf.json.JSONObject;
 
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 /**
  * Created by LinkedME01 on 16/3/18.
