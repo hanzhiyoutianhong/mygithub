@@ -181,14 +181,16 @@ public class UberService {
         
         String hashField;
         if ("ios".equals(clickBtnParams.source)) {
-            hashField ="ios_click";
+            hashField ="ios_click_count";
         } else if ("android".equals(clickBtnParams.source)) {
-            hashField = "android_click";
+            hashField = "android_click_count";
         } else if("web".equals(clickBtnParams.source)) {
-            hashField = "web_click";
+            hashField = "web_click_count";
         } else{
-            hashField = "other_click";
+            hashField = "other_click_count";
         }
+
+        buttonCount(buttonInfo.getBtnId(), buttonInfo.getAppId(), buttonInfo.getConsumerAppId(), hashField, 1);
         ApiLogger.btnCount(btnCountKey);
         JedisPort btnCountClient = btnCountShardingSupport.getClient(btnCountKey);
         btnCountClient.hincrBy(btnCountKey, hashField, 1);
@@ -224,47 +226,6 @@ public class UberService {
         buttonCount.setCountType(countType);
         buttonCount.setConsumerId(consumerAppId);
         buttonCount.setCountValue(value);
-//        if(countType.equals("ios_view")) {
-//            buttonCount.setIosViewCount(value);
-//        } else if( countType.equals("android_view")) {
-//            buttonCount.setAndroidViewCount(value);
-//        } else if(countType.equals("web_view")) {
-//            buttonCount.setWebViewCount(value);
-//        } else if(countType.equals("other_view")) {
-//            buttonCount.setOtherViewCount(value);
-//        } else if(countType.equals("ios_click")) {
-//            buttonCount.setIosClickCount(value);
-//        } else if(countType.equals("android_click")) {
-//            buttonCount.setAndroidClickCount(value);
-//        } else if(countType.equals("web_click")) {
-//            buttonCount.setWebClickCount(value);
-//        } else if(countType.equals("other_click")) {
-//            buttonCount.setOtherClickCount(value);
-//        } else if(countType.equals("ios_open")) {
-//            buttonCount.setIosOpenCount(value);
-//        } else if(countType.equals("android_open")) {
-//            buttonCount.setAndroidOpenCount(value);
-//        } else if(countType.equals("web_open")) {
-//            buttonCount.setWebOpenCount(value);
-//        } else if(countType.equals("other_open")) {
-//            buttonCount.setOtherOpenCount(value);
-//        } else if(countType.equals("ios_order")) {
-//            buttonCount.setIosOrderCount(value);
-//        } else if(countType.equals("android_order")) {
-//            buttonCount.setAndroidOrderCount(value);
-//        } else if(countType.equals("web_order")) {
-//            buttonCount.setWebOrderCount(value);
-//        } else if(countType.equals("other_order")) {
-//            buttonCount.setOtherOrderCount(value);
-//        } else if(countType.equals("ios_income")) {
-//            buttonCount.setIosIncome(value);
-//        } else if(countType.equals("android_income")) {
-//            buttonCount.setAndroidIncome(value);
-//        } else if(countType.equals("web_income")) {
-//            buttonCount.setWebIncome(value);
-//        } else if(countType.equals("other_income")) {
-//            buttonCount.setOtherIncome(value);
-//        }
 
         String date = Util.getCurrDate();
         buttonCount.setDate(date);

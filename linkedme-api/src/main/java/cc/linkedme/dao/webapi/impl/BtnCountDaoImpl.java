@@ -26,7 +26,7 @@ public class BtnCountDaoImpl extends BaseDao implements BtnCountDao {
     public int addButtonCount(ButtonCount buttonCount) {
         String countType = buttonCount.getCountType();
 
-        String id = buttonCount.getBtnId() + "_" + buttonCount.getAppId() + "_" + buttonCount.getDate();
+        String id = buttonCount.getBtnId() + "_" + buttonCount.getConsumerId() + "_" + buttonCount.getDate();
         TableChannel tableChannel = tableContainer.getTableChannel("btnCount", ADD_BUTTON_COUNT, buttonCount.getAppId(), Util.timeStrToDate(buttonCount.getDate()));
 
         String sql = tableChannel.getSql() + " (id, app_id, btn_id, consumer_id, date, " + countType + ") values(?, ?, ?, ?, ?, ?) ON DUPLICATE KEY UPDATE " + countType + " = " + countType + " + values("

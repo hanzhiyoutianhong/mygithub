@@ -74,47 +74,6 @@ public class MsgUtils {
         String countType = buttonCount.getCountType();
         info.append("count_type", countType);
         info.append("count_value", buttonCount.getCountValue());
-//        if(countType.equals("ios_view")) {
-//            info.append("ios_view", buttonCount.getIosViewCount());
-//        } else if( countType.equals("android_view")) {
-//            info.append("android_view", buttonCount.getAndroidViewCount());
-//        } else if(countType.equals("web_view")) {
-//            info.append("web_view", buttonCount.getWebViewCount());
-//        } else if(countType.equals("other_view")) {
-//            info.append("other_view", buttonCount.getOtherViewCount());
-//        } else if(countType.equals("ios_click")) {
-//            info.append("ios_click", buttonCount.getIosClickCount());
-//        } else if(countType.equals("android_click")) {
-//            info.append("android_click", buttonCount.getAndroidClickCount());
-//        } else if(countType.equals("web_click")) {
-//            info.append("web_click", buttonCount.getWebClickCount());
-//        } else if(countType.equals("other_click")) {
-//            info.append("other_click", buttonCount.getOtherClickCount());
-//        } else if(countType.equals("ios_open")) {
-//            info.append("ios_open", buttonCount.getIosOpenCount());
-//        } else if(countType.equals("android_open")) {
-//            info.append("android_open", buttonCount.getAndroidOpenCount());
-//        } else if(countType.equals("web_open")) {
-//            info.append("web_open", buttonCount.getWebOpenCount());
-//        } else if(countType.equals("other_open")) {
-//            info.append("other_open", buttonCount.getOtherOpenCount());
-//        } else if(countType.equals("ios_order")) {
-//            info.append("ios_order", buttonCount.getIosOrderCount());
-//        } else if(countType.equals("android_order")) {
-//            info.append("android_order", buttonCount.getAndroidOrderCount());
-//        } else if(countType.equals("web_order")) {
-//            info.append("web_order", buttonCount.getWebOrderCount());
-//        } else if(countType.equals("other_order")) {
-//            info.append("other_order", buttonCount.getOtherOrderCount());
-//        } else if(countType.equals("ios_income")) {
-//            info.append("ios_income", buttonCount.getIosIncome());
-//        } else if(countType.equals("android_income")) {
-//            info.append("android_income", buttonCount.getAndroidIncome());
-//        } else if(countType.equals("web_income")) {
-//            info.append("web_income", buttonCount.getWebIncome());
-//        } else if(countType.equals("other_income")) {
-//            info.append("other_income", buttonCount.getOtherIncome());
-//        }
 
         buttonCountMsg.append("info", info.flip());
         return buttonCountMsg.flip().toString();
