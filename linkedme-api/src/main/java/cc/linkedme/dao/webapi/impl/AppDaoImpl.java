@@ -241,34 +241,28 @@ public class AppDaoImpl extends BaseDao implements AppDao {
 
     public int updateApp(final AppParams appParams) {
         int res = 0;
-        if (!isAppNameValidate(appParams))
-            throw new LMException(LMExceptionFactor.LM_ILLEGAL_PARAM_VALUE, "Duplicate app name");
-        else {
-            TableChannel tableChannel =
-                    tableContainer.getTableChannel("appInfo", UPDATE_APP_BY_APPID, appParams.user_id, appParams.user_id);
-            JdbcTemplate jdbcTemplate = tableChannel.getJdbcTemplate();
+        TableChannel tableChannel = tableContainer.getTableChannel("appInfo", UPDATE_APP_BY_APPID, appParams.user_id, appParams.user_id);
+        JdbcTemplate jdbcTemplate = tableChannel.getJdbcTemplate();
 
-            Object[] values = new Object[]{appParams.app_name, appParams.type, appParams.ios_uri_scheme, appParams.ios_not_url,
-                    appParams.ios_search_option, appParams.ios_store_url, appParams.ios_custom_url, appParams.ios_bundle_id,
-                    appParams.ios_app_prefix, appParams.android_uri_scheme, appParams.android_not_url, appParams.android_search_option,
-                    appParams.google_play_url, appParams.android_custom_url, appParams.android_package_name,
-                    appParams.android_sha256_fingerprints, appParams.ios_android_flag, appParams.use_default_landing_page,
-                    appParams.custom_landing_page, appParams.app_id};
+        Object[] values = new Object[] {appParams.app_name, appParams.type, appParams.ios_uri_scheme, appParams.ios_not_url,
+                appParams.ios_search_option, appParams.ios_store_url, appParams.ios_custom_url, appParams.ios_bundle_id,
+                appParams.ios_app_prefix, appParams.android_uri_scheme, appParams.android_not_url, appParams.android_search_option,
+                appParams.google_play_url, appParams.android_custom_url, appParams.android_package_name,
+                appParams.android_sha256_fingerprints, appParams.ios_android_flag, appParams.use_default_landing_page,
+                appParams.custom_landing_page, appParams.app_id};
 
-            try {
-                res += jdbcTemplate.update(tableChannel.getSql(), values);
-            } catch (DataAccessException e) {
-                if (DaoUtil.isDuplicateInsert(e)) {
-                    ApiLogger.warn(new StringBuilder(128).append("Duplicate insert app table, app_name=").append(appParams.getApp_name()),
-                            e);
-                    throw new LMException(LMExceptionFactor.LM_FAILURE_DB_OP,
-                            "duplicate insert app table, app_name=" + appParams.getApp_name());
-                }
-                throw new LMException(LMExceptionFactor.LM_FAILURE_DB_OP);
+        try {
+            res += jdbcTemplate.update(tableChannel.getSql(), values);
+        } catch (DataAccessException e) {
+            if (DaoUtil.isDuplicateInsert(e)) {
+                ApiLogger.warn(new StringBuilder(128).append("Duplicate insert app table, app_name=").append(appParams.getApp_name()), e);
+                throw new LMException(LMExceptionFactor.LM_FAILURE_DB_OP,
+                        "duplicate insert app table, app_name=" + appParams.getApp_name());
             }
+            throw new LMException(LMExceptionFactor.LM_FAILURE_DB_OP);
         }
-        return res;
 
+        return res;
     }
 
     public List<UrlTagsInfo> getUrlTagsByAppId(AppParams appParams) {

@@ -34,6 +34,8 @@ public interface AppService {
 
     byte[] getAppImg(int appId, String type);
 
+    boolean isAppNameExist(AppParams appParams);
+
     
     /**
      * 校验android uri scheme是否为预留或者注册过
