@@ -17,12 +17,11 @@ import org.springframework.stereotype.Service;
 import cc.linkedme.commons.log.ApiLogger;
 import cc.linkedme.commons.redis.JedisPort;
 import cc.linkedme.commons.shard.ShardingSupportHash;
-import cc.linkedme.commons.useragent.Constants;
 import cc.linkedme.data.model.ButtonInfo;
 import cc.linkedme.data.model.ConsumerAppInfo;
+import cc.linkedme.data.model.Ride;
 import cc.linkedme.data.model.params.ClickBtnParams;
 import cc.linkedme.data.model.params.GetBtnStatusParams;
-import cc.linkedme.data.model.params.InitUberButtonParams;
 import cc.linkedme.service.webapi.BtnService;
 import cc.linkedme.service.webapi.ConsumerService;
 
@@ -56,10 +55,10 @@ public class UberService {
         return json.toString();
     }
     
-    public String initButton(InitUberButtonParams initUberButtonParams) {
+    public String initButton(Ride ride, String btnId, String source) {
         
         // 根据btn_id获取button信息
-        ButtonInfo buttonInfo = btnService.getBtnInfo(initUberButtonParams.btn_id);
+        ButtonInfo buttonInfo = btnService.getBtnInfo(btnId);
         
         JSONObject json = new JSONObject();
         if(buttonInfo.getOnlineStatus() == 0){       
@@ -77,21 +76,21 @@ public class UberService {
         String clientId = consumerAppInfo.getClientId();
         String serverToken = consumerAppInfo.getServerToken();
 
-        double startLat = initUberButtonParams.getPickup_lat();
-        double startLng = initUberButtonParams.getPickup_lng();
-        double endLat = initUberButtonParams.getDropoff_lat();
-        double endLng = initUberButtonParams.getDropoff_lng();
+        double startLat = ride.getPickupLatitude();
+        double startLng = ride.getPickupLongitude();
+        double endLat = ride.getDropoffLatitude();
+        double endLng = ride.getDropoffLongitude();
 
         // 计数
         String btnCountKey =
-                DateFormatUtils.format(new Date(), "yyyyMMdd") + "_" + buttonInfo.getAppId() + "_" + initUberButtonParams.btn_id + "_"
+                DateFormatUtils.format(new Date(), "yyyyMMdd") + "_" + buttonInfo.getAppId() + "_" + btnId + "_"
                         + consumerAppInfo.getAppId();
         String hashField;
-        if ("ios".equals(initUberButtonParams.getSource())) {
+        if ("ios".equals(source)) {
             hashField ="ios_view";
-        } else if ("android".equals(initUberButtonParams.getSource())) {
+        } else if ("android".equals(source)) {
             hashField = "android_view";
-        } else if("web".equals(initUberButtonParams.getSource())) {
+        } else if("web".equals(source)) {
             hashField = "web_view";
         } else{
             hashField = "other_view";
@@ -137,7 +136,7 @@ public class UberService {
         String formatSchemeUrl = String.format(
                 schemeUrl
                         + "client_id=%s&action=setPickup&pickup[latitude]=%s&pickup[longitude]=%s&pickup[formatted_address]=%s&dropoff[latitude]=%s&dropoff[longitude]=%s&dropoff[formatted_address]=%s",
-                clientId, startLat, startLng, initUberButtonParams.pickup_label, endLat, endLng, initUberButtonParams.dropoff_label);
+                clientId, startLat, startLng, ride.getPickupLabel(), endLat, endLng, ride.getDropoffLabel());
         if (!Strings.isNullOrEmpty(productId)) {
             formatSchemeUrl = formatSchemeUrl + "&product_id=" + productId;
         }
@@ -151,7 +150,7 @@ public class UberService {
         btn_title.put("scheme_url", formatSchemeUrl);
         
         String custom_url = String.format(customUrl  + "client_id=%s&action=setPickup&pickup[latitude]=%s&pickup[longitude]=%s&pickup[formatted_address]=%s&dropoff[latitude]=%s&dropoff[longitude]=%s&dropoff[formatted_address]=%s",
-                clientId, startLat, startLng, initUberButtonParams.pickup_label, endLat, endLng, initUberButtonParams.dropoff_label);
+                clientId, startLat, startLng, ride.getPickupLabel(), endLat, endLng, ride.getDropoffLabel());
         btn_title.put("custom_url", custom_url);
         btn_title.put("default_url", defaultUrl);
         btn_title.put("click_url", cc.linkedme.commons.util.Constants.BTN_CLICK_URL);

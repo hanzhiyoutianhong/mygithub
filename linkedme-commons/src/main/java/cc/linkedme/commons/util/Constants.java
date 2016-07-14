@@ -18,7 +18,7 @@ public class Constants {
     public static final String LOGO_HTTP_BASE_URL = DEEPLINK_HTTP_PREFIX + LIVE_TEST_API_FLAG + "/sdk/images/";
     public static final String APP_LOGO_IMG_TYPE = ".png";
     
-    public static final String BTN_CLICK_URL = DEEPLINK_HTTP_PREFIX + LIVE_TEST_API_FLAG + "/ride/click_btn";
+    public static final String BTN_CLICK_URL = DEEPLINK_HTTP_PREFIX + LIVE_TEST_API_FLAG + "/btn/ride/click";
 
     public static final boolean enableProfiling = true;
 

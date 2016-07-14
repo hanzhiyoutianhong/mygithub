@@ -2,6 +2,7 @@ package cc.linkedme.api.lkme.web.sdk;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
+import javax.ws.rs.BeanParam;
 import javax.ws.rs.FormParam;
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
@@ -15,15 +16,14 @@ import net.sf.json.JSONObject;
 
 import org.springframework.stereotype.Component;
 
-import cc.linkedme.auth.SignAuthService;
 import cc.linkedme.commons.log.ApiLogger;
 import cc.linkedme.commons.util.Util;
+import cc.linkedme.data.model.LMParams;
+import cc.linkedme.data.model.Ride;
 import cc.linkedme.data.model.params.ClickBtnParams;
 import cc.linkedme.data.model.params.GetBtnStatusParams;
 import cc.linkedme.data.model.params.InitUberButtonParams;
 import cc.linkedme.uber.rides.service.UberService;
-
-import com.google.common.base.Strings;
 
 @Path("btn/ride")
 @Component
@@ -31,9 +31,6 @@ public class LMUberResources {
     
     @Resource
     UberService uberService;
-
-    @Resource
-    private SignAuthService signAuthService;
 
     
     @Path("/status")
@@ -82,62 +79,38 @@ public class LMUberResources {
     @Path("/init")
     @POST
     @Produces({MediaType.APPLICATION_JSON})
-    public String initButton(@FormParam("pickup_lng") double pickup_lng, 
-                             @FormParam("pickup_lat") double pickup_lat,
-                             @FormParam("pickup_label") String pickup_label, 
-                             @FormParam("dropoff_lat") double dropoff_lat,
-                             @FormParam("dropoff_lng") double dropoff_lng,
-                             @FormParam("dropoff_label") String dropoff_label, 
-                             @FormParam("btn_id") String btn_id, 
-                             @FormParam("source") String source,
-                             @FormParam("linkedme_key") String linkedme_key, 
-                             @FormParam("identity_id") long identity_id, 
-                             @FormParam("session_id") long session_id,
-                             @FormParam("sdk_version") String sdk_version, 
-                             @FormParam("retry_times") int retry_times,
-                             @FormParam("timestamp") long timestamp, 
-                             @FormParam("sign") String sign,
-                             
-                             @Context HttpServletRequest request) {
+    public String initButton(@FormParam("btn_id") String btnId, @FormParam("source") String source, @BeanParam Ride ride,
+            @BeanParam LMParams lmParams) {
 
         InitUberButtonParams initUberButtonParams = new InitUberButtonParams();
-        initUberButtonParams.pickup_lng = pickup_lng;
-        initUberButtonParams.dropoff_lat = dropoff_lat;
-        initUberButtonParams.btn_id = btn_id;
-        initUberButtonParams.dropoff_lng = dropoff_lng;
-        initUberButtonParams.pickup_label = pickup_label;
-        initUberButtonParams.pickup_lat = pickup_lat;
-        initUberButtonParams.dropoff_label = dropoff_label;
-        initUberButtonParams.identity_id = identity_id;
-        initUberButtonParams.session_id = session_id;
+        initUberButtonParams.pickup_lng = ride.getPickupLongitude();
+        initUberButtonParams.dropoff_lat = ride.getDropoffLatitude();
+        initUberButtonParams.btn_id = btnId;
+        initUberButtonParams.dropoff_lng = ride.getDropoffLongitude();
+        initUberButtonParams.pickup_label = ride.getPickupLabel();
+        initUberButtonParams.pickup_lat = ride.getPickupLatitude();
+        initUberButtonParams.dropoff_label = ride.getDropoffLabel();
+        initUberButtonParams.identity_id = lmParams.getIdentityId();
+        initUberButtonParams.session_id = lmParams.getSessionId();
         initUberButtonParams.source = source;
-        initUberButtonParams.sdk_version = sdk_version;
-        initUberButtonParams.retry_times = retry_times;
-        initUberButtonParams.linkedme_key = Util.formatLinkedmeKey(linkedme_key);
-        initUberButtonParams.timestamp = timestamp;
-        initUberButtonParams.sign = sign;
-
-        // String apiName = "/i/uber/init_button";
-        // if (!signAuthService.doAuth(apiName, initUberButtonParams.sign,
-        // String.valueOf(initUberButtonParams.identity_id), initUberButtonParams.linkedme_key,
-        // String.valueOf(initUberButtonParams.session_id),
-        // String.valueOf(initUberButtonParams.timestamp))) {
-        // throw new LMException(LMExceptionFactor.LM_AUTH_FAILED);
-        // }
+        initUberButtonParams.sdk_version = lmParams.getSdkVersion();
+        initUberButtonParams.retry_times = lmParams.getRetryTimes();
+        initUberButtonParams.linkedme_key = Util.formatLinkedmeKey(lmParams.getLinkedmeKey());
+        initUberButtonParams.timestamp = lmParams.getTimestamp();
+        initUberButtonParams.sign = lmParams.getSign();
+        
         JSONObject requestJson = JSONObject.fromObject(initUberButtonParams);
 
-        String result = uberService.initButton(initUberButtonParams);
+        String result = uberService.initButton(ride, btnId, source);
 
         JSONObject log = new JSONObject();
         JSONObject responseJson = JSONObject.fromObject(result);
         log.put("request", requestJson);
         log.put("response", responseJson);
-        ApiLogger.biz(String.format("%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s", request.getHeader("x-forwarded-for"), "init_uber_btn",
-                initUberButtonParams.identity_id, initUberButtonParams.linkedme_key, initUberButtonParams.btn_id,
-                initUberButtonParams.session_id, initUberButtonParams.retry_times, initUberButtonParams.is_debug,
-                initUberButtonParams.sdk_version, log.toString()));
-
         
+        ApiLogger.biz(String.format("%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s", lmParams.getRemoteIp(), "init_uber_btn",
+                lmParams.getIdentityId(), lmParams.getLinkedmeKey(), btnId, lmParams.getSessionId(), lmParams.getRetryTimes(),
+                lmParams.getSdkVersion(), log.toString()));
       
         return result;
 
@@ -189,43 +162,6 @@ public class LMUberResources {
 
         return "{}";
     }
-
-
-
-    @Path("/test")
-    @GET
-    @Produces({MediaType.APPLICATION_JSON})
-    public String webhooks(@QueryParam("param") String param) {
-
-        return "{\"hello\":" + param + "}";
-    }
-
-    @Path("/sdk")
-    @GET
-    @Produces({MediaType.APPLICATION_JSON})
-    public String sdk(@QueryParam("linkedme_key") String linkedMEKey, 
-                      @QueryParam("button_id") String deviceId) {
-        if (Strings.isNullOrEmpty(linkedMEKey)) {
-
-        }
-
-        String result = null;
-        return result;
-    }
-
-    @Path("/callback")
-    @GET
-    @Produces({MediaType.APPLICATION_JSON})
-    public String callback(@QueryParam("linkedme_key") String linkedMEKey, 
-                           @QueryParam("button_id") String deviceId,
-                           @QueryParam("device_type") Byte deviceType) {
-        
-        if (Strings.isNullOrEmpty(linkedMEKey)) {
-
-        }
-
-        String result = null;
-
-        return result;
-    }
+    
+    
 }
