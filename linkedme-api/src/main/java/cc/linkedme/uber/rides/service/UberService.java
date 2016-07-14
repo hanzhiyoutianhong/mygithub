@@ -5,6 +5,9 @@ import java.util.Date;
 
 import javax.annotation.Resource;
 
+import cc.linkedme.commons.util.Util;
+import cc.linkedme.data.model.ButtonCount;
+import cc.linkedme.mcq.ButtonCountMsgPusher;
 import net.sf.json.JSONArray;
 import net.sf.json.JSONObject;
 
@@ -42,6 +45,9 @@ public class UberService {
 
     @Resource
     ShardingSupportHash<JedisPort> btnCountShardingSupport;
+
+    @Resource
+    private ButtonCountMsgPusher buttonCountMsgPusher;
     
     public String getBtnStatus(GetBtnStatusParams getBtnStatusParams){
         
@@ -61,10 +67,10 @@ public class UberService {
         ButtonInfo buttonInfo = btnService.getBtnInfo(btnId);
         
         JSONObject json = new JSONObject();
-        if(buttonInfo.getOnlineStatus() == 0){       
-            json.put("online_status", false);
-            return json.toString();
-        }
+//        if(buttonInfo.getOnlineStatus() == 0){
+//            json.put("online_status", false);
+//            return json.toString();
+//        }
         
         ConsumerAppInfo consumerAppInfo = consumerService.getConsumerAppInfo(buttonInfo.getConsumerAppId());
 
@@ -82,19 +88,24 @@ public class UberService {
         double endLng = ride.getDropoffLongitude();
 
         // 计数
+        String hashField;
+        if ("ios".equals(source)) {
+            hashField ="ios_view_count";
+        } else if ("android".equals(source)) {
+            hashField = "android_view_count";
+        } else if("web".equals(source)) {
+            hashField = "web_view_count";
+        } else{
+            hashField = "other_view_count";
+        }
+
+        buttonCount( btnId, buttonInfo.getAppId(), buttonInfo.getConsumerAppId(), hashField, 1 );
+
+
         String btnCountKey =
                 DateFormatUtils.format(new Date(), "yyyyMMdd") + "_" + buttonInfo.getAppId() + "_" + btnId + "_"
                         + consumerAppInfo.getAppId();
-        String hashField;
-        if ("ios".equals(source)) {
-            hashField ="ios_view";
-        } else if ("android".equals(source)) {
-            hashField = "android_view";
-        } else if("web".equals(source)) {
-            hashField = "web_view";
-        } else{
-            hashField = "other_view";
-        }
+
         ApiLogger.btnCount(btnCountKey);
         JedisPort btnCountClient = btnCountShardingSupport.getClient(btnCountKey);
         btnCountClient.hincrBy(btnCountKey, hashField, 1);
@@ -204,5 +215,60 @@ public class UberService {
             float newIncome = Float.parseFloat(appIncome) + price;
             appCountClient.set(hashKey + incomeSuffix, newIncome);
         }
+    }
+
+    private void buttonCount(String buttonId, long appId, long consumerAppId, String countType, int value) {
+        ButtonCount buttonCount = new ButtonCount();
+        buttonCount.setAppId(appId);
+        buttonCount.setBtnId(buttonId);
+        buttonCount.setCountType(countType);
+        buttonCount.setConsumerId(consumerAppId);
+        buttonCount.setCountValue(value);
+//        if(countType.equals("ios_view")) {
+//            buttonCount.setIosViewCount(value);
+//        } else if( countType.equals("android_view")) {
+//            buttonCount.setAndroidViewCount(value);
+//        } else if(countType.equals("web_view")) {
+//            buttonCount.setWebViewCount(value);
+//        } else if(countType.equals("other_view")) {
+//            buttonCount.setOtherViewCount(value);
+//        } else if(countType.equals("ios_click")) {
+//            buttonCount.setIosClickCount(value);
+//        } else if(countType.equals("android_click")) {
+//            buttonCount.setAndroidClickCount(value);
+//        } else if(countType.equals("web_click")) {
+//            buttonCount.setWebClickCount(value);
+//        } else if(countType.equals("other_click")) {
+//            buttonCount.setOtherClickCount(value);
+//        } else if(countType.equals("ios_open")) {
+//            buttonCount.setIosOpenCount(value);
+//        } else if(countType.equals("android_open")) {
+//            buttonCount.setAndroidOpenCount(value);
+//        } else if(countType.equals("web_open")) {
+//            buttonCount.setWebOpenCount(value);
+//        } else if(countType.equals("other_open")) {
+//            buttonCount.setOtherOpenCount(value);
+//        } else if(countType.equals("ios_order")) {
+//            buttonCount.setIosOrderCount(value);
+//        } else if(countType.equals("android_order")) {
+//            buttonCount.setAndroidOrderCount(value);
+//        } else if(countType.equals("web_order")) {
+//            buttonCount.setWebOrderCount(value);
+//        } else if(countType.equals("other_order")) {
+//            buttonCount.setOtherOrderCount(value);
+//        } else if(countType.equals("ios_income")) {
+//            buttonCount.setIosIncome(value);
+//        } else if(countType.equals("android_income")) {
+//            buttonCount.setAndroidIncome(value);
+//        } else if(countType.equals("web_income")) {
+//            buttonCount.setWebIncome(value);
+//        } else if(countType.equals("other_income")) {
+//            buttonCount.setOtherIncome(value);
+//        }
+
+        String date = Util.getCurrDate();
+        buttonCount.setDate(date);
+
+        buttonCountMsgPusher.addButtonCount(buttonCount);
     }
 }

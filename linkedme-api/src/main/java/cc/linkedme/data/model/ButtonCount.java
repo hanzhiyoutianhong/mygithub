@@ -9,13 +9,40 @@ public class ButtonCount {
     private String btnId;
     private long consumerId;
     private String date;
-    private int viewCount;
-    private int clickCount;
-    private int openAppCount;
-    private int openWebCount;
-    private int openOtherCount;
-    private int orderCount;
-    private float income;
+    private String countType;
+    private int countValue;
+
+    private int iosViewCount;
+    private int androidViewCount;
+    private int webViewCount;
+    private int otherViewCount;
+
+    private int iosClickCount;
+    private int androidClickCount;
+    private int webClickCount;
+    private int otherClickCount;
+
+    private int iosOpenCount;
+    private int androidOpenCount;
+    private int webOpenCount;
+    private int otherOpenCount;
+
+    private int iosOrderCount;
+    private int androidOrderCount;
+    private int webOrderCount;
+    private int otherOrderCount;
+
+    //存储的时候转成整型
+    private int iosIncome;
+    private int androidIncome;
+    private int webIncome;
+    private int otherIncome;
+
+    private int totalView;
+    private int totalClick;
+    private int totalOpen;
+    private int totalOrder;
+    private int totalIncome;
 
     public long getAppId() {
         return appId;
@@ -49,64 +76,219 @@ public class ButtonCount {
         this.date = date;
     }
 
-    public int getViewCount() {
-        return viewCount;
+    public String getCountType() {
+        return countType;
     }
 
-    public void setViewCount(int viewCount) {
-        this.viewCount = viewCount;
+    public void setCountType(String countType) {
+        this.countType = countType;
     }
 
-
-    public int getClickCount() {
-        return clickCount;
+    public int getCountValue() {
+        return countValue;
     }
 
-    public void setClickCount(int clickCount) {
-        this.clickCount = clickCount;
+    public void setCountValue(int countValue) {
+        this.countValue = countValue;
     }
 
-
-    public int getOpenAppCount() {
-        return openAppCount;
+    public int getIosViewCount() {
+        return iosViewCount;
     }
 
-    public void setOpenAppCount(int openAppCount) {
-        this.openAppCount = openAppCount;
+    public void setIosViewCount(int iosViewCount) {
+        this.iosViewCount = iosViewCount;
     }
 
-    public int getOpenWebCount() {
-        return openWebCount;
+    public int getAndroidViewCount() {
+        return androidViewCount;
     }
 
-    public void setOpenWebCount(int openWebCount) {
-        this.openWebCount = openWebCount;
+    public void setAndroidViewCount(int androidViewCount) {
+        this.androidViewCount = androidViewCount;
     }
 
-    public int getOrderCount() {
-        return orderCount;
+    public int getWebViewCount() {
+        return webViewCount;
     }
 
-    public void setOrderCount(int orderCount) {
-        this.orderCount = orderCount;
+    public void setWebViewCount(int webViewCount) {
+        this.webViewCount = webViewCount;
     }
 
-
-    public float getIncome() {
-        return income;
+    public int getOtherViewCount() {
+        return otherViewCount;
     }
 
-    public void setIncome(float income) {
-        this.income = income;
+    public void setOtherViewCount(int otherViewCount) {
+        this.otherViewCount = otherViewCount;
     }
 
-
-    public int getOpenOtherCount() {
-        return openOtherCount;
+    public int getIosClickCount() {
+        return iosClickCount;
     }
 
-    public void setOpenOtherCount(int openOtherCount) {
-        this.openOtherCount = openOtherCount;
+    public void setIosClickCount(int iosClickCount) {
+        this.iosClickCount = iosClickCount;
     }
 
+    public int getAndroidClickCount() {
+        return androidClickCount;
+    }
+
+    public void setAndroidClickCount(int androidClickCount) {
+        this.androidClickCount = androidClickCount;
+    }
+
+    public int getWebClickCount() {
+        return webClickCount;
+    }
+
+    public void setWebClickCount(int webClickCount) {
+        this.webClickCount = webClickCount;
+    }
+
+    public int getOtherClickCount() {
+        return otherClickCount;
+    }
+
+    public void setOtherClickCount(int otherClickCount) {
+        this.otherClickCount = otherClickCount;
+    }
+
+    public int getIosOpenCount() {
+        return iosOpenCount;
+    }
+
+    public void setIosOpenCount(int iosOpenCount) {
+        this.iosOpenCount = iosOpenCount;
+    }
+
+    public int getAndroidOpenCount() {
+        return androidOpenCount;
+    }
+
+    public void setAndroidOpenCount(int androidOpenCount) {
+        this.androidOpenCount = androidOpenCount;
+    }
+
+    public int getWebOpenCount() {
+        return webOpenCount;
+    }
+
+    public void setWebOpenCount(int webOpenCount) {
+        this.webOpenCount = webOpenCount;
+    }
+
+    public int getOtherOpenCount() {
+        return otherOpenCount;
+    }
+
+    public void setOtherOpenCount(int otherOpenCount) {
+        this.otherOpenCount = otherOpenCount;
+    }
+
+    public int getIosOrderCount() {
+        return iosOrderCount;
+    }
+
+    public void setIosOrderCount(int iosOrderCount) {
+        this.iosOrderCount = iosOrderCount;
+    }
+
+    public int getAndroidOrderCount() {
+        return androidOrderCount;
+    }
+
+    public void setAndroidOrderCount(int androidOrderCount) {
+        this.androidOrderCount = androidOrderCount;
+    }
+
+    public int getWebOrderCount() {
+        return webOrderCount;
+    }
+
+    public void setWebOrderCount(int webOrderCount) {
+        this.webOrderCount = webOrderCount;
+    }
+
+    public int getOtherOrderCount() {
+        return otherOrderCount;
+    }
+
+    public void setOtherOrderCount(int otherOrderCount) {
+        this.otherOrderCount = otherOrderCount;
+    }
+
+    public int getIosIncome() {
+        return iosIncome;
+    }
+
+    public void setIosIncome(int iosIncome) {
+        this.iosIncome = iosIncome;
+    }
+
+    public int getAndroidIncome() {
+        return androidIncome;
+    }
+
+    public void setAndroidIncome(int androidIncome) {
+        this.androidIncome = androidIncome;
+    }
+
+    public int getWebIncome() {
+        return webIncome;
+    }
+
+    public void setWebIncome(int webIncome) {
+        this.webIncome = webIncome;
+    }
+
+    public int getOtherIncome() {
+        return otherIncome;
+    }
+
+    public void setOtherIncome(int otherIncome) {
+        this.otherIncome = otherIncome;
+    }
+
+    public int getTotalView() {
+        return totalView;
+    }
+
+    public void setTotalView(int totalView) {
+        this.totalView = totalView;
+    }
+
+    public int getTotalClick() {
+        return totalClick;
+    }
+
+    public void setTotalClick(int totalClick) {
+        this.totalClick = totalClick;
+    }
+
+    public int getTotalOpen() {
+        return totalOpen;
+    }
+
+    public void setTotalOpen(int totalOpen) {
+        this.totalOpen = totalOpen;
+    }
+
+    public int getTotalOrder() {
+        return totalOrder;
+    }
+
+    public void setTotalOrder(int totalOrder) {
+        this.totalOrder = totalOrder;
+    }
+
+    public int getTotalIncome() {
+        return totalIncome;
+    }
+
+    public void setTotalIncome(int totalIncome) {
+        this.totalIncome = totalIncome;
+    }
 }

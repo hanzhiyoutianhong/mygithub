@@ -17,6 +17,8 @@ public class ButtonInfo {
 
     private ConsumerAppInfo consumerAppInfo;
 
+    private ButtonCount buttonCount;
+
 
     public String getBtnId() {
         return btnId;
