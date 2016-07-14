@@ -303,7 +303,8 @@ public class LMSdkServiceImpl implements LMSdkService {
         return resultJson.toString();
     }
 
-    private FingerPrintInfo toFingerPrintInfo(long identityId, long newIdentityId, String deviceId, int deviceType, FingerPrintInfo.OperationType operationType) {
+    private FingerPrintInfo toFingerPrintInfo(long identityId, long newIdentityId, String deviceId, int deviceType,
+            FingerPrintInfo.OperationType operationType) {
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
         Date currentTime = new Date();
 
@@ -389,12 +390,8 @@ public class LMSdkServiceImpl implements LMSdkService {
             }
 
             String clickId = getClickIdFromUri(deepLinkUrl);
-            if (!Strings.isNullOrEmpty(openParams.spotlight_identifier)
-                    && openParams.spotlight_identifier.startsWith(Constants.SPOTLIGHT_PREFIX)) {
-                String[] arr = openParams.spotlight_identifier.split("\\.");
-                if (arr.length == 3) {
-                    clickId = arr[2];
-                }
+            if (!Strings.isNullOrEmpty(openParams.spotlight_identifier)) {
+                clickId = DeepLinkUtil.getDeepLinkFromUrl(openParams.spotlight_identifier);
             }
             deepLinkId = Base62.decode(clickId);
             DeepLink deepLink = null;
@@ -522,7 +519,7 @@ public class LMSdkServiceImpl implements LMSdkService {
     public String url(UrlParams urlParams) {
         Joiner joiner = Joiner.on("&").skipNulls();
         Joiner joiner2 = Joiner.on(",").skipNulls();
-        // linkedme_key & tags & alias & channel & feature & stage & params TODO 添加identity_id信息
+        // linkedme_key & tags & channel & feature & stage & params TODO 添加identity_id信息
         // 区分用户和设备
         String urlParamsStr = joiner.join(urlParams.linkedme_key, joiner2.join(urlParams.tags), joiner2.join(urlParams.channel),
                 joiner2.join(urlParams.feature), joiner2.join(urlParams.stage), urlParams.params);
@@ -531,7 +528,10 @@ public class LMSdkServiceImpl implements LMSdkService {
         if ("Dashboard".equals(urlParams.source)) {
             urlParamsStr = urlParamsStr + "&" + System.currentTimeMillis();
         }
-        String deepLinkMd5 = MD5Utils.md5(urlParamsStr);
+        String deepLinkMd5 = urlParams.deepLinkMd5;
+        if (Strings.isNullOrEmpty(deepLinkMd5)) {
+            deepLinkMd5 = MD5Utils.md5(urlParamsStr);
+        }
         // 从redis里查找md5是否存在
         // 如果存在,找出对应的deeplink_id,base62进行编码,
         // 根据linkedmeKey从redis里查找出appId,生成短链,返回 //http://lkme.cc/abc/qwerk

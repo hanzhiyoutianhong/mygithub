@@ -25,8 +25,19 @@ public class SignAuthService {
         if (Strings.isNullOrEmpty(linkedmeKey)) {
             return false;
         }
+        String source = request.getParameter("source");
+        if (!Strings.isNullOrEmpty(source)) {
+            source = source.trim().toLowerCase();
+            // TODO Android sdk 还没有认证功能,后续需要加上
+            // web sdk和dashboard因为是js代码,加上认证会暴露认证算法,所以先去掉
+            if (source.equals("android") || source.equals("web") || source.equals("dashboard")) {
+                return true;
+            }
+        }
+
+        // TODO 后续不区分live/test key,这句要去掉
         linkedmeKey = Util.formatLinkedmeKey(linkedmeKey);
-        
+
         // 838212907f1a18565f85a63ed2508774 LinkedME
         // 03d6139e11d1b757a454ad7e07e3a295 创头条
         // 7e289a2484f4368dbafbd1e5c7d06903 LinkedME-Demo
