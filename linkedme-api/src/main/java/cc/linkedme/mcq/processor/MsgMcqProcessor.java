@@ -176,7 +176,7 @@ public class MsgMcqProcessor extends McqProcessor {
         int result = ApiUtil.MQ_PROCESS_ABORT;
         ButtonCount buttonCount = new ButtonCount();
 
-        if( type == 51 ) {
+        if (type == 51) {
             buttonCount.setAppId(info.getLong("app_id"));
             buttonCount.setBtnId(info.getString("button_id"));
             buttonCount.setConsumerId(info.getLong("consumer_id"));
@@ -233,7 +233,7 @@ public class MsgMcqProcessor extends McqProcessor {
 
     private int addButtonCount(ButtonCount buttonCount) {
         int result = 0;
-        if(updateDb) {
+        if (updateDb) {
             result += btnCountService.addButtonCount(buttonCount);
         }
 

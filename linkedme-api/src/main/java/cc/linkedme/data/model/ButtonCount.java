@@ -32,7 +32,7 @@ public class ButtonCount {
     private int webOrderCount;
     private int otherOrderCount;
 
-    //存储的时候转成整型
+    // 存储的时候转成整型
     private int iosIncome;
     private int androidIncome;
     private int webIncome;

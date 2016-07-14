@@ -36,7 +36,7 @@ import com.google.api.client.repackaged.com.google.common.base.Strings;
 
 @Service
 public class UberService {
-    
+
     @Resource
     BtnService btnService;
 
@@ -48,30 +48,30 @@ public class UberService {
 
     @Resource
     private ButtonCountMsgPusher buttonCountMsgPusher;
-    
-    public String getBtnStatus(GetBtnStatusParams getBtnStatusParams){
-        
+
+    public String getBtnStatus(GetBtnStatusParams getBtnStatusParams) {
+
         ButtonInfo btnInfo = btnService.getBtnInfo(getBtnStatusParams.getBtnId());
         ConsumerAppInfo consumerAppInfo = consumerService.getConsumerAppInfo(btnInfo.getConsumerAppId());
-        
+
         JSONObject json = new JSONObject();
         json.put("online_status", btnInfo.getOnlineStatus() == 1);
         json.put("scheme_url", consumerAppInfo.getSchemeUrl());
-        
+
         return json.toString();
     }
-    
+
     public String initButton(Ride ride, String btnId, String source) {
-        
+
         // 根据btn_id获取button信息
         ButtonInfo buttonInfo = btnService.getBtnInfo(btnId);
-        
+
         JSONObject json = new JSONObject();
-//        if(buttonInfo.getOnlineStatus() == 0){
-//            json.put("online_status", false);
-//            return json.toString();
-//        }
-        
+        // if(buttonInfo.getOnlineStatus() == 0){
+        // json.put("online_status", false);
+        // return json.toString();
+        // }
+
         ConsumerAppInfo consumerAppInfo = consumerService.getConsumerAppInfo(buttonInfo.getConsumerAppId());
 
         // 根据buttonInfo.getConsumerAppId()获取变现方的app信息
@@ -90,21 +90,20 @@ public class UberService {
         // 计数
         String hashField;
         if ("ios".equals(source)) {
-            hashField ="ios_view_count";
+            hashField = "ios_view_count";
         } else if ("android".equals(source)) {
             hashField = "android_view_count";
-        } else if("web".equals(source)) {
+        } else if ("web".equals(source)) {
             hashField = "web_view_count";
-        } else{
+        } else {
             hashField = "other_view_count";
         }
 
-        buttonCount( btnId, buttonInfo.getAppId(), buttonInfo.getConsumerAppId(), hashField, 1 );
+        buttonCount(btnId, buttonInfo.getAppId(), buttonInfo.getConsumerAppId(), hashField, 1);
 
 
-        String btnCountKey =
-                DateFormatUtils.format(new Date(), "yyyyMMdd") + "_" + buttonInfo.getAppId() + "_" + btnId + "_"
-                        + consumerAppInfo.getAppId();
+        String btnCountKey = DateFormatUtils.format(new Date(), "yyyyMMdd") + "_" + buttonInfo.getAppId() + "_" + btnId + "_"
+                + consumerAppInfo.getAppId();
 
         ApiLogger.btnCount(btnCountKey);
         JedisPort btnCountClient = btnCountShardingSupport.getClient(btnCountKey);
@@ -137,7 +136,7 @@ public class UberService {
                 JSONObject priceJson = jsonArray.getJSONObject(0);
                 productId = priceJson.getString("product_id");
                 price = priceJson.getString("estimate");
-                if(Strings.isNullOrEmpty(price)) {
+                if (Strings.isNullOrEmpty(price)) {
                     price = "";
                 }
                 distance = priceJson.getDouble("distance");
@@ -153,21 +152,23 @@ public class UberService {
         }
 
         json.put("online_status", true);
-        
+
         JSONObject btn_title = new JSONObject();
         btn_title.put("btn_icon", buttonIcon);
         String btn_msg = "距离" + distance + ",需花费约" + price;
         btn_title.put("btn_msg", btn_msg);
         btn_title.put("scheme_url", formatSchemeUrl);
-        
-        String custom_url = String.format(customUrl  + "client_id=%s&action=setPickup&pickup[latitude]=%s&pickup[longitude]=%s&pickup[formatted_address]=%s&dropoff[latitude]=%s&dropoff[longitude]=%s&dropoff[formatted_address]=%s",
+
+        String custom_url = String.format(
+                customUrl
+                        + "client_id=%s&action=setPickup&pickup[latitude]=%s&pickup[longitude]=%s&pickup[formatted_address]=%s&dropoff[latitude]=%s&dropoff[longitude]=%s&dropoff[formatted_address]=%s",
                 clientId, startLat, startLng, ride.getPickupLabel(), endLat, endLng, ride.getDropoffLabel());
         btn_title.put("custom_url", custom_url);
         btn_title.put("default_url", defaultUrl);
         btn_title.put("click_url", cc.linkedme.commons.util.Constants.BTN_CLICK_URL);
-        
+
         json.put("btn_title", btn_title);
-       
+
         return json.toString();
     }
 
@@ -175,18 +176,17 @@ public class UberService {
         // 根据btn_id获取button信息
         ButtonInfo buttonInfo = btnService.getBtnInfo(clickBtnParams.btn_id);
 
-        String btnCountKey =
-                DateFormatUtils.format(new Date(), "yyyyMMdd") + "_" + buttonInfo.getAppId() + "_" + buttonInfo.getBtnId() + "_"
-                        + buttonInfo.getConsumerAppId();
-        
+        String btnCountKey = DateFormatUtils.format(new Date(), "yyyyMMdd") + "_" + buttonInfo.getAppId() + "_" + buttonInfo.getBtnId()
+                + "_" + buttonInfo.getConsumerAppId();
+
         String hashField;
         if ("ios".equals(clickBtnParams.source)) {
-            hashField ="ios_click_count";
+            hashField = "ios_click_count";
         } else if ("android".equals(clickBtnParams.source)) {
             hashField = "android_click_count";
-        } else if("web".equals(clickBtnParams.source)) {
+        } else if ("web".equals(clickBtnParams.source)) {
             hashField = "web_click_count";
-        } else{
+        } else {
             hashField = "other_click_count";
         }
 
@@ -194,16 +194,16 @@ public class UberService {
         ApiLogger.btnCount(btnCountKey);
         JedisPort btnCountClient = btnCountShardingSupport.getClient(btnCountKey);
         btnCountClient.hincrBy(btnCountKey, hashField, 1);
-        
-//        String incomeSuffix = ".income";
+
+        // String incomeSuffix = ".income";
 
         // app <-> btn计数
-//        String btnHashKey = buttonInfo.getAppId() + clickBtnParams.btn_id;
-//        clickCount(btnHashKey, clickSuffix, incomeSuffix, 0);   //TODO 后续金额改成实际值
+        // String btnHashKey = buttonInfo.getAppId() + clickBtnParams.btn_id;
+        // clickCount(btnHashKey, clickSuffix, incomeSuffix, 0); //TODO 后续金额改成实际值
 
         // app <-> consumer_app计数
-//        String hashKey = String.valueOf(buttonInfo.getAppId()) + buttonInfo.getConsumerAppId();
-//        clickCount(hashKey, clickSuffix, incomeSuffix, 0);  //TODO 后续金额改成实际值
+        // String hashKey = String.valueOf(buttonInfo.getAppId()) + buttonInfo.getConsumerAppId();
+        // clickCount(hashKey, clickSuffix, incomeSuffix, 0); //TODO 后续金额改成实际值
 
     }
 
