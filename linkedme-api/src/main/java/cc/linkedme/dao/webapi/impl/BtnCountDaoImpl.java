@@ -31,7 +31,6 @@ public class BtnCountDaoImpl extends BaseDao implements BtnCountDao {
 
         String sql = tableChannel.getSql() + " (id, app_id, btn_id, consumer_id, date, " + countType + ") values(?, ?, ?, ?, ?, ?) ON DUPLICATE KEY UPDATE " + countType + " = " + countType + " + values("
                 + countType + ")";
-        //   insert into $db$.$tb$ (app_id, btn_id, consumer_id, date, ios_view_count) values( ?, ?, ?, ?, ? ) ON DUPLICATE KEY UPDATE ios_view_count = ios_view_count + values( ios_view_count );
         int result = 0;
         try {
             result = tableChannel.getJdbcTemplate().update(sql,
