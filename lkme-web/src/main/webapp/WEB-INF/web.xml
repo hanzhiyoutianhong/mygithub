@@ -33,10 +33,9 @@
         <url-pattern>/*</url-pattern>
     </filter-mapping>
 
-
-    <!--
+<!--
     <filter>
-        <filter-name>authFilter</filter-name>
+        <filter-name>sdkAuthFilter</filter-name>
         <filter-class>org.springframework.web.filter.DelegatingFilterProxy</filter-class>
         <init-param>
             <param-name>targetFilterLifecycle</param-name>
@@ -44,10 +43,14 @@
         </init-param>
     </filter>
     <filter-mapping>
-        <filter-name>authFilter</filter-name>
-        <url-pattern>/*</url-pattern>
+        <filter-name>sdkAuthFilter</filter-name>
+        <url-pattern>/i/*</url-pattern>
     </filter-mapping>
-    -->
+    <filter-mapping>
+        <filter-name>sdkAuthFilter</filter-name>
+        <url-pattern>/t/*</url-pattern>
+    </filter-mapping>
+-->
 
     <!--跨域访问配置 Start-->
     <filter>
@@ -153,10 +156,10 @@
             <param-name>jersey.config.server.provider.packages</param-name>
             <param-value>cc.linkedme.api.lkme.web, cc.linkedme.commons.exception</param-value>
         </init-param>
-		<init-param>
-		    <param-name>jersey.config.server.provider.scanning.recursive</param-name>
-		    <param-value>true</param-value>
-		</init-param>
+        <init-param>
+            <param-name>jersey.config.server.provider.scanning.recursive</param-name>
+            <param-value>true</param-value>
+        </init-param>
         <load-on-startup>1</load-on-startup>
     </servlet>
 
