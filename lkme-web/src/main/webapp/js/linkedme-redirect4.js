@@ -134,8 +134,9 @@ function start() {
         if (Params.isQQBrowser()) {
             DEBUG_ALERT("QQ browser");
             if (Params.isYYBAvailable()) {
+                var yybUrl = Params.yyb_download_url + "&android_scheme=" + launchAppUrl;
                 var destination = lkmeAction.destination.androidBrowser.replace(/{browserName}/g, "qq")
-                gotoUrl(Params.yyb_download_url, destination);
+                gotoUrl(yybUrl, destination);
             } else {
                 gotoCannotForwardPage();
             }
@@ -189,7 +190,12 @@ function gotoPlatform(channel) {
 function gotoQQ(txChannel) {
     DEBUG_ALERT(txChannel);
     if (Params.isYYBAvailable()) {
-        gotoUrl(Params.yyb_download_url, lkmeAction.destination.yybPlatform.replace(/{tx_channel}/g, txChannel));
+        var yybParam = (Params.uri_scheme.indexOf("://") >= 0) ? Params.uri_scheme : (Params.uri_scheme + "://");
+        if (Params.click_id && Params.click_id.length > 0) {
+            yybParam = yybParam + "?click_id=" + Params.click_id;
+        }
+        var yybUrl = Params.yyb_download_url + "&android_scheme=" + yybParam;
+        gotoUrl(yybUrl, lkmeAction.destination.yybPlatform.replace(/{tx_channel}/g, txChannel));
     } else {
         gotoPlatform(txChannel);
     }

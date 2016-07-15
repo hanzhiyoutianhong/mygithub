@@ -272,6 +272,7 @@ public class LMSdkResources {
                            @FormParam("campaign") String campaign,
                            @FormParam("stage") String stage,
                            @FormParam("params") String params,
+                           @FormParam("deeplink_md5") String deepLinkMd5,
                            @FormParam("source") String source,
                            @FormParam("sdk_version") String sdk_version,
                            @FormParam("retry_times") int retry_times,
@@ -303,6 +304,7 @@ public class LMSdkResources {
         } catch (Exception e) {
             throw new LMException(LMExceptionFactor.LM_ILLEGAL_PARAM_VALUE, "params is illegal");
         }
+        urlParams.deepLinkMd5 = deepLinkMd5;
         urlParams.source = source;
         urlParams.sdk_version = sdk_version;
 
