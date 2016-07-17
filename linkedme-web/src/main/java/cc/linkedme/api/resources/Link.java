@@ -184,6 +184,10 @@ public class Link {
             jsonArray.add(jsonObject);
         }
 
+        if(jsonArray.size() > 0) {
+            return jsonArray.toString();
+        }
+
         boolean res = deepLinkService.updateUrl(dashboardUrlParams);
 
         if (res) {

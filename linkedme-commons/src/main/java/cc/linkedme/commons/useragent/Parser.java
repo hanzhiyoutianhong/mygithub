@@ -152,7 +152,9 @@ public class Parser {
             System.out.println(client8.device);
 
             System.out.println("----");
-            Client client9 = parser.parseUA("Mozilla/5.0 (Linux; U; Android 4.4.4; zh-CN; MX4 Pro Build/KTU84P) AppleWebKit/534.30 (KHTML, like Gecko) Version/4.0 UCBrowser/10.10.3.810 U3/0.8.0 Mobile Safari/534.30");
+            Client client9 = parser.parseUA("Mozilla/5.0 (Linux; Android 6.0.1; MI 5 Build/MXB48T) AppleWebKit/537.36 (KHTML, like Gecko) Version/4.0 Chrome/37.0.0.0 Mobile MQQBrowser/6.2 TBS/036524 Safari/537.36 MicroMessenger/6.3.18.800 NetType/WIFI Language/zh_CN");
+//            Client client9 = parser.parseUA("Mozilla/5.0 (iPhone; CPU iPhone OS 9_3_1 like Mac OS X) AppleWebKit/601.1.46 (KHTML, like Gecko) Mobile/13E238 MicroMessenger/6.3.16 NetType/WIFI Language/zh_CN");
+//            Client client9 = parser.parseUA("Mozilla/5.0 (Linux; U; Android 4.4.4; zh-CN; MX4 Pro Build/KTU84P) AppleWebKit/534.30 (KHTML, like Gecko) Version/4.0 UCBrowser/10.10.3.810 U3/0.8.0 Mobile Safari/534.30");
             System.out.println(client9.userAgent);
             System.out.println(client9.os);
             System.out.println(client9.device);

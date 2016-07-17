@@ -7,4 +7,5 @@ import cc.linkedme.data.model.params.JsRecordIdParams;
  */
 public interface JsService {
     void recordId(JsRecordIdParams jsRecordIdParams);
+    void recordIdForYYB(JsRecordIdParams jsRecordIdParams);
 }

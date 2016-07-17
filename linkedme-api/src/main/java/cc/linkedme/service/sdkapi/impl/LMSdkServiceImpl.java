@@ -4,6 +4,7 @@ import javax.annotation.Resource;
 
 import cc.linkedme.commons.exception.LMException;
 import cc.linkedme.commons.exception.LMExceptionFactor;
+import cc.linkedme.commons.memcache.MemCacheTemplate;
 import org.apache.commons.lang3.StringUtils;
 
 import cc.linkedme.commons.log.ApiLogger;
@@ -25,7 +26,6 @@ import cc.linkedme.data.model.FingerPrintInfo;
 import cc.linkedme.data.model.params.CloseParams;
 import cc.linkedme.data.model.params.InstallParams;
 import cc.linkedme.data.model.params.OpenParams;
-import cc.linkedme.data.model.params.PreInstallParams;
 import cc.linkedme.data.model.params.UrlParams;
 import cc.linkedme.data.model.params.WebCloseParams;
 import cc.linkedme.data.model.params.WebInitParams;
@@ -82,6 +82,9 @@ public class LMSdkServiceImpl implements LMSdkService {
 
     @Resource
     private ShardingSupportHash<JedisPort> deepLinkCountShardingSupport;
+
+    @Resource
+    private MemCacheTemplate<Long> browserFingerprintIdForYYBMemCache;
 
     private static ThreadPoolExecutor deepLinkCountThreadPool = new ThreadPoolExecutor(20, 20, 60L, TimeUnit.SECONDS,
             new LinkedBlockingQueue<Runnable>(300), new ThreadPoolExecutor.DiscardOldestPolicy());
@@ -399,6 +402,18 @@ public class LMSdkServiceImpl implements LMSdkService {
                 clicked_linkedme_link = true;
                 deepLink = deepLinkService.getDeepLinkInfo(deepLinkId, appId);
             }
+
+            // yyb + deferred deep linking
+            if (deepLink == null && "Android".equals(openParams.os) && appId > 0) {
+                String deviceFingerprintId = createFingerprintId(String.valueOf(appId), openParams.os, openParams.os_version,
+                        openParams.device_model.trim().toLowerCase(), openParams.clientIP);
+                deepLinkId = browserFingerprintIdForYYBMemCache.get(deviceFingerprintId + ".yyb");
+                if (deepLinkId > 0) {
+                    clicked_linkedme_link = true;
+                    deepLink = deepLinkService.getDeepLinkInfo(deepLinkId, appId);
+                }
+            }
+
             if (deepLink != null) {
                 params = getParamsFromDeepLink(deepLink);
 

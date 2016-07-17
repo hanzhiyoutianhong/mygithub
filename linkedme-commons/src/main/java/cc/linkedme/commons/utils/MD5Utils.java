@@ -3,6 +3,7 @@ package cc.linkedme.commons.utils;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 
+@Deprecated
 public class MD5Utils {
 
     /**
