@@ -175,7 +175,7 @@ public class App {
         JSONArray errors = new JSONArray();
         if (appParams.has_android && StringUtils.isBlank(appParams.getAndroid_uri_scheme())) {
             errors.add(getErrorJson("android_uri_scheme", "请配置URI Scheme"));
-        } else if (appParams.has_android && appParams.getAndroid_uri_scheme().endsWith("://")){
+        } else if (appParams.has_android && appParams.getAndroid_uri_scheme().endsWith("://")) {
             errors.add(getErrorJson("android_uri_scheme", "URI Scheme的结尾不需要\"://\""));
         } else if (appParams.has_android && appService.isAndroidUriSchemeExsit(appParams.getAndroid_uri_scheme(), appParams.getApp_id())) {
             errors.add(getErrorJson("android_uri_scheme", "该URI Scheme已被占用，请重新配置"));
@@ -183,7 +183,7 @@ public class App {
 
         if (appParams.has_ios && StringUtils.isBlank(appParams.getIos_uri_scheme())) {
             errors.add(getErrorJson("ios_uri_scheme", "请配置URI Scheme"));
-        } else if (appParams.has_ios && appParams.getIos_uri_scheme().endsWith("://")){
+        } else if (appParams.has_ios && appParams.getIos_uri_scheme().endsWith("://")) {
             errors.add(getErrorJson("ios_uri_scheme", "URI Scheme的结尾不需要\"://\""));
         } else if (appParams.has_ios && appService.isIosUriSchemeExsit(appParams.getIos_uri_scheme(), appParams.getApp_id())) {
             errors.add(getErrorJson("ios_uri_scheme", "该URI Scheme已被占用，请重新配置"));
@@ -196,10 +196,11 @@ public class App {
         } else if (appParams.has_ios && appService.isIosBundleIdExist(appParams.getIos_bundle_id(), appParams.getApp_id())) {
             errors.add(getErrorJson("ios_bundle_id", "该Bundle ID已被占用，请重新配置"));
         }
-       
+
         if (appParams.has_android && StringUtils.isBlank(appParams.getAndroid_package_name())) {
             errors.add(getErrorJson("android_package_name", "请配置Package Name"));
-        } else if (appParams.has_android && appService.isAndroidPackageNameExist(appParams.getAndroid_package_name(), appParams.getApp_id())) {
+        } else if (appParams.has_android
+                && appService.isAndroidPackageNameExist(appParams.getAndroid_package_name(), appParams.getApp_id())) {
             errors.add(getErrorJson("android_package_name", "该Package Name已存在，请重新配置"));
         }
 
@@ -211,26 +212,29 @@ public class App {
             errors.add(getErrorJson("android_sha256_fingerprints", "请配置Android的SHA256证书"));
         }
 
-        if ( appParams.ios_search_option.equals("apple_store") && StringUtils.isBlank(appParams.getIos_store_url())) {
+        if (appParams.has_ios && appParams.ios_search_option.equals("apple_store") && StringUtils.isBlank(appParams.getIos_store_url())) {
             errors.add(getErrorJson("ios_store_url", "请配置您的App在Apple Store中的下载链接"));
-        } else if( appParams.ios_search_option.equals("custom_url") && StringUtils.isBlank(appParams.getIos_custom_url())) {
+        } else if (appParams.has_ios && appParams.ios_search_option.equals("custom_url")
+                && StringUtils.isBlank(appParams.getIos_custom_url())) {
             errors.add(getErrorJson("ios_custom_url", "请配置您的iOS App的自定义下载链接"));
         }
 
-        if( appParams.android_search_option.equals("google_play") && StringUtils.isBlank(appParams.getGoogle_play_url())) {
+        if (appParams.has_android && appParams.android_search_option.equals("google_play")
+                && StringUtils.isBlank(appParams.getGoogle_play_url())) {
             errors.add(getErrorJson("google_play_url", "请配置您的App在Android应用商店的下载链接"));
-        } else if( appParams.android_search_option.equals("custom_url") && StringUtils.isBlank(appParams.getAndroid_custom_url())) {
+        } else if (appParams.has_android && appParams.android_search_option.equals("custom_url")
+                && StringUtils.isBlank(appParams.getAndroid_custom_url())) {
             errors.add(getErrorJson("android_custom_url", "请配置您的Android App的自定义下载链接"));
         }
 
-        if( !appParams.use_default_landing_page && StringUtils.isBlank(appParams.getCustom_landing_page())) {
+        if (!appParams.use_default_landing_page && StringUtils.isBlank(appParams.getCustom_landing_page())) {
             errors.add(getErrorJson("custom_landing_page", "请配置PC端的自定义跳转链接"));
         }
 
         if (appService.isAppNameExist(appParams)) {
             errors.add(getErrorJson("app_name", "您的账号下已存在相同的App名称，请重新配置"));
         }
-        if(errors.size() > 0){
+        if (errors.size() > 0) {
             return errors.toString();
         }
 
