@@ -272,6 +272,7 @@ public class LMSdkResources {
                            @FormParam("campaign") String campaign,
                            @FormParam("stage") String stage,
                            @FormParam("params") String params,
+                           @FormParam("deeplink_md5") String deepLinkMd5,
                            @FormParam("source") String source,
                            @FormParam("sdk_version") String sdk_version,
                            @FormParam("retry_times") int retry_times,
@@ -303,6 +304,7 @@ public class LMSdkResources {
         } catch (Exception e) {
             throw new LMException(LMExceptionFactor.LM_ILLEGAL_PARAM_VALUE, "params is illegal");
         }
+        urlParams.deepLinkMd5 = deepLinkMd5;
         urlParams.source = source;
         urlParams.sdk_version = sdk_version;
 
@@ -396,26 +398,6 @@ public class LMSdkResources {
 
         return "{}";
 
-    }
-
-
-    @Path("/preInstall")
-    @POST
-    @Produces({MediaType.APPLICATION_JSON})
-    public String preInstall(PreInstallParams preInstallParams, @Context HttpServletRequest request) {
-        preInstallParams.clientIP = request.getHeader("x-forwarded-for");
-        String identityId = lmSdkService.preInstall(preInstallParams);
-        String result = "{\"identity_id\":" + identityId + "}";
-        return result;
-    }
-
-    @Path("/preOpen")
-    @POST
-    @Produces({MediaType.APPLICATION_JSON})
-    public String preOpen(PreOpenParams preOpenParams, @Context HttpServletRequest request) {
-        ApiLogger.info("sdk/preOpen,deepLinkId:" + Base62.decode(preOpenParams.click_id) + ",destination:" + preOpenParams.destination
-                + ",lkme_tag:" + preOpenParams.lkme_tag);
-        return "{}";
     }
 
     @Path("/applist")

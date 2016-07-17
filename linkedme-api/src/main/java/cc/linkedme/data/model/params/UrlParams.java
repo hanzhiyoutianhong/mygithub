@@ -10,7 +10,7 @@ import javax.xml.bind.annotation.XmlRootElement;
  */
 
 
-public class UrlParams extends BaseParams{
+public class UrlParams extends BaseParams {
     public long deeplink_id;
     public long[] deeplink_ids;
     public long app_id;
@@ -22,6 +22,7 @@ public class UrlParams extends BaseParams{
     public String[] stage;
     public String[] campaign;
     public JSONObject params;
+    public String deepLinkMd5;
     public String source;
     public String session_id;
 
@@ -29,9 +30,9 @@ public class UrlParams extends BaseParams{
     public boolean ios_use_default;
     public String ios_custom_url;
     public boolean android_use_default;
-    public String  android_custom_url;
-    public boolean  desktop_use_default;
-    public String  desktop_custom_url;
+    public String android_custom_url;
+    public boolean desktop_use_default;
+    public String desktop_custom_url;
 
 
     public long getApp_id() {
@@ -192,5 +193,13 @@ public class UrlParams extends BaseParams{
 
     public void setUser_id(int user_id) {
         this.user_id = user_id;
+    }
+
+    public String getDeepLinkMd5() {
+        return deepLinkMd5;
+    }
+
+    public void setDeepLinkMd5(String deepLinkMd5) {
+        this.deepLinkMd5 = deepLinkMd5;
     }
 }

@@ -30,6 +30,8 @@ public interface AppDao {
 
     byte[] getAppImg(int appId);
 
+    boolean isAppNameValidate(AppParams appParams);
+
 
     public boolean isAndroidUriSchemeExsit(String androidUriScheme, long appId);
     

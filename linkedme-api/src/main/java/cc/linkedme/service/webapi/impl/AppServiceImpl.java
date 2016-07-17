@@ -45,6 +45,7 @@ import cc.linkedme.data.model.params.AppParams;
 import cc.linkedme.service.webapi.AppService;
 import net.sf.json.JSONArray;
 import net.sf.json.JSONObject;
+import org.apache.commons.lang3.StringUtils;
 
 /**
  * Created by LinkedME01 on 16/3/18.
@@ -82,7 +83,11 @@ public class AppServiceImpl implements AppService {
     
     public boolean isIosBundleIdExist(String iosBundleId, long appId){
         return appDao.isIosBundleIdExist(iosBundleId, appId);
-    }    
+    }
+
+    public boolean isAppNameExist(AppParams appParams) {
+        return !appDao.isAppNameValidate(appParams);
+    }
     
     private void updateAppleAssociationFile(String appIdentifier, String appID) {
         BufferedReader br = null;
@@ -275,7 +280,9 @@ public class AppServiceImpl implements AppService {
             }
         }
 
-        int result = appDao.updateApp(appParams);
+        int result = 0;
+        result += appDao.updateApp(appParams);
+
         if (result > 0) {
             AppInfo appInfo = new AppInfo();
             appInfo.setApp_id(appParams.app_id);

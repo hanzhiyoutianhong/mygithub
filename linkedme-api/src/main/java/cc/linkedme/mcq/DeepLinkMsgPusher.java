@@ -3,7 +3,6 @@ package cc.linkedme.mcq;
 import cc.linkedme.commons.json.JsonBuilder;
 import cc.linkedme.commons.mcq.writer.McqBaseWriter;
 import cc.linkedme.data.model.DeepLink;
-import jdk.nashorn.internal.ir.annotations.Reference;
 
 import javax.annotation.Resource;
 
