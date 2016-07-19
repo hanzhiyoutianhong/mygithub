@@ -46,10 +46,14 @@ public class Device {
         deviceInfo.setPlatform(platform);
         deviceInfo.setDescription(description);
 
-        checkParams(appId, new String[] {deviceId});
+        JSONArray jsonArray = checkParams(appId, new String[] {deviceId});
 
         if (platform == null || platform < 0 || platform > 1) {
-            throw new LMException(LMExceptionFactor.LM_ILLEGAL_PARAM_VALUE, "platform is invalid");
+            jsonArray.add(getErrorMsg("40001","platform","platform 只能是0或者1"));
+        }
+
+        if(jsonArray.size() > 0){
+            return jsonArray.toString();
         }
 
         Integer result = deviceService.addDevice(deviceInfo);
@@ -62,7 +66,13 @@ public class Device {
     @Produces(MediaType.APPLICATION_JSON)
     public String deleteDevice(@FormParam("app_id") long appId, @FormParam("device_id") String[] deviceId,
             @Context HttpServletRequest request) {
-        checkParams(appId, deviceId);
+
+        JSONArray jsonArray = checkParams(appId, deviceId);
+
+        if(jsonArray.size() > 0){
+            return jsonArray.toString();
+        }
+
         Integer result = deviceService.delDevice(appId, deviceId);
         return resultToJson(result);
     }
@@ -81,10 +91,14 @@ public class Device {
         deviceInfo.setPlatform(platform);
         deviceInfo.setDescription(description);
 
-        checkParams(appId, new String[] {deviceId});
+        JSONArray jsonArray = checkParams(appId, new String[] {deviceId});
 
         if (platform == null || platform < 0 || platform > 1) {
-            throw new LMException(LMExceptionFactor.LM_ILLEGAL_PARAM_VALUE, "platform is invalid");
+            jsonArray.add(getErrorMsg("40001","platform","platform 只能是0或者1"));
+        }
+
+        if(jsonArray.size() > 0){
+            return jsonArray.toString();
         }
 
         Integer result = deviceService.updateDevice(deviceInfo);
@@ -96,7 +110,13 @@ public class Device {
     @POST
     @Produces(MediaType.APPLICATION_JSON)
     public String getDevice(@FormParam("app_id") long appId, @FormParam("device_id") String deviceId, @Context HttpServletRequest request) {
-        checkParams(appId, new String[] {deviceId});
+
+        JSONArray jsonArray = checkParams(appId, new String[] {deviceId});
+
+        if(jsonArray.size() > 0){
+            return jsonArray.toString();
+        }
+
         DeviceInfo deviceInfo = deviceService.getDevice(appId, deviceId);
 
         if (deviceInfo == null) {
@@ -111,9 +131,17 @@ public class Device {
     @GET
     @Produces(MediaType.APPLICATION_JSON)
     public String getDevices(@FormParam("app_id") long appId, @Context HttpServletRequest request) {
+
+        JSONArray jsonArray = new JSONArray();
+
         if (appId <= 0) {
-            throw new LMException(LMExceptionFactor.LM_ILLEGAL_PARAM_VALUE, "invalid app_id");
+            jsonArray.add(getErrorMsg("40001","app_id","app_id 小于零"));
         }
+
+        if(jsonArray.size() > 0){
+            return jsonArray.toString();
+        }
+
         List<DeviceInfo> deviceInfos = deviceService.listDevice(appId);
 
         if (CollectionUtils.isEmpty(deviceInfos)) {
@@ -124,16 +152,20 @@ public class Device {
     }
 
 
-    private void checkParams(long appId, String[] deviceIds) {
+    private JSONArray checkParams(long appId, String[] deviceIds) {
+
+        JSONArray jsonArray = new JSONArray();
+
         if (appId <= 0) {
-            throw new LMException(LMExceptionFactor.LM_ILLEGAL_PARAM_VALUE, "app_id <= 0");
+            jsonArray.add(getErrorMsg("40001","app_id","app_id 小于零"));
         }
 
         for (String deviceId : deviceIds) {
             if (Strings.isNullOrEmpty(deviceId)) {
-                throw new LMException(LMExceptionFactor.LM_ILLEGAL_PARAM_VALUE, "device_id is null");
+                jsonArray.add(getErrorMsg("40001","device_id","device_id 为空"));
             }
         }
+        return jsonArray;
     }
 
     private String resultToJson(Integer reslut) {
@@ -146,6 +178,14 @@ public class Device {
         }
 
         return resultJson.toString();
+    }
+
+    public JSONObject getErrorMsg(String errCode, String errParam, String errMsg){
+        JSONObject jsonObject = new JSONObject();
+        jsonObject.put("err_code",errCode);
+        jsonObject.put("err_param",errParam);
+        jsonObject.put("err_msg",errMsg);
+        return jsonObject;
     }
 
 }
