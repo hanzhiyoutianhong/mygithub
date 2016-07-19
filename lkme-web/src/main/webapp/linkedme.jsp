@@ -78,7 +78,7 @@
                 return 'true' == '${isForceUseScheme}';
             },
             isYYBAvailable: function () {
-                return 'true' == '${isYYBAvailable}' && "" !== Params.yyb_download_url && 0 !== Params.yyb_download_url && !Params.isIOS();
+                return "" !== Params.yyb_download_url && 0 !== Params.yyb_download_url && !Params.isIOS();
             }
         };
         var DEBUG = ${DEBUG};
