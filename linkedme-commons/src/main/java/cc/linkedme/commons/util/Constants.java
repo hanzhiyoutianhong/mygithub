@@ -31,8 +31,8 @@ public class Constants {
     // 脏数据缓存过期时间 1 分钟
     public static Date EXPTIME_VECTOR_DIRTY = new Date(1000l * 60);
 
-    // 应用宝浏览器指纹过期时间2分钟(前期测试2分钟,后续上线的时候改成1分钟)
-    public static Date EXPTIME_BROWSER_FINGERPRINT_ID_FOR_YYB = new Date(1000l * 60);
+    // 应用宝浏览器指纹过期时间10分钟,保证未安装应用宝的用户下载应用宝后仍然可以调整到app的详情页
+    public static Date EXPTIME_BROWSER_FINGERPRINT_ID_FOR_YYB = new Date(1000l * 60 * 10);
 
     // timeline multi DB查询超时
     public static long TIMEOUT_MULTI_USER_TIMELINE = 600;
