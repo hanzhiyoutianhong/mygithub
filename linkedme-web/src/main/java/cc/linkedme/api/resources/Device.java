@@ -1,7 +1,5 @@
 package cc.linkedme.api.resources;
 
-import cc.linkedme.commons.exception.LMException;
-import cc.linkedme.commons.exception.LMExceptionFactor;
 import cc.linkedme.data.model.DeviceInfo;
 import cc.linkedme.service.webapi.DeviceService;
 import com.google.api.client.repackaged.com.google.common.base.Strings;
@@ -49,10 +47,10 @@ public class Device {
         JSONArray jsonArray = checkParams(appId, new String[] {deviceId});
 
         if (platform == null || platform < 0 || platform > 1) {
-            jsonArray.add(getErrorMsg("40001","platform","platform 只能是0或者1"));
+            jsonArray.add(getErrorMsg("40001", "platform", "platform 只能是0或者1"));
         }
 
-        if(jsonArray.size() > 0){
+        if (jsonArray.size() > 0) {
             return jsonArray.toString();
         }
 
@@ -69,7 +67,7 @@ public class Device {
 
         JSONArray jsonArray = checkParams(appId, deviceId);
 
-        if(jsonArray.size() > 0){
+        if (jsonArray.size() > 0) {
             return jsonArray.toString();
         }
 
@@ -94,10 +92,10 @@ public class Device {
         JSONArray jsonArray = checkParams(appId, new String[] {deviceId});
 
         if (platform == null || platform < 0 || platform > 1) {
-            jsonArray.add(getErrorMsg("40001","platform","platform 只能是0或者1"));
+            jsonArray.add(getErrorMsg("40001", "platform", "platform 只能是0或者1"));
         }
 
-        if(jsonArray.size() > 0){
+        if (jsonArray.size() > 0) {
             return jsonArray.toString();
         }
 
@@ -113,7 +111,7 @@ public class Device {
 
         JSONArray jsonArray = checkParams(appId, new String[] {deviceId});
 
-        if(jsonArray.size() > 0){
+        if (jsonArray.size() > 0) {
             return jsonArray.toString();
         }
 
@@ -135,10 +133,10 @@ public class Device {
         JSONArray jsonArray = new JSONArray();
 
         if (appId <= 0) {
-            jsonArray.add(getErrorMsg("40001","app_id","app_id 小于零"));
+            jsonArray.add(getErrorMsg("40001", "app_id", "app_id 小于零"));
         }
 
-        if(jsonArray.size() > 0){
+        if (jsonArray.size() > 0) {
             return jsonArray.toString();
         }
 
@@ -157,12 +155,12 @@ public class Device {
         JSONArray jsonArray = new JSONArray();
 
         if (appId <= 0) {
-            jsonArray.add(getErrorMsg("40001","app_id","app_id 小于零"));
+            jsonArray.add(getErrorMsg("40001", "app_id", "app_id 小于零"));
         }
 
         for (String deviceId : deviceIds) {
             if (Strings.isNullOrEmpty(deviceId)) {
-                jsonArray.add(getErrorMsg("40001","device_id","device_id 为空"));
+                jsonArray.add(getErrorMsg("40001", "device_id", "device_id 为空"));
             }
         }
         return jsonArray;
@@ -180,11 +178,11 @@ public class Device {
         return resultJson.toString();
     }
 
-    public JSONObject getErrorMsg(String errCode, String errParam, String errMsg){
+    public JSONObject getErrorMsg(String errCode, String errParam, String errMsg) {
         JSONObject jsonObject = new JSONObject();
-        jsonObject.put("err_code",errCode);
-        jsonObject.put("err_param",errParam);
-        jsonObject.put("err_msg",errMsg);
+        jsonObject.put("err_code", errCode);
+        jsonObject.put("err_param", errParam);
+        jsonObject.put("err_msg", errMsg);
         return jsonObject;
     }
 
