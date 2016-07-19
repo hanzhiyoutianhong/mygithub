@@ -33,9 +33,12 @@ public class Device {
     @Path("/add")
     @POST
     @Produces(MediaType.APPLICATION_JSON)
-    public String AddDevice(@FormParam("app_id") long appId, @FormParam("device_id") String deviceId,
-            @FormParam("device_name") String deviceName, @FormParam("platform") Integer platform,
-            @FormParam("device_info") String description, @Context HttpServletRequest request) {
+    public String AddDevice(@FormParam("app_id") long appId,
+                            @FormParam("device_id") String deviceId,
+                            @FormParam("device_name") String deviceName,
+                            @FormParam("platform") Integer platform,
+                            @FormParam("device_info") String description,
+                            @Context HttpServletRequest request) {
 
         DeviceInfo deviceInfo = new DeviceInfo();
         deviceInfo.setAppId(appId);
@@ -62,8 +65,9 @@ public class Device {
     @Path("/delete")
     @POST
     @Produces(MediaType.APPLICATION_JSON)
-    public String deleteDevice(@FormParam("app_id") long appId, @FormParam("device_id") String[] deviceId,
-            @Context HttpServletRequest request) {
+    public String deleteDevice(@FormParam("app_id") long appId,
+                               @FormParam("device_id") String[] deviceId,
+                               @Context HttpServletRequest request) {
 
         JSONArray jsonArray = checkParams(appId, deviceId);
 
@@ -78,9 +82,12 @@ public class Device {
     @Path("/modify")
     @POST
     @Produces(MediaType.APPLICATION_JSON)
-    public String updateDevice(@FormParam("app_id") long appId, @FormParam("device_id") String deviceId,
-            @FormParam("device_name") String deviceName, @FormParam("platform") Integer platform,
-            @FormParam("device_info") String description, @Context HttpServletRequest request) {
+    public String updateDevice(@FormParam("app_id") long appId,
+                               @FormParam("device_id") String deviceId,
+                               @FormParam("device_name") String deviceName,
+                               @FormParam("platform") Integer platform,
+                               @FormParam("device_info") String description,
+                               @Context HttpServletRequest request) {
 
         DeviceInfo deviceInfo = new DeviceInfo();
         deviceInfo.setAppId(appId);
@@ -107,7 +114,9 @@ public class Device {
     @Path("/query")
     @POST
     @Produces(MediaType.APPLICATION_JSON)
-    public String getDevice(@FormParam("app_id") long appId, @FormParam("device_id") String deviceId, @Context HttpServletRequest request) {
+    public String getDevice(@FormParam("app_id") long appId,
+                            @FormParam("device_id") String deviceId,
+                            @Context HttpServletRequest request) {
 
         JSONArray jsonArray = checkParams(appId, new String[] {deviceId});
 
@@ -128,7 +137,8 @@ public class Device {
     @Path("/list")
     @GET
     @Produces(MediaType.APPLICATION_JSON)
-    public String getDevices(@FormParam("app_id") long appId, @Context HttpServletRequest request) {
+    public String getDevices(@FormParam("app_id") long appId,
+                             @Context HttpServletRequest request) {
 
         JSONArray jsonArray = new JSONArray();
 
