@@ -64,8 +64,6 @@ public class DeviceServiceImpl implements DeviceService {
 
 
     public void setWhiteDeviceMap() {
-        Map<String, List<Long>> tmpMap = deviceDao.getDeviceIdAndAppIdKVMap();
-        whiteDeviceMap.clear();
-        whiteDeviceMap = tmpMap;
+        whiteDeviceMap =  deviceDao.getDeviceIdAndAppIdKVMap();
     }
 }
