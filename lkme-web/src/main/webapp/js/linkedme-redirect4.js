@@ -1,5 +1,6 @@
 var lkmeAction = {
     recordIdUrl: "/" + Params.live_test_flag + "/js/record_id",
+    recordIdForYYBUrl: "/" + Params.live_test_flag + "/js/yyb_record_id",
     recordJsEventUrl: "/" + Params.live_test_flag + "/js/record_event",
     recordJsUserClickEventUrl: "/" + Params.live_test_flag + "/js/record_click_event",
     destination: {
@@ -30,6 +31,23 @@ var lkmeAction = {
         $.ajax({
             method: "POST",
             url: this.recordIdUrl,
+            data: param,
+            success: function () {
+            },
+            error: function () {
+            }
+        });
+    },
+    recordIdForYYB: function () {
+        var param = {
+            app_id: Params.app_id,
+            browser_fingerprint_id: Params.browser_fingerprint_id,
+            deeplink_id: Params.deeplink_id,
+        };
+        $.ajax({
+            method: "POST",
+            async: false,
+            url: this.recordIdForYYBUrl,
             data: param,
             success: function () {
             },
@@ -105,9 +123,13 @@ function start() {
         } else {
             if (Params.isUniversalLink()) {
                 DEBUG_ALERT("isUniversalLink = true");
-                lkmeAction.recordId();
                 var destination = lkmeAction.destination.iOSUniversalLink;
-                gotoUrl(Params.forward_url, destination);
+                var div_universal_link_open_btn = '<div style="background-image:url(' + baseImgPathLang + 'ios9_open.png);background-size: 100% 100%;width:100%;height:100%;">    <div style="text-align:center; width:100%; position:absolute; top:80%;">        <button id="btnGotoAppStore" style="font-size: 1em; background-color:#FFFFFF; border: 3px solid #959595; color: #959595; padding: 6px 20px; -webkit-border-radius: 30px; -moz-border-radius: 30px; border-radius: 30px;">' + gotoAppStore + "</button></div></div>";
+                $("body").append(div_universal_link_open_btn), $("#btnGotoAppStore").click(function () {
+                    lkmeAction.recordJSUserClickEvent("gotoAppStore");
+                    lkmeAction.recordId();
+                    gotoUrl(Params.forward_url, destination);
+                });
             } else if (Params.isChrome()) {
                 DEBUG_ALERT("isChrome");
                 iOSChromeLaunch(a, function () {
@@ -194,6 +216,7 @@ function gotoQQ(txChannel) {
         if (Params.click_id && Params.click_id.length > 0) {
             yybParam = yybParam + "?click_id=" + Params.click_id;
         }
+        lkmeAction.recordIdForYYB();
         var yybUrl = Params.yyb_download_url + "&android_scheme=" + yybParam;
         gotoUrl(yybUrl, lkmeAction.destination.yybPlatform.replace(/{tx_channel}/g, txChannel));
     } else {
