@@ -11,4 +11,5 @@ import java.util.List;
 public interface BtnCountDao {
     List<ButtonCount> getConsumerIncome(long appId, long consumerAppId, String startDate, String endDate);
     List<ButtonCount> getButtonCounts(long appId, String btnId, String startDate, String endDate);
+    int addButtonCount(ButtonCount buttonCount);
 }
