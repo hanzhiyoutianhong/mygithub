@@ -7,14 +7,14 @@ public class Constants {
 
     public static final String DEEPLINK_HTTPS_PREFIX = "https://lkme.cc";
     public static final String LIVE_TEST_API_FLAG = "i";
-    
+
     public static final String DEEPLINK_HTTP_PREFIX = "http://lkme.cc/";
     public static final String LINKEDME_HTTPS_PREFIX = "https://www.linkedme.cc/";
     public static final String SPOTLIGHT_PREFIX = "cc.lkme.";
 
     public static final String CREATE_URL_API = DEEPLINK_HTTP_PREFIX + LIVE_TEST_API_FLAG + "/sdk/url";
     public static final String DASHBOARD_API_URL = LINKEDME_HTTPS_PREFIX + LIVE_TEST_API_FLAG;
-    public static final String LOGO_HTTPS_BASE_URL = DEEPLINK_HTTPS_PREFIX +"/"+ LIVE_TEST_API_FLAG + "/sdk/images/";
+    public static final String LOGO_HTTPS_BASE_URL = DEEPLINK_HTTPS_PREFIX + "/" + LIVE_TEST_API_FLAG + "/sdk/images/";
     public static final String LOGO_HTTP_BASE_URL = DEEPLINK_HTTP_PREFIX + LIVE_TEST_API_FLAG + "/sdk/images/";
     public static final String APP_LOGO_IMG_TYPE = ".png";
     
@@ -32,11 +32,8 @@ public class Constants {
     // 脏数据缓存过期时间 1 分钟
     public static Date EXPTIME_VECTOR_DIRTY = new Date(1000l * 60);
 
-    // Meta vector content missed expire time is 1 hour.
-    public static Date EXPTIME_META_VECTOR_CONTENT_MISSED = new Date(1000l * 60 * 60);
-
-    // Meta vector userType missed expire time is 1 hour.
-    public static Date EXPTIME_META_VECTOR_USERTYPE_MISSED = new Date(1000l * 60 * 60);
+    // 应用宝浏览器指纹过期时间10分钟,保证未安装应用宝的用户下载应用宝后仍然可以调整到app的详情页
+    public static Date EXPTIME_BROWSER_FINGERPRINT_ID_FOR_YYB = new Date(1000l * 60 * 10);
 
     // timeline multi DB查询超时
     public static long TIMEOUT_MULTI_USER_TIMELINE = 600;

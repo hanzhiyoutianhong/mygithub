@@ -56,7 +56,7 @@
         <property name="slaveL1List">
             <wfc:mclist serverPorts="" strategy="normal_mc"></wfc:mclist>
         </property>
-        <property name="expire" value="21600"></property>	<!-- minutes -->
+        <property name="expire" value="21600"></property>    <!-- minutes -->
     </bean>
 
     <bean id="appInfoMemCache" class="cc.linkedme.commons.memcache.MemCacheTemplate">
@@ -72,6 +72,22 @@
         <property name="slaveL1List">
             <wfc:mclist serverPorts="" strategy="normal_mc"></wfc:mclist>
         </property>
-        <property name="expire" value="21600"></property>	<!-- minutes -->
+        <property name="expire" value="21600"></property>    <!-- minutes -->
+    </bean>
+
+    <bean id="browserFingerprintIdForYYBMemCache" class="cc.linkedme.commons.memcache.MemCacheTemplate">
+        <property name="master">
+            <wfc:mc serverPort="${yybbrowserid.cache.master}" strategy="normal_mc"></wfc:mc>
+        </property>
+        <property name="slave">
+            <wfc:mc serverPort="${yybbrowserid.cache.slave}" strategy="normal_mc"></wfc:mc>
+        </property>
+        <property name="masterL1List">
+            <wfc:mclist serverPorts="${yybbrowserid.cache.masterL1List}" strategy="normal_mc"></wfc:mclist>
+        </property>
+        <property name="slaveL1List">
+            <wfc:mclist serverPorts="" strategy="normal_mc"></wfc:mclist>
+        </property>
+        <property name="expire" value="21600"></property>    <!-- minutes -->
     </bean>
 </beans>

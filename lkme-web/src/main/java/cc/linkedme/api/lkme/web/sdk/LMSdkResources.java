@@ -197,6 +197,7 @@ public class LMSdkResources {
                            @FormParam("os_version") String os_version,
                            @FormParam("sdk_update") int sdk_update,
                            @FormParam("os") String os,
+                           @FormParam("device_model") String device_model,
                            @FormParam("is_debug") boolean is_debug,
                            @FormParam("lat_val") String lat_val,
                            @FormParam("sdk_version") String sdk_version,
@@ -218,6 +219,7 @@ public class LMSdkResources {
         openParams.os_version = os_version;
         openParams.sdk_update = sdk_update;
         openParams.os = os;
+        openParams.device_model = device_model;
         openParams.is_debug = is_debug;
         openParams.lat_val = lat_val;
         openParams.sdk_version = sdk_version;

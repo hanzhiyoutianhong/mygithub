@@ -155,6 +155,7 @@ public class UrlServlet extends HttpServlet {
         String deviceModel = "other";
         if (client != null && client.device != null && client.device.family != null) {
             deviceModel = client.device.family.trim().toLowerCase();
+            deviceModel = null; //TODO 等sdk上线后删除此行
         }
 
         // 如果没有cookie,设置cookie

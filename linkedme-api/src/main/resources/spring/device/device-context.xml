@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:wfc="http://www.springframework.org/schema/wfc"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
+       http://www.springframework.org/schema/beans/spring-beans.xsd http://www.springframework.org/schema/wfc http://www.springframework.org/schema/wfc.xsd">
+
+    <bean id="deviceDao" class="cc.linkedme.dao.webapi.impl.DeviceDaoImpl">
+        <property name="tableContainer">
+            <bean class="cc.linkedme.data.dao.strategy.TableContainer">
+                <property name="tablesItems">
+                    <map>
+                        <entry key="device" value-ref="device"/>
+                    </map>
+                </property>
+            </bean>
+        </property>
+    </bean>
+
+    <bean id="device" class="cc.linkedme.data.dao.strategy.TableItem">
+        <property name="itemName" value="device"/>
+        <property name="dbNamePrefix" value="dashboard"/>
+        <property name="dbCount" value="1"/>
+
+        <property name="tableNamePrefix" value="device_info"/>
+        <property name="tableCount" value="1"/>
+        <property name="sqls">
+            <map>
+                <entry key="ADD_DEVICE"
+                       value="insert into $db$.$tb$ (app_id, device_id, device_name, platform, description, create_time, last_update_time) values(?, ?, ?, ?, ? now(), now())"/>
+
+                <entry key="DEL_DEVICE_BY_APPID_AND_DEVICEID"
+                       value="update $db$.$tb$ set valid_status = '0' where app_id = ? and device_id = ?"/>
+
+                <entry key="UPDATE_DEVICE_BY_APPID_AND_DEVICEID"
+                       value="update $db$.$tb$ set device_name=?, platform=?, description=?, last_update_time=? where app_id = ? and device_id = ? and valid_status = '1'"/>
+
+                <entry key="GET_DEVICE_BY_APPID_AND_DEVICEID"
+                       value="select app_id, device_id, device_name, platform, description, create_time, last_update_time from $db$.$tb$ where app_id = ? and device_id = ? and valid_status = '1' "/>
+
+                <entry key="GET_DEVICES_BY_APPID"
+                       value="select app_id, device_id, device_name, platform, description, create_time, last_update_time from $db$.$tb$ where app_id = ? and valid_status = '1' "/>
+
+                <entry key="GET_ALL_DEVICES" value="select device_id, app_id from $db$.$tb$ where valid_status = '1'"/>
+            </map>
+        </property>
+        <property name="jdbcTemplates">
+            <list>
+                <ref bean="app_jdbctemplate_0"/>
+                <!--<ref bean="deeplink_jdbctemplate_1"/> -->
+            </list>
+        </property>
+        
+    </bean>
+
+
+    <bean id="deviceService" class="cc.linkedme.service.webapi.impl.DeviceServiceImpl"></bean>
+
+</beans>
