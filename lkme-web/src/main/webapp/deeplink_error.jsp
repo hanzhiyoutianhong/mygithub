@@ -11,6 +11,6 @@
     <title>Title</title>
 </head>
 <body>
-    <div style="background-image:url(https://lkme.cc/img/cn/invalid_link.jpg);background-size: 100% 100%;width:100%;height:100%;"></div>
+    <div style="background-image:url(https://lkme.cc/img/cn/invalid_link.png);background-size: 100% 100%;width:100%;height:100%;"></div>
 </body>
 </html>
