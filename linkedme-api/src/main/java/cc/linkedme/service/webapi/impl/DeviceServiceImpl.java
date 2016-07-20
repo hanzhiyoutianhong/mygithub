@@ -1,15 +1,18 @@
 package cc.linkedme.service.webapi.impl;
 
-import cc.linkedme.dao.webapi.DeviceDao;
-import cc.linkedme.data.model.DeviceInfo;
-import cc.linkedme.service.webapi.DeviceService;
-import org.apache.commons.collections.CollectionUtils;
-
-import javax.annotation.Resource;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.atomic.AtomicReference;
+
+import javax.annotation.Resource;
+
+import org.apache.commons.collections.CollectionUtils;
+
+import cc.linkedme.dao.webapi.DeviceDao;
+import cc.linkedme.data.model.DeviceInfo;
+import cc.linkedme.service.webapi.DeviceService;
 
 /**
  * Created by LinkedME07 on 16/7/17.
@@ -17,7 +20,7 @@ import java.util.Map;
 
 public class DeviceServiceImpl implements DeviceService {
 
-    private static Map<String, List<Long>> whiteDeviceMap = new HashMap<>();
+    public static AtomicReference<Map<String, List<Long>>> whiteDeviceMap = new AtomicReference<>(new HashMap<>());
 
     @Resource
     private DeviceDao deviceDao;
@@ -64,6 +67,7 @@ public class DeviceServiceImpl implements DeviceService {
 
 
     public void setWhiteDeviceMap() {
-        whiteDeviceMap =  deviceDao.getDeviceIdAndAppIdKVMap();
+        Map<String, List<Long>> deviceIdAndAppIdMap =  deviceDao.getDeviceIdAndAppIdKVMap();
+        whiteDeviceMap.set(deviceIdAndAppIdMap);        
     }
 }
