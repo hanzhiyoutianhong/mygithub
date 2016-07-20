@@ -188,6 +188,11 @@ public class LMSdkServiceImpl implements LMSdkService {
 
         ClientInfo clientInfo = new ClientInfo();
         clientInfo.setDeviceId(installParams.device_id);
+        clientInfo.setiMei(installParams.device_imei);
+        clientInfo.setAndroidId(installParams.android_id);
+        clientInfo.setSerialNumber(installParams.serial_number);
+        clientInfo.setDeviceMac(installParams.device_mac);
+        clientInfo.setDeviceFingerPrint(installParams.finger_print);
         clientInfo.setLinkedmeKey(installParams.linkedme_key);
         clientInfo.setDeviceType(installParams.device_type);
         clientInfo.setDeviceModel(installParams.device_model);
@@ -196,6 +201,7 @@ public class LMSdkServiceImpl implements LMSdkService {
         clientInfo.setHasNfc(installParams.has_nfc);
         clientInfo.setHasSim(installParams.has_sim);
         clientInfo.setOs(installParams.os);
+        clientInfo.setosVersionDetail(installParams.os_version_detail);
         clientInfo.setOsVersion(installParams.os_version);
         clientInfo.setScreenDpi(installParams.screen_dpi);
         clientInfo.setScreenHeight(installParams.screen_height);
@@ -206,6 +212,7 @@ public class LMSdkServiceImpl implements LMSdkService {
         clientInfo.setCarrier(installParams.carrier);
         clientInfo.setAppVersion(installParams.app_version);
         clientInfo.setSdkUpdate(installParams.sdk_update);
+        clientInfo.setSdkVersion(installParams.sdk_version);
         clientInfo.setIosTeamId(installParams.ios_team_id);
         clientInfo.setIosBundleId(installParams.ios_bundle_id);
 
