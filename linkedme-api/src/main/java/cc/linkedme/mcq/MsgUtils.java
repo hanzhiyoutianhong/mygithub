@@ -92,6 +92,11 @@ public class MsgUtils {
         info.append("identityId", clientInfo.getIdentityId());
         info.append("deviceId", clientInfo.getDeviceId());
         info.append("deviceType", clientInfo.getDeviceType());
+        info.append("deviceImei", clientInfo.getiMei());
+        info.append("androidId", clientInfo.getAndroidId());
+        info.append("serialNumber", clientInfo.getSerialNumber());
+        info.append("deviceMac", clientInfo.getDeviceMac());
+        info.append("fingerprint", clientInfo.getDeviceFingerPrint());
         info.append("deviceModel", clientInfo.getDeviceModel());
         info.append("deviceBrand", clientInfo.getDeviceBrand());
         info.append("hasBluetooth", clientInfo.getHasBlutooth());
@@ -99,6 +104,7 @@ public class MsgUtils {
         info.append("hasSim", clientInfo.getHasSim());
         info.append("os", clientInfo.getOs());
         info.append("osVersion", clientInfo.getOsVersion());
+        info.append("os_version_detail", clientInfo.getosVersionDetail());
         info.append("screenDpi", clientInfo.getScreenDpi());
         info.append("screenHeight", clientInfo.getScreenHeight());
         info.append("screenWidth", clientInfo.getScreenWidth());
@@ -120,6 +126,11 @@ public class MsgUtils {
         clientInfo.setIdentityId(clientMsg.getLong("identityId"));
         clientInfo.setDeviceId(clientMsg.getString("deviceId"));
         clientInfo.setDeviceType(clientMsg.getInt("deviceType"));
+        clientInfo.setiMei(clientMsg.getString("deviceImei"));
+        clientInfo.setAndroidId(clientMsg.getString("androidId"));
+        clientInfo.setSerialNumber(clientMsg.getString("serialNumber"));
+        clientInfo.setDeviceMac(clientMsg.getString("deviceMac"));
+        clientInfo.setDeviceFingerPrint(clientMsg.getString("fingerprint"));
         clientInfo.setDeviceModel(clientMsg.getString("deviceModel"));
         clientInfo.setDeviceBrand(clientMsg.getString("deviceBrand"));
         clientInfo.setHasBlutooth(clientMsg.getBoolean("hasBluetooth"));
@@ -127,6 +138,7 @@ public class MsgUtils {
         clientInfo.setHasSim(clientMsg.getBoolean("hasSim"));
         clientInfo.setOs(clientMsg.getString("os"));
         clientInfo.setOsVersion(clientMsg.getString("osVersion"));
+        clientInfo.setosVersionDetail(clientMsg.getInt("os_version_detail"));
         clientInfo.setScreenDpi(clientMsg.getInt("screenDpi"));
         clientInfo.setScreenHeight(clientMsg.getInt("screenHeight"));
         clientInfo.setScreenWidth(clientMsg.getInt("screenWidth"));
@@ -136,6 +148,7 @@ public class MsgUtils {
         clientInfo.setCarrier(clientMsg.getString("carrier"));
         clientInfo.setAppVersion(clientMsg.getString("appVersion"));
         clientInfo.setSdkUpdate(clientMsg.getInt("sdkUpdate"));
+        clientInfo.setSdkVersion(clientMsg.getString("sdkVersion"));
         clientInfo.setIosTeamId(clientMsg.getString("iOSTeamId"));
         clientInfo.setIosBundleId(clientMsg.getString("iOSBundleId"));
         clientInfo.setLinkedmeKey(clientMsg.getString("linkedmeKey"));

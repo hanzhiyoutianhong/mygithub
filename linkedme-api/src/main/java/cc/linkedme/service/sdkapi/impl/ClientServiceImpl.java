@@ -37,7 +37,7 @@ public class ClientServiceImpl implements ClientService {
     public static ThreadPoolExecutor deepLinkCountThreadPool = new ThreadPoolExecutor(20, 20, 60L, TimeUnit.SECONDS,
             new LinkedBlockingQueue<Runnable>(300), new ThreadPoolExecutor.DiscardOldestPolicy());
 
-    public int addClient(ClientInfo clientInfo, long deepLinkId) {
+    public int addClient(ClientInfo clientInfo) {
         int result = clientDao.addClient(clientInfo);
         return result;
     }

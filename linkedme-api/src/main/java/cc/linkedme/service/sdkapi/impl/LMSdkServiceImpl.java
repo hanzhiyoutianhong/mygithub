@@ -48,6 +48,7 @@ import java.util.concurrent.Callable;
 import java.util.concurrent.LinkedBlockingQueue;
 import java.util.concurrent.ThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
+import java.util.regex.Pattern;
 
 /**
  * Created by LinkedME00 on 16/1/15.
@@ -91,6 +92,8 @@ public class LMSdkServiceImpl implements LMSdkService {
 
     public final static float UNIVERSE_LINK_IOS_VERSION = 8;
 
+    public final static int ANDROID_APP_LINKS_VERSION = 23;
+
 
     public String webinit(WebInitParams webInitParams) {
 
@@ -125,6 +128,59 @@ public class LMSdkServiceImpl implements LMSdkService {
                 webCloseParams.getLinkedmeKey(), webCloseParams.getIdentityId(), webCloseParams.getSessionId(),
                 webCloseParams.getTimestamp()));
 
+    }
+
+    private String createDeviceInfo(ClientInfo clientInfo) {
+        String res = "";
+        res += clientInfo.getDeviceMac() + "_" + clientInfo.getDeviceFingerPrint() + "_" + clientInfo.getDeviceModel();
+        return res;
+    }
+
+    private boolean isValidAndroidId(String androidId) {
+        String regex = "[0-9a-f]{15,16}";
+
+        return Pattern.matches(regex, androidId) && !androidId.equals("000000000000000") && !androidId.equals("0000000000000000")
+                && !androidId.equals("9774d56d682e549c");
+    }
+
+    private boolean isValidAndroidSerialNumber(String androidSerialNumber) {
+        return !StringUtils.isBlank(androidSerialNumber) && androidSerialNumber != "unknown";
+    }
+
+    private boolean isValidImei(String imei) {
+        String regex = "\\d{15}\\d{17}";
+        return Pattern.matches(regex, imei) && !imei.equals("0000000000000000") && !imei.equals("000000000000000000");
+    }
+
+    public String getDeviceId(ClientInfo clientInfo) {
+        String deviceId;
+
+        if (clientInfo.getosVersionDetail() >= ANDROID_APP_LINKS_VERSION && isValidImei(clientInfo.getiMei())) {
+            if( isValidAndroidId(clientInfo.getAndroidId())) {
+                deviceId = MD5Utils.md5(clientInfo.getiMei() + "IA" + clientInfo.getAndroidId());
+            } else if( isValidAndroidSerialNumber(clientInfo.getSerialNumber())) {
+                deviceId = MD5Utils.md5(clientInfo.getiMei() + "IS" + clientInfo.getSerialNumber());
+            } else {
+                deviceId = MD5Utils.md5(clientInfo.getiMei() + createDeviceInfo(clientInfo));
+            }
+        } else {
+            if( isValidAndroidId(clientInfo.getAndroidId()) && isValidAndroidSerialNumber(clientInfo.getSerialNumber())) {
+                deviceId = MD5Utils.md5(clientInfo.getAndroidId() + "AS" + clientInfo.getSerialNumber());
+            } else if( isValidAndroidId(clientInfo.getAndroidId()) ) {
+                deviceId = MD5Utils.md5(clientInfo.getAndroidId() + "AI" + createDeviceInfo(clientInfo));
+            } else if( isValidAndroidSerialNumber(clientInfo.getSerialNumber())) {
+                deviceId = MD5Utils.md5(clientInfo.getSerialNumber() + "SI" + createDeviceInfo(clientInfo));
+            } else {
+                deviceId = MD5Utils.md5(createDeviceInfo(clientInfo));
+            }
+        }
+        clientInfo.setDeviceId(deviceId);
+
+        return deviceId;
+    }
+
+    public void addClientInfo(ClientInfo clientInfo) {
+        clientMsgPusher.addClient(clientInfo);
     }
 
     public String install(InstallParams installParams) {
@@ -162,7 +218,8 @@ public class LMSdkServiceImpl implements LMSdkService {
         }
         String scanPrefix = "";
 
-        String deviceId = installParams.device_id;
+        String deviceId = getDeviceId(clientInfo);
+
         JedisPort clientRedisClient = clientShardingSupport.getClient(deviceId);
         String identityIdStr = clientRedisClient.get(deviceId);
         long identityId = 0;
@@ -277,7 +334,7 @@ public class LMSdkServiceImpl implements LMSdkService {
         }
         // 写mcq
         clientInfo.setIdentityId(identityId);
-        clientMsgPusher.addClient(clientInfo, fromDeepLinkId);
+        clientMsgPusher.addClient(clientInfo);
 
         // 写mcq,存储键值对
         FingerPrintInfo fingerPrintInfo = toFingerPrintInfo(identityId, newIdentityId, deviceId, installParams.device_type, operationType);
@@ -286,6 +343,7 @@ public class LMSdkServiceImpl implements LMSdkService {
 
         String sessionId = String.valueOf(System.currentTimeMillis());
         JSONObject resultJson = new JSONObject();
+        resultJson.put("device_id", deviceId);
         resultJson.put("session_id", sessionId);
         resultJson.put("identity_id", String.valueOf(identityId));
         resultJson.put("device_fingerprint_id", deviceFingerprintId);

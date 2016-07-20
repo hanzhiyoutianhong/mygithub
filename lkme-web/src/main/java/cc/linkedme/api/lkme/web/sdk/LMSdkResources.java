@@ -3,11 +3,13 @@ package cc.linkedme.api.lkme.web.sdk;
 import cc.linkedme.auth.SignAuthService;
 import cc.linkedme.commons.exception.LMException;
 import cc.linkedme.commons.exception.LMExceptionFactor;
+import cc.linkedme.commons.json.JsonBuilder;
 import cc.linkedme.commons.log.ApiLogger;
 import cc.linkedme.commons.util.Base62;
 import cc.linkedme.commons.util.Constants;
 import cc.linkedme.commons.util.Util;
 import cc.linkedme.data.model.AppListInfo;
+import cc.linkedme.data.model.ClientInfo;
 import cc.linkedme.data.model.params.*;
 import cc.linkedme.service.sdkapi.AppListService;
 import cc.linkedme.service.sdkapi.LMSdkService;
@@ -29,6 +31,7 @@ import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 import java.io.IOException;
 import java.io.OutputStream;
+import java.sql.Timestamp;
 import java.util.ArrayList;
 
 @Path("sdk")
@@ -440,6 +443,75 @@ public class LMSdkResources {
             return "{\"ret\":\"true\"}";
         else
             return "{\"ret\":\"error\"}";
+    }
+
+    @Path("/device_id")
+    @POST
+    public String getDeviceId(@FormParam("device_type") int deviceType,
+                              @FormParam("device_imei") String deviceImei,
+                              @FormParam("device_android_id") String androidId,
+                              @FormParam("device_mac") String deviceMac,
+                              @FormParam("device_fingerprint") String deviceFingerPrint,
+                              @FormParam("device_brand") String deviceBrand,
+                              @FormParam("device_model") String deviceModel,
+                              @FormParam("has_bluetooth") boolean hasBlueTooth,
+                              @FormParam("has_nfc") boolean hasNfc,
+                              @FormParam("has_sim") boolean hasSim,
+                              @FormParam("os") String os,
+                              @FormParam("os_version_detail") int osVersionDetail,
+                              @FormParam("os_version") String osVersion,
+                              @FormParam("screen_dpi") int screenDpi,
+                              @FormParam("screen_height") int screenHeight,
+                              @FormParam("screen_width") int screenWidth,
+                              @FormParam("is_wifi") boolean isWifi,
+                              @FormParam("is_debug") boolean isDebug,
+                              @FormParam("google_advertising_id") String googleAdvertisingId,
+                              @FormParam("lat_val") boolean latVal,
+                              @FormParam("carrier") String carrier,
+                              @FormParam("app_version") String appVersion,
+                              @FormParam("external_intent_uri") String externalIntentUri,
+                              @FormParam("sdk_update") int sdkUpdate,
+                              @FormParam("sdk_version") String sdkVersion,
+                              @FormParam("retry_times") int retryTimes,
+                              @FormParam("linkedme_key") String linkedmeKey,
+                              @FormParam("timestamp")  Timestamp timeStamp,
+                              @FormParam("sign") String sign) {
+
+        ClientInfo clientInfo = new ClientInfo();
+        clientInfo.setDeviceType(deviceType);
+        clientInfo.setiMei(deviceImei);
+        clientInfo.setAndroidId(androidId);
+        clientInfo.setDeviceMac(deviceMac);
+        clientInfo.setDeviceFingerPrint(deviceFingerPrint);
+        clientInfo.setDeviceBrand(deviceBrand);
+        clientInfo.setDeviceModel(deviceModel);
+        clientInfo.setHasBlutooth(hasBlueTooth);
+        clientInfo.setHasNfc(hasNfc);
+        clientInfo.setHasSim(hasSim);
+        clientInfo.setOs(os);
+        clientInfo.setosVersionDetail(osVersionDetail);
+        clientInfo.setOsVersion(osVersion);
+        clientInfo.setScreenDpi(screenDpi);
+        clientInfo.setScreenHeight(screenHeight);
+        clientInfo.setScreenWidth(screenWidth);
+        clientInfo.setIsWifi(isWifi);
+        clientInfo.setDebug(isDebug);
+        clientInfo.setGoogleAdvertisingId(googleAdvertisingId);
+        clientInfo.setLatVal(latVal);
+        clientInfo.setCarrier(carrier);
+        clientInfo.setAppVersion(appVersion);
+        clientInfo.setExternalIntentUri(externalIntentUri);
+        clientInfo.setSdkUpdate(sdkUpdate);
+        clientInfo.setSdkVersion(sdkVersion);
+        clientInfo.setLinkedmeKey(linkedmeKey);
+        clientInfo.setTimestamp(timeStamp);
+        clientInfo.setSign(sign);
+
+        String deviceId = lmSdkService.getDeviceId(clientInfo);
+        lmSdkService.addClientInfo(clientInfo);
+        JSONObject deviceIdJson = new JSONObject();
+        deviceIdJson.put("device_id", deviceId);
+        return deviceIdJson.toString();
     }
 
     @Path("/images/{name}.{type}")
