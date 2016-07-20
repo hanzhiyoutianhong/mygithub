@@ -6,6 +6,8 @@ import java.net.URI;
 import java.util.BitSet;
 import java.util.Enumeration;
 import java.util.Formatter;
+import java.util.List;
+import java.util.Map;
 
 import javax.servlet.Filter;
 import javax.servlet.FilterChain;
@@ -16,6 +18,7 @@ import javax.servlet.ServletResponse;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.apache.commons.collections.MapUtils;
 import org.apache.commons.lang.StringUtils;
 import org.apache.http.Header;
 import org.apache.http.HttpEntity;
@@ -34,6 +37,7 @@ import org.apache.http.message.BasicHttpRequest;
 import org.apache.http.message.HeaderGroup;
 import org.apache.http.util.EntityUtils;
 import org.springframework.context.ApplicationContext;
+import org.springframework.util.CollectionUtils;
 import org.springframework.web.context.support.WebApplicationContextUtils;
 
 import cc.linkedme.commons.exception.LMException;
@@ -42,6 +46,7 @@ import cc.linkedme.commons.http.MultiReadHttpServletRequest;
 import cc.linkedme.commons.log.ApiLogger;
 import cc.linkedme.commons.redis.JedisPort;
 import cc.linkedme.commons.shard.ShardingSupportHash;
+import cc.linkedme.service.webapi.impl.DeviceServiceImpl;
 
 public class TestEnvRedirecter implements Filter {
 
@@ -83,10 +88,14 @@ public class TestEnvRedirecter implements Filter {
         String appIdStr = linkedmeKeyClient.hget(linkedmeKey, "appid");
         
         String requestUri = httpRequest.getRequestURI();
+        Map<String, List<Long>> testDeviceMap = DeviceServiceImpl.whiteDeviceMap.get();
 
+        boolean isTestDevice = !MapUtils.isEmpty(testDeviceMap) && testDeviceMap.containsKey(deviceId);
+        boolean isTestApp = !CollectionUtils.isEmpty(testDeviceMap.get(deviceId)) && 
+                testDeviceMap.get(deviceId).contains(Long.valueOf(appIdStr));
         
+        if(isTestDevice && isTestApp && requestUri.startsWith(LIVE_REQUEST_RREFIX)) {
 
-        if ("test".equals(deviceId) && requestUri.startsWith(LIVE_REQUEST_RREFIX)) {
             try (CloseableHttpClient proxyClient = HttpClients.createDefault()) {
 
                 String requestMethod = httpRequest.getMethod();
