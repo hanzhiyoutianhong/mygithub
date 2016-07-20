@@ -6,6 +6,7 @@ import cc.linkedme.commons.switcher.Switcher;
 import cc.linkedme.commons.switcher.SwitcherManagerFactoryLoader;
 import cc.linkedme.commons.util.ApiUtil;
 import cc.linkedme.commons.util.UseTimeStasticsMonitor;
+import cc.linkedme.data.model.ButtonCount;
 import cc.linkedme.data.model.ClientInfo;
 import cc.linkedme.data.model.DeepLink;
 import cc.linkedme.data.model.DeepLinkDateCount;
@@ -14,6 +15,8 @@ import cc.linkedme.mcq.MsgUtils;
 import cc.linkedme.service.DeepLinkService;
 import cc.linkedme.service.sdkapi.ClientService;
 import cc.linkedme.service.sdkapi.FingerPrintService;
+import cc.linkedme.service.webapi.BtnCountService;
+import cc.linkedme.service.webapi.BtnService;
 import net.sf.json.JSONObject;
 
 import javax.annotation.Resource;
@@ -47,6 +50,9 @@ public class MsgMcqProcessor extends McqProcessor {
 
     @Resource
     private FingerPrintService fingerPrintService;
+
+    @Resource
+    private BtnCountService btnCountService;
 
 
     // 处理收到的消息
@@ -98,6 +104,8 @@ public class MsgMcqProcessor extends McqProcessor {
             }
         } else if (MsgUtils.isFingerPrintType(type)) {
             result = processFingerPrintMsg(type, info);
+        } else if (MsgUtils.isAddButtonType(type)) {
+            result = addButtonCount(type, info);
         }
         return result;
     }
@@ -164,6 +172,24 @@ public class MsgMcqProcessor extends McqProcessor {
         return result;
     }
 
+    private int addButtonCount(int type, JSONObject info) {
+        int result = ApiUtil.MQ_PROCESS_ABORT;
+        ButtonCount buttonCount = new ButtonCount();
+
+        if (type == 51) {
+            buttonCount.setAppId(info.getLong("app_id"));
+            buttonCount.setBtnId(info.getString("button_id"));
+            buttonCount.setConsumerId(info.getLong("consumer_id"));
+            buttonCount.setDate(info.getString("date"));
+            buttonCount.setCountType(info.getString("count_type"));
+            buttonCount.setCountValue(info.getInt("count_value"));
+
+            result = addButtonCount(buttonCount);
+        }
+
+        return result;
+    }
+
     private int addDeepLink(DeepLink deepLink) {
         int result = 0;
         if (updateDb) {
@@ -197,6 +223,18 @@ public class MsgMcqProcessor extends McqProcessor {
             if (fingerPrintInfo.getOperationType() != FingerPrintInfo.OperationType.NONE) {
                 result += fingerPrintService.addFingerPrint(fingerPrintInfo);
             }
+        }
+
+        if (updateMc) {
+
+        }
+        return result;
+    }
+
+    private int addButtonCount(ButtonCount buttonCount) {
+        int result = 0;
+        if (updateDb) {
+            result += btnCountService.addButtonCount(buttonCount);
         }
 
         if (updateMc) {

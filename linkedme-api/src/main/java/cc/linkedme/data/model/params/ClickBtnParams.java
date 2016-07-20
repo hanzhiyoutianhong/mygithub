@@ -22,6 +22,7 @@ public class ClickBtnParams {
     public String open_type;
     public String device_fingerprint_id;
     public String price;
+    public String source;
     public String click_time;
     public long timestamp;
     public String sign;
@@ -96,6 +97,14 @@ public class ClickBtnParams {
 
     public void setPrice(String price) {
         this.price = price;
+    }
+
+    public String getSource() {
+        return source;
+    }
+
+    public void setSource(String source) {
+        this.source = source;
     }
 
     public String getClick_time() {
