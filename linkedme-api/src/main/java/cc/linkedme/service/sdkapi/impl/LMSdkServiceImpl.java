@@ -412,8 +412,12 @@ public class LMSdkServiceImpl implements LMSdkService {
 
             // yyb + deferred deep linking
             if (deepLink == null && "Android".equals(openParams.os) && appId > 0) {
-                String deviceFingerprintId = createFingerprintId(String.valueOf(appId), openParams.os, openParams.os_version,
-                        openParams.device_model.trim().toLowerCase(), openParams.clientIP);
+                String deviceModel = null;
+                if (!Strings.isNullOrEmpty(openParams.device_model)) {
+                    deviceModel = openParams.device_model.trim().toLowerCase();
+                }
+                String deviceFingerprintId =
+                        createFingerprintId(String.valueOf(appId), openParams.os, openParams.os_version, deviceModel, openParams.clientIP);
                 String deepLinkIdStr = browserFingerprintIdForYYBMemCache.get(deviceFingerprintId + ".yyb");
                 if (!Strings.isNullOrEmpty(deepLinkIdStr)) {
                     deepLinkId = Long.parseLong(deepLinkIdStr);
