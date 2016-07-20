@@ -89,7 +89,6 @@ public class ButtonDaoImpl extends BaseDao implements ButtonDao {
                 button.setCreationTime(rs.getString("creation_time"));
                 button.setCheckStatus(rs.getInt("check_status"));
                 button.setOnlineStatus(rs.getInt("online_status"));
-                button.setConsumerOnlineStatus(rs.getInt("consumer_online_status"));
                 buttons.add(button);
                 return null;
             }

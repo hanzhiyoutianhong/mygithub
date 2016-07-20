@@ -1,6 +1,8 @@
 package cc.linkedme.mcq;
 
 import cc.linkedme.commons.json.JsonBuilder;
+import cc.linkedme.data.model.ButtonCount;
+import cc.linkedme.data.model.ButtonInfo;
 import cc.linkedme.data.model.ClientInfo;
 import cc.linkedme.data.model.DeepLink;
 import cc.linkedme.data.model.FingerPrintInfo;
@@ -57,6 +59,24 @@ public class MsgUtils {
 
         fingerPrintMsg.append("info", info.flip());
         return fingerPrintMsg.flip().toString();
+    }
+
+    public static String buttonCountMsgJson(ButtonCount buttonCount) {
+        JsonBuilder buttonCountMsg = new JsonBuilder();
+        buttonCountMsg.append("type", 51);
+        JsonBuilder info = new JsonBuilder();
+
+        info.append("app_id", buttonCount.getAppId());
+        info.append("button_id", buttonCount.getBtnId());
+        info.append("consumer_id", buttonCount.getConsumerId());
+        info.append("date", buttonCount.getDate());
+
+        String countType = buttonCount.getCountType();
+        info.append("count_type", countType);
+        info.append("count_value", buttonCount.getCountValue());
+
+        buttonCountMsg.append("info", info.flip());
+        return buttonCountMsg.flip().toString();
     }
 
     public static DeepLink toDeepLinkObj(JSONObject deepLinkMsg) {
@@ -171,6 +191,10 @@ public class MsgUtils {
 
     public static boolean isFingerPrintType(int type) {
         return (McqMsgType.UPDATE_FINGER_PRINT.getType() == type);
+    }
+
+    public static boolean isAddButtonType(int type) {
+        return (McqMsgType.ADD_BUTTON_COUNT.getType() == type);
     }
 
 }

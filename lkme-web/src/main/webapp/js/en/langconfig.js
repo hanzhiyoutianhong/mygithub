@@ -4,9 +4,9 @@
 
 var basePath = "../../";
 var baseJsPath = basePath + "js/";
-var baseJsPathLang  = baseJsPath + "cn/";
+var baseJsPathLang  = baseJsPath + "en/";
 var baseImgPath = basePath + "img/";
-var baseImgPathLang = baseImgPath + "cn/";
+var baseImgPathLang = baseImgPath + "en/";
 var gotoStore = "Go To App Store";
 var gotoAppStore = "Go To App Store and Download";
 var openStore = "Please Open App Market and search this App";
