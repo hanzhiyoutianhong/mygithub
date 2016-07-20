@@ -39,7 +39,7 @@
 	</filter>
 	<filter-mapping>
         <filter-name>TestEnvRedirect</filter-name>
-        <url-pattern>/*</url-pattern>
+        <url-pattern>/i/*</url-pattern>
     </filter-mapping>
 	
 <!--

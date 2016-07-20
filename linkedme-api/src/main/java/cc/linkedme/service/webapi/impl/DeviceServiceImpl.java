@@ -68,6 +68,6 @@ public class DeviceServiceImpl implements DeviceService {
 
     public void setWhiteDeviceMap() {
         Map<String, List<Long>> deviceIdAndAppIdMap =  deviceDao.getDeviceIdAndAppIdKVMap();
-        whiteDeviceMap = new AtomicReference<>(deviceIdAndAppIdMap);
+        whiteDeviceMap.set(deviceIdAndAppIdMap);        
     }
 }
