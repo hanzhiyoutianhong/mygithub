@@ -445,9 +445,11 @@ public class LMSdkResources {
             return "{\"ret\":\"error\"}";
     }
 
+    @Deprecated
     @Path("/device_id")
     @POST
     @Produces({MediaType.APPLICATION_JSON})
+    // Currently not used
     public String getDeviceId(@FormParam("device_type") int deviceType,
                               @FormParam("device_imei") String deviceImei,
                               @FormParam("device_android_id") String androidId,
@@ -509,7 +511,7 @@ public class LMSdkResources {
         clientInfo.setSign(sign);
 
         String deviceId = lmSdkService.getDeviceId(clientInfo);
-        lmSdkService.addClientInfo(clientInfo);
+        //lmSdkService.addClientInfo(clientInfo);
         JSONObject deviceIdJson = new JSONObject();
         deviceIdJson.put("device_id", deviceId);
         return deviceIdJson.toString();
