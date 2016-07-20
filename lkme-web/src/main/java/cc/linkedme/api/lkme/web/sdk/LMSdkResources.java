@@ -105,6 +105,11 @@ public class LMSdkResources {
     @Produces(MediaType.APPLICATION_JSON)
     public String install(@FormParam("device_id") String device_id,
                           @FormParam("device_type") int device_type,
+                          @FormParam("device_imei") String imei,
+                          @FormParam("device_android_id") String android_id,
+                          @FormParam("device_serial_number") String serial_number,
+                          @FormParam("device_mac") String device_mac,
+                          @FormParam("device_fingerprint") String device_fingerprint,
                           @FormParam("device_brand") String device_brand,
                           @FormParam("device_model") String device_model,
                           @FormParam("has_bluetooth") boolean has_bluetooth,
@@ -112,6 +117,7 @@ public class LMSdkResources {
                           @FormParam("has_sim") boolean has_sim,
                           @FormParam("os") String os,
                           @FormParam("os_version") String os_version,
+                          @FormParam("os_version_int") int os_version_detail,
                           @FormParam("screen_dpi") int screen_dpi,
                           @FormParam("screen_height") int screen_height,
                           @FormParam("screen_width") int screen_width,
@@ -139,6 +145,11 @@ public class LMSdkResources {
         InstallParams installParams = new InstallParams();
         installParams.device_id = device_id;
         installParams.device_type = device_type;
+        installParams.device_imei = imei;
+        installParams.android_id = android_id;
+        installParams.serial_number = serial_number;
+        installParams.device_mac = device_mac;
+        installParams.finger_print = device_fingerprint;
         installParams.device_brand = device_brand;
         installParams.device_model = device_model;
         installParams.has_bluetooth = has_bluetooth;
@@ -146,6 +157,7 @@ public class LMSdkResources {
         installParams.has_sim = has_sim;
         installParams.os = os;
         installParams.os_version = os_version;
+        installParams.os_version_detail = os_version_detail;
         installParams.screen_dpi = screen_dpi;
         installParams.screen_height = screen_height;
         installParams.screen_width = screen_width;
@@ -168,7 +180,7 @@ public class LMSdkResources {
         installParams.linkedme_key = Util.formatLinkedmeKey(linkedme_key);
         installParams.timestamp = timestamp;
         installParams.sign = sign;
-
+        installParams.os_version_detail = os_version_detail;
 
         if (Strings.isNullOrEmpty(installParams.linkedme_key)) {
             throw new LMException(LMExceptionFactor.LM_MISSING_PARAM, installParams.linkedme_key);
@@ -189,9 +201,10 @@ public class LMSdkResources {
     @Path("/open")
     @POST
     @Produces({MediaType.APPLICATION_JSON})
-    public String openForm(@FormParam("device_fingerprint_id") String device_fingerprint_id,
+    public String openForm(@FormParam("device_id") String device_id,
+                           @FormParam("device_fingerprint_id") String device_fingerprint_id,
                            @FormParam("identity_id") long identity_id,
-                           @FormParam("is_referable") boolean is_referable,
+                           @FormParam("is_referrable") boolean is_referrable,
                            @FormParam("app_version") String app_version,
                            @FormParam("external_intent_uri") String external_intent_uri,
                            @FormParam("extra_uri_data") String extra_uri_data,
@@ -211,9 +224,10 @@ public class LMSdkResources {
                            @Context HttpServletRequest request) {
 
         OpenParams openParams = new OpenParams();
+        openParams.device_id = device_id;
         openParams.device_fingerprint_id = device_fingerprint_id;
         openParams.identity_id = identity_id;
-        openParams.is_referable = is_referable;
+        openParams.is_referable = is_referrable;
         openParams.app_version = app_version;
         openParams.external_intent_uri = external_intent_uri;
         openParams.extra_uri_data = extra_uri_data;
@@ -260,7 +274,8 @@ public class LMSdkResources {
     @Path("/url")
     @POST
     @Produces({MediaType.APPLICATION_JSON})
-    public String url_form(@FormParam("app_id") int app_id,
+    public String url_form(@FormParam("device_id") String device_id,
+                           @FormParam("app_id") int app_id,
                            @FormParam("ios_use_default") boolean ios_use_default,
                            @FormParam("ios_custom_url") String ios_custom_url,
                            @FormParam("android_use_default") boolean android_use_default,
@@ -287,6 +302,7 @@ public class LMSdkResources {
                            @Context HttpServletRequest request) {
 
         UrlParams urlParams = new UrlParams();
+        urlParams.device_id = device_id;
         urlParams.app_id = app_id;
         urlParams.ios_use_default = ios_use_default;
         urlParams.ios_custom_url = ios_custom_url;
@@ -362,7 +378,8 @@ public class LMSdkResources {
     @Path("/close")
     @POST
     @Produces({MediaType.APPLICATION_JSON})
-    public String close(@FormParam("device_fingerprint_id") String device_fingerprint_id,
+    public String close(@FormParam("device_id") String device_id,
+                        @FormParam("device_fingerprint_id") String device_fingerprint_id,
                         @FormParam("identity_id") long identity_id,
                         @FormParam("session_id") String session_id,
                         @FormParam("sdk_version") String sdk_version,
@@ -373,6 +390,7 @@ public class LMSdkResources {
                         @Context HttpServletRequest request) {
 
         CloseParams closeParams = new CloseParams();
+        closeParams.device_id = device_id;
         closeParams.device_fingerprint_id = device_fingerprint_id;
         closeParams.identity_id = identity_id;
         closeParams.session_id = session_id;

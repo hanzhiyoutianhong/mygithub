@@ -137,6 +137,9 @@ public class LMSdkServiceImpl implements LMSdkService {
     }
 
     private boolean isValidAndroidId(String androidId) {
+        if(StringUtils.isBlank(androidId)) {
+            return false;
+        }
         String regex = "[0-9a-f]{15,16}";
 
         return Pattern.matches(regex, androidId) && !androidId.equals("000000000000000") && !androidId.equals("0000000000000000")
@@ -144,18 +147,24 @@ public class LMSdkServiceImpl implements LMSdkService {
     }
 
     private boolean isValidAndroidSerialNumber(String androidSerialNumber) {
+        if( StringUtils.isBlank(androidSerialNumber)) {
+            return false;
+        }
         return !StringUtils.isBlank(androidSerialNumber) && androidSerialNumber != "unknown";
     }
 
     private boolean isValidImei(String imei) {
-        String regex = "\\d{15}\\d{17}";
+        if( StringUtils.isBlank(imei)) {
+            return false;
+        }
+        String regex = "\\d{15}|\\d{17}";
         return Pattern.matches(regex, imei) && !imei.equals("0000000000000000") && !imei.equals("000000000000000000");
     }
 
     public String getDeviceId(ClientInfo clientInfo) {
         String deviceId;
 
-        if (clientInfo.getosVersionDetail() >= ANDROID_APP_LINKS_VERSION && isValidImei(clientInfo.getiMei())) {
+        if (clientInfo.getosVersionDetail() < ANDROID_APP_LINKS_VERSION && isValidImei(clientInfo.getiMei())) {
             if (isValidAndroidId(clientInfo.getAndroidId())) {
                 deviceId = MD5Utils.md5(clientInfo.getiMei() + "IA" + clientInfo.getAndroidId());
             } else if (isValidAndroidSerialNumber(clientInfo.getSerialNumber())) {
@@ -225,7 +234,10 @@ public class LMSdkServiceImpl implements LMSdkService {
         }
         String scanPrefix = "";
 
-        String deviceId = getDeviceId(clientInfo);
+        String deviceId = installParams.device_id;
+        if ("android".equals(installParams.os.trim().toLowerCase())) {
+            deviceId = getDeviceId(clientInfo);
+        }
 
         JedisPort clientRedisClient = clientShardingSupport.getClient(deviceId);
         String identityIdStr = clientRedisClient.get(deviceId);
