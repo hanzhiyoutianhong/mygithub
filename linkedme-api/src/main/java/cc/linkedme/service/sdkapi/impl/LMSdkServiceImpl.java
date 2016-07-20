@@ -156,19 +156,19 @@ public class LMSdkServiceImpl implements LMSdkService {
         String deviceId;
 
         if (clientInfo.getosVersionDetail() >= ANDROID_APP_LINKS_VERSION && isValidImei(clientInfo.getiMei())) {
-            if( isValidAndroidId(clientInfo.getAndroidId())) {
+            if (isValidAndroidId(clientInfo.getAndroidId())) {
                 deviceId = MD5Utils.md5(clientInfo.getiMei() + "IA" + clientInfo.getAndroidId());
-            } else if( isValidAndroidSerialNumber(clientInfo.getSerialNumber())) {
+            } else if (isValidAndroidSerialNumber(clientInfo.getSerialNumber())) {
                 deviceId = MD5Utils.md5(clientInfo.getiMei() + "IS" + clientInfo.getSerialNumber());
             } else {
                 deviceId = MD5Utils.md5(clientInfo.getiMei() + createDeviceInfo(clientInfo));
             }
         } else {
-            if( isValidAndroidId(clientInfo.getAndroidId()) && isValidAndroidSerialNumber(clientInfo.getSerialNumber())) {
+            if (isValidAndroidId(clientInfo.getAndroidId()) && isValidAndroidSerialNumber(clientInfo.getSerialNumber())) {
                 deviceId = MD5Utils.md5(clientInfo.getAndroidId() + "AS" + clientInfo.getSerialNumber());
-            } else if( isValidAndroidId(clientInfo.getAndroidId()) ) {
+            } else if (isValidAndroidId(clientInfo.getAndroidId())) {
                 deviceId = MD5Utils.md5(clientInfo.getAndroidId() + "AI" + createDeviceInfo(clientInfo));
-            } else if( isValidAndroidSerialNumber(clientInfo.getSerialNumber())) {
+            } else if (isValidAndroidSerialNumber(clientInfo.getSerialNumber())) {
                 deviceId = MD5Utils.md5(clientInfo.getSerialNumber() + "SI" + createDeviceInfo(clientInfo));
             } else {
                 deviceId = MD5Utils.md5(createDeviceInfo(clientInfo));

@@ -447,6 +447,7 @@ public class LMSdkResources {
 
     @Path("/device_id")
     @POST
+    @Produces({MediaType.APPLICATION_JSON})
     public String getDeviceId(@FormParam("device_type") int deviceType,
                               @FormParam("device_imei") String deviceImei,
                               @FormParam("device_android_id") String androidId,
