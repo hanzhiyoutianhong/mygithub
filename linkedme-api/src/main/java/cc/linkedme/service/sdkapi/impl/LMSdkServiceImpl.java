@@ -85,7 +85,7 @@ public class LMSdkServiceImpl implements LMSdkService {
     private ShardingSupportHash<JedisPort> deepLinkCountShardingSupport;
 
     @Resource
-    private MemCacheTemplate<Long> browserFingerprintIdForYYBMemCache;
+    private MemCacheTemplate<String> browserFingerprintIdForYYBMemCache;
 
     private static ThreadPoolExecutor deepLinkCountThreadPool = new ThreadPoolExecutor(20, 20, 60L, TimeUnit.SECONDS,
             new LinkedBlockingQueue<Runnable>(300), new ThreadPoolExecutor.DiscardOldestPolicy());
@@ -442,7 +442,8 @@ public class LMSdkServiceImpl implements LMSdkService {
         boolean clicked_linkedme_link = false;
         String openTypeForLog = "other";
         long appId = 0;
-        if (!Strings.isNullOrEmpty(deepLinkUrl) || !Strings.isNullOrEmpty(openParams.spotlight_identifier)) {
+        if (!Strings.isNullOrEmpty(deepLinkUrl) || !Strings.isNullOrEmpty(openParams.spotlight_identifier)
+                || "Android".equals(openParams.os)) {
             // 根据linkedme_key获取appid
             JedisPort linkedmeKeyClient = linkedmeKeyShardingSupport.getClient(openParams.linkedme_key);
             String appIdStr = linkedmeKeyClient.hget(openParams.linkedme_key, "appid");
@@ -463,12 +464,16 @@ public class LMSdkServiceImpl implements LMSdkService {
 
             // yyb + deferred deep linking
             if (deepLink == null && "Android".equals(openParams.os) && appId > 0) {
-                String deviceFingerprintId = createFingerprintId(String.valueOf(appId), openParams.os, openParams.os_version,
-                        openParams.device_model.trim().toLowerCase(), openParams.clientIP);
-                deepLinkId = browserFingerprintIdForYYBMemCache.get(deviceFingerprintId + ".yyb");
+                String deviceFingerprintId =
+                        createFingerprintId(String.valueOf(appId), openParams.os, openParams.os_version, null, openParams.clientIP);
+                String deepLinkIdStr = browserFingerprintIdForYYBMemCache.get(deviceFingerprintId + ".yyb");
+                if (!Strings.isNullOrEmpty(deepLinkIdStr)) {
+                    deepLinkId = Long.parseLong(deepLinkIdStr);
+                }
                 if (deepLinkId > 0) {
                     clicked_linkedme_link = true;
                     deepLink = deepLinkService.getDeepLinkInfo(deepLinkId, appId);
+                    browserFingerprintIdForYYBMemCache.delete(deviceFingerprintId + ".yyb"); // 匹配成功后删除记录
                 }
             }
 

@@ -17,7 +17,7 @@ public class JsServiceImpl implements JsService {
     private ShardingSupportHash<JedisPort> clientShardingSupport;
 
     @Resource
-    private MemCacheTemplate<Long> browserFingerprintIdForYYBMemCache;
+    private MemCacheTemplate<String> browserFingerprintIdForYYBMemCache;
 
     @Override
     public void recordId(JsRecordIdParams jsRecordIdParams) {
@@ -51,7 +51,7 @@ public class JsServiceImpl implements JsService {
     @Override
     public void recordIdForYYB(JsRecordIdParams jsRecordIdParams) {
         String browserFingerprintId = jsRecordIdParams.browser_fingerprint_id;
-        browserFingerprintIdForYYBMemCache.set(browserFingerprintId + ".yyb", jsRecordIdParams.deeplink_id,
+        browserFingerprintIdForYYBMemCache.set(browserFingerprintId + ".yyb", String.valueOf(jsRecordIdParams.deeplink_id),
                 Constants.EXPTIME_BROWSER_FINGERPRINT_ID_FOR_YYB);
     }
 }
