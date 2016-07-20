@@ -191,6 +191,8 @@ public class LMSdkServiceImpl implements LMSdkService {
                 identityId = Long.parseLong(identityIdStr);
                 deepLinkId = Long.parseLong(deepLinkIdStr);
                 deepLink = deepLinkService.getDeepLinkInfo(deepLinkId, appId);
+                // 匹配成功,删除deferred deep linking记录
+                dfpIdRedisClient.hdelAll(deviceFingerprintId);
             } else {
                 // 匹配不成功, 生成identity_id
                 identityId = uuidCreator.nextId(1); // 1表示发号器的identity_id业务
@@ -219,6 +221,9 @@ public class LMSdkServiceImpl implements LMSdkService {
                     newIdentityId = Long.parseLong(identityIdStr);
                     deepLinkId = Long.parseLong(deepLinkIdStr);
                     deepLink = deepLinkService.getDeepLinkInfo(deepLinkId, appId);
+
+                    // 匹配成功,删除deferred deep linking记录
+                    dfpIdRedisClient.hdelAll(deviceFingerprintId);
 
                     if ((("ios".equals(installParams.os.trim().toLowerCase())) && (installParams.device_type == 24))
                             || (("android".equals(installParams.os.trim().toLowerCase())) && (installParams.device_type == 12))) {
@@ -323,7 +328,8 @@ public class LMSdkServiceImpl implements LMSdkService {
 
     private static String createFingerprintId(String appId, String os, String os_version, String deviceModel, String clientIP) {
         Joiner joiner = Joiner.on("&").skipNulls();
-        String deviceParamsStr = joiner.join(appId, os, os_version, deviceModel, clientIP);
+        // TODO 等Android sdk新版上线后,添加deviceModel字段
+        String deviceParamsStr = joiner.join(appId, os, os_version, null, clientIP);
         return MD5Utils.md5(deviceParamsStr);
     }
 
@@ -406,8 +412,8 @@ public class LMSdkServiceImpl implements LMSdkService {
 
             // yyb + deferred deep linking
             if (deepLink == null && "Android".equals(openParams.os) && appId > 0) {
-                String deviceFingerprintId =
-                        createFingerprintId(String.valueOf(appId), openParams.os, openParams.os_version, null, openParams.clientIP);
+                String deviceFingerprintId = createFingerprintId(String.valueOf(appId), openParams.os, openParams.os_version,
+                        openParams.device_model.trim().toLowerCase(), openParams.clientIP);
                 String deepLinkIdStr = browserFingerprintIdForYYBMemCache.get(deviceFingerprintId + ".yyb");
                 if (!Strings.isNullOrEmpty(deepLinkIdStr)) {
                     deepLinkId = Long.parseLong(deepLinkIdStr);
