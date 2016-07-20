@@ -33,13 +33,19 @@ import org.apache.http.message.BasicHttpEntityEnclosingRequest;
 import org.apache.http.message.BasicHttpRequest;
 import org.apache.http.message.HeaderGroup;
 import org.apache.http.util.EntityUtils;
+import org.springframework.context.ApplicationContext;
+import org.springframework.web.context.support.WebApplicationContextUtils;
 
 import cc.linkedme.commons.exception.LMException;
 import cc.linkedme.commons.exception.LMExceptionFactor;
 import cc.linkedme.commons.http.MultiReadHttpServletRequest;
 import cc.linkedme.commons.log.ApiLogger;
+import cc.linkedme.commons.redis.JedisPort;
+import cc.linkedme.commons.shard.ShardingSupportHash;
 
 public class TestEnvRedirecter implements Filter {
+
+    private ShardingSupportHash<JedisPort> linkedmeKeyShardingSupport;
 
     private static final String TEST_ENV_HTTP = "http://lkme.cc";
 
@@ -61,7 +67,8 @@ public class TestEnvRedirecter implements Filter {
 
     @Override
     public void init(FilterConfig filterConfig) throws ServletException {
-
+        ApplicationContext ctx = WebApplicationContextUtils.getRequiredWebApplicationContext(filterConfig.getServletContext());
+        linkedmeKeyShardingSupport = (ShardingSupportHash<JedisPort>)ctx.getBean("linkedmeKeyShardingSupport");
     }
 
     @Override
@@ -70,17 +77,20 @@ public class TestEnvRedirecter implements Filter {
         MultiReadHttpServletRequest httpRequest = new MultiReadHttpServletRequest((HttpServletRequest) request);
         HttpServletResponse httpResponse = (HttpServletResponse) response;
 
-        String deviceId = httpRequest.getParameter("deviceId");
+        String deviceId = httpRequest.getParameter("device_id");
+        String linkedmeKey = httpRequest.getParameter("linkedme_key");
+        JedisPort linkedmeKeyClient = linkedmeKeyShardingSupport.getClient(linkedmeKey);
+        String appIdStr = linkedmeKeyClient.hget(linkedmeKey, "appid");
+        
         String requestUri = httpRequest.getRequestURI();
 
-        // TODO 待注册设备的接口完成后再更新
-        // boolean isTestDevice = false;
-        // if (isTestDevice) {
+        
+
         if ("test".equals(deviceId) && requestUri.startsWith(LIVE_REQUEST_RREFIX)) {
             try (CloseableHttpClient proxyClient = HttpClients.createDefault()) {
 
                 String requestMethod = httpRequest.getMethod();
-                
+
                 String targetUri = TEST_ENV_HTTP + requestUri.replaceFirst(LIVE_REQUEST_RREFIX, TEST_REQUEST_PREFIX);
                 String proxyRequestUri = rewriteUrlFromRequest(httpRequest, targetUri);
                 HttpRequest proxyRequest;
