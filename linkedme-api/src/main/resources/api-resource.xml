@@ -12,6 +12,7 @@
     <import resource="classpath:spring/deeplink/deeplink-datecount-context.xml"/>
     <import resource="classpath:spring/app/app-context.xml"/>
     <import resource="classpath:spring/user/user-content.xml"/>
+    <import resource="classpath:spring/device/device-context.xml"/>
     <import resource="classpath:spring/client/client-context.xml"/>
     <import resource="classpath:spring/button/btn-context.xml"/>
     <import resource="classpath:spring/button/btn-count-context.xml"/>
