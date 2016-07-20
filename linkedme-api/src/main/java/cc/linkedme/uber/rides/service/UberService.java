@@ -89,11 +89,12 @@ public class UberService {
 
         // 计数
         String hashField;
-        if ("ios".equals(source)) {
+        String sourceOs = source.toLowerCase();
+        if ("ios".equals(sourceOs)) {
             hashField = "ios_view_count";
-        } else if ("android".equals(source)) {
+        } else if ("android".equals(sourceOs)) {
             hashField = "android_view_count";
-        } else if ("web".equals(source)) {
+        } else if ("web".equals(sourceOs)) {
             hashField = "web_view_count";
         } else {
             hashField = "other_view_count";
@@ -180,11 +181,12 @@ public class UberService {
                 + "_" + buttonInfo.getConsumerAppId();
 
         String hashField;
-        if ("ios".equals(clickBtnParams.source)) {
+        String sourceOs = clickBtnParams.source.toLowerCase();
+        if ("ios".equals(sourceOs)) {
             hashField = "ios_click_count";
-        } else if ("android".equals(clickBtnParams.source)) {
+        } else if ("android".equals(sourceOs)) {
             hashField = "android_click_count";
-        } else if ("web".equals(clickBtnParams.source)) {
+        } else if ("web".equals(sourceOs)) {
             hashField = "web_click_count";
         } else {
             hashField = "other_click_count";

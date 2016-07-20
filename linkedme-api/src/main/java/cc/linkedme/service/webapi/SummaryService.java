@@ -688,10 +688,10 @@ public class SummaryService {
             }
             List<ButtonCount> buttonCounts = btnCountDao.getConsumerIncome(summaryButtonParams.app_id, buttonInfo.getConsumerAppId(),
                     summaryButtonParams.start_date, summaryButtonParams.end_date);
-            Map<String, Integer> resultCountMap = new HashMap<>();
+            Map<String, Long> resultCountMap = new HashMap<>();
             // 按天汇总consumer_app的金额
             for (ButtonCount buttonCount : buttonCounts) {
-                int totalIncome = resultCountMap.get(buttonCount.getDate());
+                long totalIncome = resultCountMap.get(buttonCount.getDate());
                 if (totalIncome == 0) {
                     resultCountMap.put(buttonCount.getDate(), buttonCount.getTotalIncome());
                 } else {
@@ -705,7 +705,7 @@ public class SummaryService {
             consumerIncomeJson.put("app_name", buttonInfo.getConsumerAppInfo().getAppName());
             JSONArray dataJsonArray = new JSONArray();
 
-            for (Map.Entry<String, Integer> entry : resultCountMap.entrySet()) {
+            for (Map.Entry<String, Long> entry : resultCountMap.entrySet()) {
                 JSONArray dateJson = new JSONArray();
                 dateJson.add(0, strDateToTimestamps(entry.getKey(), simpleDateFormat));
                 dateJson.add(1, entry.getValue());
@@ -721,11 +721,11 @@ public class SummaryService {
     public String getBtnHistoryCounts(SummaryButtonParams summaryButtonParams) {
         List<ButtonCount> buttonCounts = btnCountDao.getButtonCounts(summaryButtonParams.app_id, summaryButtonParams.btn_id,
                 summaryButtonParams.start_date, summaryButtonParams.end_date);
-        Map<String, Map<String, Integer>> resultCountMap = new HashMap<>();
+        Map<String, Map<String, Long>> resultCountMap = new HashMap<>();
         for (ButtonCount buttonCount : buttonCounts) {
-            Map<String, Integer> tmpMap = resultCountMap.get(buttonCount.getDate());
+            Map<String, Long> tmpMap = resultCountMap.get(buttonCount.getDate());
             if (tmpMap == null) {
-                Map<String, Integer> countMap = new HashMap<>();
+                Map<String, Long> countMap = new HashMap<>();
                 countMap.put("view_count",  buttonCount.getTotalView());
                 countMap.put("click_count", buttonCount.getTotalClick());
                 countMap.put("order_count", buttonCount.getTotalOrder());
@@ -745,7 +745,7 @@ public class SummaryService {
         JSONArray incomeCountJson = new JSONArray();
         JSONArray installCountJson = new JSONArray();
         SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd");
-        for (Map.Entry<String, Map<String, Integer>> entry : resultCountMap.entrySet()) {
+        for (Map.Entry<String, Map<String, Long>> entry : resultCountMap.entrySet()) {
             if (Strings.isNullOrEmpty(entry.getKey()) || (entry.getValue() == null) || (entry.getValue().size() == 0)) {
                 continue;
             }

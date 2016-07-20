@@ -12,37 +12,37 @@ public class ButtonCount {
     private String countType;
     private int countValue;
 
-    private int iosViewCount;
-    private int androidViewCount;
-    private int webViewCount;
-    private int otherViewCount;
+    private long iosViewCount;
+    private long androidViewCount;
+    private long webViewCount;
+    private long otherViewCount;
 
-    private int iosClickCount;
-    private int androidClickCount;
-    private int webClickCount;
-    private int otherClickCount;
+    private long iosClickCount;
+    private long androidClickCount;
+    private long webClickCount;
+    private long otherClickCount;
 
-    private int iosOpenCount;
-    private int androidOpenCount;
-    private int webOpenCount;
-    private int otherOpenCount;
+    private long iosOpenCount;
+    private long androidOpenCount;
+    private long webOpenCount;
+    private long otherOpenCount;
 
-    private int iosOrderCount;
-    private int androidOrderCount;
-    private int webOrderCount;
-    private int otherOrderCount;
+    private long iosOrderCount;
+    private long androidOrderCount;
+    private long webOrderCount;
+    private long otherOrderCount;
 
     // 存储的时候转成整型
-    private int iosIncome;
-    private int androidIncome;
-    private int webIncome;
-    private int otherIncome;
+    private long iosIncome;
+    private long androidIncome;
+    private long webIncome;
+    private long otherIncome;
 
-    private int totalView;
-    private int totalClick;
-    private int totalOpen;
-    private int totalOrder;
-    private int totalIncome;
+    private long totalView;
+    private long totalClick;
+    private long totalOpen;
+    private long totalOrder;
+    private long totalIncome;
 
     public long getAppId() {
         return appId;
@@ -92,203 +92,203 @@ public class ButtonCount {
         this.countValue = countValue;
     }
 
-    public int getIosViewCount() {
+    public long getIosViewCount() {
         return iosViewCount;
     }
 
-    public void setIosViewCount(int iosViewCount) {
+    public void setIosViewCount(long iosViewCount) {
         this.iosViewCount = iosViewCount;
     }
 
-    public int getAndroidViewCount() {
+    public long getAndroidViewCount() {
         return androidViewCount;
     }
 
-    public void setAndroidViewCount(int androidViewCount) {
+    public void setAndroidViewCount(long androidViewCount) {
         this.androidViewCount = androidViewCount;
     }
 
-    public int getWebViewCount() {
+    public long getWebViewCount() {
         return webViewCount;
     }
 
-    public void setWebViewCount(int webViewCount) {
+    public void setWebViewCount(long webViewCount) {
         this.webViewCount = webViewCount;
     }
 
-    public int getOtherViewCount() {
+    public long getOtherViewCount() {
         return otherViewCount;
     }
 
-    public void setOtherViewCount(int otherViewCount) {
+    public void setOtherViewCount(long otherViewCount) {
         this.otherViewCount = otherViewCount;
     }
 
-    public int getIosClickCount() {
+    public long getIosClickCount() {
         return iosClickCount;
     }
 
-    public void setIosClickCount(int iosClickCount) {
+    public void setIosClickCount(long iosClickCount) {
         this.iosClickCount = iosClickCount;
     }
 
-    public int getAndroidClickCount() {
+    public long getAndroidClickCount() {
         return androidClickCount;
     }
 
-    public void setAndroidClickCount(int androidClickCount) {
+    public void setAndroidClickCount(long androidClickCount) {
         this.androidClickCount = androidClickCount;
     }
 
-    public int getWebClickCount() {
+    public long getWebClickCount() {
         return webClickCount;
     }
 
-    public void setWebClickCount(int webClickCount) {
+    public void setWebClickCount(long webClickCount) {
         this.webClickCount = webClickCount;
     }
 
-    public int getOtherClickCount() {
+    public long getOtherClickCount() {
         return otherClickCount;
     }
 
-    public void setOtherClickCount(int otherClickCount) {
+    public void setOtherClickCount(long otherClickCount) {
         this.otherClickCount = otherClickCount;
     }
 
-    public int getIosOpenCount() {
+    public long getIosOpenCount() {
         return iosOpenCount;
     }
 
-    public void setIosOpenCount(int iosOpenCount) {
+    public void setIosOpenCount(long iosOpenCount) {
         this.iosOpenCount = iosOpenCount;
     }
 
-    public int getAndroidOpenCount() {
+    public long getAndroidOpenCount() {
         return androidOpenCount;
     }
 
-    public void setAndroidOpenCount(int androidOpenCount) {
+    public void setAndroidOpenCount(long androidOpenCount) {
         this.androidOpenCount = androidOpenCount;
     }
 
-    public int getWebOpenCount() {
+    public long getWebOpenCount() {
         return webOpenCount;
     }
 
-    public void setWebOpenCount(int webOpenCount) {
+    public void setWebOpenCount(long webOpenCount) {
         this.webOpenCount = webOpenCount;
     }
 
-    public int getOtherOpenCount() {
+    public long getOtherOpenCount() {
         return otherOpenCount;
     }
 
-    public void setOtherOpenCount(int otherOpenCount) {
+    public void setOtherOpenCount(long otherOpenCount) {
         this.otherOpenCount = otherOpenCount;
     }
 
-    public int getIosOrderCount() {
+    public long getIosOrderCount() {
         return iosOrderCount;
     }
 
-    public void setIosOrderCount(int iosOrderCount) {
+    public void setIosOrderCount(long iosOrderCount) {
         this.iosOrderCount = iosOrderCount;
     }
 
-    public int getAndroidOrderCount() {
+    public long getAndroidOrderCount() {
         return androidOrderCount;
     }
 
-    public void setAndroidOrderCount(int androidOrderCount) {
+    public void setAndroidOrderCount(long androidOrderCount) {
         this.androidOrderCount = androidOrderCount;
     }
 
-    public int getWebOrderCount() {
+    public long getWebOrderCount() {
         return webOrderCount;
     }
 
-    public void setWebOrderCount(int webOrderCount) {
+    public void setWebOrderCount(long webOrderCount) {
         this.webOrderCount = webOrderCount;
     }
 
-    public int getOtherOrderCount() {
+    public long getOtherOrderCount() {
         return otherOrderCount;
     }
 
-    public void setOtherOrderCount(int otherOrderCount) {
+    public void setOtherOrderCount(long otherOrderCount) {
         this.otherOrderCount = otherOrderCount;
     }
 
-    public int getIosIncome() {
+    public long getIosIncome() {
         return iosIncome;
     }
 
-    public void setIosIncome(int iosIncome) {
+    public void setIosIncome(long iosIncome) {
         this.iosIncome = iosIncome;
     }
 
-    public int getAndroidIncome() {
+    public long getAndroidIncome() {
         return androidIncome;
     }
 
-    public void setAndroidIncome(int androidIncome) {
+    public void setAndroidIncome(long androidIncome) {
         this.androidIncome = androidIncome;
     }
 
-    public int getWebIncome() {
+    public long getWebIncome() {
         return webIncome;
     }
 
-    public void setWebIncome(int webIncome) {
+    public void setWebIncome(long webIncome) {
         this.webIncome = webIncome;
     }
 
-    public int getOtherIncome() {
+    public long getOtherIncome() {
         return otherIncome;
     }
 
-    public void setOtherIncome(int otherIncome) {
+    public void setOtherIncome(long otherIncome) {
         this.otherIncome = otherIncome;
     }
 
-    public int getTotalView() {
+    public long getTotalView() {
         return totalView;
     }
 
-    public void setTotalView(int totalView) {
+    public void setTotalView(long totalView) {
         this.totalView = totalView;
     }
 
-    public int getTotalClick() {
+    public long getTotalClick() {
         return totalClick;
     }
 
-    public void setTotalClick(int totalClick) {
+    public void setTotalClick(long totalClick) {
         this.totalClick = totalClick;
     }
 
-    public int getTotalOpen() {
+    public long getTotalOpen() {
         return totalOpen;
     }
 
-    public void setTotalOpen(int totalOpen) {
+    public void setTotalOpen(long totalOpen) {
         this.totalOpen = totalOpen;
     }
 
-    public int getTotalOrder() {
+    public long getTotalOrder() {
         return totalOrder;
     }
 
-    public void setTotalOrder(int totalOrder) {
+    public void setTotalOrder(long totalOrder) {
         this.totalOrder = totalOrder;
     }
 
-    public int getTotalIncome() {
+    public long getTotalIncome() {
         return totalIncome;
     }
 
-    public void setTotalIncome(int totalIncome) {
+    public void setTotalIncome(long totalIncome) {
         this.totalIncome = totalIncome;
     }
 }
