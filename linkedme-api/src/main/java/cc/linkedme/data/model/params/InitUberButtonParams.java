@@ -10,6 +10,7 @@ import org.codehaus.jackson.annotate.JsonIgnoreProperties;
 
 public class InitUberButtonParams {
 
+    public String device_id;
     public long identity_id;
     public String linkedme_key;
     public long session_id;
@@ -27,6 +28,14 @@ public class InitUberButtonParams {
     public String source;
     public long timestamp;
     public String sign;
+
+    public String getDevice_id() {
+        return device_id;
+    }
+
+    public void setDevice_id(String device_id) {
+        this.device_id = device_id;
+    }
 
     public long getIdentity_id() {
         return identity_id;

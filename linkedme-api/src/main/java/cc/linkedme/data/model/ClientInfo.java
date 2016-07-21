@@ -6,6 +6,85 @@ import java.sql.Timestamp;
  * Created by LinkedME00 on 16/3/19.
  */
 public class ClientInfo {
+
+    private String iMei;
+    private String androidId;
+    private String serialNumber;
+    private String deviceMac;
+    private String deviceFingerPrint;
+
+    public String getiMei() {
+        return iMei;
+    }
+
+    public void setiMei(String iMei) {
+        this.iMei = iMei;
+    }
+
+    public String getAndroidId() {
+        return androidId;
+    }
+
+    public void setAndroidId(String androidId) {
+        this.androidId = androidId;
+    }
+
+    public String getSerialNumber() {
+        return serialNumber;
+    }
+
+    public void setSerialNumber(String serialNumber) {
+        this.serialNumber = serialNumber;
+    }
+
+    public boolean isHasBlutooth() {
+        return hasBlutooth;
+    }
+
+    public boolean isHasNfc() {
+        return hasNfc;
+    }
+
+    public boolean isHasSim() {
+        return hasSim;
+    }
+
+    public boolean isWifi() {
+        return isWifi;
+    }
+
+    public void setWifi(boolean wifi) {
+        isWifi = wifi;
+    }
+
+    public boolean isReferable() {
+        return isReferable;
+    }
+
+    public void setReferable(boolean referable) {
+        isReferable = referable;
+    }
+
+    public boolean isLatVal() {
+        return latVal;
+    }
+
+    public String getDeviceMac() {
+        return deviceMac;
+    }
+
+    public void setDeviceMac(String deviceMac) {
+        this.deviceMac = deviceMac;
+    }
+
+    public String getDeviceFingerPrint() {
+        return deviceFingerPrint;
+    }
+
+    public void setDeviceFingerPrint(String deviceFingerPrint) {
+        this.deviceFingerPrint = deviceFingerPrint;
+    }
+
     private long identityId;
 
 
@@ -117,6 +196,16 @@ public class ClientInfo {
         this.osVersion = osVersion;
     }
 
+    private int osVersionDetail;
+
+    public int getosVersionDetail() {
+        return osVersionDetail;
+    }
+
+    public void setosVersionDetail(int osVersionDetail) {
+        this.osVersionDetail = osVersionDetail;
+    }
+
     private int screenDpi;
 
 
@@ -159,6 +248,26 @@ public class ClientInfo {
         this.isWifi = isWifi;
     }
 
+    private boolean isDebug;
+
+    public boolean isDebug() {
+        return isDebug;
+    }
+
+    public void setDebug(boolean debug) {
+        isDebug = debug;
+    }
+
+    private String googleAdvertisingId;
+
+    public String getGoogleAdvertisingId() {
+        return googleAdvertisingId;
+    }
+
+    public void setGoogleAdvertisingId(String googleAdvertisingId) {
+        this.googleAdvertisingId = googleAdvertisingId;
+    }
+
     private boolean isReferable;
 
     public boolean getIsReferable() {
@@ -199,8 +308,17 @@ public class ClientInfo {
         this.appVersion = appVersion;
     }
 
-    private int sdkUpdate;
+    private String externalIntentUri;
 
+    public String getExternalIntentUri() {
+        return externalIntentUri;
+    }
+
+    public void setExternalIntentUri(String externalIntentUri) {
+        this.externalIntentUri = externalIntentUri;
+    }
+
+    private int sdkUpdate;
 
     public int getSdkUpdate() {
         return sdkUpdate;
@@ -208,6 +326,16 @@ public class ClientInfo {
 
     public void setSdkUpdate(int sdkUpdate) {
         this.sdkUpdate = sdkUpdate;
+    }
+
+    private String sdkVersion;
+
+    public String getSdkVersion() {
+        return sdkVersion;
+    }
+
+    public void setSdkVersion(String sdkVersion) {
+        this.sdkVersion = sdkVersion;
     }
 
     private String iosTeamId;
@@ -240,4 +368,13 @@ public class ClientInfo {
         this.timestamp = timestamp;
     }
 
+    private String sign;
+
+    public String getSign() {
+        return sign;
+    }
+
+    public void setSign(String sign) {
+        this.sign = sign;
+    }
 }

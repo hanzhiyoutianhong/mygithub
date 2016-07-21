@@ -9,6 +9,7 @@ import javax.xml.bind.annotation.XmlRootElement;
  */
 
 public class OpenParams extends BaseParams{
+    public String device_id;
     public long deeplink_id;
     public String deeplink_url;
     public boolean is_referable;
@@ -24,6 +25,14 @@ public class OpenParams extends BaseParams{
     public String lat_val;
     public String last_source;
     public String clientIP;
+
+    public String getDevice_id() {
+        return device_id;
+    }
+
+    public void setDevice_id(String device_id) {
+        this.device_id = device_id;
+    }
 
     public long getDeeplink_id() {
         return deeplink_id;
