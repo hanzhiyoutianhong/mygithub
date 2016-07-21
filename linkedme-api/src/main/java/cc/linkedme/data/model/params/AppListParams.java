@@ -12,6 +12,7 @@ import javax.xml.bind.annotation.XmlRootElement;
 @XmlRootElement
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class AppListParams {
+    public String device_id;
     public long identity_id;
     public String os;
     public String device_fingerprint_id;
@@ -23,6 +24,14 @@ public class AppListParams {
     public String linkedme_key;
     public long timestamp;
     public String sign;
+
+    public String getDevice_id() {
+        return device_id;
+    }
+
+    public void setDevice_id(String device_id) {
+        this.device_id = device_id;
+    }
 
     public long getIdentity_id() {
         return identity_id;

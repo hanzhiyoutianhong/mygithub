@@ -17,11 +17,10 @@ public class ClientMsgPusher {
     @Resource
     private McqBaseWriter apiMcqWriter;
 
-    public void addClient(ClientInfo clientInfo, long deepLinkId) {
+    public void addClient(ClientInfo clientInfo) {
         JsonBuilder clientMsg = new JsonBuilder();
         clientMsg.append("type", 21);
         JsonBuilder infoJson = MsgUtils.toClientMsgJson(clientInfo);
-        infoJson.append("deeplink_id", deepLinkId);
         clientMsg.append("info", infoJson.flip());
         apiMcqWriter.writeMsg(clientMsg.flip().toString());
     }

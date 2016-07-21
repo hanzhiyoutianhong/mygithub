@@ -11,6 +11,7 @@ import javax.xml.bind.annotation.XmlRootElement;
 
 
 public class UrlParams extends BaseParams {
+    public String device_id;
     public long deeplink_id;
     public long[] deeplink_ids;
     public long app_id;
@@ -34,6 +35,13 @@ public class UrlParams extends BaseParams {
     public boolean desktop_use_default;
     public String desktop_custom_url;
 
+    public String getDevice_id() {
+        return device_id;
+    }
+
+    public void setDevice_id(String device_id) {
+        this.device_id = device_id;
+    }
 
     public long getApp_id() {
         return app_id;

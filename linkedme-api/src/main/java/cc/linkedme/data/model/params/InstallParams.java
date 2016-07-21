@@ -11,6 +11,11 @@ import org.codehaus.jackson.annotate.JsonIgnoreProperties;
 public class InstallParams extends BaseParams{
 
     public String device_id;
+    public String device_imei;
+    public String android_id;
+    public String serial_number;
+    public String device_mac;
+    public String finger_print;
 
     public int device_type;
     public String device_brand;
@@ -19,6 +24,7 @@ public class InstallParams extends BaseParams{
     public boolean has_nfc;
     public boolean has_sim;
     public String os;
+    public int os_version_detail;
     public String os_version;
     public int screen_dpi;
     public int screen_height;
@@ -44,6 +50,46 @@ public class InstallParams extends BaseParams{
 
     public void setDevice_id(String device_id) {
         this.device_id = device_id;
+    }
+
+    public String getDevice_imei() {
+        return device_imei;
+    }
+
+    public void setDevice_imei(String device_imei) {
+        this.device_imei = device_imei;
+    }
+
+    public String getAndroid_id() {
+        return android_id;
+    }
+
+    public void setAndroid_id(String android_id) {
+        this.android_id = android_id;
+    }
+
+    public String getSerial_number() {
+        return serial_number;
+    }
+
+    public void setSerial_number(String serial_number) {
+        this.serial_number = serial_number;
+    }
+
+    public String getDevice_mac() {
+        return device_mac;
+    }
+
+    public void setDevice_mac(String device_mac) {
+        this.device_mac = device_mac;
+    }
+
+    public String getFinger_print() {
+        return finger_print;
+    }
+
+    public void setFinger_print(String finger_print) {
+        this.finger_print = finger_print;
     }
 
     public int getDevice_type() {
@@ -100,6 +146,14 @@ public class InstallParams extends BaseParams{
 
     public void setOs(String os) {
         this.os = os;
+    }
+
+    public int getOs_version_detail() {
+        return os_version_detail;
+    }
+
+    public void setOs_version_detail(int os_version_detail) {
+        this.os_version_detail = os_version_detail;
     }
 
     public String getOs_version() {
