@@ -10,6 +10,7 @@ import org.codehaus.jackson.annotate.JsonIgnoreProperties;
 
 public class InitUberButtonParams {
 
+    public String device_id;
     public long identity_id;
     public String linkedme_key;
     public long session_id;
@@ -24,8 +25,17 @@ public class InitUberButtonParams {
     public double dropoff_lat;
     public double dropoff_lng;
     public String dropoff_label;
+    public String source;
     public long timestamp;
     public String sign;
+
+    public String getDevice_id() {
+        return device_id;
+    }
+
+    public void setDevice_id(String device_id) {
+        this.device_id = device_id;
+    }
 
     public long getIdentity_id() {
         return identity_id;
@@ -137,6 +147,14 @@ public class InitUberButtonParams {
 
     public void setDropoff_label(String dropoff_label) {
         this.dropoff_label = dropoff_label;
+    }
+
+    public String getSource() {
+        return source;
+    }
+
+    public void setSource(String source) {
+        this.source = source;
     }
 
     public long getTimestamp() {

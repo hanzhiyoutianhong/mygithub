@@ -6,6 +6,7 @@ import java.util.*;
 
 import javax.annotation.Resource;
 
+import org.apache.commons.collections.map.HashedMap;
 import org.apache.commons.lang.StringUtils;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
@@ -687,14 +688,14 @@ public class SummaryService {
             }
             List<ButtonCount> buttonCounts = btnCountDao.getConsumerIncome(summaryButtonParams.app_id, buttonInfo.getConsumerAppId(),
                     summaryButtonParams.start_date, summaryButtonParams.end_date);
-            Map<String, Float> resultCountMap = new HashMap<>();
+            Map<String, Long> resultCountMap = new HashMap<>();
             // 按天汇总consumer_app的金额
             for (ButtonCount buttonCount : buttonCounts) {
-                Float income = resultCountMap.get(buttonCount.getDate());
-                if (income == null) {
-                    resultCountMap.put(buttonCount.getDate(), buttonCount.getIncome());
+                long totalIncome = resultCountMap.get(buttonCount.getDate());
+                if (totalIncome == 0) {
+                    resultCountMap.put(buttonCount.getDate(), buttonCount.getTotalIncome());
                 } else {
-                    resultCountMap.put(buttonCount.getDate(), income + buttonCount.getIncome());
+                    resultCountMap.put(buttonCount.getDate(), totalIncome + buttonCount.getTotalIncome());
                 }
             }
 
@@ -704,7 +705,7 @@ public class SummaryService {
             consumerIncomeJson.put("app_name", buttonInfo.getConsumerAppInfo().getAppName());
             JSONArray dataJsonArray = new JSONArray();
 
-            for (Map.Entry<String, Float> entry : resultCountMap.entrySet()) {
+            for (Map.Entry<String, Long> entry : resultCountMap.entrySet()) {
                 JSONArray dateJson = new JSONArray();
                 dateJson.add(0, strDateToTimestamps(entry.getKey(), simpleDateFormat));
                 dateJson.add(1, entry.getValue());
@@ -720,21 +721,21 @@ public class SummaryService {
     public String getBtnHistoryCounts(SummaryButtonParams summaryButtonParams) {
         List<ButtonCount> buttonCounts = btnCountDao.getButtonCounts(summaryButtonParams.app_id, summaryButtonParams.btn_id,
                 summaryButtonParams.start_date, summaryButtonParams.end_date);
-        Map<String, Map<String, Float>> resultCountMap = new HashMap<>();
+        Map<String, Map<String, Long>> resultCountMap = new HashMap<>();
         for (ButtonCount buttonCount : buttonCounts) {
-            Map<String, Float> tmpMap = resultCountMap.get(buttonCount.getDate());
+            Map<String, Long> tmpMap = resultCountMap.get(buttonCount.getDate());
             if (tmpMap == null) {
-                Map<String, Float> countMap = new HashMap<>();
-                countMap.put("view_count", (float) buttonCount.getViewCount());
-                countMap.put("click_count", (float) buttonCount.getClickCount());
-                countMap.put("order_count", (float) buttonCount.getOrderCount());
-                countMap.put("income", buttonCount.getIncome());
+                Map<String, Long> countMap = new HashMap<>();
+                countMap.put("view_count",  buttonCount.getTotalView());
+                countMap.put("click_count", buttonCount.getTotalClick());
+                countMap.put("order_count", buttonCount.getTotalOrder());
+                countMap.put("income", buttonCount.getTotalIncome());
                 resultCountMap.put(buttonCount.getDate(), countMap);
             } else {
-                tmpMap.put("view_count", tmpMap.get("view_count") + buttonCount.getViewCount());
-                tmpMap.put("click_count", tmpMap.get("click_count") + buttonCount.getClickCount());
-                tmpMap.put("order_count", tmpMap.get("order_count") + buttonCount.getOrderCount());
-                tmpMap.put("income", tmpMap.get("income") + buttonCount.getIncome());
+                tmpMap.put("view_count", tmpMap.get("view_count") + buttonCount.getTotalView());
+                tmpMap.put("click_count", tmpMap.get("click_count") + buttonCount.getTotalClick());
+                tmpMap.put("order_count", tmpMap.get("order_count") + buttonCount.getTotalOrder());
+                tmpMap.put("income", tmpMap.get("income") + buttonCount.getTotalIncome());
             }
         }
 
@@ -744,7 +745,7 @@ public class SummaryService {
         JSONArray incomeCountJson = new JSONArray();
         JSONArray installCountJson = new JSONArray();
         SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd");
-        for (Map.Entry<String, Map<String, Float>> entry : resultCountMap.entrySet()) {
+        for (Map.Entry<String, Map<String, Long>> entry : resultCountMap.entrySet()) {
             if (Strings.isNullOrEmpty(entry.getKey()) || (entry.getValue() == null) || (entry.getValue().size() == 0)) {
                 continue;
             }
@@ -789,10 +790,10 @@ public class SummaryService {
         long view = 0, click = 0, order = 0;
         float income = 0;
         for (ButtonCount buttonCount : buttonCounts) {
-            view += buttonCount.getViewCount();
-            click += buttonCount.getClickCount();
-            order += buttonCount.getOrderCount();
-            income += buttonCount.getIncome();
+            view += buttonCount.getTotalView();
+            click += buttonCount.getTotalClick();
+            order += buttonCount.getTotalOrder();
+            income += buttonCount.getTotalIncome();
         }
 
         JSONObject resultJson = new JSONObject();
@@ -811,9 +812,9 @@ public class SummaryService {
         int openWeb = 0;
         int openOther = 0;
         for (ButtonCount buttonCount : buttonCounts) {
-            openApp += buttonCount.getOpenAppCount();
-            openWeb += buttonCount.getOpenWebCount();
-            openOther += buttonCount.getOpenOtherCount();
+            openApp += buttonCount.getIosOpenCount() + buttonCount.getAndroidOpenCount();
+            openWeb += buttonCount.getWebOpenCount();
+            openOther += buttonCount.getOtherOpenCount();
         }
         JSONObject jsonObject = new JSONObject();
         jsonObject.put("app", openApp);

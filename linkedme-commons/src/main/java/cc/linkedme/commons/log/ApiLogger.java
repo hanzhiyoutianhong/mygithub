@@ -23,6 +23,8 @@ public class ApiLogger {
     private static Logger fireLog = Logger.getLogger("fire");
 
     private static Logger bizLog = Logger.getLogger("biz");
+    
+    private static Logger btnCountLog = Logger.getLogger("btncount");
 
 
     /**
@@ -313,6 +315,9 @@ public class ApiLogger {
         bizLog.info(msg);
     }
 
+    public static void btnCount(Object msg){
+        btnCountLog.info(msg);
+    }
     /**
      * start a perflog session <br/>
      * PerfLogSession perfSession = ApiLogger.perf("codeblock"); perfSession.start();

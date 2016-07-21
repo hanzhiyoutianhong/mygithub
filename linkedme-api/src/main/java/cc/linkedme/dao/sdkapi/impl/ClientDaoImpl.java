@@ -21,6 +21,11 @@ public class ClientDaoImpl extends BaseDao implements ClientDao {
         }
         long identityId = clientInfo.getIdentityId();
         String linkedMEKey = clientInfo.getLinkedmeKey();
+        String iMei = clientInfo.getiMei();
+        String androidId = clientInfo.getAndroidId();
+        String serialNumber = clientInfo.getSerialNumber();
+        String deviceMac = clientInfo.getDeviceMac();
+        String deviceFingerPrint = clientInfo.getDeviceFingerPrint();
         String deviceId = clientInfo.getDeviceId();
         int deviceType = clientInfo.getDeviceType();
         String deviceModel = clientInfo.getDeviceModel();
@@ -29,6 +34,7 @@ public class ClientDaoImpl extends BaseDao implements ClientDao {
         boolean hasNfc = clientInfo.getHasNfc();
         boolean hasSim = clientInfo.getHasSim();
         String os = clientInfo.getOs();
+        int osVersionDetail = clientInfo.getosVersionDetail();
         String osVersion = clientInfo.getOsVersion();
         int screenDpi = clientInfo.getScreenDpi();
         int screenHeight = clientInfo.getScreenHeight();
@@ -39,19 +45,21 @@ public class ClientDaoImpl extends BaseDao implements ClientDao {
         String carrier = clientInfo.getCarrier();
         String appVersion = clientInfo.getAppVersion();
         int sdk_update = clientInfo.getSdkUpdate();
+        String sdkVersion = clientInfo.getSdkVersion();
         String iOSTeamId = clientInfo.getIosTeamId();
         String iOSBundle = clientInfo.getIosBundleId();
 
-        TableChannel tableChannel = tableContainer.getTableChannel("clientInfo", ADD_CLIENT, identityId, identityId);
+        TableChannel tableChannel = tableContainer.getTableChannel("clientInfo", ADD_CLIENT, deviceId, deviceId);
 
         try {
             result += tableChannel.getJdbcTemplate().update(tableChannel.getSql(),
-                    new Object[] {identityId, linkedMEKey, deviceId, deviceType, deviceModel, deviceBrand, hasBluetooth, hasNfc, hasSim, os,
-                            osVersion, screenDpi, screenHeight, screenWidth, isWifi, isReferable, latVal, carrier, appVersion, sdk_update,
-                            iOSTeamId, iOSBundle});
+                    new Object[] {identityId, linkedMEKey, iMei, androidId, serialNumber, deviceMac, deviceFingerPrint, deviceId,
+                            deviceType, deviceModel, deviceBrand, hasBluetooth, hasNfc, hasSim, os, osVersionDetail, osVersion, screenDpi,
+                            screenHeight, screenWidth, isWifi, isReferable, latVal, carrier, appVersion, sdk_update, sdkVersion, iOSTeamId,
+                            iOSBundle});
         } catch (DataAccessException e) {
             if (DaoUtil.isDuplicateInsert(e)) {
-                //如果identityId存在,则更新
+                // 如果identityId存在,则更新
                 ApiLogger.info(new StringBuilder(128).append("Duplicate insert client, id=").append(identityId));
             } else {
                 throw e;

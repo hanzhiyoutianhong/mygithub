@@ -1,6 +1,8 @@
 package cc.linkedme.mcq;
 
 import cc.linkedme.commons.json.JsonBuilder;
+import cc.linkedme.data.model.ButtonCount;
+import cc.linkedme.data.model.ButtonInfo;
 import cc.linkedme.data.model.ClientInfo;
 import cc.linkedme.data.model.DeepLink;
 import cc.linkedme.data.model.FingerPrintInfo;
@@ -59,6 +61,24 @@ public class MsgUtils {
         return fingerPrintMsg.flip().toString();
     }
 
+    public static String buttonCountMsgJson(ButtonCount buttonCount) {
+        JsonBuilder buttonCountMsg = new JsonBuilder();
+        buttonCountMsg.append("type", 51);
+        JsonBuilder info = new JsonBuilder();
+
+        info.append("app_id", buttonCount.getAppId());
+        info.append("button_id", buttonCount.getBtnId());
+        info.append("consumer_id", buttonCount.getConsumerId());
+        info.append("date", buttonCount.getDate());
+
+        String countType = buttonCount.getCountType();
+        info.append("count_type", countType);
+        info.append("count_value", buttonCount.getCountValue());
+
+        buttonCountMsg.append("info", info.flip());
+        return buttonCountMsg.flip().toString();
+    }
+
     public static DeepLink toDeepLinkObj(JSONObject deepLinkMsg) {
         DeepLink deepLink = new DeepLink();
         deepLink.setDeeplinkId(deepLinkMsg.getLong("deeplink_id"));
@@ -92,6 +112,11 @@ public class MsgUtils {
         info.append("identityId", clientInfo.getIdentityId());
         info.append("deviceId", clientInfo.getDeviceId());
         info.append("deviceType", clientInfo.getDeviceType());
+        info.append("deviceImei", clientInfo.getiMei());
+        info.append("androidId", clientInfo.getAndroidId());
+        info.append("serialNumber", clientInfo.getSerialNumber());
+        info.append("deviceMac", clientInfo.getDeviceMac());
+        info.append("fingerprint", clientInfo.getDeviceFingerPrint());
         info.append("deviceModel", clientInfo.getDeviceModel());
         info.append("deviceBrand", clientInfo.getDeviceBrand());
         info.append("hasBluetooth", clientInfo.getHasBlutooth());
@@ -99,6 +124,7 @@ public class MsgUtils {
         info.append("hasSim", clientInfo.getHasSim());
         info.append("os", clientInfo.getOs());
         info.append("osVersion", clientInfo.getOsVersion());
+        info.append("os_version_detail", clientInfo.getosVersionDetail());
         info.append("screenDpi", clientInfo.getScreenDpi());
         info.append("screenHeight", clientInfo.getScreenHeight());
         info.append("screenWidth", clientInfo.getScreenWidth());
@@ -120,6 +146,11 @@ public class MsgUtils {
         clientInfo.setIdentityId(clientMsg.getLong("identityId"));
         clientInfo.setDeviceId(clientMsg.getString("deviceId"));
         clientInfo.setDeviceType(clientMsg.getInt("deviceType"));
+        clientInfo.setiMei(clientMsg.getString("deviceImei"));
+        clientInfo.setAndroidId(clientMsg.getString("androidId"));
+        clientInfo.setSerialNumber(clientMsg.getString("serialNumber"));
+        clientInfo.setDeviceMac(clientMsg.getString("deviceMac"));
+        clientInfo.setDeviceFingerPrint(clientMsg.getString("fingerprint"));
         clientInfo.setDeviceModel(clientMsg.getString("deviceModel"));
         clientInfo.setDeviceBrand(clientMsg.getString("deviceBrand"));
         clientInfo.setHasBlutooth(clientMsg.getBoolean("hasBluetooth"));
@@ -127,6 +158,7 @@ public class MsgUtils {
         clientInfo.setHasSim(clientMsg.getBoolean("hasSim"));
         clientInfo.setOs(clientMsg.getString("os"));
         clientInfo.setOsVersion(clientMsg.getString("osVersion"));
+        clientInfo.setosVersionDetail(clientMsg.getInt("os_version_detail"));
         clientInfo.setScreenDpi(clientMsg.getInt("screenDpi"));
         clientInfo.setScreenHeight(clientMsg.getInt("screenHeight"));
         clientInfo.setScreenWidth(clientMsg.getInt("screenWidth"));
@@ -136,6 +168,7 @@ public class MsgUtils {
         clientInfo.setCarrier(clientMsg.getString("carrier"));
         clientInfo.setAppVersion(clientMsg.getString("appVersion"));
         clientInfo.setSdkUpdate(clientMsg.getInt("sdkUpdate"));
+        clientInfo.setSdkVersion(clientMsg.getString("sdkVersion"));
         clientInfo.setIosTeamId(clientMsg.getString("iOSTeamId"));
         clientInfo.setIosBundleId(clientMsg.getString("iOSBundleId"));
         clientInfo.setLinkedmeKey(clientMsg.getString("linkedmeKey"));
@@ -158,6 +191,10 @@ public class MsgUtils {
 
     public static boolean isFingerPrintType(int type) {
         return (McqMsgType.UPDATE_FINGER_PRINT.getType() == type);
+    }
+
+    public static boolean isAddButtonType(int type) {
+        return (McqMsgType.ADD_BUTTON_COUNT.getType() == type);
     }
 
 }
