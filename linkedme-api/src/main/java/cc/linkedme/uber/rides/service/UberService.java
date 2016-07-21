@@ -152,7 +152,11 @@ public class UberService {
             formatSchemeUrl = formatSchemeUrl + "&product_id=" + productId;
         }
 
-        json.put("online_status", true);
+        if (buttonInfo.getOnlineStatus() == 0) {
+            json.put("online_status", false);
+        } else {
+            json.put("online_status", true);
+        }
 
         JSONObject btn_title = new JSONObject();
         btn_title.put("btn_icon", buttonIcon);
