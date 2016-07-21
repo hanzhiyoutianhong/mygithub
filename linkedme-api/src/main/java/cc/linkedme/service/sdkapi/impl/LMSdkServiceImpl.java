@@ -132,12 +132,13 @@ public class LMSdkServiceImpl implements LMSdkService {
 
     private String createDeviceInfo(ClientInfo clientInfo) {
         String res = "";
-        res += clientInfo.getDeviceMac() + "_" + clientInfo.getDeviceFingerPrint() + "_" + clientInfo.getDeviceModel();
+        res += clientInfo.getDeviceBrand() + "_" + clientInfo.getDeviceModel() + "_" + clientInfo.getosVersionDetail() + "_"
+                + clientInfo.getScreenDpi() + "_" + clientInfo.getScreenHeight() + "_" + clientInfo.getScreenWidth();
         return res;
     }
 
     private boolean isValidAndroidId(String androidId) {
-        if(StringUtils.isBlank(androidId)) {
+        if (StringUtils.isBlank(androidId)) {
             return false;
         }
         String regex = "[0-9a-f]{15,16}";
@@ -147,14 +148,14 @@ public class LMSdkServiceImpl implements LMSdkService {
     }
 
     private boolean isValidAndroidSerialNumber(String androidSerialNumber) {
-        if( StringUtils.isBlank(androidSerialNumber)) {
+        if (StringUtils.isBlank(androidSerialNumber)) {
             return false;
         }
         return !StringUtils.isBlank(androidSerialNumber) && androidSerialNumber != "unknown";
     }
 
     private boolean isValidImei(String imei) {
-        if( StringUtils.isBlank(imei)) {
+        if (StringUtils.isBlank(imei)) {
             return false;
         }
         String regex = "\\d{15}|\\d{17}";
