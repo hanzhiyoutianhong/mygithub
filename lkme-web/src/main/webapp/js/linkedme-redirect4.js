@@ -157,7 +157,8 @@ function start() {
             DEBUG_ALERT("QQ browser");
             if (Params.isYYBAvailable()) {
                 var yybUrl = Params.yyb_download_url + "&android_scheme=" + launchAppUrl;
-                var destination = lkmeAction.destination.androidBrowser.replace(/{browserName}/g, "qq")
+                var destination = lkmeAction.destination.androidBrowser.replace(/{browserName}/g, "qq");
+                lkmeAction.recordIdForYYB();
                 gotoUrl(yybUrl, destination);
             } else {
                 gotoCannotForwardPage();
