@@ -24,8 +24,6 @@ public class ApiLogger {
 
     private static Logger bizLog = Logger.getLogger("biz");
     
-    private static Logger btnCountLog = Logger.getLogger("btncount");
-
 
     /**
      * 触发自动降级的日志文件。
@@ -315,10 +313,7 @@ public class ApiLogger {
         bizLog.info(msg);
     }
 
-    public static void btnCount(Object msg){
-        btnCountLog.info(msg);
-    }
-    /**
+     /**
      * start a perflog session <br/>
      * PerfLogSession perfSession = ApiLogger.perf("codeblock"); perfSession.start();
      * perfSession.step("codeblock_step1"); .... perfSession.step("codeblock_step2"); ....
