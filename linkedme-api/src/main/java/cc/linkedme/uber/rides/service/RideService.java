@@ -224,18 +224,19 @@ public class RideService {
                 
                 double distance = priceJson.getDouble("distance");
                 //uber返回英里，转换成公里
-                uberReturn.setDistance(distance * 1.6093);
+                uberReturn.setDistance(String.format("%.2f", distance * 1.6093));
             }
         }
 
         return uberReturn;
     }
+  
     
     class UberReturn{
         
         private String productId = StringUtils.EMPTY;
         private String price = StringUtils.EMPTY;
-        private double distance;
+        private String distance;
         
         public String getProductId() {
             return productId;
@@ -249,10 +250,10 @@ public class RideService {
         public void setPrice(String price) {
             this.price = price;
         }
-        public double getDistance() {
+        public String getDistance() {
             return distance;
         }
-        public void setDistance(double distance) {
+        public void setDistance(String distance) {
             this.distance = distance;
         }
     }
