@@ -41,7 +41,6 @@ public class FingerPrintServiceImpl implements FingerPrintService {
     }
 
     public int addFingerPrint(FingerPrintInfo fingerPrintInfo) {
-        FingerPrintInfo newFingerPrintInfo = fingerPrintInfo;
         if (fingerPrintInfo == null) {
             ApiLogger.error("FingerPrintDaoImpl.addFingerPrint fingerPrintInfo is null, add failed");
         }
@@ -50,15 +49,15 @@ public class FingerPrintServiceImpl implements FingerPrintService {
         if (fingerPrintInfo.getOperationType() == FingerPrintInfo.OperationType.UPDATE) {
             FingerPrintInfo existedFingerPrintInfo = getFingerPrint(fingerPrintInfo);
             if (existedFingerPrintInfo.getId() == -1) {
-                result += fingerPrintDao.addFingerPrint(newFingerPrintInfo, 0);
+                result += fingerPrintDao.addFingerPrint(fingerPrintInfo, 0);
             } else {
                 if (existedFingerPrintInfo.getValid_status() != 0) {
                     result += setValidStatus(existedFingerPrintInfo, 0);
                 }
             }
-            newFingerPrintInfo.setIdentityId(fingerPrintInfo.getNewIdentityId());
+            fingerPrintInfo.setIdentityId(fingerPrintInfo.getNewIdentityId());
         }
-        result += fingerPrintDao.addFingerPrint(newFingerPrintInfo, 1);
+        result += fingerPrintDao.addFingerPrint(fingerPrintInfo, 1);
 
         return result;
     }

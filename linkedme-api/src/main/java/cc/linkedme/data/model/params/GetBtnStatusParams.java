@@ -2,7 +2,8 @@ package cc.linkedme.data.model.params;
 
 
 public class GetBtnStatusParams {
-    
+
+    public String device_id;
     public String btnId;
     public String linkedmeKey;
     public long identityId;
@@ -11,6 +12,14 @@ public class GetBtnStatusParams {
     public int retryTimes;
     public long timestamp;
     public String sign;
+
+    public String getDevice_id() {
+        return device_id;
+    }
+
+    public void setDevice_id(String device_id) {
+        this.device_id = device_id;
+    }
 
     public String getBtnId() {
         return btnId;

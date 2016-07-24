@@ -127,9 +127,8 @@ public class MsgMcqProcessor extends McqProcessor {
     private int processClientMsg(int type, JSONObject info) {
         int result = ApiUtil.MQ_PROCESS_ABORT;
         ClientInfo clientInfo = MsgUtils.toClientInfoObj(info);
-        long deepLinkId = info.getLong("deeplink_id");
         if (type == 21) {
-            result = addClient(clientInfo, deepLinkId);
+            result = addClient(clientInfo);
         } else if (type == 22) {
 
         } else if (type == 23) {
@@ -206,10 +205,10 @@ public class MsgMcqProcessor extends McqProcessor {
         return deepLinkService.addDeepLinkCount(deepLinkDateCount, countType);
     }
 
-    private int addClient(ClientInfo clientInfo, long deepLinkId) {
+    private int addClient(ClientInfo clientInfo) {
         int result = 0;
         if (updateDb) {
-            result = clientService.addClient(clientInfo, deepLinkId);
+            result = clientService.addClient(clientInfo);
         }
         if (updateMc) {
 

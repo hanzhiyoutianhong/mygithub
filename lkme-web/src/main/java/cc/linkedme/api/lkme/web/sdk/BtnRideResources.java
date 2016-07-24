@@ -36,7 +36,8 @@ public class BtnRideResources {
     @Path("/status")
     @GET
     @Produces({MediaType.APPLICATION_JSON})
-    public String getBtnStatus(@QueryParam("btn_id") String btnId,
+    public String getBtnStatus(@QueryParam("device_id") String deviceId,
+                               @QueryParam("btn_id") String btnId,
                                @QueryParam("linkedme_key") String linkedmeKey,
                                @QueryParam("identity_id") long identityId,
                                @QueryParam("session_id") long sessionId,
@@ -48,6 +49,7 @@ public class BtnRideResources {
                                @Context HttpServletRequest request){
 
         GetBtnStatusParams getBtnStatusParams = new GetBtnStatusParams();
+        getBtnStatusParams.device_id = deviceId;
         getBtnStatusParams.btnId = btnId;
         getBtnStatusParams.linkedmeKey = linkedmeKey;
         getBtnStatusParams.identityId = identityId;
@@ -79,10 +81,14 @@ public class BtnRideResources {
     @Path("/init")
     @POST
     @Produces({MediaType.APPLICATION_JSON})
-    public String initButton(@FormParam("btn_id") String btnId, @FormParam("source") String source, @BeanParam Ride ride,
-            @BeanParam LMParams lmParams) {
+    public String initButton(@FormParam("device_id") String deviceId,
+                             @FormParam("btn_id") String btnId,
+                             @FormParam("source") String source,
+                             @BeanParam Ride ride,
+                             @BeanParam LMParams lmParams) {
 
         InitUberButtonParams initUberButtonParams = new InitUberButtonParams();
+        initUberButtonParams.device_id = deviceId;
         initUberButtonParams.pickup_lng = ride.getPickupLongitude();
         initUberButtonParams.dropoff_lat = ride.getDropoffLatitude();
         initUberButtonParams.btn_id = btnId;
@@ -120,7 +126,7 @@ public class BtnRideResources {
     @Path("/click")
     @POST
     @Produces(MediaType.APPLICATION_JSON)
-    public String clickBtn(
+    public String clickBtn(@FormParam("device_id") String device_id,
                            @FormParam("btn_id") String btn_id,
                            @FormParam("linkedme_key") String linkedme_key,
                            @FormParam("identity_id") long identity_id,
@@ -133,6 +139,7 @@ public class BtnRideResources {
                            @Context HttpServletRequest request) {
 
         ClickBtnParams clickBtnParams = new ClickBtnParams();
+        clickBtnParams.device_id = device_id;
         clickBtnParams.btn_id = btn_id;
         clickBtnParams.identity_id = identity_id;
         clickBtnParams.session_id = session_id;
