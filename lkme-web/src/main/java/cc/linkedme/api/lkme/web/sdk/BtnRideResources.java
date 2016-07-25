@@ -23,14 +23,14 @@ import cc.linkedme.data.model.Ride;
 import cc.linkedme.data.model.params.ClickBtnParams;
 import cc.linkedme.data.model.params.GetBtnStatusParams;
 import cc.linkedme.data.model.params.InitUberButtonParams;
-import cc.linkedme.uber.rides.service.UberService;
+import cc.linkedme.uber.rides.service.RideService;
 
 @Path("btn/ride")
 @Component
-public class LMUberResources {
+public class BtnRideResources {
 
     @Resource
-    UberService uberService;
+    RideService uberService;
 
 
     @Path("/status")
