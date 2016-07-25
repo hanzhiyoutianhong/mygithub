@@ -437,7 +437,7 @@ public class UrlServlet extends HttpServlet {
 
         request.setAttribute("DEBUG", DEBUG);
 
-        if ((!isWechat) && (!isWeibo) && isAndroid && isChrome && userAgentMajor >= 25 && !isMIUI) {
+        if ((!isWechat) && (!isWeibo) && isAndroid && isChrome && userAgentMajor >= 25 && !isMIUI && !isQQBrowser) {
             String browser_fallback_url = new StringBuilder(Constants.DEEPLINK_HTTP_PREFIX).append(Constants.LIVE_TEST_API_FLAG)
                     .append("/js/record_id_and_redirect?").append("identity_id=").append(identityId).append("&").append("app_id=")
                     .append(appId).append("&").append("is_valid_identityid=").append(isValidIdentity).append("&")
