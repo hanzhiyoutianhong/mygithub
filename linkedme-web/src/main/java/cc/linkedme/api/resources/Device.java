@@ -15,6 +15,7 @@ import javax.ws.rs.GET;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
+import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 import java.util.List;
@@ -66,16 +67,27 @@ public class Device {
     @POST
     @Produces(MediaType.APPLICATION_JSON)
     public String deleteDevice(@FormParam("app_id") long appId,
-                               @FormParam("device_id") String[] deviceId,
+                               @FormParam("device_id") String deviceId,
                                @Context HttpServletRequest request) {
 
-        JSONArray jsonArray = checkParams(appId, deviceId);
+
+        JSONArray jsonArray = new JSONArray();
+
+        if (Strings.isNullOrEmpty(deviceId)) {
+            jsonArray.add(getErrorMsg("40001", "device_id", "device_id 为空"));
+        }
+
+        if (appId <= 0) {
+            jsonArray.add(getErrorMsg("40001", "app_id", "app_id 小于零"));
+        }
 
         if (jsonArray.size() > 0) {
             return jsonArray.toString();
         }
 
-        Integer result = deviceService.delDevice(appId, deviceId);
+        String[] deviceIds = deviceId.split(",");
+        
+        Integer result = deviceService.delDevice(appId, deviceIds);
         return resultToJson(result);
     }
 
@@ -112,10 +124,10 @@ public class Device {
     }
 
     @Path("/query")
-    @POST
+    @GET
     @Produces(MediaType.APPLICATION_JSON)
-    public String getDevice(@FormParam("app_id") long appId,
-                            @FormParam("device_id") String deviceId,
+    public String getDevice(@QueryParam("app_id")long appId,
+                            @QueryParam("device_id") String deviceId,
                             @Context HttpServletRequest request) {
 
         JSONArray jsonArray = checkParams(appId, new String[] {deviceId});
@@ -137,7 +149,7 @@ public class Device {
     @Path("/list")
     @GET
     @Produces(MediaType.APPLICATION_JSON)
-    public String getDevices(@FormParam("app_id") long appId,
+    public String getDevices(@QueryParam("app_id") long appId,
                              @Context HttpServletRequest request) {
 
         JSONArray jsonArray = new JSONArray();
