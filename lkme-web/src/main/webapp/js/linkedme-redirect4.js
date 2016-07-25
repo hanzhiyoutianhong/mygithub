@@ -337,11 +337,11 @@ function gotoAndroidAppInstall() {
     } else if (Params.isUC()) {
         destination = lkmeAction.destination.androidLoadLandingPage.replace(/{dest}/g, "uc_browser_market");
         DEBUG_ALERT(destination);
-        div_goto_landingpage = div_goto_landingpage.replace(/{Bg_Url}/g, baseImgPathLang + "bg.png").replace(/{app_name}/g, Params.app_name).replace(/{logo_url}/g, Params.logo_url).replace(/{Download_title}/g, Params.app_title).replace(/{Download_msg}/g, Params.app_slogan).replace(/{Btn_landingpage_text}/g, gotoAppStore).replace(/{Border_width}/g, "3").replace(/{Element_type}/g, "button");
+        div_goto_landingpage = div_goto_landingpage.replace(/{Bg_Url}/g, baseImgPathLang + "bg.png").replace(/{app_name}/g, Params.app_name).replace(/{logo_url}/g, Params.logo_url).replace(/{Download_title}/g, Params.app_title).replace(/{Download_msg}/g, Params.app_slogan).replace(/{Btn_landingpage_text}/g, gotoStore).replace(/{Border_width}/g, "3").replace(/{Element_type}/g, "button");
         $("body").append(div_goto_landingpage);
         lkmeAction.recordJSEvent(destination);
         $("#btnGotoLandingPage").click(function () {
-            lkmeAction.reportJSUserClickEvent("gotoAndroidMarket");
+            lkmeAction.recordJSUserClickEvent("gotoAndroidMarket");
             gotoAndroidMarket();
         });
     } else {
