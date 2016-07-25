@@ -6,6 +6,7 @@ import com.google.api.client.repackaged.com.google.common.base.Strings;
 import net.sf.json.JSONArray;
 import net.sf.json.JSONObject;
 import org.apache.commons.collections.CollectionUtils;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import javax.annotation.Resource;
@@ -28,7 +29,7 @@ import java.util.List;
 @Component
 public class Device {
 
-    @Resource
+    @Autowired
     private DeviceService deviceService;
 
     @Path("/add")
