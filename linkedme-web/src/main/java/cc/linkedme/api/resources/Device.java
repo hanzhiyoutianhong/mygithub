@@ -71,14 +71,22 @@ public class Device {
                                @Context HttpServletRequest request) {
 
 
-        String[] deviceIds = deviceId.split(",");
+        JSONArray jsonArray = new JSONArray();
 
-        JSONArray jsonArray = checkParams(appId, deviceIds);
+        if (Strings.isNullOrEmpty(deviceId)) {
+            jsonArray.add(getErrorMsg("40001", "device_id", "device_id 为空"));
+        }
+
+        if (appId <= 0) {
+            jsonArray.add(getErrorMsg("40001", "app_id", "app_id 小于零"));
+        }
 
         if (jsonArray.size() > 0) {
             return jsonArray.toString();
         }
 
+        String[] deviceIds = deviceId.split(",");
+        
         Integer result = deviceService.delDevice(appId, deviceIds);
         return resultToJson(result);
     }
