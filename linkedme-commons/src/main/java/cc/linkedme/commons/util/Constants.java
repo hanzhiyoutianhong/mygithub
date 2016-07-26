@@ -6,7 +6,7 @@ import java.util.concurrent.atomic.AtomicLong;
 public class Constants {
 
     public static final String DEEPLINK_HTTPS_PREFIX = "https://lkme.cc";
-    public static final String LIVE_TEST_API_FLAG = "t";
+    public static final String LIVE_TEST_API_FLAG = "i";
 
     public static final String DEEPLINK_HTTP_PREFIX = "http://lkme.cc/";
     public static final String LINKEDME_HTTPS_PREFIX = "https://www.linkedme.cc/";

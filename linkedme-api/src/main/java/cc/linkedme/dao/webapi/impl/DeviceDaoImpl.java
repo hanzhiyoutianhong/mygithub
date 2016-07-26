@@ -41,7 +41,7 @@ public class DeviceDaoImpl extends BaseDao implements DeviceDao {
         try {
             tableChannel = tableContainer.getTableChannel("device", ADD_DEVICE, 0L, 0L);
 
-            Object[] values = {deviceInfo.getAppId() + deviceInfo.getDeviceId(), deviceInfo.getAppId(), deviceInfo.getDeviceId(),
+            Object[] values = {deviceInfo.getAppId() +"_"+ deviceInfo.getDeviceId(), deviceInfo.getAppId(), deviceInfo.getDeviceId(),
                     deviceInfo.getDeviceName(), deviceInfo.getPlatform(), deviceInfo.getDescription()};
 
             result += tableChannel.getJdbcTemplate().update(tableChannel.getSql(), values);
@@ -52,7 +52,7 @@ public class DeviceDaoImpl extends BaseDao implements DeviceDao {
 
                 try {
                     result += tableChannel.getJdbcTemplate().update(tableChannel.getSql(),
-                            new Object[] {deviceInfo.getAppId() + deviceInfo.getDeviceId()});
+                            new Object[] {deviceInfo.getAppId() +"_"+ deviceInfo.getDeviceId()});
                 } catch (DataAccessException ea) {
                     throw new LMException(LMExceptionFactor.LM_FAILURE_DB_OP, "Failed to delete device" + deviceInfo.getDeviceId());
                 }
@@ -70,7 +70,7 @@ public class DeviceDaoImpl extends BaseDao implements DeviceDao {
         JdbcTemplate jdbcTemplate = tableChannel.getJdbcTemplate();
 
         try {
-            result += jdbcTemplate.update(tableChannel.getSql(), new Object[] {appId + deviceId});
+            result += jdbcTemplate.update(tableChannel.getSql(), new Object[] {appId +"_"+ deviceId});
         } catch (DataAccessException e) {
             throw new LMException(LMExceptionFactor.LM_FAILURE_DB_OP, "Failed to delete device" + deviceId);
         }
@@ -88,7 +88,7 @@ public class DeviceDaoImpl extends BaseDao implements DeviceDao {
         JdbcTemplate jdbcTemplate = tableChannel.getJdbcTemplate();
 
         Object[] values = new Object[] {deviceInfo.getDeviceName(), deviceInfo.getPlatform(), deviceInfo.getDescription(), updateTime,
-                deviceInfo.getAppId() + deviceInfo.getDeviceId()};
+                deviceInfo.getAppId() +"_"+ deviceInfo.getDeviceId()};
 
         try {
             result += jdbcTemplate.update(tableChannel.getSql(), values);
@@ -107,7 +107,7 @@ public class DeviceDaoImpl extends BaseDao implements DeviceDao {
         TableChannel tableChannel = tableContainer.getTableChannel("device", GET_DEVICE_BY_APPID_AND_DEVICEID, 0L, 0L);
         JdbcTemplate jdbcTemplate = tableChannel.getJdbcTemplate();
         final List<DeviceInfo> deviceInfos = new ArrayList<DeviceInfo>();
-        jdbcTemplate.query(tableChannel.getSql(), new Object[] {appId + deviceId}, new RowMapper() {
+        jdbcTemplate.query(tableChannel.getSql(), new Object[] {appId +"_"+ deviceId}, new RowMapper() {
             public Object mapRow(ResultSet resultSet, int i) throws SQLException {
                 DeviceInfo deviceInfo = new DeviceInfo();
                 deviceInfo.setAppId(appId);
@@ -115,8 +115,8 @@ public class DeviceDaoImpl extends BaseDao implements DeviceDao {
                 deviceInfo.setDeviceName(resultSet.getString("device_name"));
                 deviceInfo.setPlatform(resultSet.getInt("platform"));
                 deviceInfo.setDescription(resultSet.getString("description"));
-                deviceInfo.setCreateTime(resultSet.getString("create_time"));
-                deviceInfo.setLastUpateTime(resultSet.getString("last_update_time"));
+                deviceInfo.setCreateTime(resultSet.getString("create_time").substring(0,19));
+                deviceInfo.setLastUpateTime(resultSet.getString("last_update_time").substring(0,19));
                 deviceInfos.add(deviceInfo);
                 return null;
             }
@@ -143,8 +143,8 @@ public class DeviceDaoImpl extends BaseDao implements DeviceDao {
                 deviceInfo.setDeviceName(resultSet.getString("device_name"));
                 deviceInfo.setPlatform(resultSet.getInt("platform"));
                 deviceInfo.setDescription(resultSet.getString("description"));
-                deviceInfo.setCreateTime(resultSet.getString("create_time"));
-                deviceInfo.setLastUpateTime(resultSet.getString("last_update_time"));
+                deviceInfo.setCreateTime(resultSet.getString("create_time").substring(0,19));
+                deviceInfo.setLastUpateTime(resultSet.getString("last_update_time").substring(0,19));
                 deviceInfos.add(deviceInfo);
                 return null;
             }
