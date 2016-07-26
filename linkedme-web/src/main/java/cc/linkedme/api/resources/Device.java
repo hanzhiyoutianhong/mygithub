@@ -6,6 +6,7 @@ import com.google.api.client.repackaged.com.google.common.base.Strings;
 import net.sf.json.JSONArray;
 import net.sf.json.JSONObject;
 import org.apache.commons.collections.CollectionUtils;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import javax.annotation.Resource;
@@ -28,7 +29,7 @@ import java.util.List;
 @Component
 public class Device {
 
-    @Resource
+    @Autowired
     private DeviceService deviceService;
 
     @Path("/add")
@@ -37,7 +38,7 @@ public class Device {
     public String AddDevice(@FormParam("app_id") long appId,
                             @FormParam("device_id") String deviceId,
                             @FormParam("device_name") String deviceName,
-                            @FormParam("platform") Integer platform,
+                            @FormParam("platform") int platform,
                             @FormParam("device_info") String description,
                             @Context HttpServletRequest request) {
 
@@ -50,7 +51,7 @@ public class Device {
 
         JSONArray jsonArray = checkParams(appId, new String[] {deviceId});
 
-        if (platform == null || platform < 0 || platform > 1) {
+        if (platform < 0 || platform > 1) {
             jsonArray.add(getErrorMsg("40001", "platform", "platform 只能是0或者1"));
         }
 
@@ -86,7 +87,7 @@ public class Device {
         }
 
         String[] deviceIds = deviceId.split(",");
-        
+
         Integer result = deviceService.delDevice(appId, deviceIds);
         return resultToJson(result);
     }
@@ -97,7 +98,7 @@ public class Device {
     public String updateDevice(@FormParam("app_id") long appId,
                                @FormParam("device_id") String deviceId,
                                @FormParam("device_name") String deviceName,
-                               @FormParam("platform") Integer platform,
+                               @FormParam("platform") int platform,
                                @FormParam("device_info") String description,
                                @Context HttpServletRequest request) {
 
@@ -110,7 +111,7 @@ public class Device {
 
         JSONArray jsonArray = checkParams(appId, new String[] {deviceId});
 
-        if (platform == null || platform < 0 || platform > 1) {
+        if (platform < 0 || platform > 1) {
             jsonArray.add(getErrorMsg("40001", "platform", "platform 只能是0或者1"));
         }
 
@@ -126,7 +127,7 @@ public class Device {
     @Path("/query")
     @GET
     @Produces(MediaType.APPLICATION_JSON)
-    public String getDevice(@QueryParam("app_id")long appId,
+    public String getDevice(@QueryParam("app_id") long appId,
                             @QueryParam("device_id") String deviceId,
                             @Context HttpServletRequest request) {
 

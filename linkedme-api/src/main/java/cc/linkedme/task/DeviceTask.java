@@ -16,7 +16,6 @@ public class DeviceTask implements Runnable {
 
     @Override
     public void run() {
-        ApiLogger.info("device task start...");
         deviceService.setWhiteDeviceMap();
     }
 }

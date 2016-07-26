@@ -93,7 +93,7 @@ public class DeepLinkService {
         }
 
         deepLink = deepLinkDao.getDeepLinkInfo(deepLinkId, appId);
-        if (deepLink != null && deepLink.getDeeplinkId() > 0) {
+        if (deepLink != null && deepLink.getDeeplinkId() > 0 && (deepLink.getAppId() == appId || deepLink.getAppId() == 10230)) {
             addDeepLinkToCache(deepLink);
             return deepLink;
         }
