@@ -8,6 +8,7 @@ import java.util.concurrent.atomic.AtomicReference;
 
 import javax.annotation.Resource;
 
+import cc.linkedme.commons.log.ApiLogger;
 import org.apache.commons.collections.CollectionUtils;
 
 import cc.linkedme.dao.webapi.DeviceDao;
@@ -67,7 +68,8 @@ public class DeviceServiceImpl implements DeviceService {
 
 
     public void setWhiteDeviceMap() {
-        Map<String, List<Long>> deviceIdAndAppIdMap =  deviceDao.getDeviceIdAndAppIdKVMap();
-        whiteDeviceMap.set(deviceIdAndAppIdMap);        
+        Map<String, List<Long>> deviceIdAndAppIdMap = deviceDao.getDeviceIdAndAppIdKVMap();
+        ApiLogger.debug("deviceIdAndAppIdMap: " + deviceIdAndAppIdMap);
+        whiteDeviceMap.set(deviceIdAndAppIdMap);
     }
 }

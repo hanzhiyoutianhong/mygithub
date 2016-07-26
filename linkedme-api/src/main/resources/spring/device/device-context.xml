@@ -26,16 +26,19 @@
         <property name="sqls">
             <map>
                 <entry key="ADD_DEVICE"
-                       value="insert into $db$.$tb$ (app_id, device_id, device_name, platform, description, create_time, last_update_time) values(?, ?, ?, ?, ? now(), now())"/>
+                       value="insert into $db$.$tb$ (id, app_id, device_id, device_name, platform, description, create_time, last_update_time) values(?, ?, ?, ?, ?, ?, now(), now())"/>
 
                 <entry key="DEL_DEVICE_BY_APPID_AND_DEVICEID"
-                       value="update $db$.$tb$ set valid_status = '0' where app_id = ? and device_id = ?"/>
+                       value="update $db$.$tb$ set valid_status = '0' where id = ?"/>
+
+                <entry key="ONLINE_DEVICE_BY_APPID_AND_DEVICEID"
+                       value="update $db$.$tb$ set valid_status = '1' where id = ?"/>
 
                 <entry key="UPDATE_DEVICE_BY_APPID_AND_DEVICEID"
-                       value="update $db$.$tb$ set device_name=?, platform=?, description=?, last_update_time=? where app_id = ? and device_id = ? and valid_status = '1'"/>
+                       value="update $db$.$tb$ set device_name=?, platform=?, description=?, last_update_time=? where id = ? and valid_status = '1'"/>
 
                 <entry key="GET_DEVICE_BY_APPID_AND_DEVICEID"
-                       value="select app_id, device_id, device_name, platform, description, create_time, last_update_time from $db$.$tb$ where app_id = ? and device_id = ? and valid_status = '1' "/>
+                       value="select app_id, device_id, device_name, platform, description, create_time, last_update_time from $db$.$tb$ where id = ? and valid_status = '1' "/>
 
                 <entry key="GET_DEVICES_BY_APPID"
                        value="select app_id, device_id, device_name, platform, description, create_time, last_update_time from $db$.$tb$ where app_id = ? and valid_status = '1' "/>
@@ -49,9 +52,8 @@
                 <!--<ref bean="deeplink_jdbctemplate_1"/> -->
             </list>
         </property>
-        
-    </bean>
 
+    </bean>
 
     <bean id="deviceService" class="cc.linkedme.service.webapi.impl.DeviceServiceImpl"></bean>
 

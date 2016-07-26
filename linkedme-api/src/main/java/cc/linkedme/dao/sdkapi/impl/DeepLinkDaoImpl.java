@@ -95,6 +95,7 @@ public class DeepLinkDaoImpl extends BaseDao implements DeepLinkDao {
         try {
             tableChannel.getJdbcTemplate().query(tableChannel.getSql(), new Object[] {deepLinkId, appid}, new RowMapper() {
                 public Object mapRow(ResultSet resultSet, int i) throws SQLException {
+                    dp.setAppId(appid);
                     dp.setDeeplinkId(resultSet.getBigDecimal("deeplink_id").longValue());
                     dp.setCreateTime(resultSet.getString("create_time"));
                     dp.setTags(resultSet.getString("tags"));
@@ -286,10 +287,9 @@ public class DeepLinkDaoImpl extends BaseDao implements DeepLinkDao {
 
         try {
             result += jdbcTemplate.update(tableChannel.getSql(), values);
-        }catch (DataAccessException e) {
+        } catch (DataAccessException e) {
             if (DaoUtil.isDuplicateInsert(e)) {
-                ApiLogger.warn(new StringBuilder(128).append("Duplicate insert deeplink_info table, deeplink_id=").append(deepLinkId),
-                        e);
+                ApiLogger.warn(new StringBuilder(128).append("Duplicate insert deeplink_info table, deeplink_id=").append(deepLinkId), e);
                 throw new LMException(LMExceptionFactor.LM_FAILURE_DB_OP,
                         "duplicate insert deeplink_info table, deeplink_id=" + deepLinkId);
             }

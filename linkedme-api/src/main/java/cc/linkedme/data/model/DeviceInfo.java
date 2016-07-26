@@ -13,7 +13,6 @@ public class DeviceInfo {
     private String description;
     private String createTime;
     private String lastUpateTime;
-    private String validStatus;
 
     public DeviceInfo() {}
 
@@ -73,14 +72,6 @@ public class DeviceInfo {
         this.lastUpateTime = lastUpateTime;
     }
 
-    public String getValidStatus() {
-        return validStatus;
-    }
-
-    public void setValidStatus(String validStatus) {
-        this.validStatus = validStatus;
-    }
-
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -94,9 +85,7 @@ public class DeviceInfo {
         if (deviceName != null ? !deviceName.equals(that.deviceName) : that.deviceName != null) return false;
         if (description != null ? !description.equals(that.description) : that.description != null) return false;
         if (createTime != null ? !createTime.equals(that.createTime) : that.createTime != null) return false;
-        if (lastUpateTime != null ? !lastUpateTime.equals(that.lastUpateTime) : that.lastUpateTime != null)
-            return false;
-        return validStatus != null ? validStatus.equals(that.validStatus) : that.validStatus == null;
+        return lastUpateTime != null ? lastUpateTime.equals(that.lastUpateTime) : that.lastUpateTime == null;
 
     }
 
@@ -109,7 +98,6 @@ public class DeviceInfo {
         result = 31 * result + (description != null ? description.hashCode() : 0);
         result = 31 * result + (createTime != null ? createTime.hashCode() : 0);
         result = 31 * result + (lastUpateTime != null ? lastUpateTime.hashCode() : 0);
-        result = 31 * result + (validStatus != null ? validStatus.hashCode() : 0);
         return result;
     }
 }
