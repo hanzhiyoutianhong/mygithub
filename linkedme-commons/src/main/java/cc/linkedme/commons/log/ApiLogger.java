@@ -15,6 +15,7 @@ public class ApiLogger {
     public static long REDIS_FIRE_TIME = 50; // Redis操作超时
 
     private static Logger log = Logger.getLogger("api");
+    private static Logger debugLog = Logger.getLogger("debug");
     private static Logger infoLog = Logger.getLogger("info");
     private static Logger warnLog = Logger.getLogger("warn");
     private static Logger errorLog = Logger.getLogger("error");
@@ -71,6 +72,7 @@ public class ApiLogger {
     public static void debug(Object msg, String debugType) {
         if (log.isDebugEnabled()) {
             msg = assembleDebugMsg(msg, debugType);
+            debugLog.debug(msg);
             if (log.isDebugEnabled()) {
                 log.debug(msg);
             } else {

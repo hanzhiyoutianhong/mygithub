@@ -55,7 +55,10 @@
 
     </bean>
 
-
     <bean id="deviceService" class="cc.linkedme.service.webapi.impl.DeviceServiceImpl"></bean>
+
+    <bean id="deviceTaskTrigger" class="cc.linkedme.task.DeviceTaskTrigger"></bean>
+
+    <bean id="deviceTask" class="cc.linkedme.task.DeviceTask"></bean>
 
 </beans>

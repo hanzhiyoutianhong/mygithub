@@ -115,8 +115,8 @@ public class DeviceDaoImpl extends BaseDao implements DeviceDao {
                 deviceInfo.setDeviceName(resultSet.getString("device_name"));
                 deviceInfo.setPlatform(resultSet.getInt("platform"));
                 deviceInfo.setDescription(resultSet.getString("description"));
-                deviceInfo.setCreateTime(sdf.format(resultSet.getString("create_time")));
-                deviceInfo.setLastUpateTime(sdf.format(resultSet.getString("last_update_time")));
+                deviceInfo.setCreateTime(resultSet.getString("create_time"));
+                deviceInfo.setLastUpateTime(resultSet.getString("last_update_time"));
                 deviceInfos.add(deviceInfo);
                 return null;
             }
@@ -143,8 +143,8 @@ public class DeviceDaoImpl extends BaseDao implements DeviceDao {
                 deviceInfo.setDeviceName(resultSet.getString("device_name"));
                 deviceInfo.setPlatform(resultSet.getInt("platform"));
                 deviceInfo.setDescription(resultSet.getString("description"));
-                deviceInfo.setCreateTime(sdf.format(resultSet.getString("create_time")));
-                deviceInfo.setLastUpateTime(sdf.format(resultSet.getString("last_update_time")));
+                deviceInfo.setCreateTime(resultSet.getString("create_time"));
+                deviceInfo.setLastUpateTime(resultSet.getString("last_update_time"));
                 deviceInfos.add(deviceInfo);
                 return null;
             }
