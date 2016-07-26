@@ -252,9 +252,9 @@ public final class TableItemHlper {
         calIndex(5553290834L);
 
         // 根据appID和deepLinkId得到deeplink具体的库和表
-        System.out.println(getDbTable(10229, 3447411577978882L, "deeplink"));
-        System.out.println(Base62.decode("zeC"));
-        System.out.println(Base62.decode("UuZVEcvm7"));
+        System.out.println(getDbTable(10248, 3476267164762114L, "deeplink"));
+        System.out.println(Base62.decode("IfC"));
+        System.out.println(Base62.decode("cEDj6dHv7"));
         // 根据identityId得到client具体的库和表
         System.out.println(getDbTable(3368955058323458L, 3368955058323458L, "client"));
     }
