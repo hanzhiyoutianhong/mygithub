@@ -72,27 +72,9 @@ public class Base62 {
     }
 
     public static void main(String[] args) {
-
-        long num = 3393978980368386L;
-        
-        System.out.println("Number: " + num);
-
-        String encoding = null;
-        long decoding;
-
-
-        encoding = Base62.encode(num);
-        System.out.println("Base62 Encoding: " + encoding);
-
-        decoding = Base62.decode(encoding);
-        long decoding1 = Base62.decode("sdk");
-        long decoding2 = Base62.decode("0");
-        
-        
-        System.out.println("Base62 Decoding: " + Base62.decode("IfC"));
+        System.out.println("Base62 Decoding: " + Base62.decode("G4LCXAjn7"));
+        System.out.println("Base62 Decoding: " + Base62.decode("heC"));
         System.out.println("Base62 Decoding: " + Base62.encode( 10024L ));
-        System.out.println("Base62 Decoding: " + Base62.encode( num ));
-        System.out.println(decoding2);
     }
 
 }

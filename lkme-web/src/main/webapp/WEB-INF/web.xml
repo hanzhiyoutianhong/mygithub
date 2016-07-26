@@ -2,7 +2,7 @@
 <web-app version="2.4" xmlns="http://java.sun.com/xml/ns/j2ee"
          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://java.sun.com/xml/ns/j2ee
-	http://java.sun.com/xml/ns/j2ee/web-app_2_4.xsd">
+    http://java.sun.com/xml/ns/j2ee/web-app_2_4.xsd">
     <display-name>lkme-web API</display-name>
 
     <context-param>
@@ -33,33 +33,33 @@
         <url-pattern>/*</url-pattern>
     </filter-mapping>
 
-	<filter>
-		<filter-name>TestEnvRedirect</filter-name>
-		<filter-class>cc.linkedme.api.lkme.filter.TestEnvRedirecter</filter-class>
-	</filter>
-	<filter-mapping>
+    <filter>
+        <filter-name>TestEnvRedirect</filter-name>
+        <filter-class>cc.linkedme.api.lkme.filter.TestEnvRedirecter</filter-class>
+    </filter>
+    <filter-mapping>
         <filter-name>TestEnvRedirect</filter-name>
         <url-pattern>/i/*</url-pattern>
     </filter-mapping>
-	
-<!--
-    <filter>
-        <filter-name>sdkAuthFilter</filter-name>
-        <filter-class>org.springframework.web.filter.DelegatingFilterProxy</filter-class>
-        <init-param>
-            <param-name>targetFilterLifecycle</param-name>
-            <param-value>true</param-value>
-        </init-param>
-    </filter>
-    <filter-mapping>
-        <filter-name>sdkAuthFilter</filter-name>
-        <url-pattern>/i/*</url-pattern>
-    </filter-mapping>
-    <filter-mapping>
-        <filter-name>sdkAuthFilter</filter-name>
-        <url-pattern>/t/*</url-pattern>
-    </filter-mapping>
--->
+
+    <!--
+        <filter>
+            <filter-name>sdkAuthFilter</filter-name>
+            <filter-class>org.springframework.web.filter.DelegatingFilterProxy</filter-class>
+            <init-param>
+                <param-name>targetFilterLifecycle</param-name>
+                <param-value>true</param-value>
+            </init-param>
+        </filter>
+        <filter-mapping>
+            <filter-name>sdkAuthFilter</filter-name>
+            <url-pattern>/i/*</url-pattern>
+        </filter-mapping>
+        <filter-mapping>
+            <filter-name>sdkAuthFilter</filter-name>
+            <url-pattern>/t/*</url-pattern>
+        </filter-mapping>
+    -->
 
     <!--跨域访问配置 Start-->
     <filter>
@@ -103,60 +103,6 @@
         <servlet-class>cc.linkedme.commons.spring.McqProcessorInitListener</servlet-class>
         <load-on-startup>3</load-on-startup> <!--tomcat启动后执行-->
     </servlet>
-
-    <!-- demo start  -->
-    <!--summary-->
-    <servlet>
-        <servlet-name>LMSummary</servlet-name>
-        <servlet-class>cc.linkedme.servlet.demoh5.LMSummaryServlet</servlet-class>
-    </servlet>
-    <servlet-mapping>
-        <servlet-name>LMSummary</servlet-name>
-        <url-pattern>/h5/summary</url-pattern>
-    </servlet-mapping>
-    <!--features-->
-    <servlet>
-        <servlet-name>LMFeature</servlet-name>
-        <servlet-class>cc.linkedme.servlet.demoh5.LMFeatureServlet</servlet-class>
-    </servlet>
-    <servlet-mapping>
-        <servlet-name>LMFeature</servlet-name>
-        <url-pattern>/h5/feature</url-pattern>
-    </servlet-mapping>
-    <!--partner-->
-    <servlet>
-        <servlet-name>LMApps</servlet-name>
-        <servlet-class>cc.linkedme.servlet.demoh5.LMAppsServlet</servlet-class>
-    </servlet>
-    <servlet-mapping>
-        <servlet-name>LMApps</servlet-name>
-        <url-pattern>/h5/partner</url-pattern>
-    </servlet-mapping>
-    <!--home-->
-    <servlet>
-        <servlet-name>LMHome</servlet-name>
-        <servlet-class>cc.linkedme.servlet.demoh5.LMHomeServlet</servlet-class>
-    </servlet>
-    <servlet-mapping>
-        <servlet-name>LMHome</servlet-name>
-        <url-pattern>/h5/home</url-pattern>
-    </servlet-mapping>
-
-    <servlet-mapping>
-        <servlet-name>default</servlet-name>
-        <url-pattern>/demoh5/*</url-pattern>
-    </servlet-mapping>
-
-
-    <servlet>
-        <servlet-name>testServlet</servlet-name>
-        <servlet-class>cc.linkedme.servlet.UrlTestServlet</servlet-class>
-    </servlet>
-    <servlet-mapping>
-        <servlet-name>testServlet</servlet-name>
-        <url-pattern>/testServlet</url-pattern>
-    </servlet-mapping>
-    <!-- demo end  -->
 
     <servlet>
         <servlet-name>lkmeServlet</servlet-name>
