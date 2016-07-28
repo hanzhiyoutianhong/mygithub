@@ -19,7 +19,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.apache.commons.collections.MapUtils;
-import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.apache.http.Header;
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpEntityEnclosingRequest;
@@ -84,6 +84,12 @@ public class TestEnvRedirecter implements Filter {
 
         String deviceId = httpRequest.getParameter("device_id");
         String linkedmeKey = httpRequest.getParameter("linkedme_key");
+        
+        if(StringUtils.isBlank(deviceId) || StringUtils.isBlank(linkedmeKey)){
+            chain.doFilter(httpRequest, response);
+            return;
+        }
+        
         JedisPort linkedmeKeyClient = linkedmeKeyShardingSupport.getClient(linkedmeKey);
         String appIdStr = linkedmeKeyClient.hget(linkedmeKey, "appid");
         
