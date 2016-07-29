@@ -247,19 +247,18 @@ public class LMSdkServiceImpl implements LMSdkService {
         long deepLinkId = 0;
         FingerPrintInfo.OperationType operationType = FingerPrintInfo.OperationType.NONE;
         DeepLink deepLink = null;
-        String deviceFingerprintId = "d";
         String browserFingerprintId = "b";
         String installType = "other";
         String deviceModel = installParams.device_model;
         if ("ios".equals(installParams.os.trim().toLowerCase())) {
             deviceModel = "iphone";
         }
+        String deviceFingerprintId = createFingerprintId(String.valueOf(appId), installParams.os, installParams.os_version,
+                deviceModel.trim().toLowerCase(), installParams.clientIP);
 
         if (Strings.isNullOrEmpty(identityIdStr)) { // 之前不存在<device, identityId>
             operationType = FingerPrintInfo.OperationType.ADD;
             // device_fingerprint_id 与 browse_fingerprint_id匹配逻辑
-            deviceFingerprintId = createFingerprintId(String.valueOf(appId), installParams.os, installParams.os_version,
-                    deviceModel.trim().toLowerCase(), installParams.clientIP);
             JedisPort dfpIdRedisClient = clientShardingSupport.getClient(deviceFingerprintId);
             identityIdStr = dfpIdRedisClient.hget(deviceFingerprintId, "iid");
             String deepLinkIdStr = dfpIdRedisClient.hget(deviceFingerprintId, "did");
@@ -287,8 +286,6 @@ public class LMSdkServiceImpl implements LMSdkService {
             if (Strings.isNullOrEmpty(deepLinkIdStr)) { // 之前存在identityId,但是没有identityId与deepLinkId的键值对
                 // device_fingerprint_id 与 browse_fingerprint_id匹配逻辑
                 // 如果匹配上了,更新<device_id, identity_id>记录，并把<device_id, identity_id>放在历史库;
-                deviceFingerprintId = createFingerprintId(String.valueOf(appId), installParams.os, installParams.os_version,
-                        deviceModel.trim().toLowerCase(), installParams.clientIP);
                 JedisPort dfpIdRedisClient = clientShardingSupport.getClient(deviceFingerprintId);
                 identityIdStr = dfpIdRedisClient.hget(deviceFingerprintId, "iid");
                 deepLinkIdStr = dfpIdRedisClient.hget(deviceFingerprintId, "did");
@@ -305,8 +302,7 @@ public class LMSdkServiceImpl implements LMSdkService {
                     if ((("ios".equals(installParams.os.trim().toLowerCase())) && (installParams.device_type == 24))
                             || (("android".equals(installParams.os.trim().toLowerCase())) && (installParams.device_type == 12))) {
                         clientRedisClient.sadd(deviceId + ".old", String.valueOf(identityId));
-                        clientRedisClient.set(deviceId, newIdentityId); // 更新<device_id,
-                                                                        // identity_id>
+                        clientRedisClient.set(deviceId, newIdentityId); // 更新<device_id,identity_id>
                         clientRedisClient.set(identityId + ".di", deviceId);
                     }
                 }
@@ -321,6 +317,15 @@ public class LMSdkServiceImpl implements LMSdkService {
 
                 // 清理redis中对应的identityId.dpi和identityId.scan
                 identityRedisClient.del(identityIdStr + ".dpi", identityIdStr + ".scan");
+            }
+        }
+
+        if (deepLink == null) {
+            String deepLinkIdStr = browserFingerprintIdForYYBMemCache.get(deviceFingerprintId + ".yyb");
+            if (!Strings.isNullOrEmpty(deepLinkIdStr)) {
+                browserFingerprintIdForYYBMemCache.delete(deviceFingerprintId + ".yyb"); // 匹配成功后删除记录
+                deepLinkId = Long.parseLong(deepLinkIdStr);
+                deepLink = deepLinkService.getDeepLinkInfo(deepLinkId, appId);
             }
         }
 
