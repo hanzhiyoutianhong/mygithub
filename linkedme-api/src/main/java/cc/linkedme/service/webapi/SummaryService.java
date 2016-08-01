@@ -100,6 +100,13 @@ public class SummaryService {
 
             // 把每一天的click,open,install计数统计出来
             putElementToAllDateCounts(allDateCounts, deepLinkDateCount);
+            if(!allDateCounts.containsKey(summaryDeepLinkParams.endDate)){
+                Map<String, Long> count = new HashMap<>();
+                count.put("click", 0L);
+                count.put("open", 0L);
+                count.put("install", 0L);
+                allDateCounts.put(summaryDeepLinkParams.endDate, count);
+            }
 
             // 分类统计总计数
             iosClick += deepLinkDateCount.getIosClick();
