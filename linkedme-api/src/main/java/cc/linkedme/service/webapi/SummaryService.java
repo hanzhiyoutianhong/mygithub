@@ -1,5 +1,6 @@
 package cc.linkedme.service.webapi;
 
+import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.*;
@@ -8,6 +9,7 @@ import javax.annotation.Resource;
 
 import org.apache.commons.collections.map.HashedMap;
 import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang3.time.DateUtils;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
 
@@ -100,13 +102,29 @@ public class SummaryService {
 
             // 把每一天的click,open,install计数统计出来
             putElementToAllDateCounts(allDateCounts, deepLinkDateCount);
-            if(!allDateCounts.containsKey(summaryDeepLinkParams.endDate)){
-                Map<String, Long> count = new HashMap<>();
-                count.put("click", 0L);
-                count.put("open", 0L);
-                count.put("install", 0L);
-                allDateCounts.put(summaryDeepLinkParams.endDate, count);
+            DateFormat df = new SimpleDateFormat("yyyy-MM-dd");
+            try {
+                Date startDate = df.parse(summaryDeepLinkParams.startDate);
+                Date endDate = df.parse(summaryDeepLinkParams.endDate);
+
+                Date currentDate = startDate;
+                while (!currentDate.after(endDate)) {
+                    String currentDateStr = df.format(currentDate);
+                    if (!allDateCounts.containsKey(currentDateStr)) {
+                        Map<String, Long> count = new HashMap<>();
+                        count.put("click", 0L);
+                        count.put("open", 0L);
+                        count.put("install", 0L);
+                        allDateCounts.put(currentDateStr, count);
+                    }
+                    currentDate = DateUtils.addDays(currentDate, 1);
+                }
+                
+            } catch (ParseException e) {
+                ApiLogger.error("解析日期出错（startDate:" + summaryDeepLinkParams.startDate + ", endDate:" + summaryDeepLinkParams.endDate + ")",
+                        e);
             }
+           
 
             // 分类统计总计数
             iosClick += deepLinkDateCount.getIosClick();
