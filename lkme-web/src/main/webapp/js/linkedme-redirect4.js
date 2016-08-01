@@ -102,7 +102,7 @@ function start() {
     if (Params.isWechat()) {
         gotoQQ("wechat");
     } else if (Params.isQQ()) {
-        gotoQQ("qq");
+        gotoPlatform("qq"); //qq不能通过yyb微下载唤起app
     } else if (Params.isWeibo()) {
         gotoPlatform("weibo");
     } else if (Params.isIOS()) {
