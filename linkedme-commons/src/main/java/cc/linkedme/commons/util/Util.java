@@ -1,5 +1,6 @@
 package cc.linkedme.commons.util;
 
+import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.lang.reflect.Array;
 import java.net.URLDecoder;
@@ -24,10 +25,17 @@ import cc.linkedme.commons.exception.LMException;
 import cc.linkedme.commons.exception.LMExceptionFactor;
 import cc.linkedme.data.dao.util.DateDuration;
 import com.google.common.base.Strings;
+import net.sf.json.JSONObject;
 import org.apache.commons.lang.ArrayUtils;
 import org.apache.commons.lang.StringUtils;
 
 import cc.linkedme.commons.log.ApiLogger;
+import org.apache.http.HttpResponse;
+import org.apache.http.client.HttpClient;
+import org.apache.http.client.methods.HttpGet;
+import org.apache.http.impl.client.DefaultHttpClient;
+import org.apache.http.protocol.HTTP;
+import org.apache.http.util.EntityUtils;
 
 public class Util {
 
@@ -946,6 +954,26 @@ public class Util {
         return result;
     }
 
+    /**
+     * 得到最近interval天的每一天的日期
+     * 
+     * @param interval 最近几天
+     * @return
+     */
+    public static List<String> getLastDays(int interval) {
+        List<String> days = new ArrayList<>();
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+        Calendar c = Calendar.getInstance();
+        c.add(Calendar.DATE, -interval);
+        do {
+            c.add(Calendar.DATE, 1);
+            Date date = c.getTime();
+            days.add(sdf.format(date));
+        } while (--interval > 0);
+
+        return days;
+    }
+
     public static String formatLinkedmeKey(String linkedme_key) {
         if (!Strings.isNullOrEmpty(linkedme_key)) {
             String[] linkedme_keys = linkedme_key.split("_");
@@ -984,6 +1012,40 @@ public class Util {
         while (curr.before(max)) {
             result.add(sdf1.format(curr.getTime()));
             curr.add(Calendar.MONTH, 1);
+        }
+        return result;
+    }
+
+    public static JSONObject getErrorMsg(String errCode, String errParam, String errMsg) {
+        JSONObject jsonObject = new JSONObject();
+        jsonObject.put("err_code", errCode);
+        jsonObject.put("err_param", errParam);
+        jsonObject.put("err_msg", errMsg);
+        return jsonObject;
+    }
+
+    public static String httpGet(String api) {
+        HttpClient client = new DefaultHttpClient();
+        String result = null;
+        HttpGet getMethod = new HttpGet(api);
+        HttpResponse httpResponse = null;
+        try {
+            httpResponse = client.execute(getMethod);
+            result = EntityUtils.toString(httpResponse.getEntity(), HTTP.UTF_8);
+
+        } catch (UnsupportedEncodingException e) {
+            e.printStackTrace();
+        } catch (org.apache.http.ParseException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        } finally {
+            client.getConnectionManager().shutdown();
+        }
+
+        if (httpResponse == null || httpResponse != null && httpResponse.getStatusLine().getStatusCode() != 200
+                || Strings.isNullOrEmpty(result)) {
+            throw new LMException(LMExceptionFactor.LM_SYS_ERROR, "get data failed");
         }
         return result;
     }

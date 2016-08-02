@@ -20,6 +20,7 @@
     <import resource="classpath:spring/applist/applist-context.xml"/>
     <import resource="classpath:spring/fingerprint/fingerprint-context.xml"/>
     <import resource="classpath:spring/js/js.xml"/>
+    <import resource="classpath:spring/appanalysis/appanalysis-context.xml"/>
 
 
     <import resource="spring/redis/redis.xml"/>

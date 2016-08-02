@@ -84,7 +84,7 @@ public class DeepLinkService {
                 // throw new KryoException("deserializeObj error.", e);
             }
             if (deepLink != null) {
-                if (deepLink.getAppId() == appId || deepLink.getAppId() == 10230) {
+                if (deepLink.getAppId() == appId || appId == 10230) {
                     return deepLink;
                 } else {
                     return null;
@@ -93,7 +93,7 @@ public class DeepLinkService {
         }
 
         deepLink = deepLinkDao.getDeepLinkInfo(deepLinkId, appId);
-        if (deepLink != null && deepLink.getDeeplinkId() > 0 && (deepLink.getAppId() == appId || deepLink.getAppId() == 10230)) {
+        if (deepLink != null && deepLink.getDeeplinkId() > 0 && (deepLink.getAppId() == appId || appId == 10230)) {
             addDeepLinkToCache(deepLink);
             return deepLink;
         }

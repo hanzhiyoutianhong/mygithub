@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:wfc="http://www.springframework.org/schema/wfc"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
+       http://www.springframework.org/schema/beans/spring-beans.xsd http://www.springframework.org/schema/wfc http://www.springframework.org/schema/wfc.xsd">
+
+    <bean id="appAnalysisDao" class="cc.linkedme.dao.sdkapi.impl.AppAnalysisDaoImpl">
+        <property name="tableContainer">
+            <bean class="cc.linkedme.data.dao.strategy.TableContainer">
+                <property name="tablesItems">
+                    <map>
+                        <entry key="app_analysis" value-ref="app_analysis"/>
+                    </map>
+                </property>
+            </bean>
+        </property>
+    </bean>
+
+    <bean id="app_analysis" class="cc.linkedme.data.dao.strategy.TableItem">
+        <property name="itemName" value="app_analysis"/>
+        <property name="dbNamePrefix" value="dashboard"/>
+        <property name="dbCount" value="1"/>
+
+        <property name="tableNamePrefix" value="app_bundles"/>
+        <property name="tableCount" value="1"/>
+        <property name="sqls">
+            <map>
+                <entry key="ADD_APP_BUNDLE"
+                       value="insert into $db$.$tb$ (id, app_id, company, app_name, app_icon, genres,  online_date, last_update_time, is_online) values(?, ?, ?, ?, ?, ?, now(), ?, ?)"/>
+
+                <entry key="ONLINE_APPS"
+                       value="update $db$.$tb$ set valid_status = '1', offline_date = NULL  where id = ?"/>
+
+                <entry key="OFFLINE_APPS"
+                       value="update $db$.$tb$ set valid_status = '1', offline_date = now() where id = ?"/>
+
+                <entry key="GET_APPS"
+                       value="select app_id, app_name, app_icon, status, last_update_time, is_online from $db$.$tb$ where company = ? and valid_status = '1'"/>
+
+                <entry key="GET_INC_APPS"
+                       value="select app_id from $db$.$tb$ where company = ? and date_format(online_date,'%Y-%m-%d') = ? and valid_status = '1'"/>
+
+                <entry key="GET_DES_APPS"
+                       value="select app_id from $db$.$tb$ where company = ? and date_format(offline_date,'%Y-%m-%d') = ? and valid_status = '1'"/>
+
+                <entry key="UPDATE_STATUS"
+                       value="update $db$.$tb$ set status=? where id = ? and valid_status = '1'"/>
+
+                <entry key="COUNT_BUNDLE_ID"
+                       value="select count(*) from $db$.$tb$ where company = ? and date_format(online_date,'%Y-%m-%d') >= ? and valid_status = '1'"/>
+
+                <entry key="COUNT_APP_IS_ONLINE"
+                       value="select count(*) from $db$.$tb$ where company = ? and date_format(online_date,'%Y-%m-%d') >= ? and is_online = '1' and valid_status = '1'"/>
+
+                <entry key="COUNT_WITH_SDK"
+                       value="select count(*) from $db$.$tb$ where company = ? and date_format(online_date,'%Y-%m-%d') >= ? and status = '1' and valid_status = '1'"/>
+
+                <entry key="GET_APPS_WITH_SDK"
+                       value="select app_name, genres from $db$.$tb$ where company = ? and date_format(online_date,'%Y-%m-%d') >= ? and status = '1' and valid_status = '1'"/>
+
+                <entry key="COUNT_INC_APPS"
+                       value="select count(*) from $db$.$tb$ where company = ? and date_format(online_date,'%Y-%m-%d') >= ? and valid_status = '1'"/>
+
+            </map>
+        </property>
+        <property name="jdbcTemplates">
+            <list>
+                <ref bean="app_analysis_jdbctemplate_0"/>
+            </list>
+        </property>
+
+    </bean>
+
+    <bean id="appAnalysisService" class="cc.linkedme.service.sdkapi.impl.AppAnalysisServiceImpl"></bean>
+
+</beans>

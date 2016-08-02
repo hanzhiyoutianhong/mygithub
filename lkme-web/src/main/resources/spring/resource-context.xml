@@ -47,6 +47,10 @@
 
     <bean id="deviceTask" class="cc.linkedme.task.DeviceTask"></bean>
 
+    <bean id="appAnalysisTaskTrigger" class="cc.linkedme.task.AppAnalysisTaskTrigger"></bean>
+
+    <bean id="appAnalysisTask" class="cc.linkedme.task.AppAnalysisTask"></bean>
+
 </beans>
 
 
