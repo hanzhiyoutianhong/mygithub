@@ -85,7 +85,7 @@ public class AppAnalysis {
         return jsonObject.toString();
     }
 
-    @Path("/count_by_interval")
+    @Path("/countbyinterval")
     @GET
     @Produces({MediaType.APPLICATION_JSON})
     public String count(@QueryParam("interval") int interval,
