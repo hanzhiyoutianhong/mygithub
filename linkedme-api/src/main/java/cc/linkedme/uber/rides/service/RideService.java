@@ -6,6 +6,8 @@ import java.util.Date;
 import javax.annotation.Resource;
 import javax.ws.rs.core.HttpHeaders;
 
+import cc.linkedme.commons.exception.LMException;
+import cc.linkedme.commons.exception.LMExceptionFactor;
 import cc.linkedme.commons.util.Util;
 import cc.linkedme.data.model.ButtonCount;
 import cc.linkedme.mcq.ButtonCountMsgPusher;
@@ -70,6 +72,11 @@ public class RideService {
     public String initButton(Ride ride, String btnId, String source) {
 
         ButtonInfo button = btnService.getBtnInfo(btnId);
+
+        if( button == null ) {
+            throw new LMException(LMExceptionFactor.LM_ILLEGAL_PARAM_VALUE, "invalid button id!");
+        }
+
         ConsumerAppInfo consumerApp = consumerService.getConsumerAppInfo(button.getConsumerAppId());
 
         // 计数view

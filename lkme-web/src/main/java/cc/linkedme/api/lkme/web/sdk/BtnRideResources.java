@@ -12,6 +12,11 @@ import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 
+import cc.linkedme.commons.exception.LMException;
+import cc.linkedme.commons.exception.LMExceptionFactor;
+import com.google.api.client.repackaged.com.google.common.base.Strings;
+import com.google.common.primitives.Longs;
+import net.sf.ezmorph.primitive.LongMorpher;
 import net.sf.json.JSONObject;
 
 import org.springframework.stereotype.Component;
@@ -24,6 +29,7 @@ import cc.linkedme.data.model.params.ClickBtnParams;
 import cc.linkedme.data.model.params.GetBtnStatusParams;
 import cc.linkedme.data.model.params.InitUberButtonParams;
 import cc.linkedme.uber.rides.service.RideService;
+import org.springframework.util.NumberUtils;
 
 @Path("btn/ride")
 @Component
@@ -86,6 +92,18 @@ public class BtnRideResources {
                              @FormParam("source") String source,
                              @BeanParam Ride ride,
                              @BeanParam LMParams lmParams) {
+
+        if (Strings.isNullOrEmpty(deviceId)) {
+            throw new LMException(LMExceptionFactor.LM_ILLEGAL_PARAM_VALUE, "device id cannot be null");
+        }
+
+        if (Strings.isNullOrEmpty(btnId)) {
+            throw new LMException(LMExceptionFactor.LM_ILLEGAL_PARAM_VALUE, "button id cannot be null");
+        }
+
+        if (Strings.isNullOrEmpty(source)) {
+            throw new LMException(LMExceptionFactor.LM_ILLEGAL_PARAM_VALUE, "source cannot be null");
+        }
 
         InitUberButtonParams initUberButtonParams = new InitUberButtonParams();
         initUberButtonParams.device_id = deviceId;

@@ -14,7 +14,9 @@ public class FingerPrintMsgPusher {
     private McqBaseWriter apiMcqWriter;
 
     public void updateFingerPrint(FingerPrintInfo fingerPrintInfo) {
-        String fingerPrintInfoMsg = MsgUtils.updateFingerPrintMsgJson(fingerPrintInfo);
-        apiMcqWriter.writeMsg(fingerPrintInfoMsg);
+        if (fingerPrintInfo.getOperationType() != FingerPrintInfo.OperationType.NONE) {
+            String fingerPrintInfoMsg = MsgUtils.updateFingerPrintMsgJson(fingerPrintInfo);
+            apiMcqWriter.writeMsg(fingerPrintInfoMsg);
+        }
     }
 }

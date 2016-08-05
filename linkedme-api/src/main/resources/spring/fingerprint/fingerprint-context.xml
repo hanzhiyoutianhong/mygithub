@@ -41,7 +41,7 @@
         </property>
         <property name="jdbcTemplates">
             <list>
-                <ref bean="finger_print_jdbctemplate_0"/>
+                <ref bean="client_jdbctemplate_0"/>
             </list>
         </property>
     </bean>
