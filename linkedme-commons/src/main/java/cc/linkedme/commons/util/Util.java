@@ -1029,32 +1029,6 @@ public class Util {
         return jsonObject;
     }
 
-    /*public static String httpGet(String api) {
-        HttpClient client = new DefaultHttpClient();
-        String result = null;
-        HttpGet getMethod = new HttpGet(api);
-        HttpResponse httpResponse = null;
-        try {
-            httpResponse = client.execute(getMethod);
-            result = EntityUtils.toString(httpResponse.getEntity(), HTTP.UTF_8);
-
-        } catch (UnsupportedEncodingException e) {
-            e.printStackTrace();
-        } catch (org.apache.http.ParseException e) {
-            e.printStackTrace();
-        } catch (IOException e) {
-            e.printStackTrace();
-        } finally {
-            client.getConnectionManager().shutdown();
-        }
-
-        if (httpResponse == null || httpResponse != null && httpResponse.getStatusLine().getStatusCode() != 200
-                || Strings.isNullOrEmpty(result)) {
-            throw new LMException(LMExceptionFactor.LM_SYS_ERROR, "get data failed");
-        }
-        return result;
-    }*/
-
     public static String httpGet(String api){
 
         String result = null;
