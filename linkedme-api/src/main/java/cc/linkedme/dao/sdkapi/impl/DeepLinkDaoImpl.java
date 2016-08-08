@@ -67,6 +67,7 @@ public class DeepLinkDaoImpl extends BaseDao implements DeepLinkDao {
         String android_custom_url = deepLink.getAndroid_custom_url();
         boolean desktop_use_default = deepLink.isDesktop_use_default();
         String desktop_custom_url = deepLink.getDesktop_custom_url();
+        String type = deepLink.getType();
 
         TableChannel tableChannel = tableContainer.getTableChannel("deeplink", ADD_DEEPLINK, appid, UuidHelper.getDateFromId(deeplink_id));
 
@@ -74,7 +75,7 @@ public class DeepLinkDaoImpl extends BaseDao implements DeepLinkDao {
             result += tableChannel.getJdbcTemplate().update(tableChannel.getSql(),
                     new Object[] {deeplink_id, deeplink_md5, linkedme_key, identity_id, appid, create_time, tags, alias, channel, feature,
                             stage, campaign, params, source, sdk_version, link_label, ios_use_default, ios_custom_url, android_use_default,
-                            android_custom_url, desktop_use_default, desktop_custom_url});
+                            android_custom_url, desktop_use_default, desktop_custom_url, type});
         } catch (DataAccessException e) {
             if (DaoUtil.isDuplicateInsert(e)) {
                 ApiLogger.warn(new StringBuilder(128).append("Duplicate insert deepLink, id=").append(deeplink_id));
@@ -112,6 +113,7 @@ public class DeepLinkDaoImpl extends BaseDao implements DeepLinkDao {
                     dp.setAndroid_custom_url(resultSet.getString("android_custom_url"));
                     dp.setDesktop_use_default(resultSet.getBoolean("desktop_use_default"));
                     dp.setDesktop_custom_url(resultSet.getString("desktop_custom_url"));
+                    dp.setType(resultSet.getString("type"));
                     return null;
                 }
             });
@@ -161,7 +163,7 @@ public class DeepLinkDaoImpl extends BaseDao implements DeepLinkDao {
                 dp.setTags(resultSet.getString("tags"));
                 dp.setSource(resultSet.getString("source"));
                 dp.setParams(resultSet.getString("params"));
-
+                dp.setType(resultSet.getString("type"));
                 deepLinks.add(dp);
                 return null;
             }
@@ -173,7 +175,7 @@ public class DeepLinkDaoImpl extends BaseDao implements DeepLinkDao {
     }
 
     public List<DeepLink> getDeepLinks(long appid, String start_date, String end_date, String feature, String campaign, String stage,
-            String channel, String tag, String source, boolean unique) {
+            String channel, String tag, String source, boolean unique, String type) {
         Date date = Util.timeStrToDate(start_date);
         TableChannel tableChannel = tableContainer.getTableChannel("deeplink", GET_DEEPLINKS, appid, date);
         String sql = tableChannel.getSql();
@@ -182,6 +184,7 @@ public class DeepLinkDaoImpl extends BaseDao implements DeepLinkDao {
         end_date += " 23:59:59";
         List<String> paramList = new ArrayList<>();
         paramList.add(String.valueOf(appid));
+        paramList.add(type);
         if (!Strings.isNullOrEmpty(start_date)) {
             condition += "and create_time >= ? ";
             paramList.add(start_date);
@@ -233,6 +236,7 @@ public class DeepLinkDaoImpl extends BaseDao implements DeepLinkDao {
                 dp.setStage(resultSet.getString("stage"));
                 dp.setCampaign(resultSet.getString("campaign"));
                 dp.setSource(resultSet.getString("source"));
+                dp.setType(resultSet.getString("type"));
                 deepLinks.add(dp);
                 return null;
             }
