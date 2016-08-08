@@ -369,7 +369,7 @@ public class SummaryService {
                 || (deepLink.getSource() != null && deepLink.getSource().equals(summaryDeepLinkParams.source))) {
             e = true;
         }
-        if (deepLink.getType() != null && deepLink.getType().equals(summaryDeepLinkParams.type)) {
+        if (deepLink.getType() != null && deepLink.getType().equals(summaryDeepLinkParams.liveTestFlag)) {
             f = true;
         }
         return a && b && c && d && e && f;
@@ -408,7 +408,7 @@ public class SummaryService {
         for (DateDuration dd : dateDurations) {
             deepLinks.addAll(deepLinkDao.getDeepLinks(summaryDeepLinkParams.appid, dd.getMin_date(), dd.getMax_date(),
                     summaryDeepLinkParams.feature, summaryDeepLinkParams.campaign, summaryDeepLinkParams.stage,
-                    summaryDeepLinkParams.channel, summaryDeepLinkParams.tags, summaryDeepLinkParams.source, summaryDeepLinkParams.unique, summaryDeepLinkParams.type));
+                    summaryDeepLinkParams.channel, summaryDeepLinkParams.tags, summaryDeepLinkParams.source, summaryDeepLinkParams.unique, summaryDeepLinkParams.liveTestFlag));
         }
         return deepLinks;
     }
