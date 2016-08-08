@@ -22,6 +22,7 @@ public class SummaryDeepLinkParams {
     public String orderby;
     public String deepLinkUrl;
     public long deepLinkId;
+    public String liveTestFlag;
 
     public SummaryDeepLinkParams() {}
 

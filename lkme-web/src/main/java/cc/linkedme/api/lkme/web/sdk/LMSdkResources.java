@@ -3,7 +3,6 @@ package cc.linkedme.api.lkme.web.sdk;
 import cc.linkedme.auth.SignAuthService;
 import cc.linkedme.commons.exception.LMException;
 import cc.linkedme.commons.exception.LMExceptionFactor;
-import cc.linkedme.commons.json.JsonBuilder;
 import cc.linkedme.commons.log.ApiLogger;
 import cc.linkedme.commons.util.Base62;
 import cc.linkedme.commons.util.Constants;
@@ -98,7 +97,6 @@ public class LMSdkResources {
 
         return "{}";
     }
-
 
     @Path("/install")
     @POST
@@ -196,7 +194,6 @@ public class LMSdkResources {
 
         return result;
     }
-
 
     @Path("/open")
     @POST
@@ -297,6 +294,7 @@ public class LMSdkResources {
                            @FormParam("sdk_version") String sdk_version,
                            @FormParam("retry_times") int retry_times,
                            @FormParam("linkedme_key") String linkedme_key,
+                           @FormParam("type") String type,
                            @FormParam("timestamp") long timestamp,
                            @FormParam("sign") String sign,
                            @Context HttpServletRequest request) {
@@ -339,6 +337,7 @@ public class LMSdkResources {
 
         urlParams.retry_times = retry_times;
         urlParams.linkedme_key = Util.formatLinkedmeKey(linkedme_key);
+        urlParams.type = type;
         urlParams.timestamp = timestamp;
         urlParams.sign = sign;
 
@@ -373,7 +372,6 @@ public class LMSdkResources {
 
         return resultJson.toString();
     }
-
 
     @Path("/close")
     @POST

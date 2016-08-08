@@ -66,11 +66,11 @@ public class Link {
         List<NameValuePair> params = new ArrayList<NameValuePair>();
         params.add(new BasicNameValuePair("app_id", String.valueOf(dashboardUrlParams.app_id)));
         params.add(new BasicNameValuePair("ios_use_default", String.valueOf(dashboardUrlParams.ios_use_default)));
-        params.add(new BasicNameValuePair("ios_custom_url", String.valueOf(dashboardUrlParams.ios_custom_url)));
+        params.add(new BasicNameValuePair("ios_custom_url", dashboardUrlParams.ios_custom_url));
         params.add(new BasicNameValuePair("android_use_default", String.valueOf(dashboardUrlParams.android_use_default)));
-        params.add(new BasicNameValuePair("android_custom_url", String.valueOf(dashboardUrlParams.android_custom_url)));
+        params.add(new BasicNameValuePair("android_custom_url", dashboardUrlParams.android_custom_url));
         params.add(new BasicNameValuePair("desktop_use_default", String.valueOf(dashboardUrlParams.desktop_use_default)));
-        params.add(new BasicNameValuePair("desktop_custom_url", String.valueOf(dashboardUrlParams.desktop_custom_url)));
+        params.add(new BasicNameValuePair("desktop_custom_url", dashboardUrlParams.desktop_custom_url));
 
         Joiner joiner = Joiner.on(",").skipNulls();
         params.add(new BasicNameValuePair("feature", joiner.join(dashboardUrlParams.feature)));
@@ -80,6 +80,7 @@ public class Link {
         params.add(new BasicNameValuePair("tags", joiner.join(dashboardUrlParams.tags)));
         params.add(new BasicNameValuePair("source", dashboardUrlParams.source));
         params.add(new BasicNameValuePair("params", dashboardUrlParams.params.toString()));
+        params.add(new BasicNameValuePair("type", dashboardUrlParams.live_test_flag));
 
         HttpClient client = new DefaultHttpClient();
         String result = null;
@@ -118,12 +119,18 @@ public class Link {
                              @QueryParam("tag") String tag,
                              @QueryParam("source") String source,
                              @QueryParam("unique") boolean unique,
+                             @QueryParam("live_test_flag") String liveTestFlag,
                              @QueryParam("return_number") int return_number,
                              @QueryParam("skip_number") int skip_number,
                              @QueryParam("orderby") String orderby) {
 
         SummaryDeepLinkParams summaryDeepLinkParams = new SummaryDeepLinkParams(appid, start_date, end_date, feature, campaign, stage,
                 channel, tag, source, unique, return_number, skip_number, orderby);
+        if (Strings.isNullOrEmpty(liveTestFlag)) {
+            summaryDeepLinkParams.liveTestFlag = "live";
+        } else {
+            summaryDeepLinkParams.liveTestFlag = liveTestFlag;
+        }
         String deepLinks = summaryService.getDeepLinksWithCount(summaryDeepLinkParams);
         if (Strings.isNullOrEmpty(deepLinks)) {
             return "{\"total_count\":0, \"ret\":[]}";

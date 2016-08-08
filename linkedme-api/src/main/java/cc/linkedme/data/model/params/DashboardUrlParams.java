@@ -31,9 +31,10 @@ public class DashboardUrlParams {
     public boolean ios_use_default;
     public String ios_custom_url;
     public boolean android_use_default;
-    public String  android_custom_url;
-    public boolean  desktop_use_default;
-    public String  desktop_custom_url;
+    public String android_custom_url;
+    public boolean desktop_use_default;
+    public String desktop_custom_url;
+    public String live_test_flag;
 
     public long identity_id;
     public String device_fingerprint_id;
@@ -266,5 +267,13 @@ public class DashboardUrlParams {
 
     public void setUser_id(int user_id) {
         this.user_id = user_id;
+    }
+
+    public String getLive_test_flag() {
+        return live_test_flag;
+    }
+
+    public void setLive_test_flag(String live_test_flag) {
+        this.live_test_flag = live_test_flag;
     }
 }
