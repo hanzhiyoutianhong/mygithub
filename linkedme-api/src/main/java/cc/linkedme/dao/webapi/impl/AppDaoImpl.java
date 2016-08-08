@@ -269,7 +269,7 @@ public class AppDaoImpl extends BaseDao implements AppDao {
         TableChannel tableChannel = tableContainer.getTableChannel("urlTags", GET_URL_TAGS_BY_APPID, 0L, 0L);
         JdbcTemplate jdbcTemplate = tableChannel.getJdbcTemplate();
         final List<UrlTagsInfo> urlTagsInfos = new ArrayList<UrlTagsInfo>();
-        jdbcTemplate.query(tableChannel.getSql(), new Object[]{appParams.app_id}, new RowMapper() {
+        jdbcTemplate.query(tableChannel.getSql(), new Object[]{appParams.app_id, appParams.live_test_flag}, new RowMapper() {
 
             public Object mapRow(ResultSet resultSet, int i) throws SQLException {
                 do {
@@ -299,7 +299,7 @@ public class AppDaoImpl extends BaseDao implements AppDao {
 
         final List<UrlTagsInfo> urlTagsInfos = new ArrayList<UrlTagsInfo>();
 
-        jdbcTemplate.query(tableChannel.getSql(), new Object[]{appParams.app_id, appParams.type}, new RowMapper() {
+        jdbcTemplate.query(tableChannel.getSql(), new Object[]{appParams.app_id, appParams.type, appParams.live_test_flag}, new RowMapper() {
 
             public Object mapRow(ResultSet resultSet, int i) throws SQLException {
                 do {
@@ -331,7 +331,7 @@ public class AppDaoImpl extends BaseDao implements AppDao {
                 JdbcTemplate jdbcTemplate_set = tableChannel_set.getJdbcTemplate();
 
                 try {
-                    result += jdbcTemplate_set.update(tableChannel_set.getSql(), new Object[]{appParams.app_id, values[i], type});
+                    result += jdbcTemplate_set.update(tableChannel_set.getSql(), new Object[]{appParams.app_id, values[i], type, appParams.live_test_flag});
                 } catch (DataAccessException e) {
                     if (DaoUtil.isDuplicateInsert(e)) {
                         ApiLogger.warn(new StringBuilder(128).append("Duplicate insert url_tags_info table, tag_content= ")
