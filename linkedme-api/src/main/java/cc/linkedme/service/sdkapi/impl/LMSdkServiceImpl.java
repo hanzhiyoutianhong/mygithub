@@ -5,6 +5,8 @@ import javax.annotation.Resource;
 import cc.linkedme.commons.exception.LMException;
 import cc.linkedme.commons.exception.LMExceptionFactor;
 import cc.linkedme.commons.memcache.MemCacheTemplate;
+import cc.linkedme.service.webapi.impl.DeviceServiceImpl;
+import org.apache.commons.collections.MapUtils;
 import org.apache.commons.lang3.StringUtils;
 
 import cc.linkedme.commons.log.ApiLogger;
@@ -40,10 +42,13 @@ import com.google.common.base.Strings;
 
 import net.sf.json.JSONArray;
 import net.sf.json.JSONObject;
+import org.springframework.util.CollectionUtils;
 
 import java.net.URI;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.List;
+import java.util.Map;
 import java.util.concurrent.Callable;
 import java.util.concurrent.LinkedBlockingQueue;
 import java.util.concurrent.ThreadPoolExecutor;
@@ -673,6 +678,19 @@ public class LMSdkServiceImpl implements LMSdkService {
             return Constants.DEEPLINK_HTTPS_PREFIX + "/" + Base62.encode(appId) + "/" + link;
         }
 
+        Map<String, List<Long>> testDeviceMap = DeviceServiceImpl.whiteDeviceMap.get();
+
+        boolean isTestDevice = !MapUtils.isEmpty(testDeviceMap) && testDeviceMap.containsKey(urlParams.device_id);
+        boolean isTestApp =
+                !CollectionUtils.isEmpty(testDeviceMap.get(urlParams.device_id)) && testDeviceMap.get(urlParams.device_id).contains(appId);
+
+        String urlType = "live";
+        if (isTestDevice && isTestApp) {
+            urlType = "test";
+        } else if (!Strings.isNullOrEmpty(urlParams.type) && urlParams.type.equals("test")) {
+            urlType = "test";
+        }
+
         long deepLinkId = uuidCreator.nextId(0); // 0表示发号器的deepLink业务
         String params = urlParams.params == null ? "" : urlParams.params.toString();
         DeepLink link = new DeepLink(deepLinkId, deepLinkMd5, urlParams.app_id, urlParams.linkedme_key, urlParams.identity_id,
@@ -686,7 +704,7 @@ public class LMSdkServiceImpl implements LMSdkService {
         link.setAndroid_custom_url(urlParams.android_custom_url);
         link.setDesktop_use_default(urlParams.desktop_use_default);
         link.setDesktop_custom_url(urlParams.desktop_custom_url);
-
+        link.setType(urlType);
 
         SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
         Date createTime = UuidHelper.getDateFromId(deepLinkId);
