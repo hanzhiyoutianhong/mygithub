@@ -33,6 +33,7 @@ public class DeepLink implements Serializable {
     private String params;
     private String source;
     private String sdkVersion;
+    private String type;
     private Timestamp updateTime;
     private int state;
 
@@ -313,6 +314,14 @@ public class DeepLink implements Serializable {
         this.deepLinkCount = deepLinkCount;
     }
 
+    public String getType() {
+        return type;
+    }
+
+    public void setType(String type) {
+        this.type = type;
+    }
+
     public JSONObject toJsonObject() {
         JSONObject jsonObject = new JSONObject();
         jsonObject.put("deeplink_id", deeplinkId);
@@ -327,7 +336,7 @@ public class DeepLink implements Serializable {
         }
         if (!Strings.isNullOrEmpty(stage)) {
             JSONArray stageJson = JSONArray.fromObject(stage.split(","));
-            jsonObject.put("campaign", stageJson);
+            jsonObject.put("stage", stageJson);
         }
         if (!Strings.isNullOrEmpty(channel)) {
             JSONArray channelJson = JSONArray.fromObject(channel.split(","));
@@ -340,6 +349,7 @@ public class DeepLink implements Serializable {
         jsonObject.put("unique", false);
         jsonObject.put("creation_time", createTime);
         jsonObject.put("source", source);
+        jsonObject.put("type", type);
 
         if (deepLinkCount != null) {
             JSONObject iosCount = new JSONObject();

@@ -124,7 +124,6 @@ public class SummaryService {
                 ApiLogger.error("解析日期出错（startDate:" + summaryDeepLinkParams.startDate + ", endDate:" + summaryDeepLinkParams.endDate + ")",
                         e);
             }
-           
 
             // 分类统计总计数
             iosClick += deepLinkDateCount.getIosClick();
@@ -348,6 +347,7 @@ public class SummaryService {
         boolean c = false;
         boolean d = false;
         boolean e = false;
+        boolean f = false;
 
         if (Strings.isNullOrEmpty(summaryDeepLinkParams.feature)
                 || (deepLink.getFeature() != null && deepLink.getFeature().contains(summaryDeepLinkParams.feature))) {
@@ -369,7 +369,10 @@ public class SummaryService {
                 || (deepLink.getSource() != null && deepLink.getSource().equals(summaryDeepLinkParams.source))) {
             e = true;
         }
-        return a && b && c && d && e;
+        if (deepLink.getType() != null && deepLink.getType().equals(summaryDeepLinkParams.liveTestFlag)) {
+            f = true;
+        }
+        return a && b && c && d && e && f;
     }
 
     public List<DeepLink> getDeepLinks(SummaryDeepLinkParams summaryDeepLinkParams) {
@@ -405,7 +408,7 @@ public class SummaryService {
         for (DateDuration dd : dateDurations) {
             deepLinks.addAll(deepLinkDao.getDeepLinks(summaryDeepLinkParams.appid, dd.getMin_date(), dd.getMax_date(),
                     summaryDeepLinkParams.feature, summaryDeepLinkParams.campaign, summaryDeepLinkParams.stage,
-                    summaryDeepLinkParams.channel, summaryDeepLinkParams.tags, summaryDeepLinkParams.source, summaryDeepLinkParams.unique));
+                    summaryDeepLinkParams.channel, summaryDeepLinkParams.tags, summaryDeepLinkParams.source, summaryDeepLinkParams.unique, summaryDeepLinkParams.liveTestFlag));
         }
         return deepLinks;
     }

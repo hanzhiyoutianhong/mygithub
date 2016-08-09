@@ -30,10 +30,10 @@ import org.apache.commons.lang.ArrayUtils;
 import org.apache.commons.lang.StringUtils;
 
 import cc.linkedme.commons.log.ApiLogger;
-import org.apache.http.HttpResponse;
-import org.apache.http.client.HttpClient;
+import org.apache.http.client.methods.CloseableHttpResponse;
 import org.apache.http.client.methods.HttpGet;
-import org.apache.http.impl.client.DefaultHttpClient;
+import org.apache.http.impl.client.CloseableHttpClient;
+import org.apache.http.impl.client.HttpClients;
 import org.apache.http.protocol.HTTP;
 import org.apache.http.util.EntityUtils;
 
@@ -1024,31 +1024,33 @@ public class Util {
         return jsonObject;
     }
 
-    public static String httpGet(String api) {
-        HttpClient client = new DefaultHttpClient();
+    public static String httpGet(String api){
+
         String result = null;
-        HttpGet getMethod = new HttpGet(api);
-        HttpResponse httpResponse = null;
+        CloseableHttpClient httpClient = HttpClients.createDefault();
+        HttpGet get = new HttpGet(api);
+        CloseableHttpResponse httpResponse = null;
         try {
-            httpResponse = client.execute(getMethod);
+            httpResponse = httpClient.execute(get);
             result = EntityUtils.toString(httpResponse.getEntity(), HTTP.UTF_8);
-
-        } catch (UnsupportedEncodingException e) {
-            e.printStackTrace();
-        } catch (org.apache.http.ParseException e) {
-            e.printStackTrace();
-        } catch (IOException e) {
-            e.printStackTrace();
+        } catch (Exception e) {
+            throw new LMException(LMExceptionFactor.LM_SYS_ERROR, "http connect failed");
         } finally {
-            client.getConnectionManager().shutdown();
+            try {
+                if (httpClient != null) {
+                    httpClient.close();
+                }
+            } catch (IOException e) {
+                throw new LMException(LMExceptionFactor.LM_SYS_ERROR, "close http connection failed");
+            }
         }
-
         if (httpResponse == null || httpResponse != null && httpResponse.getStatusLine().getStatusCode() != 200
                 || Strings.isNullOrEmpty(result)) {
             throw new LMException(LMExceptionFactor.LM_SYS_ERROR, "get data failed");
         }
         return result;
     }
+
 
     public static void main(String args[]) {
         String start_month = "2016-06-20";

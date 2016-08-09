@@ -7,6 +7,7 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.MediaType;
 
+import com.google.api.client.repackaged.com.google.common.base.Strings;
 import org.springframework.stereotype.Component;
 
 import cc.linkedme.data.model.params.SummaryButtonParams;
@@ -40,11 +41,17 @@ public class Summary {
                                     @QueryParam("channel") String channel,
                                     @QueryParam("tag") String tag,
                                     @QueryParam("source") String source,
+                                    @QueryParam("live_test_flag") String liveTestFlag,
                                     @QueryParam("unique") boolean unique,
                                     @QueryParam("token") String token) {
 
         SummaryDeepLinkParams summaryDeepLinkParams =
                 new SummaryDeepLinkParams(appId, start_date, end_date, feature, campaign, stage, channel, tag, source, unique);
+        if(Strings.isNullOrEmpty(liveTestFlag)) {
+            summaryDeepLinkParams.liveTestFlag = "live";
+        } else {
+            summaryDeepLinkParams.liveTestFlag = liveTestFlag;
+        }
         return summaryService.getDeepLinksHistoryCounts(summaryDeepLinkParams);
     }
 
