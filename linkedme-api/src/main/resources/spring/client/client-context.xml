@@ -31,10 +31,8 @@
         <property name="tableCount" value="8"/>
         <property name="sqls">
             <map>
-                <!--entry key="ADD_CLIENT"
-                       value="insert into $db$.$tb$ (identity_id, linkedme_key, imei, android_id, serial_number, device_mac, device_finger_print, device_id, device_type, device_model, device_brand, has_bluetooth, has_nfc, has_sim, os, os_version_detail, os_version, screen_dpi, screen_height, screen_width, is_wifi, is_referable, lat_val, carrier, app_version, sdk_update, sdk_version, ios_team_id, ios_bundle_id, timestamp) values(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, now())"/-->
                 <entry key="ADD_CLIENT"
-                       value="insert into $db$.$tb$ (identity_id, linkedme_key, imei, android_id, serial_number, device_mac, device_finger_print, device_id, device_type, device_model, device_brand, has_bluetooth, has_nfc, has_sim, os, os_version_detail, os_version, screen_dpi, screen_height, screen_width, is_wifi, is_referable, lat_val, carrier, app_version, sdk_update, sdk_version, ios_team_id, ios_bundle_id, timestamp) values(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, now()) on duplicate update device_id = values( device_id )"/>
+                       value="insert into $db$.$tb$ (identity_id, linkedme_key, imei, android_id, serial_number, device_mac, device_finger_print, device_id, device_type, device_model, device_brand, has_bluetooth, has_nfc, has_sim, os, os_version_detail, os_version, screen_dpi, screen_height, screen_width, is_wifi, is_referable, lat_val, carrier, app_version, sdk_update, sdk_version, ios_team_id, ios_bundle_id, timestamp) values(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, now())"/>
                 <entry key="UPDATE_APP"
                        value="update $db$.$tb$ set vflag = ?, mflag=? where status_id = ? and vflag in (0,6,7) and cmt_id = ?"/>
                 <entry key="GET_APPS_BY_USERID"
