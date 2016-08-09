@@ -86,7 +86,7 @@ public class RideService {
        
         String uberParams = String.format("client_id=%s&action=setPickup&pickup[latitude]=%s&pickup[longitude]=%s"
                 + "&pickup[formatted_address]=%s&dropoff[latitude]=%s&dropoff[longitude]=%s&dropoff[formatted_address]=%s",
-                consumerApp.getAppLogoUrl(), ride.getPickupLatitude(), ride.getPickupLongitude(), ride.getPickupLabel(),
+                consumerApp.getClientId(), ride.getPickupLatitude(), ride.getPickupLongitude(), ride.getPickupLabel(),
                 ride.getDropoffLatitude(), ride.getDropoffLongitude(), ride.getDropoffLabel());
         String schemeUrl =consumerApp.getSchemeUrl() + uberParams;
         
