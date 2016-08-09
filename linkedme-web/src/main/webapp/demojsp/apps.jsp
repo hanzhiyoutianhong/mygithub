@@ -37,7 +37,7 @@
             //var search = location.search;
             //var lkme = /^\?linkedme=(.*)/.exec(search);
             //lkme && btn.setAttribute('href', search.split('&')[0].replace("?linkedme=",""));
-            linkedme.init("linkedme_test_7e289a2484f4368dbafbd1e5c7d06903", null, null);
+            linkedme.init("linkedme_live_7e289a2484f4368dbafbd1e5c7d06903", null, null);
             var data = {};
             data.params = '{"control":"LinkedME","View":"https://www.linkedme.cc/iosdemo/apps.jsp"}';
 
