@@ -87,6 +87,14 @@ public class AppParams {
         this.type = type;
     }
 
+    public String[] getValue() {
+        return value;
+    }
+
+    public void setValue(String[] value) {
+        this.value = value;
+    }
+
     public String getLkme_key() {
         return lkme_key;
     }
@@ -255,14 +263,6 @@ public class AppParams {
         this.android_sha256_fingerprints = android_sha256_fingerprints;
     }
 
-    public int getIos_android_flag() {
-        return ios_android_flag;
-    }
-
-    public void setIos_android_flag(int ios_android_flag) {
-        this.ios_android_flag = ios_android_flag;
-    }
-
     public boolean isUse_default_landing_page() {
         return use_default_landing_page;
     }
@@ -287,12 +287,12 @@ public class AppParams {
         this.custom_landing_page = custom_landing_page;
     }
 
-    public boolean isis_yyb_available() {
-        return is_yyb_available;
+    public int getIos_android_flag() {
+        return ios_android_flag;
     }
 
-    public void setis_yyb_available(boolean is_yyb_available) {
-        this.is_yyb_available = is_yyb_available;
+    public void setIos_android_flag(int ios_android_flag) {
+        this.ios_android_flag = ios_android_flag;
     }
 
     public String getImg_data() {
@@ -309,14 +309,6 @@ public class AppParams {
 
     public void setImg_encoding(String img_encoding) {
         this.img_encoding = img_encoding;
-    }
-
-    public String[] getValue() {
-        return value;
-    }
-
-    public void setValue(String[] value) {
-        this.value = value;
     }
 
     public String getApp_logo() {
