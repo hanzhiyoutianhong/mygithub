@@ -73,7 +73,7 @@ public class RideService {
 
         ButtonInfo button = btnService.getBtnInfo(btnId);
 
-        if( button == null ) {
+        if (button == null) {
             throw new LMException(LMExceptionFactor.LM_ILLEGAL_PARAM_VALUE, "invalid button id!");
         }
 

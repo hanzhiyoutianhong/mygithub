@@ -80,9 +80,9 @@
         <property name="tableCount" value="1"/>
         <property name="sqls">
             <map>
-                <entry key="GET_URL_TAGS_BY_APPID" value="select tag_content, tag_type from $db$.$tb$ where app_id = ?"/>
-                <entry key="GET_URL_TAGS_BY_APPID_AND_TYPE" value="select tag_content from $db$.$tb$ where app_id = ? and tag_type = ?"/>
-                <entry key="SET_URL_TAGS_BY_APPID_AND_TYPE" value="insert into $db$.$tb$ (app_id, tag_content, tag_type) values(?, ?, ?)"/>
+                <entry key="GET_URL_TAGS_BY_APPID" value="select tag_content, tag_type from $db$.$tb$ where app_id = ? and live_test_flag = ?"/>
+                <entry key="GET_URL_TAGS_BY_APPID_AND_TYPE" value="select tag_content from $db$.$tb$ where app_id = ? and tag_type = ? and live_test_flag = ?"/>
+                <entry key="SET_URL_TAGS_BY_APPID_AND_TYPE" value="insert into $db$.$tb$ (app_id, tag_content, tag_type, live_test_flag) values(?, ?, ?, ?)"/>
             </map>
         </property>
         <property name="jdbcTemplates">

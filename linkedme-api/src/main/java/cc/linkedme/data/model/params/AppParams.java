@@ -53,6 +53,8 @@ public class AppParams {
 
     public String app_logo;
 
+    public String live_test_flag;
+
     public long getApp_id() {
         return app_id;
     }
@@ -269,6 +271,14 @@ public class AppParams {
         this.use_default_landing_page = use_default_landing_page;
     }
 
+    public boolean is_yyb_available() {
+        return is_yyb_available;
+    }
+
+    public void setIs_yyb_available(boolean is_yyb_available) {
+        this.is_yyb_available = is_yyb_available;
+    }
+
     public String getCustom_landing_page() {
         return custom_landing_page;
     }
@@ -316,5 +326,12 @@ public class AppParams {
     public void setApp_logo(String app_logo) {
         this.app_logo = app_logo;
     }
-    
+
+    public String getLive_test_flag() {
+        return live_test_flag;
+    }
+
+    public void setLive_test_flag(String live_test_flag) {
+        this.live_test_flag = live_test_flag;
+    }
 }
