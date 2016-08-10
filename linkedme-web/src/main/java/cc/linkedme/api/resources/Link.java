@@ -63,6 +63,10 @@ public class Link {
             return jsonArray.toString();
         }
 
+        if(Strings.isNullOrEmpty(dashboardUrlParams.live_test_flag)) {
+            dashboardUrlParams.live_test_flag = "live";
+        }
+
         List<NameValuePair> params = new ArrayList<NameValuePair>();
         params.add(new BasicNameValuePair("app_id", String.valueOf(dashboardUrlParams.app_id)));
         params.add(new BasicNameValuePair("ios_use_default", String.valueOf(dashboardUrlParams.ios_use_default)));
