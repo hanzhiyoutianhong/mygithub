@@ -199,6 +199,10 @@ public class Link {
             return jsonArray.toString();
         }
 
+        if(Strings.isNullOrEmpty(dashboardUrlParams.live_test_flag)) {
+            dashboardUrlParams.live_test_flag = "live";
+        }
+        
         boolean res = deepLinkService.updateUrl(dashboardUrlParams);
 
         if (res) {

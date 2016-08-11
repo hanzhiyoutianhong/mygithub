@@ -128,6 +128,10 @@
         <servlet-name>appleFileServlet</servlet-name>
         <url-pattern>/apple-app-site-association</url-pattern>
     </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>appleFileServlet</servlet-name>
+        <url-pattern>/.well-known/apple-app-site-association</url-pattern>
+    </servlet-mapping>
 
     <servlet>
         <servlet-name>androidFileServlet</servlet-name>
