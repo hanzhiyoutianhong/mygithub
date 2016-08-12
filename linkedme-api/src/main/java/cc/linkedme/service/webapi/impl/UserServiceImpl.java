@@ -159,10 +159,4 @@ public class UserServiceImpl implements UserService {
         return userInfos;
     }
 
-    public List<UserInfo> getNewUsersByDay() {
-        Date now = new Date();
-        List<UserInfo> userInfos = userDao.getNewUsersByDay(now);
-        return userInfos;
-    }
-
 }

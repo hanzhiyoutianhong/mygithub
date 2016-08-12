@@ -32,7 +32,4 @@ public interface UserService {
     boolean validatePassword(String email ,String password);
 
     List<UserInfo> getNewUsersByDay(Date date);
-
-    List<UserInfo> getNewUsersByDay();
-
 }

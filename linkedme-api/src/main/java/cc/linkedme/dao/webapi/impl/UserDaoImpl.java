@@ -241,6 +241,7 @@ public class UserDaoImpl extends BaseDao implements UserDao {
 
         TableChannel tableChannel = tableContainer.getTableChannel("userInfo", GET_NEW_REGISTERED_USER_BY_DAY, 0L, 0L);
         JdbcTemplate jdbcTemplate = tableChannel.getJdbcTemplate();
+
         List<UserInfo> userInfos = new ArrayList<>();
 
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
@@ -261,10 +262,8 @@ public class UserDaoImpl extends BaseDao implements UserDao {
                 return null;
             }
         });
-        if (!userInfos.isEmpty())
-            return userInfos;
-        else
-            return null;
+
+        return userInfos;
     }
 
 }

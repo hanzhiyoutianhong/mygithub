@@ -249,19 +249,35 @@ public class User {
         return jsonObject;
     }
 
-    @Path("new_user_today")
+    @Path("new_user_by_day")
     @POST
     @Produces({MediaType.APPLICATION_JSON})
-    public String newUserToday() {
-        List<UserInfo> userInfos = userService.getNewUsersByDay();
+    public String newUserByDay(@FormParam("date") String date, @Context HttpServletRequest request) {
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+        Date formatedDate;
+        List<UserInfo> userInfos;
+
+        try {
+            formatedDate = sdf.parse(date);
+        } catch (Exception e) {
+            ApiLogger.error("User.newUserByDay parse date format error", e);
+            throw new LMException(LMExceptionFactor.LM_ILLEGAL_PARAM_VALUE, "parse date format error");
+        }
+
+        userInfos = userService.getNewUsersByDay(formatedDate);
+        
         JSONObject result = new JSONObject();
         JSONArray userArray = new JSONArray();
-        int newUserCount = userInfos.size();
+        
+        int newUserCount = 0;
+        if(userInfos != null ) {
+            newUserCount = userInfos.size();
+        }
+        
         result.put("count", newUserCount);
 
-        for (int i = 0; userInfos != null && i < newUserCount; i++) {
+        for (UserInfo userInfo : userInfos ) {
             JSONObject user = new JSONObject();
-            UserInfo userInfo = userInfos.get(i);
             user.put("email", userInfo.getEmail());
             user.put("name", userInfo.getName());
             user.put("phone_number", userInfo.getPhone_number());
@@ -275,41 +291,12 @@ public class User {
         return result.toJSONString();
     }
 
-    @Path("new_user_by_day")
+    @Path("new_user_today")
     @POST
     @Produces({MediaType.APPLICATION_JSON})
-    public String newUserByDay(@FormParam("date") String date, @Context HttpServletRequest request) {
-        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
-        Date dt;
-        List<UserInfo> userInfos = new ArrayList<>();
-
-        try {
-            dt = sdf.parse(date);
-            userInfos = userService.getNewUsersByDay(dt);
-        } catch (Exception e) {
-            ApiLogger.error("User.newUserByDay parse date format error", e);
-            throw new LMException(LMExceptionFactor.LM_ILLEGAL_PARAM_VALUE, "parse date format error");
-        }
-
-        JSONObject result = new JSONObject();
-        JSONArray userArray = new JSONArray();
-        int newUserCount = userInfos.size();
-        result.put("count", newUserCount);
-
-        for (int i = 0; userInfos != null && i < newUserCount; i++) {
-            JSONObject user = new JSONObject();
-            UserInfo userInfo = userInfos.get(i);
-            user.put("email", userInfo.getEmail());
-            user.put("name", userInfo.getName());
-            user.put("phone_number", userInfo.getPhone_number());
-            user.put("company", userInfo.getCompany());
-            user.put("register_time", userInfo.getRegister_time());
-            userArray.add(user);
-        }
-
-        result.put("user_list", userArray);
-
-        return result.toJSONString();
+    public String newUserToday(@Context HttpServletRequest request) {
+        String date = new Date().toString();
+        return newUserByDay(date, request);
     }
 
 }
