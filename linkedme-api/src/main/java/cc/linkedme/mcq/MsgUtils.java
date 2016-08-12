@@ -38,6 +38,7 @@ public class MsgUtils {
         info.append("android_custom_url", deepLink.getAndroid_custom_url());
         info.append("desktop_use_default", deepLink.isDesktop_use_default());
         info.append("desktop_custom_url", deepLink.getDesktop_custom_url());
+        info.append("type", deepLink.getType());
 
         deepLinkMsg.append("info", info.flip());
         return deepLinkMsg.flip().toString();
@@ -103,6 +104,7 @@ public class MsgUtils {
         deepLink.setAndroid_custom_url(deepLinkMsg.getString("android_custom_url"));
         deepLink.setDesktop_use_default(deepLinkMsg.getBoolean("desktop_use_default"));
         deepLink.setDesktop_custom_url(deepLinkMsg.getString("desktop_custom_url"));
+        deepLink.setType(deepLinkMsg.getString("type"));
         return deepLink;
     }
 

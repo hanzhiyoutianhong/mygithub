@@ -33,15 +33,6 @@
         <url-pattern>/*</url-pattern>
     </filter-mapping>
 
-    <filter>
-        <filter-name>TestEnvRedirect</filter-name>
-        <filter-class>cc.linkedme.api.lkme.filter.TestEnvRedirecter</filter-class>
-    </filter>
-    <filter-mapping>
-        <filter-name>TestEnvRedirect</filter-name>
-        <url-pattern>/i/*</url-pattern>
-    </filter-mapping>
-
     <!--
         <filter>
             <filter-name>sdkAuthFilter</filter-name>
@@ -136,6 +127,10 @@
     <servlet-mapping>
         <servlet-name>appleFileServlet</servlet-name>
         <url-pattern>/apple-app-site-association</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>appleFileServlet</servlet-name>
+        <url-pattern>/.well-known/apple-app-site-association</url-pattern>
     </servlet-mapping>
 
     <servlet>

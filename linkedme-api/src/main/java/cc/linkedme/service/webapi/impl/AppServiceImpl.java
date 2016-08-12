@@ -329,6 +329,7 @@ public class AppServiceImpl implements AppService {
     public void addUrlTags(DashboardUrlParams urlParams) {
         AppParams appParams = new AppParams();
         appParams.app_id = urlParams.app_id;
+        appParams.live_test_flag = urlParams.live_test_flag;
         if (ArrayUtils.isNotEmpty(urlParams.feature)) {
             appParams.value = urlParams.feature;
             appParams.type = "feature";

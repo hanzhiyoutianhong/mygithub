@@ -11,6 +11,7 @@ import org.apache.mina.core.session.IdleStatus;
 import org.apache.mina.core.session.IoSession;
 
 import cc.linkedme.commons.log.ApiLogger;
+import cc.linkedme.commons.mcq.McqBaseManager;
 import cc.linkedme.commons.switcher.Switcher;
 import cc.linkedme.commons.switcher.SwitcherManager;
 import cc.linkedme.commons.switcher.SwitcherManagerFactoryLoader;
@@ -65,6 +66,22 @@ public class SocketHandle extends IoHandlerAdapter {
                 switcher.setValue(false);
             }
             session.write(switcherName + " " + switcher.getValue());
+            return;
+        } else if (command.trim().startsWith("queue")){
+            String cmds[] = command.split("\\s");
+            if (cmds.length != 2 || !"queue".equalsIgnoreCase(cmds[0])) {
+                session.write("Usage: queue [on|off|show]");
+                return;
+            }
+            String op = cmds[1];
+            
+            if("on".equalsIgnoreCase(op)){
+                McqBaseManager.IS_ALL_READ.compareAndSet(false, true);
+            }else if("off".equalsIgnoreCase(op)){
+                McqBaseManager.IS_ALL_READ.compareAndSet(true, false);
+            }
+            
+            session.write("reading mcq: " + McqBaseManager.IS_ALL_READ);
             return;
         }
     }

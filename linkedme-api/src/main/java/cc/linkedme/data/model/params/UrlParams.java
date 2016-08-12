@@ -34,6 +34,7 @@ public class UrlParams extends BaseParams {
     public String android_custom_url;
     public boolean desktop_use_default;
     public String desktop_custom_url;
+    public String type;
 
     public String getDevice_id() {
         return device_id;
@@ -209,5 +210,13 @@ public class UrlParams extends BaseParams {
 
     public void setDeepLinkMd5(String deepLinkMd5) {
         this.deepLinkMd5 = deepLinkMd5;
+    }
+
+    public String getType() {
+        return type;
+    }
+
+    public void setType(String type) {
+        this.type = type;
     }
 }

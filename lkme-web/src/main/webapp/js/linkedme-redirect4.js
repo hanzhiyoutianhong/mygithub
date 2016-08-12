@@ -102,7 +102,7 @@ function start() {
     if (Params.isWechat()) {
         gotoQQ("wechat");
     } else if (Params.isQQ()) {
-        gotoQQ("qq");
+        gotoPlatform("qq"); //qq不能通过yyb微下载唤起app
     } else if (Params.isWeibo()) {
         gotoPlatform("weibo");
     } else if (Params.isIOS()) {
@@ -123,12 +123,14 @@ function start() {
         } else {
             if (Params.isUniversalLink()) {
                 DEBUG_ALERT("isUniversalLink = true");
-                var destination = lkmeAction.destination.iOSUniversalLink;
-                var div_universal_link_open_btn = '<div style="background-image:url(' + baseImgPathLang + 'ios9_open.png);background-size: 100% 100%;width:100%;height:100%;">    <div style="text-align:center; width:100%; position:absolute; top:80%;">        <button id="btnGotoAppStore" style="font-size: 1em; background-color:#FFFFFF; border: 3px solid #959595; color: #959595; padding: 6px 20px; -webkit-border-radius: 30px; -moz-border-radius: 30px; border-radius: 30px;">' + gotoAppStore + "</button></div></div>";
-                $("body").append(div_universal_link_open_btn), $("#btnGotoAppStore").click(function () {
-                    lkmeAction.recordJSUserClickEvent("gotoAppStore");
-                    lkmeAction.recordId();
-                    gotoUrl(Params.forward_url, destination);
+                iOSSafariLaunch(launchAppUrl, 2500, function () {
+                    var destination = lkmeAction.destination.iOSUniversalLink;
+                    var div_universal_link_open_btn = '<div style="background-image:url(' + baseImgPathLang + 'ios9_open.png);background-size: 100% 100%;width:100%;height:100%;">    <div style="text-align:center; width:100%; position:absolute; top:80%;">        <button id="btnGotoAppStore" style="font-size: 1em; background-color:#FFFFFF; border: 3px solid #959595; color: #959595; padding: 6px 20px; -webkit-border-radius: 30px; -moz-border-radius: 30px; border-radius: 30px;">' + gotoAppStore + "</button></div></div>";
+                    $("body").append(div_universal_link_open_btn), $("#btnGotoAppStore").click(function () {
+                        lkmeAction.recordJSUserClickEvent("gotoAppStore");
+                        lkmeAction.recordId();
+                        gotoUrl(Params.forward_url, destination);
+                    });
                 });
             } else if (Params.isChrome()) {
                 DEBUG_ALERT("isChrome");

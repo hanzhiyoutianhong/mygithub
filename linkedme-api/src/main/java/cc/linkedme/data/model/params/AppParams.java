@@ -53,6 +53,8 @@ public class AppParams {
 
     public String app_logo;
 
+    public String live_test_flag;
+
     public long getApp_id() {
         return app_id;
     }
@@ -83,6 +85,14 @@ public class AppParams {
 
     public void setType(String type) {
         this.type = type;
+    }
+
+    public String[] getValue() {
+        return value;
+    }
+
+    public void setValue(String[] value) {
+        this.value = value;
     }
 
     public String getLkme_key() {
@@ -253,20 +263,20 @@ public class AppParams {
         this.android_sha256_fingerprints = android_sha256_fingerprints;
     }
 
-    public int getIos_android_flag() {
-        return ios_android_flag;
-    }
-
-    public void setIos_android_flag(int ios_android_flag) {
-        this.ios_android_flag = ios_android_flag;
-    }
-
     public boolean isUse_default_landing_page() {
         return use_default_landing_page;
     }
 
     public void setUse_default_landing_page(boolean use_default_landing_page) {
         this.use_default_landing_page = use_default_landing_page;
+    }
+
+    public boolean is_yyb_available() {
+        return is_yyb_available;
+    }
+
+    public void setIs_yyb_available(boolean is_yyb_available) {
+        this.is_yyb_available = is_yyb_available;
     }
 
     public String getCustom_landing_page() {
@@ -277,12 +287,12 @@ public class AppParams {
         this.custom_landing_page = custom_landing_page;
     }
 
-    public boolean isis_yyb_available() {
-        return is_yyb_available;
+    public int getIos_android_flag() {
+        return ios_android_flag;
     }
 
-    public void setis_yyb_available(boolean is_yyb_available) {
-        this.is_yyb_available = is_yyb_available;
+    public void setIos_android_flag(int ios_android_flag) {
+        this.ios_android_flag = ios_android_flag;
     }
 
     public String getImg_data() {
@@ -301,14 +311,6 @@ public class AppParams {
         this.img_encoding = img_encoding;
     }
 
-    public String[] getValue() {
-        return value;
-    }
-
-    public void setValue(String[] value) {
-        this.value = value;
-    }
-
     public String getApp_logo() {
         return app_logo;
     }
@@ -316,5 +318,12 @@ public class AppParams {
     public void setApp_logo(String app_logo) {
         this.app_logo = app_logo;
     }
-    
+
+    public String getLive_test_flag() {
+        return live_test_flag;
+    }
+
+    public void setLive_test_flag(String live_test_flag) {
+        this.live_test_flag = live_test_flag;
+    }
 }
