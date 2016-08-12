@@ -1,15 +1,13 @@
 package cc.linkedme.api.resources;
 
 import javax.annotation.Resource;
+import javax.print.attribute.standard.Media;
 import javax.servlet.http.HttpServletRequest;
-import javax.ws.rs.GET;
-import javax.ws.rs.POST;
-import javax.ws.rs.Path;
-import javax.ws.rs.Produces;
-import javax.ws.rs.QueryParam;
+import javax.ws.rs.*;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 
+import cc.linkedme.commons.log.ApiLogger;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import org.springframework.stereotype.Component;
@@ -23,6 +21,11 @@ import cc.linkedme.data.model.params.UserParams;
 import cc.linkedme.service.webapi.UserService;
 
 import com.google.api.client.repackaged.com.google.common.base.Strings;
+
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
 
 /**
  * Created by Vontroy on 16/3/19.
@@ -244,6 +247,69 @@ public class User {
         jsonObject.put("err_param",errParam);
         jsonObject.put("err_msg",errMsg);
         return jsonObject;
+    }
+
+    @Path("new_user_today")
+    @POST
+    @Produces({MediaType.APPLICATION_JSON})
+    public String newUserToday() {
+        List<UserInfo> userInfos = userService.getNewUsersByDay();
+        JSONObject result = new JSONObject();
+        JSONArray userArray = new JSONArray();
+        int newUserCount = userInfos.size();
+        result.put("count", newUserCount);
+
+        for (int i = 0; userInfos != null && i < newUserCount; i++) {
+            JSONObject user = new JSONObject();
+            UserInfo userInfo = userInfos.get(i);
+            user.put("email", userInfo.getEmail());
+            user.put("name", userInfo.getName());
+            user.put("phone_number", userInfo.getPhone_number());
+            user.put("company", userInfo.getCompany());
+            user.put("register_time", userInfo.getRegister_time());
+            userArray.add(user);
+        }
+
+        result.put("user_list", userArray);
+
+        return result.toJSONString();
+    }
+
+    @Path("new_user_by_day")
+    @POST
+    @Produces({MediaType.APPLICATION_JSON})
+    public String newUserByDay(@FormParam("date") String date, @Context HttpServletRequest request) {
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+        Date dt;
+        List<UserInfo> userInfos = new ArrayList<>();
+
+        try {
+            dt = sdf.parse(date);
+            userInfos = userService.getNewUsersByDay(dt);
+        } catch (Exception e) {
+            ApiLogger.error("User.newUserByDay parse date format error", e);
+            throw new LMException(LMExceptionFactor.LM_ILLEGAL_PARAM_VALUE, "parse date format error");
+        }
+
+        JSONObject result = new JSONObject();
+        JSONArray userArray = new JSONArray();
+        int newUserCount = userInfos.size();
+        result.put("count", newUserCount);
+
+        for (int i = 0; userInfos != null && i < newUserCount; i++) {
+            JSONObject user = new JSONObject();
+            UserInfo userInfo = userInfos.get(i);
+            user.put("email", userInfo.getEmail());
+            user.put("name", userInfo.getName());
+            user.put("phone_number", userInfo.getPhone_number());
+            user.put("company", userInfo.getCompany());
+            user.put("register_time", userInfo.getRegister_time());
+            userArray.add(user);
+        }
+
+        result.put("user_list", userArray);
+
+        return result.toJSONString();
     }
 
 }

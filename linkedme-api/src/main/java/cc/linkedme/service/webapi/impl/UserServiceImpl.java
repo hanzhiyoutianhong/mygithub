@@ -1,7 +1,9 @@
 package cc.linkedme.service.webapi.impl;
 
 import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.List;
 import java.util.Random;
 
 import javax.annotation.Resource;
@@ -148,6 +150,17 @@ public class UserServiceImpl implements UserService {
             return true;
         }
         return false;
+    }
+
+    public List<UserInfo> getNewUsersByDay(Date date) {
+        List<UserInfo> userInfos = userDao.getNewUsersByDay(date);
+        return userInfos;
+    }
+
+    public List<UserInfo> getNewUsersByDay() {
+        Date now = new Date();
+        List<UserInfo> userInfos = userDao.getNewUsersByDay(now);
+        return userInfos;
     }
 
 }
