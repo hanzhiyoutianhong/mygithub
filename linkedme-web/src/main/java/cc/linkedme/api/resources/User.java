@@ -3,7 +3,12 @@ package cc.linkedme.api.resources;
 import javax.annotation.Resource;
 import javax.print.attribute.standard.Media;
 import javax.servlet.http.HttpServletRequest;
-import javax.ws.rs.*;
+import javax.ws.rs.FormParam;
+import javax.ws.rs.GET;
+import javax.ws.rs.POST;
+import javax.ws.rs.Path;
+import javax.ws.rs.Produces;
+import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 
@@ -265,18 +270,18 @@ public class User {
         }
 
         userInfos = userService.getNewUsersByDay(formatedDate);
-        
+
         JSONObject result = new JSONObject();
         JSONArray userArray = new JSONArray();
-        
+
         int newUserCount = 0;
-        if(userInfos != null ) {
+        if (userInfos != null) {
             newUserCount = userInfos.size();
         }
-        
+
         result.put("count", newUserCount);
 
-        for (UserInfo userInfo : userInfos ) {
+        for (UserInfo userInfo : userInfos) {
             JSONObject user = new JSONObject();
             user.put("email", userInfo.getEmail());
             user.put("name", userInfo.getName());
