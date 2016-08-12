@@ -300,7 +300,8 @@ public class User {
     @POST
     @Produces({MediaType.APPLICATION_JSON})
     public String newUserToday(@Context HttpServletRequest request) {
-        String date = new Date().toString();
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+        String date = sdf.format(new Date());
         return newUserByDay(date, request);
     }
 
