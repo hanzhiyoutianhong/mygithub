@@ -12,6 +12,7 @@ public class UserInfo {
     private String email;
     private String pwd;
     private String name;
+    private String phone_number;
     private String company;
     private short role_id;
     private String register_time;
@@ -34,39 +35,47 @@ public class UserInfo {
         return id;
     }
 
-    public void setId( int id ) {
+    public void setId(int id) {
         this.id = id;
     }
 
-    public String getEmail(){
+    public String getEmail() {
         return email;
     }
 
-    public void setEmail( String email ){
+    public void setEmail(String email) {
         this.email = email;
     }
 
-    public String getPwd(){
+    public String getPwd() {
         return pwd;
     }
 
-    public void setPwd( String passwd ){
-        this.pwd = passwd;
+    public void setPwd(String pwd) {
+        this.pwd = pwd;
     }
 
     public String getName() {
         return name;
     }
 
-    public void setName( String name ) {
+    public void setName(String name) {
         this.name = name;
+    }
+
+    public String getPhone_number() {
+        return phone_number;
+    }
+
+    public void setPhone_number(String phone_number) {
+        this.phone_number = phone_number;
     }
 
     public String getCompany() {
         return company;
     }
 
-    public void setCompany( String company ) {
+    public void setCompany(String company) {
         this.company = company;
     }
 
@@ -74,7 +83,7 @@ public class UserInfo {
         return role_id;
     }
 
-    public void setRole_id( short role_id ) {
+    public void setRole_id(short role_id) {
         this.role_id = role_id;
     }
 
@@ -82,7 +91,7 @@ public class UserInfo {
         return register_time;
     }
 
-    public void setRegister_time( String register_time ) {
+    public void setRegister_time(String register_time) {
         this.register_time = register_time;
     }
 
@@ -90,7 +99,7 @@ public class UserInfo {
         return last_login_time;
     }
 
-    public void setLast_login_time( String last_login_time ) {
+    public void setLast_login_time(String last_login_time) {
         this.last_login_time = last_login_time;
     }
 

@@ -37,6 +37,7 @@ public class UserDaoImpl extends BaseDao implements UserDao {
     public static final String GET_TOKEN = "GET_TOKEN";
     public static final String SET_RANDOM_CODE = "SET_RANDOM_CODE";
     public static final String SET_LOGIN_TIME_AND_TOKEN = "SET_LOGIN_TIME_AND_TOKEN";
+    public static final String GET_NEW_REGISTERED_USER_BY_DAY = "GET_NEW_REGISTERED_USER_BY_DAY";
 
     public static final String REQUEST_DEMO = "REQUEST_DEMO";
 
@@ -235,5 +236,35 @@ public class UserDaoImpl extends BaseDao implements UserDao {
         }
         return res;
     }
+
+    public List<UserInfo> getNewUsersByDay(Date date) {
+
+        TableChannel tableChannel = tableContainer.getTableChannel("userInfo", GET_NEW_REGISTERED_USER_BY_DAY, 0L, 0L);
+        JdbcTemplate jdbcTemplate = tableChannel.getJdbcTemplate();
+
+        List<UserInfo> userInfos = new ArrayList<>();
+
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+        String start_time = sdf.format(date) + " 00:00:00";
+        String end_time = sdf.format(date) + " 23:59:59";
+
+        jdbcTemplate.query(tableChannel.getSql(), new Object[] {start_time, end_time}, new RowMapper() {
+
+            public Object mapRow(ResultSet resultSet, int i) throws SQLException {
+                UserInfo userInfo = new UserInfo();
+                userInfo.setEmail(resultSet.getString("email"));
+                userInfo.setName(resultSet.getString("name"));
+                userInfo.setPhone_number(resultSet.getString("phone_number"));
+                userInfo.setCompany(resultSet.getString("company"));
+                userInfo.setRegister_time(resultSet.getString("register_time"));
+
+                userInfos.add(userInfo);
+                return null;
+            }
+        });
+
+        return userInfos;
+    }
+
 }
 

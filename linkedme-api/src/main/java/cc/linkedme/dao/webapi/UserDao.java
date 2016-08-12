@@ -4,6 +4,9 @@ import cc.linkedme.data.model.UserInfo;
 import cc.linkedme.data.model.params.DemoRequestParams;
 import cc.linkedme.data.model.params.UserParams;
 
+import java.util.Date;
+import java.util.List;
+
 /**
  * Created by Vontroy on 16/3/19.
  */
@@ -28,4 +31,6 @@ public interface UserDao {
     String getToken(String email);
 
     int requestDemo(DemoRequestParams demoRequestParams);
+
+    public List<UserInfo> getNewUsersByDay(Date date );
 }
