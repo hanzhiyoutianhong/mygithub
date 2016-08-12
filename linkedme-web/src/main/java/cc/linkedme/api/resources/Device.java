@@ -52,7 +52,7 @@ public class Device {
         JSONArray jsonArray = checkParams(appId, new String[] {deviceId});
 
         if (Strings.isNullOrEmpty(deviceName)) {
-            jsonArray.add(getErrorMsg("40001", "device_name", "设备名称不能为空"));
+            jsonArray.add(getErrorMsg("40001", "device_name", "请输入设备名称"));
         }
 
         if (platform < 0 || platform > 1) {
@@ -79,7 +79,7 @@ public class Device {
         JSONArray jsonArray = new JSONArray();
 
         if (Strings.isNullOrEmpty(deviceId)) {
-            jsonArray.add(getErrorMsg("40001", "device_id", "设备ID不能为空"));
+            jsonArray.add(getErrorMsg("40001", "device_id", "请输入设备ID"));
         }
 
         if (appId <= 0) {
@@ -116,7 +116,7 @@ public class Device {
         JSONArray jsonArray = checkParams(appId, new String[] {deviceId});
 
         if (Strings.isNullOrEmpty(deviceName)) {
-            jsonArray.add(getErrorMsg("40001", "device_name", "设备名称不能为空"));
+            jsonArray.add(getErrorMsg("40001", "device_name", "请输入设备名称"));
         }
 
         if (platform < 0 || platform > 1) {
@@ -191,7 +191,7 @@ public class Device {
 
         for (String deviceId : deviceIds) {
             if (Strings.isNullOrEmpty(deviceId)) {
-                jsonArray.add(getErrorMsg("40001", "device_id", "设备ID不能为空"));
+                jsonArray.add(getErrorMsg("40001", "device_id", "请输入设备ID"));
             }
         }
         return jsonArray;
