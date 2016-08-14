@@ -248,10 +248,14 @@ public class App {
     @Path("/url_tags")
     @GET
     @Produces(MediaType.APPLICATION_JSON)
-    public String urlTags(@QueryParam("user_id") long user_id, @QueryParam("app_id") long app_id, @QueryParam("token") String token) {
+    public String urlTags(@QueryParam("user_id") long user_id,
+                          @QueryParam("app_id") long app_id,
+                          @QueryParam("live_test_flag") String live_test_flag,
+                          @QueryParam("token") String token) {
         AppParams appParams = new AppParams();
         appParams.user_id = user_id;
         appParams.app_id = app_id;
+        appParams.live_test_flag = live_test_flag;
 
         if (appParams.user_id <= 0) {
             throw new LMException(LMExceptionFactor.LM_ILLEGAL_PARAM_VALUE, "invalid user id");
