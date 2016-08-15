@@ -64,7 +64,9 @@ public class App {
     @Path("/get_apps")
     @GET
     @Produces(MediaType.APPLICATION_JSON)
-    public String getApps(@QueryParam("user_id") long user_id, @QueryParam("token") String token, @Context HttpServletRequest request) {
+    public String getApps(@QueryParam("user_id") long user_id,
+                          @QueryParam("token") String token,
+                          @Context HttpServletRequest request) {
         if (user_id <= 0) {
             throw new LMException(LMExceptionFactor.LM_ILLEGAL_PARAM_VALUE, "invalid user id");
         }
@@ -85,7 +87,8 @@ public class App {
     @Path("/delete_app")
     @POST
     @Produces(MediaType.APPLICATION_JSON)
-    public String deleteApp(AppParams appParams, @Context HttpServletRequest request) {
+    public String deleteApp(AppParams appParams,
+                            @Context HttpServletRequest request) {
         if (appParams.user_id <= 0) {
             throw new LMException(LMExceptionFactor.LM_ILLEGAL_PARAM_VALUE, "invalid user id");
         }
@@ -104,8 +107,11 @@ public class App {
     @Path("/query_app")
     @GET
     @Produces(MediaType.APPLICATION_JSON)
-    public String queryApp(@QueryParam("app_id") long app_id, @QueryParam("user_id") long user_id, @QueryParam("type") String type,
-            @QueryParam("token") String token, @Context HttpServletRequest request) {
+    public String queryApp(@QueryParam("app_id") long app_id,
+                           @QueryParam("user_id") long user_id,
+                           @QueryParam("type") String type,
+                           @QueryParam("token") String token,
+                           @Context HttpServletRequest request) {
 
         AppParams appParams = new AppParams();
         appParams.app_id = app_id;
@@ -123,7 +129,8 @@ public class App {
     @Path("/get_track_id")
     @GET
     @Produces(MediaType.APPLICATION_JSON)
-    public String getIconFromAppStore(@QueryParam("bundle_id") String bundleId, @Context HttpServletRequest request) {
+    public String getIconFromAppStore(@QueryParam("bundle_id") String bundleId,
+                                      @Context HttpServletRequest request) {
 
         JSONArray jsonArray = new JSONArray();
 
@@ -177,7 +184,7 @@ public class App {
 
         appParams.use_default_landing_page = desktopJson.getBoolean("use_default_landing_page");
         appParams.custom_landing_page = desktopJson.getString("custom_landing_page");
-        
+
 
         int ios_android_flag = ((appParams.is_yyb_available ? 1 : 0) << 4) + ((appParams.has_ios ? 1 : 0) << 3)
                 + ((appParams.ios_enable_ulink ? 1 : 0) << 2) + ((appParams.has_android ? 1 : 0) << 1)
@@ -262,8 +269,10 @@ public class App {
     @Path("/url_tags")
     @GET
     @Produces(MediaType.APPLICATION_JSON)
-    public String urlTags(@QueryParam("user_id") long user_id, @QueryParam("app_id") long app_id,
-            @QueryParam("live_test_flag") String live_test_flag, @QueryParam("token") String token) {
+    public String urlTags(@QueryParam("user_id") long user_id,
+                          @QueryParam("app_id") long app_id,
+                          @QueryParam("live_test_flag") String live_test_flag,
+                          @QueryParam("token") String token) {
         AppParams appParams = new AppParams();
         appParams.user_id = user_id;
         appParams.app_id = app_id;
