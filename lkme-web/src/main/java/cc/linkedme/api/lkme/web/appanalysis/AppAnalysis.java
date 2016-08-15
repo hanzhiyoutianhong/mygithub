@@ -30,8 +30,9 @@ public class AppAnalysis {
     @Path("/get_changed_apps")
     @GET
     @Produces({MediaType.APPLICATION_JSON})
-    public String getChangedApps(@QueryParam("company") String company, @QueryParam("date") String date,
-            @Context HttpServletRequest request) {
+    public String getChangedApps(@QueryParam("company") String company,
+                                 @QueryParam("date") String date,
+                                 @Context HttpServletRequest request) {
 
         JSONArray jsonArray = new JSONArray();
 
@@ -53,7 +54,8 @@ public class AppAnalysis {
     @Path("/get_apps")
     @GET
     @Produces({MediaType.APPLICATION_JSON})
-    public String getApps(@QueryParam("company") String company, @Context HttpServletRequest request) {
+    public String getApps(@QueryParam("company") String company,
+                          @Context HttpServletRequest request) {
 
         JSONArray jsonArray = new JSONArray();
 
@@ -71,8 +73,9 @@ public class AppAnalysis {
     @Path("/count")
     @GET
     @Produces({MediaType.APPLICATION_JSON})
-    public String count(@QueryParam("startDate") String startDate, @QueryParam("endDate") String endDate,
-            @Context HttpServletRequest request) {
+    public String count(@QueryParam("startDate") String startDate,
+                        @QueryParam("endDate") String endDate,
+                        @Context HttpServletRequest request) {
 
         JSONObject jsonObject = new JSONObject();
         jsonObject.put("magicwindow", appAnalysisService.count("magicwindow", startDate, endDate));
@@ -85,7 +88,8 @@ public class AppAnalysis {
     @Path("/countbyinterval")
     @GET
     @Produces({MediaType.APPLICATION_JSON})
-    public String count(@QueryParam("interval") int interval, @Context HttpServletRequest request) {
+    public String count(@QueryParam("interval") int interval,
+                        @Context HttpServletRequest request) {
 
         JSONObject jsonObject = new JSONObject();
 
@@ -101,8 +105,10 @@ public class AppAnalysis {
     @Path("/update_status")
     @GET
     @Produces(MediaType.APPLICATION_JSON)
-    public String updateStatus(@QueryParam("app_id") String appId, @QueryParam("company") String company,
-            @QueryParam("status") String status, @Context HttpServletRequest request) {
+    public String updateStatus(@QueryParam("app_id") String appId,
+                               @QueryParam("company") String company,
+                               @QueryParam("status") String status,
+                               @Context HttpServletRequest request) {
 
         JSONArray jsonArray = new JSONArray();
 
