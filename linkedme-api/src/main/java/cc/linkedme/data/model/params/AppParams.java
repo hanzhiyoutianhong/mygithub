@@ -10,9 +10,9 @@ import net.sf.json.JSONObject;
  * Created by LinkedME01 on 16/3/18.
  */
 @XmlRootElement
-@JsonIgnoreProperties(ignoreUnknown=true)
+@JsonIgnoreProperties(ignoreUnknown = true)
 public class AppParams {
-    
+
     public long app_id;
     public long user_id;
     public String app_name;
@@ -54,6 +54,8 @@ public class AppParams {
     public String app_logo;
 
     public String live_test_flag;
+
+    public String trackId;
 
     public long getApp_id() {
         return app_id;
@@ -326,4 +328,13 @@ public class AppParams {
     public void setLive_test_flag(String live_test_flag) {
         this.live_test_flag = live_test_flag;
     }
+
+    public String getTrackId() {
+        return trackId;
+    }
+
+    public void setTrackId(String trackId) {
+        this.trackId = trackId;
+    }
+
 }

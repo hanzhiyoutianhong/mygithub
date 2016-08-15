@@ -16,6 +16,7 @@ import java.util.Random;
 import javax.annotation.Resource;
 
 import cc.linkedme.commons.util.Constants;
+import cc.linkedme.commons.util.Util;
 import cc.linkedme.data.model.params.DashboardUrlParams;
 
 import com.google.common.base.Strings;
@@ -51,6 +52,10 @@ import org.apache.commons.lang3.StringUtils;
  * Created by LinkedME01 on 16/3/18.
  */
 public class AppServiceImpl implements AppService {
+
+    private static final String ITUNES_APPLE_BUNDLES = "https://itunes.apple.com/lookup?bundleId=";
+
+
     @Resource
     UuidCreator uuidCreator;
 
@@ -310,6 +315,8 @@ public class AppServiceImpl implements AppService {
 
             appInfo.setUse_default_landing_page(appParams.use_default_landing_page);
             appInfo.setCustom_landing_page(appParams.custom_landing_page);
+
+            appInfo.setTrackId(appParams.trackId);
             appInfo.setApp_logo(appParams.app_logo);
 
             // 向mc中写入最新app信息
@@ -476,4 +483,28 @@ public class AppServiceImpl implements AppService {
         }
     }
 
+    public String getTracIdFromAppStore(String bundleId){
+
+        JSONObject jsonResult = new JSONObject();
+        jsonResult.put("icon","");
+        jsonResult.put("track_id","");
+        jsonResult.put("ios_store_url","");
+
+        String res = Util.httpGet(ITUNES_APPLE_BUNDLES + bundleId);
+        if (Strings.isNullOrEmpty(res)) {
+            return jsonResult.toString();
+        }
+
+        JSONObject jsonRes = JSONObject.fromObject(res);
+        int resultCount = jsonRes.getInt("resultCount");
+
+        if (resultCount > 0) {
+            JSONObject data = jsonRes.getJSONArray("results").getJSONObject(0);
+            jsonResult.put("icon",data.getString("artworkUrl512"));
+            jsonResult.put("track_id",data.getString("trackId"));
+            jsonResult.put("ios_store_url",data.getString("trackViewUrl"));
+        }
+
+        return jsonResult.toString();
+    }
 }

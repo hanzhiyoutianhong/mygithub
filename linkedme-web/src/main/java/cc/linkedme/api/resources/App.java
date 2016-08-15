@@ -15,6 +15,7 @@ import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 
+import cc.linkedme.commons.util.Util;
 import net.sf.json.JSONArray;
 import net.sf.json.JSONObject;
 
@@ -63,9 +64,7 @@ public class App {
     @Path("/get_apps")
     @GET
     @Produces(MediaType.APPLICATION_JSON)
-    public String getApps(@QueryParam("user_id") long user_id,
-                          @QueryParam("token") String token,
-                          @Context HttpServletRequest request) {
+    public String getApps(@QueryParam("user_id") long user_id, @QueryParam("token") String token, @Context HttpServletRequest request) {
         if (user_id <= 0) {
             throw new LMException(LMExceptionFactor.LM_ILLEGAL_PARAM_VALUE, "invalid user id");
         }
@@ -105,11 +104,8 @@ public class App {
     @Path("/query_app")
     @GET
     @Produces(MediaType.APPLICATION_JSON)
-    public String queryApp(@QueryParam("app_id") long app_id,
-                           @QueryParam("user_id") long user_id,
-                           @QueryParam("type") String type,
-                           @QueryParam("token") String token,
-                           @Context HttpServletRequest request) {
+    public String queryApp(@QueryParam("app_id") long app_id, @QueryParam("user_id") long user_id, @QueryParam("type") String type,
+            @QueryParam("token") String token, @Context HttpServletRequest request) {
 
         AppParams appParams = new AppParams();
         appParams.app_id = app_id;
@@ -124,18 +120,36 @@ public class App {
         return appInfo.toJson().toString();
     }
 
+    @Path("/get_track_id")
+    @GET
+    @Produces(MediaType.APPLICATION_JSON)
+    public String getIconFromAppStore(@QueryParam("bundle_id") String bundleId, @Context HttpServletRequest request) {
+
+        JSONArray jsonArray = new JSONArray();
+
+        if (Strings.isNullOrEmpty(bundleId)) {
+            jsonArray.add(Util.getErrorMsg("40001", "bundle_id", "请填写bundle_id"));
+        }
+
+        if (jsonArray.size() > 0) {
+            return jsonArray.toString();
+        }
+
+        return appService.getTracIdFromAppStore(bundleId);
+    }
+
     @Path("/update_app")
     @POST
     @Produces(MediaType.APPLICATION_JSON)
     public String updateApp(AppParams appParams, @Context HttpServletRequest request) {
 
-        if(!Strings.isNullOrEmpty(appParams.lkme_key)){
-            appParams.lkme_key = appParams.lkme_key.substring(appParams.lkme_key.length()-32,appParams.lkme_key.length());
+        if (!Strings.isNullOrEmpty(appParams.lkme_key)) {
+            appParams.lkme_key = appParams.lkme_key.substring(appParams.lkme_key.length() - 32, appParams.lkme_key.length());
         }
-        if(!Strings.isNullOrEmpty(appParams.lkme_secret)){
-            appParams.lkme_secret = appParams.lkme_secret.substring(appParams.lkme_secret.length()-32,appParams.lkme_secret.length());
+        if (!Strings.isNullOrEmpty(appParams.lkme_secret)) {
+            appParams.lkme_secret = appParams.lkme_secret.substring(appParams.lkme_secret.length() - 32, appParams.lkme_secret.length());
         }
-        
+
         JSONObject linkSettingJson = appParams.link_setting;
         JSONObject iosJson = linkSettingJson.getJSONObject("ios");
         JSONObject adrJson = linkSettingJson.getJSONObject("android");
@@ -163,7 +177,7 @@ public class App {
 
         appParams.use_default_landing_page = desktopJson.getBoolean("use_default_landing_page");
         appParams.custom_landing_page = desktopJson.getString("custom_landing_page");
-
+        
 
         int ios_android_flag = ((appParams.is_yyb_available ? 1 : 0) << 4) + ((appParams.has_ios ? 1 : 0) << 3)
                 + ((appParams.ios_enable_ulink ? 1 : 0) << 2) + ((appParams.has_android ? 1 : 0) << 1)
@@ -171,7 +185,7 @@ public class App {
 
         appParams.ios_android_flag = ios_android_flag;
 
-     // dashboard　uri_scheme、package_name、bundle_id、App Prefix判重
+        // dashboard uri_scheme、package_name、bundle_id、App Prefix判重
         JSONArray errors = new JSONArray();
         if (appParams.has_android && StringUtils.isBlank(appParams.getAndroid_uri_scheme())) {
             errors.add(getErrorJson("android_uri_scheme", "请配置URI Scheme"));
@@ -248,10 +262,8 @@ public class App {
     @Path("/url_tags")
     @GET
     @Produces(MediaType.APPLICATION_JSON)
-    public String urlTags(@QueryParam("user_id") long user_id,
-                          @QueryParam("app_id") long app_id,
-                          @QueryParam("live_test_flag") String live_test_flag,
-                          @QueryParam("token") String token) {
+    public String urlTags(@QueryParam("user_id") long user_id, @QueryParam("app_id") long app_id,
+            @QueryParam("live_test_flag") String live_test_flag, @QueryParam("token") String token) {
         AppParams appParams = new AppParams();
         appParams.user_id = user_id;
         appParams.app_id = app_id;
@@ -334,16 +346,16 @@ public class App {
         resultJson.append("img_url", basePath + imageName + "?v=" + new Random().nextInt());
         return resultJson.flip().toString();
     }
-    
-    
-    private JSONObject getErrorJson(String errorParam, String errorMsg){
+
+
+    private JSONObject getErrorJson(String errorParam, String errorMsg) {
         JSONObject error = new JSONObject();
         error.put("err_code", 40001);
         error.put("err_param", errorParam);
         error.put("err_msg", errorMsg);
-        
+
         return error;
     }
 
-    
+
 }

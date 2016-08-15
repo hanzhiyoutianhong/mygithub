@@ -41,6 +41,8 @@ public class AppInfo implements Serializable {
     private String android_sha256_fingerprints;
     private int ios_android_flag;
 
+    private String trackId;
+
     private boolean use_default_landing_page;
     private String custom_landing_page;
 
@@ -268,6 +270,14 @@ public class AppInfo implements Serializable {
         return (ios_android_flag & 1) == 1;
     }
 
+    public String getTrackId() {
+        return trackId;
+    }
+
+    public void setTrackId(String trackId) {
+        this.trackId = trackId;
+    }
+
     public String toJson() {
         boolean is_yyb_available = ((ios_android_flag & 16) >> 4) == 1;
         boolean has_ios = ((ios_android_flag & 8) >> 3) == 1;
@@ -316,6 +326,7 @@ public class AppInfo implements Serializable {
         resultJson.append("lkme_secret", app_secret);
         resultJson.append("link_setting", link_setting.flip());
         resultJson.append("creation_time", creation_time);
+        resultJson.append("track_id",String.valueOf(trackId));
 
         return resultJson.flip().toString();
     }

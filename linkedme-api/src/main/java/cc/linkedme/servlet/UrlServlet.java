@@ -16,6 +16,7 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import net.sf.json.JSONObject;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.context.ApplicationContext;
 import org.springframework.web.context.support.WebApplicationContextUtils;
@@ -155,7 +156,7 @@ public class UrlServlet extends HttpServlet {
         String deviceModel = "other";
         if (client != null && client.device != null && client.device.family != null) {
             deviceModel = client.device.family.trim().toLowerCase();
-            deviceModel = null; //TODO 等sdk上线后删除此行
+            deviceModel = null; // TODO 等sdk上线后删除此行
         }
 
         // 如果没有cookie,设置cookie
@@ -434,6 +435,15 @@ public class UrlServlet extends HttpServlet {
         request.setAttribute("identityId", identityId);
         request.setAttribute("isValidIdentity", isValidIdentity);
         request.setAttribute("liveTestFlag", Constants.LIVE_TEST_API_FLAG);
+
+
+        if (isIOS && !Strings.isNullOrEmpty(appInfo.getTrackId())) {
+            request.setAttribute("trackId", appInfo.getTrackId());
+        } else if (isIOS && !Strings.isNullOrEmpty(appInfo.getIos_bundle_id())) {
+            String tracIdJsonStr = appService.getTracIdFromAppStore(appInfo.getIos_bundle_id());
+            JSONObject tracIdJson = JSONObject.fromObject(tracIdJsonStr);
+            request.setAttribute("trackId", tracIdJson.get("track_id"));
+        }
 
         request.setAttribute("DEBUG", DEBUG);
 

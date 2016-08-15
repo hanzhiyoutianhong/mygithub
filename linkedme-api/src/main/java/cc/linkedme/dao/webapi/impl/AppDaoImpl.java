@@ -227,6 +227,7 @@ public class AppDaoImpl extends BaseDao implements AppDao {
                 app.setIos_android_flag(resultSet.getInt("ios_android_flag"));
                 app.setUse_default_landing_page(resultSet.getBoolean("use_default_landing_page"));
                 app.setCustom_landing_page(resultSet.getString("custom_landing_page"));
+                app.setTrackId(resultSet.getString("track_id"));
 
                 appInfos.add(app);
                 return null;
@@ -249,7 +250,7 @@ public class AppDaoImpl extends BaseDao implements AppDao {
                 appParams.ios_app_prefix, appParams.android_uri_scheme, appParams.android_not_url, appParams.android_search_option,
                 appParams.google_play_url, appParams.android_custom_url, appParams.android_package_name,
                 appParams.android_sha256_fingerprints, appParams.ios_android_flag, appParams.use_default_landing_page,
-                appParams.custom_landing_page, appParams.app_id};
+                appParams.custom_landing_page,appParams.trackId,appParams.app_logo,appParams.app_id};
 
         try {
             res += jdbcTemplate.update(tableChannel.getSql(), values);
