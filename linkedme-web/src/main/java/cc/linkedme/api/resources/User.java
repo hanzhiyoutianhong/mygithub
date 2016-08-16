@@ -257,19 +257,24 @@ public class User {
     @Path("new_user_by_day")
     @POST
     @Produces({MediaType.APPLICATION_JSON})
-    public String newUserByDay(@FormParam("date") String date, @Context HttpServletRequest request) {
+    public String newUserByDay(@FormParam("date") String date, @FormParam("interval") int interval, @Context HttpServletRequest request) {
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
-        Date formatedDate;
+        if( Strings.isNullOrEmpty(date)) {
+            date = sdf.format(new Date());
+        }
+        Date end_date;
+        Date start_date;
         List<UserInfo> userInfos;
 
         try {
-            formatedDate = sdf.parse(date);
+            end_date = sdf.parse(date);
+            start_date = new Date( sdf.parse(date).getTime() - 24 * 60 * 60 * 1000 * interval );
         } catch (Exception e) {
             ApiLogger.error("User.newUserByDay parse date format error", e);
             throw new LMException(LMExceptionFactor.LM_ILLEGAL_PARAM_VALUE, "parse date format error");
         }
 
-        userInfos = userService.getNewUsersByDay(formatedDate);
+        userInfos = userService.getNewUsersByDay(start_date, end_date);
 
         JSONObject result = new JSONObject();
         JSONArray userArray = new JSONArray();
@@ -302,7 +307,7 @@ public class User {
     public String newUserToday(@Context HttpServletRequest request) {
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
         String date = sdf.format(new Date());
-        return newUserByDay(date, request);
+        return newUserByDay(date, 1, request);
     }
 
 }

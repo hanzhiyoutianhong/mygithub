@@ -237,7 +237,7 @@ public class UserDaoImpl extends BaseDao implements UserDao {
         return res;
     }
 
-    public List<UserInfo> getNewUsersByDay(Date date) {
+    public List<UserInfo> getNewUsersByDay(Date start_date, Date end_date) {
 
         TableChannel tableChannel = tableContainer.getTableChannel("userInfo", GET_NEW_REGISTERED_USER_BY_DAY, 0L, 0L);
         JdbcTemplate jdbcTemplate = tableChannel.getJdbcTemplate();
@@ -245,8 +245,8 @@ public class UserDaoImpl extends BaseDao implements UserDao {
         List<UserInfo> userInfos = new ArrayList<>();
 
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
-        String start_time = sdf.format(date) + " 00:00:00";
-        String end_time = sdf.format(date) + " 23:59:59";
+        String start_time = sdf.format(start_date) + " 00:00:00";
+        String end_time = sdf.format(end_date) + " 23:59:59";
 
         jdbcTemplate.query(tableChannel.getSql(), new Object[] {start_time, end_time}, new RowMapper() {
 

@@ -32,5 +32,5 @@ public interface UserDao {
 
     int requestDemo(DemoRequestParams demoRequestParams);
 
-    public List<UserInfo> getNewUsersByDay(Date date );
+    public List<UserInfo> getNewUsersByDay(Date start_date, Date end_date );
 }
