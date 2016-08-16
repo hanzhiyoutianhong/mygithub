@@ -259,7 +259,7 @@ public class User {
     @Produces({MediaType.APPLICATION_JSON})
     public String newUserByDay(@FormParam("date") String date, @FormParam("interval") int interval, @Context HttpServletRequest request) {
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
-        if( Strings.isNullOrEmpty(date)) {
+        if (Strings.isNullOrEmpty(date)) {
             date = sdf.format(new Date());
         }
 
@@ -269,7 +269,7 @@ public class User {
 
         try {
             end_date = sdf.parse(date);
-            start_date = new Date( sdf.parse(date).getTime() - 24 * 60 * 60 * 1000 * interval );
+            start_date = new Date(sdf.parse(date).getTime() - 24 * 60 * 60 * 1000 * interval);
         } catch (Exception e) {
             ApiLogger.error("User.newUserByDay parse date format error", e);
             throw new LMException(LMExceptionFactor.LM_ILLEGAL_PARAM_VALUE, "parse date format error");
