@@ -262,6 +262,7 @@ public class User {
         if( Strings.isNullOrEmpty(date)) {
             date = sdf.format(new Date());
         }
+
         Date end_date;
         Date start_date;
         List<UserInfo> userInfos;
@@ -307,7 +308,7 @@ public class User {
     public String newUserToday(@Context HttpServletRequest request) {
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
         String date = sdf.format(new Date());
-        return newUserByDay(date, 1, request);
+        return newUserByDay(date, 0, request);
     }
 
 }
