@@ -154,8 +154,8 @@ public class UserServiceImpl implements UserService {
         return false;
     }
 
-    public List<UserInfo> getNewUsersByDay(Date date) {
-        List<UserInfo> userInfos = userDao.getNewUsersByDay(date);
+    public List<UserInfo> getNewUsersByDay(Date start_date, Date end_date) {
+        List<UserInfo> userInfos = userDao.getNewUsersByDay(start_date, end_date);
         return userInfos;
     }
 
