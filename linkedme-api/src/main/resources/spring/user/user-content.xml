@@ -36,6 +36,7 @@
                 <entry key="UPDATE_TOKEN" value="update $db$.$tb$ set token = ? where email = ? and valid_status = '1'"/>
                 <entry key="SET_RANDOM_CODE" value="update $db$.$tb$ set random_code = ? where email = ? and valid_status = '1'"/>
                 <entry key="GET_TOKEN" value="select token from $db$.$tb$ where id = ? and valid_status = '1'"/>
+                <entry key="GET_NEW_REGISTERED_USER_BY_DAY" value="select email, name, phone_number, company, register_time from $db$.$tb$ where register_time between ? and ? and valid_status = '1'"/>
             </map>
         </property>
         <property name="jdbcTemplates">

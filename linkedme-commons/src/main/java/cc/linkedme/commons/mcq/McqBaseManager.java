@@ -10,7 +10,7 @@ public class McqBaseManager {
     /**
      * 是否从队列读取消息
      */
-    public static AtomicBoolean IS_ALL_READ = new AtomicBoolean(true);
+    public static AtomicBoolean IS_ALL_READ = new AtomicBoolean(false);
 
     /**
      * 停止所有队列读取消息
