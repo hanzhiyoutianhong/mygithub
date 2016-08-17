@@ -42,7 +42,7 @@ var lkmeAction = {
         var param = {
             app_id: Params.app_id,
             browser_fingerprint_id: Params.browser_fingerprint_id,
-            deeplink_id: Params.deeplink_id,
+            deeplink_id: Params.deeplink_id
         };
         $.ajax({
             method: "POST",
@@ -77,7 +77,7 @@ var lkmeAction = {
             destination: destination,
             identity_id: Params.identity_id,
             app_id: Params.app_id,
-            deeplink_id: Params.deeplink_id,
+            deeplink_id: Params.deeplink_id
         };
         $.ajax({
             method: "POST",
@@ -123,19 +123,19 @@ function start() {
         } else {
             if (Params.isUniversalLink()) {
                 DEBUG_ALERT("isUniversalLink = true");
-                iOSSafariLaunch(launchAppUrl, 2500, function () {
+                iOSSafariLaunch(null, 2500, function () {
+                    var destination = lkmeAction.destination.iOSUniversalLink;
                     $("#btnGotoAppStore").click(function () {
                         lkmeAction.recordJSUserClickEvent("gotoAppStore");
                         lkmeAction.recordId();
                         gotoUrl(Params.forward_url, destination);
                     });
                 });
-                var destination = lkmeAction.destination.iOSUniversalLink;
-                var div_universal_link_open_btn = '<div style="height:100%;"><img id="baseImg" src="' + baseImgPathLang + 'ios9_open.png"/><div cl    ass="img-pos" style=" position:absolute; top:80%;left:50%;margin-left:-70px;">        <button id="btnGotoAppStore" style="font-size: 0.1em; background    -color:#FFFFFF; border: 3px solid #959595; color: #959595; padding: 5px 0%; -webkit-border-radius: 30px; -moz-border-radius: 30px; border-radius: 30px    ;width:140px">' + gotoAppStore + "</button></div></div>";
+                var div_universal_link_open_btn = '<div style="height:100%;"><img id="baseImg" src="' + baseImgPathLang + 'ios9_open.png"/><div class="img-pos" style=" position:absolute; top:80%;left:50%;margin-left:-70px;">        <button id="btnGotoAppStore" style="font-size: 0.1em; background    -color:#FFFFFF; border: 3px solid #959595; color: #959595; padding: 5px 0%; -webkit-border-radius: 30px; -moz-border-radius: 30px; border-radius: 30px    ;width:140px">' + gotoAppStore + "</button></div></div>";
                 $("body").append(div_universal_link_open_btn);
-                baseImg.onload = function(){
-                    var h = $('#baseImg').height()*0.8;
-                    $('.img-pos').css('top',h+'px');
+                baseImg.onload = function() {
+                    var h = $('#baseImg').height() * 0.8;
+                    $('.img-pos').css('top', h + 'px');
                 };
             } else if (Params.isChrome()) {
                 DEBUG_ALERT("isChrome");
@@ -263,7 +263,9 @@ function iOSChromeLaunch(a, b) {
 function iOSSafariLaunch(a, b, c) {
     DEBUG_ALERT(a);
     lkmeAction.recordJSEvent(a);
-    window.location = a;
+    if(a != null){
+        window.location = a;
+    }
     var d = setTimeout(function () {
             c();
         },
