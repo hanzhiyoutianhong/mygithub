@@ -40,12 +40,12 @@ public class AppAnalysis {
             jsonArray.add(Util.getErrorMsg("40001", "company", "company 为空"));
         }
 
-        if (jsonArray.size() > 0) {
-            return jsonArray.toString();
+        if (Strings.isNullOrEmpty(date)) {
+            jsonArray.add(Util.getErrorMsg("40001", "date", "date 为空"));
         }
 
-        if (Strings.isNullOrEmpty(date)) {
-            date = Util.getCurrDate();
+        if (jsonArray.size() > 0) {
+            return jsonArray.toString();
         }
 
         return appAnalysisService.getChangedApps(company, date);

@@ -1034,20 +1034,19 @@ public class Util {
             httpResponse = httpClient.execute(get);
             result = EntityUtils.toString(httpResponse.getEntity(), HTTP.UTF_8);
         } catch (Exception e) {
-            ApiLogger.error("http connects failed, when try to connect "+api,e);
-
+            throw new LMException(LMExceptionFactor.LM_SYS_ERROR, "http connect failed");
         } finally {
             try {
                 if (httpClient != null) {
                     httpClient.close();
                 }
             } catch (IOException e) {
-                ApiLogger.error("httpClient close failed",e);
+                throw new LMException(LMExceptionFactor.LM_SYS_ERROR, "close http connection failed");
             }
         }
         if (httpResponse == null || httpResponse != null && httpResponse.getStatusLine().getStatusCode() != 200
                 || Strings.isNullOrEmpty(result)) {
-            ApiLogger.error("get data from "+api+" failed");
+            throw new LMException(LMExceptionFactor.LM_SYS_ERROR, "get data failed");
         }
         return result;
     }
