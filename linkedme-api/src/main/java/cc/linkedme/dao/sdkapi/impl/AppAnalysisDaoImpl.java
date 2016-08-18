@@ -2,6 +2,7 @@ package cc.linkedme.dao.sdkapi.impl;
 
 import cc.linkedme.commons.exception.LMException;
 import cc.linkedme.commons.exception.LMExceptionFactor;
+import cc.linkedme.commons.log.ApiLogger;
 import cc.linkedme.dao.BaseDao;
 import cc.linkedme.dao.sdkapi.AppAnalysisDao;
 import cc.linkedme.data.dao.strategy.TableChannel;
@@ -43,7 +44,7 @@ public class AppAnalysisDaoImpl extends BaseDao implements AppAnalysisDao {
             if (DaoUtil.isDuplicateInsert(e)) {
                 return switchApp(appId, company, ONLINE_APPS);
             }
-            throw new LMException(LMExceptionFactor.LM_FAILURE_DB_OP, "Failed to insert app_id: " + appId);
+            ApiLogger.error("Failed to insert into app_bundles where  app_id = "+appId, e);
         }
         return result;
     }
@@ -129,7 +130,7 @@ public class AppAnalysisDaoImpl extends BaseDao implements AppAnalysisDao {
         try {
             result += jdbcTemplate.update(tableChannel.getSql(), new Object[] {appId + "_" + company});
         } catch (DataAccessException e) {
-            throw new LMException(LMExceptionFactor.LM_FAILURE_DB_OP, "Failed to update app_id" + appId);
+            ApiLogger.error("Failed to update bundle_id from app_bundles when app_id = "+appId, e);
         }
         return result;
     }
@@ -143,7 +144,7 @@ public class AppAnalysisDaoImpl extends BaseDao implements AppAnalysisDao {
         try {
             result += jdbcTemplate.update(tableChannel.getSql(), new Object[] {status, appId + "_" + company});
         } catch (DataAccessException e) {
-            throw new LMException(LMExceptionFactor.LM_FAILURE_DB_OP, "Failed to update status, app_id = " + appId);
+            ApiLogger.error("Failed to update status from app_bundles when app_id = "+appId, e);
         }
         return result;
     }
