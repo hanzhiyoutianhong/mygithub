@@ -15,6 +15,8 @@ public class UserInfo {
     private String phone_number;
     private String company;
     private short role_id;
+    private String ios_bundle_id;
+    private String bundle_id_online_date;
     private String register_time;
     private String last_login_time;
     private String token;
@@ -85,6 +87,22 @@ public class UserInfo {
 
     public void setRole_id(short role_id) {
         this.role_id = role_id;
+    }
+
+    public String getIos_bundle_id() {
+        return ios_bundle_id;
+    }
+
+    public String getBundle_id_online_date() {
+        return bundle_id_online_date;
+    }
+
+    public void setBundle_id_online_date(String bundle_id_online_date) {
+        this.bundle_id_online_date = bundle_id_online_date;
+    }
+
+    public void setIos_bundle_id(String ios_bundle_id) {
+        this.ios_bundle_id = ios_bundle_id;
     }
 
     public String getRegister_time() {

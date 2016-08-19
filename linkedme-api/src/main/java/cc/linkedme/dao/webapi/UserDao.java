@@ -24,7 +24,7 @@ public interface UserDao {
 
     boolean queryEmail(String email); // 验证邮箱是否存在
 
-    boolean setRandomCode(String randomCode, String email);   //忘记密码后,重置密码前生成随机码
+    boolean setRandomCode(String randomCode, String email); // 忘记密码后,重置密码前生成随机码
 
     int updateToken(UserParams userParams);
 
@@ -32,5 +32,7 @@ public interface UserDao {
 
     int requestDemo(DemoRequestParams demoRequestParams);
 
-    public List<UserInfo> getNewUsersByDay(Date start_date, Date end_date );
+    public List<UserInfo> getNewUsersByDay(Date start_date, Date end_date);
+
+    public List<UserInfo> getUserInfoByBundleId(Date start_date, Date end_date);
 }

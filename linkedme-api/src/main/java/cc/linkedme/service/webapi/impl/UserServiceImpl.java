@@ -17,6 +17,7 @@ import cc.linkedme.dao.webapi.UserDao;
 import cc.linkedme.data.model.UserInfo;
 import cc.linkedme.data.model.params.DemoRequestParams;
 import cc.linkedme.data.model.params.UserParams;
+import cc.linkedme.service.sdkapi.AppAnalysisService;
 import cc.linkedme.service.webapi.UserService;
 
 /**
@@ -157,6 +158,10 @@ public class UserServiceImpl implements UserService {
     public List<UserInfo> getNewUsersByDay(Date start_date, Date end_date) {
         List<UserInfo> userInfos = userDao.getNewUsersByDay(start_date, end_date);
         return userInfos;
+    }
+
+    public List<UserInfo> getUserInfoByBundleId(Date start_date, Date end_date) {
+        return userDao.getUserInfoByBundleId(start_date, end_date);
     }
 
 }

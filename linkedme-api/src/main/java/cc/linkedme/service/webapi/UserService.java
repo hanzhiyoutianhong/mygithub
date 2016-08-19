@@ -32,4 +32,6 @@ public interface UserService {
     boolean validatePassword(String email ,String password);
 
     List<UserInfo> getNewUsersByDay(Date start_date, Date end_date);
+
+    List<UserInfo> getUserInfoByBundleId(Date start_date, Date end_date);
 }

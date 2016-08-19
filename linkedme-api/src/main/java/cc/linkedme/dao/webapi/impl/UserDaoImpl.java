@@ -38,6 +38,7 @@ public class UserDaoImpl extends BaseDao implements UserDao {
     public static final String SET_RANDOM_CODE = "SET_RANDOM_CODE";
     public static final String SET_LOGIN_TIME_AND_TOKEN = "SET_LOGIN_TIME_AND_TOKEN";
     public static final String GET_NEW_REGISTERED_USER_BY_DAY = "GET_NEW_REGISTERED_USER_BY_DAY";
+    public static final String GET_USER_INFO_BY_BUNDLE_ID = "GET_USER_INFO_BY_BUNDLE_IDGET_USER_INFO_BY_BUNDLE_ID";
 
     public static final String REQUEST_DEMO = "REQUEST_DEMO";
 
@@ -266,5 +267,45 @@ public class UserDaoImpl extends BaseDao implements UserDao {
         return userInfos;
     }
 
+    public List<UserInfo> getUserInfoByBundleId(Date start_date, Date end_date) {
+        TableChannel tableChannel = tableContainer.getTableChannel("userInfo", GET_USER_INFO_BY_BUNDLE_ID, 0L, 0L);
+        JdbcTemplate jdbcTemplate = tableChannel.getJdbcTemplate();
+
+        List<UserInfo> userInfos = new ArrayList<>();
+
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+        String start_time = sdf.format(start_date) + " 00:00:00";
+        String end_time = sdf.format(end_date) + " 23:59:59";
+        String dbName = "dashboard_0";
+        String userTbName = "user_info_0";
+        String appInfoTbName = "app_info_0";
+        String bundleTbName = "app_bundles_0";
+        String sql =
+                "select bundle.app_id, bundle.online_date, user.email, user.name, user.phone_number, user.company, user.register_time from "
+                        + dbName + "." + userTbName + " as user inner join " + dbName + "." + appInfoTbName
+                        + " as appinfo on user.id = appinfo.user_id right join " + dbName + "." + bundleTbName
+                        + " as bundle on bundle.app_id = appinfo.ios_bundle_id where bundle.online_date between " + "\'" + start_time + "\'"
+                        + " and " + "\'" + end_time + "\'"
+                        + " and user.valid_status = 1 and appinfo.valid_status = 1 and bundle.valid_status = 1;";
+        jdbcTemplate.query(sql, new RowMapper() {
+
+            public Object mapRow(ResultSet resultSet, int i) throws SQLException {
+                UserInfo userInfo = new UserInfo();
+                userInfo.setIos_bundle_id(resultSet.getString("app_id"));
+                userInfo.setBundle_id_online_date(resultSet.getString("online_date"));
+                userInfo.setEmail(resultSet.getString("email"));
+                userInfo.setName(resultSet.getString("name"));
+                userInfo.setPhone_number(resultSet.getString("phone_number"));
+                userInfo.setCompany(resultSet.getString("company"));
+                userInfo.setRegister_time(resultSet.getString("register_time"));
+
+                userInfos.add(userInfo);
+                return null;
+            }
+        });
+
+        return userInfos;
+    }
+    
 }
 
