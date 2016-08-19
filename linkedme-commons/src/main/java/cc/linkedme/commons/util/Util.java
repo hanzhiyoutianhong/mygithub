@@ -956,7 +956,7 @@ public class Util {
 
     /**
      * 得到最近interval天的每一天的日期
-     * 
+     *
      * @param interval 最近几天
      * @return
      */
@@ -1034,19 +1034,20 @@ public class Util {
             httpResponse = httpClient.execute(get);
             result = EntityUtils.toString(httpResponse.getEntity(), HTTP.UTF_8);
         } catch (Exception e) {
-            throw new LMException(LMExceptionFactor.LM_SYS_ERROR, "http connect failed");
+            ApiLogger.error("http connects failed, when try to connect "+api,e);
+
         } finally {
             try {
                 if (httpClient != null) {
                     httpClient.close();
                 }
             } catch (IOException e) {
-                throw new LMException(LMExceptionFactor.LM_SYS_ERROR, "close http connection failed");
+                ApiLogger.error("httpClient close failed",e);
             }
         }
         if (httpResponse == null || httpResponse != null && httpResponse.getStatusLine().getStatusCode() != 200
                 || Strings.isNullOrEmpty(result)) {
-            throw new LMException(LMExceptionFactor.LM_SYS_ERROR, "get data failed");
+            ApiLogger.error("get data from "+api+" failed");
         }
         return result;
     }
