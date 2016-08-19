@@ -34,30 +34,30 @@ public class AppAnalysis {
                                  @QueryParam("date") String date,
                                  @Context HttpServletRequest request) {
 
-        JSONArray jsonArray =  new JSONArray();
+        JSONArray jsonArray = new JSONArray();
 
         if (Strings.isNullOrEmpty(company)) {
             jsonArray.add(Util.getErrorMsg("40001", "company", "company 为空"));
-        }
-
-        if(Strings.isNullOrEmpty(date)){
-            jsonArray.add(Util.getErrorMsg("40001", "date", "date 为空"));
         }
 
         if (jsonArray.size() > 0) {
             return jsonArray.toString();
         }
 
-        return appAnalysisService.getChangedApps(company,date);
+        if (Strings.isNullOrEmpty(date)) {
+            date = Util.getCurrDate();
+        }
+
+        return appAnalysisService.getChangedApps(company, date);
     }
 
     @Path("/get_apps")
     @GET
     @Produces({MediaType.APPLICATION_JSON})
     public String getApps(@QueryParam("company") String company,
-                                 @Context HttpServletRequest request) {
+                          @Context HttpServletRequest request) {
 
-        JSONArray jsonArray =  new JSONArray();
+        JSONArray jsonArray = new JSONArray();
 
         if (Strings.isNullOrEmpty(company)) {
             jsonArray.add(Util.getErrorMsg("40001", "company", "company 为空"));
@@ -78,9 +78,9 @@ public class AppAnalysis {
                         @Context HttpServletRequest request) {
 
         JSONObject jsonObject = new JSONObject();
-        jsonObject.put("magicwindow",appAnalysisService.count("magicwindow",startDate, endDate));
-        jsonObject.put("deepshare",appAnalysisService.count("deepshare",startDate, endDate));
-        jsonObject.put("linkedme",appAnalysisService.count("linkedme",startDate, endDate));
+        jsonObject.put("magicwindow", appAnalysisService.count("magicwindow", startDate, endDate));
+        jsonObject.put("deepshare", appAnalysisService.count("deepshare", startDate, endDate));
+        jsonObject.put("linkedme", appAnalysisService.count("linkedme", startDate, endDate));
 
         return jsonObject.toString();
     }
@@ -93,9 +93,9 @@ public class AppAnalysis {
 
         JSONObject jsonObject = new JSONObject();
 
-        jsonObject.put("magicwindow",appAnalysisService.count("magicwindow",interval));
-        jsonObject.put("deepshare",appAnalysisService.count("deepshare",interval));
-        jsonObject.put("linkedme",appAnalysisService.count("linkedme",interval));
+        jsonObject.put("magicwindow", appAnalysisService.count("magicwindow", interval));
+        jsonObject.put("deepshare", appAnalysisService.count("deepshare", interval));
+        jsonObject.put("linkedme", appAnalysisService.count("linkedme", interval));
 
         return jsonObject.toString();
     }
@@ -110,17 +110,17 @@ public class AppAnalysis {
                                @QueryParam("status") String status,
                                @Context HttpServletRequest request) {
 
-        JSONArray jsonArray =  new JSONArray();
+        JSONArray jsonArray = new JSONArray();
 
         if (Strings.isNullOrEmpty(appId)) {
             jsonArray.add(Util.getErrorMsg("40001", "bundled_id", "bundled_id 为空"));
         }
 
-        if(Strings.isNullOrEmpty(company)){
+        if (Strings.isNullOrEmpty(company)) {
             jsonArray.add(Util.getErrorMsg("40001", "company", "company 为空"));
         }
 
-        if(Strings.isNullOrEmpty(status)){
+        if (Strings.isNullOrEmpty(status)) {
             jsonArray.add(Util.getErrorMsg("40001", "status", "status 为空"));
         }
 

@@ -92,6 +92,20 @@
         } else {
             document.write("<script src='/js/cn/langconfig.js'><\/script>");
         }
+
+        var appleId;
+        var uriSchemeParam = Params.uri_scheme + "://?click_id=" + Params.click_id;
+        if(Params.app_id == 10286) {
+            appleId = "987338116";
+        } else if(Params.app_id == 10248){
+            appleId = "1071366040";
+        }
+
+        var oMeta = document.createElement('meta');
+        oMeta.setAttribute('name', 'apple-itunes-app');
+        oMeta.setAttribute('content', "app-id=" +appleId+ ", app-argument="+uriSchemeParam);
+        document.getElementsByTagName('head')[0].appendChild(oMeta);
+
     </script>
     <script src="/js/linkedme-redirect4.js"></script>
     <title></title>
