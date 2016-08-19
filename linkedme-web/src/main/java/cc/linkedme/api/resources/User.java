@@ -13,6 +13,8 @@ import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 
 import cc.linkedme.commons.log.ApiLogger;
+import cc.linkedme.service.sdkapi.AppAnalysisService;
+import cc.linkedme.service.webapi.AppService;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import org.springframework.stereotype.Component;
@@ -311,4 +313,55 @@ public class User {
         return newUserByDay(date, 0, request);
     }
 
+    @Path("user_info_by_bundle_id")
+    @POST
+    @Produces({MediaType.APPLICATION_JSON})
+    public String getUserInfoByBundleId(@FormParam("date") String date,
+                                        @FormParam("interval") int interval,
+                                        @Context HttpServletRequest request) {
+
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+        if (Strings.isNullOrEmpty(date)) {
+            date = sdf.format(new Date());
+        }
+
+        Date end_date;
+        Date start_date;
+        List<UserInfo> userInfos;
+        try {
+            end_date = sdf.parse(date);
+            start_date = new Date(sdf.parse(date).getTime() - 24 * 60 * 60 * 1000 * interval);
+        } catch (Exception e) {
+            ApiLogger.error("User.newUserByDay parse date format error", e);
+            throw new LMException(LMExceptionFactor.LM_ILLEGAL_PARAM_VALUE, "parse date format error");
+        }
+
+        userInfos = userService.getUserInfoByBundleId(start_date, end_date);
+
+        JSONObject result = new JSONObject();
+        JSONArray userArray = new JSONArray();
+
+        int newUserCount = 0;
+        if (userInfos != null) {
+            newUserCount = userInfos.size();
+        }
+
+        result.put("count", newUserCount);
+
+        for (UserInfo userInfo : userInfos) {
+            JSONObject user = new JSONObject();
+            user.put("bundle_id", userInfo.getIos_bundle_id());
+            user.put("email", userInfo.getEmail());
+            user.put("name", userInfo.getName());
+            user.put("phone_number", userInfo.getPhone_number());
+            user.put("company", userInfo.getCompany());
+            user.put("register_time", userInfo.getRegister_time());
+            userArray.add(user);
+        }
+
+        result.put("user_list", userArray);
+
+        return result.toJSONString();
+
+    }
 }
