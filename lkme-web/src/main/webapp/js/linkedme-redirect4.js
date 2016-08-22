@@ -274,11 +274,11 @@ function iOSSafariLaunch(a, b, c) {
 }
 
 function gotoUC(a) {
-    var div_allow_deeplink_forward = '<div style="background-image:url(' + baseImgPathLang + 'open_app.png);background-size: 100% 100%;width:100%;height:100%;"><div style="text-align:center; width:100%; position:absolute; top:35%;"><p id="textCountDown" style="font-size: 1em; color: #959595; padding: 6px 20px; -webkit-border-radius: 30px; -moz-border-radius: 30px; border-radius: 30px;"></p></div></div>';
+    var div_allow_deeplink_forward = '<div style="height:100%;"><img id="baseImg" src="' + baseImgPathLang + 'open_app.png"/><div style="text-align:center; width:100%; position:absolute; top:35%;"><p id="textCountDown" style="font-size: 1em; color: #959595; padding: 6px 20px; -webkit-border-radius: 30px; -moz-border-radius: 30px; border-radius: 30px;"></p></div></div>';
     dstLocation = lkmeAction.destination.androidBrowser.replace(/{browserName}/g, "UC");
     var b = $("body").html();
     $("body").append(div_allow_deeplink_forward);
-    var c = 4,
+    var c = 2,
         d = function () {
             c--;
             $("#textCountDown").html(c);
@@ -294,21 +294,29 @@ function gotoUC(a) {
 function gotoCannotForwardPage() {
     DEBUG_ALERT("cannot launch app");
     var destination;
+    var div_cannot_forward_with_btn = '<div style="height:100%;text-align:center;"><img id="baseImg" src="' + baseImgPathLang + 'cannot_forward.png"/><div class="img-pos" style="position:absolute;top:80%;width:100%;margin:0 auto;"><button id="btnGotoAndroidDownload" style="font-size: 1em; background-color:#FFF !important;color:#959595; border: 1px solid #959595; padding: 6px 30px; -webkit-border-radius: 30px; -moz-border-radius: 30px; border-radius: 30px;">';
     if (Params.isDownloadDirectly()) {
         destination = lkmeAction.destination.androidCannotForward.replace(/{dest}/g, "download");
-        var div_cannot_forward_with_download_btn = '<div style="background-image:url(' + baseImgPathLang + 'cannot_forward.png);background-size: 100% 100%;width:100%;height:100%;">    <div style="text-align:center; width:100%; position:absolute; top:80%;">        <button id="btnGotoAndroidDownload" style="font-size: 1em; background-color:#FFFFFF; border: 3px solid #959595; color: #959595; padding: 6px 20px; -webkit-border-radius: 30px; -moz-border-radius: 30px; border-radius: 30px;">' + downloadAPK + "</button>    </div></div>";
-        $("body").append(div_cannot_forward_with_download_btn), $("#btnGotoAndroidDownload").click(function () {
+        div_cannot_forward_with_btn = div_cannot_forward_with_btn + downloadAPK + "</button></div></div>";
+        $("body").append(div_cannot_forward_with_btn);
+        $("#btnGotoAndroidDownload").click(function () {
             lkmeAction.recordJSUserClickEvent("gotoAndroidDirectDownload");
             gotoUrl(Params.forward_url);
         });
     } else {
         destination = lkmeAction.destination.androidCannotForward.replace(/{dest}/g, "market");
-        var div_cannot_forward_with_market_btn = '<div style="background-image:url(' + baseImgPathLang + 'cannot_forward.png);background-size: 100% 100%;width:100%;height:100%;">    <div style="text-align:center; width:100%; position:absolute; top:80%;">        <button id="btnGotoAndroidMarket" style="font-size: 1em; background-color:#FFFFFF; border: 3px solid #959595; color: #959595; padding: 6px 20px; -webkit-border-radius: 30px; -moz-border-radius: 30px; border-radius: 30px;">' + gotoStore + "</button></div></div>";
-        $("body").append(div_cannot_forward_with_market_btn), $("#btnGotoAndroidMarket").click(function () {
+        div_cannot_forward_with_btn = div_cannot_forward_with_btn + gotoStore + "</button></div></div>";
+        $("body").append(div_cannot_forward_with_btn);
+        $("#btnGotoAndroidDownload").click(function () {
             lkmeAction.recordJSUserClickEvent("gotoAndroidMarket");
             gotoAndroidMarket();
         });
     }
+
+    baseImg.onload = function() {
+        var h = $('#baseImg').height() * 0.8;
+        $('.img-pos').css('top', h + 'px');
+    };
 
     lkmeAction.recordJSEvent(destination);
     lkmeAction.recordId();
@@ -330,7 +338,7 @@ function gotoAndroidAppInstall() {
     if (Params.isDownloadDirectly()) {
         destination = lkmeAction.destination.androidLoadLandingPage.replace(/{dest}/g, "download");
         DEBUG_ALERT(destination);
-        div_goto_landingpage = div_goto_landingpage.replace(/{Bg_Url}/g, baseImgPathLang + "bg.png").replace(/{app_name}/g, Params.app_name).replace(/{logo_url}/g, Params.logo_url).replace(/{Download_title}/g, Params.app_title).replace(/{Download_msg}/g, Params.app_slogan).replace(/{Btn_landingpage_text}/g, downloadAPK).replace(/{Border_width}/g, "3").replace(/{Element_type}/g, "button");
+        div_goto_landingpage = div_goto_landingpage.replace(/{Bg_Url}/g, baseImgPathLang + "bg.png").replace(/{app_name}/g, Params.app_name).replace(/{logo_url}/g, Params.logo_url).replace(/{Btn_landingpage_text}/g, downloadAPK).replace(/{Border_width}/g, "3").replace(/{Element_type}/g, "button");
         $("body").append(div_goto_landingpage);
         lkmeAction.recordJSEvent(destination);
         $("#btnGotoLandingPage").click(function () {
@@ -340,13 +348,13 @@ function gotoAndroidAppInstall() {
     } else if (Params.isCannotGoMarket()) {
         destination = lkmeAction.destination.androidCannotLoadLandingPage.replace(/{dest}/g, "market");
         DEBUG_ALERT(destination);
-        div_goto_landingpage = div_goto_landingpage.replace(/{Bg_Url}/g, baseImgPathLang + "bg.png").replace(/{app_name}/g, Params.app_name).replace(/{logo_url}/g, Params.logo_url).replace(/{Download_title}/g, Params.app_title).replace(/{Download_msg}/g, Params.app_slogan).replace(/{Btn_landingpage_text}/g, openStore).replace(/{Border_width}/g, "0").replace(/{Element_type}/g, "p");
+        div_goto_landingpage = div_goto_landingpage.replace(/{Bg_Url}/g, baseImgPathLang + "bg.png").replace(/{app_name}/g, Params.app_name).replace(/{logo_url}/g, Params.logo_url).replace(/{Btn_landingpage_text}/g, openStore).replace(/{Border_width}/g, "0").replace(/{Element_type}/g, "p");
         $("body").append(div_goto_landingpage);
         lkmeAction.recordJSEvent(destination);
     } else if (Params.isUC()) {
         destination = lkmeAction.destination.androidLoadLandingPage.replace(/{dest}/g, "uc_browser_market");
         DEBUG_ALERT(destination);
-        div_goto_landingpage = div_goto_landingpage.replace(/{Bg_Url}/g, baseImgPathLang + "bg.png").replace(/{app_name}/g, Params.app_name).replace(/{logo_url}/g, Params.logo_url).replace(/{Download_title}/g, Params.app_title).replace(/{Download_msg}/g, Params.app_slogan).replace(/{Btn_landingpage_text}/g, gotoStore).replace(/{Border_width}/g, "3").replace(/{Element_type}/g, "button");
+        div_goto_landingpage = div_goto_landingpage.replace(/{Bg_Url}/g, baseImgPathLang + "bg.png").replace(/{app_name}/g, Params.app_name).replace(/{logo_url}/g, Params.logo_url).replace(/{Btn_landingpage_text}/g, gotoStore).replace(/{Border_width}/g, "3").replace(/{Element_type}/g, "button");
         $("body").append(div_goto_landingpage);
         lkmeAction.recordJSEvent(destination);
         $("#btnGotoLandingPage").click(function () {
