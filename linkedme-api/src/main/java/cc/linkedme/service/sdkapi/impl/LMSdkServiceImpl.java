@@ -428,7 +428,7 @@ public class LMSdkServiceImpl implements LMSdkService {
             return ip;
         }
         String[] ipArr = ip.split(",");
-        return ipArr[ipArr.length - 1];
+        return ipArr[ipArr.length - 1].trim();
     }
 
     private static String getClickIdFromUri(String deepLinkUrl) {
