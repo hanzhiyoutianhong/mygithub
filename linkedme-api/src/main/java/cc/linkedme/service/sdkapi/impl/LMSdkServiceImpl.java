@@ -258,8 +258,10 @@ public class LMSdkServiceImpl implements LMSdkService {
         if ("ios".equals(installParams.os.trim().toLowerCase())) {
             deviceModel = "iphone";
         }
+        String clientIp = getClientIp(installParams.clientIP);
+
         String deviceFingerprintId = createFingerprintId(String.valueOf(appId), installParams.os, installParams.os_version,
-                deviceModel.trim().toLowerCase(), installParams.clientIP);
+                deviceModel.trim().toLowerCase(), clientIp);
 
         if (Strings.isNullOrEmpty(identityIdStr)) { // 之前不存在<device, identityId>
             operationType = FingerPrintInfo.OperationType.ADD;
@@ -421,6 +423,14 @@ public class LMSdkServiceImpl implements LMSdkService {
         return MD5Utils.md5(deviceParamsStr);
     }
 
+    private static String getClientIp(String ip) {
+        if (Strings.isNullOrEmpty(ip)) {
+            return ip;
+        }
+        String[] ipArr = ip.split(",");
+        return ipArr[ipArr.length - 1];
+    }
+
     private static String getClickIdFromUri(String deepLinkUrl) {
         String clickId = "";
         if (Strings.isNullOrEmpty(deepLinkUrl)) {
@@ -504,8 +514,9 @@ public class LMSdkServiceImpl implements LMSdkService {
                 if (!Strings.isNullOrEmpty(openParams.device_model)) {
                     deviceModel = openParams.device_model.trim().toLowerCase();
                 }
+                String clientIp = getClientIp(openParams.clientIP);
                 String deviceFingerprintId =
-                        createFingerprintId(String.valueOf(appId), openParams.os, openParams.os_version, deviceModel, openParams.clientIP);
+                        createFingerprintId(String.valueOf(appId), openParams.os, openParams.os_version, deviceModel, clientIp);
                 String deepLinkIdStr = browserFingerprintIdForYYBMemCache.get(deviceFingerprintId + ".yyb");
                 if (!Strings.isNullOrEmpty(deepLinkIdStr)) {
                     deepLinkId = Long.parseLong(deepLinkIdStr);
