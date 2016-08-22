@@ -117,8 +117,8 @@ public class LMSdkServiceImpl implements LMSdkService {
         JedisPort linkedmeKeyClient = linkedmeKeyShardingSupport.getClient(webInitParams.getLinkedmeKey());
         String appId = linkedmeKeyClient.hget(webInitParams.getLinkedmeKey(), "appid");
 
-        ApiLogger.biz(String.format("%s\t%s\t%s\t%s\t%s", webInitParams.getClientIP(), "webinit", appId, webInitParams.getLinkedmeKey(),
-                webInitParams.getIdentityId()));
+        ApiLogger.biz(String.format("%s\t%s\t%s\t%s\t%s\t%s", webInitParams.getClientIP(), "webinit", appId, webInitParams.getLinkedmeKey(),
+                webInitParams.getIdentityId(),webInitParams.getType()));
 
         return resultJson.toString();
 
@@ -129,9 +129,9 @@ public class LMSdkServiceImpl implements LMSdkService {
         JedisPort linkedmeKeyClient = linkedmeKeyShardingSupport.getClient(webCloseParams.getLinkedmeKey());
         String appId = linkedmeKeyClient.hget(webCloseParams.getLinkedmeKey(), "appid");
 
-        ApiLogger.biz(String.format("%s\t%s\t%s\t%s\t%s\t%s\t%s", webCloseParams.getClientIP(), "webclose", appId,
+        ApiLogger.biz(String.format("%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s", webCloseParams.getClientIP(), "webclose", appId,
                 webCloseParams.getLinkedmeKey(), webCloseParams.getIdentityId(), webCloseParams.getSessionId(),
-                webCloseParams.getTimestamp()));
+                webCloseParams.getTimestamp(),webCloseParams.getType()));
 
     }
 
