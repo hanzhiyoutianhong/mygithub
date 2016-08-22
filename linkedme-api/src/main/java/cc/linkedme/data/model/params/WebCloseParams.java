@@ -10,6 +10,7 @@ public class WebCloseParams {
     private String identityId;
     private long timestamp;
     private String clientIP;
+    private String type;
 
     public String getLinkedmeKey() {
         return linkedmeKey;
@@ -49,5 +50,13 @@ public class WebCloseParams {
 
     public void setClientIP(String clientIP) {
         this.clientIP = clientIP;
+    }
+
+    public String getType() {
+        return type;
+    }
+
+    public void setType(String type) {
+        this.type = type;
     }
 }

@@ -8,6 +8,7 @@ public class WebInitParams {
     private String linkedmeKey;
     private String identityId;
     private String clientIP;
+    private String type;
 
     public String getLinkedmeKey() {
         return linkedmeKey;
@@ -34,5 +35,11 @@ public class WebInitParams {
     }
 
 
+    public String getType() {
+        return type;
+    }
 
+    public void setType(String type) {
+        this.type = type;
+    }
 }

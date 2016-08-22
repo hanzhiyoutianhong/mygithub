@@ -278,7 +278,7 @@ function gotoUC(a) {
     dstLocation = lkmeAction.destination.androidBrowser.replace(/{browserName}/g, "UC");
     var b = $("body").html();
     $("body").append(div_allow_deeplink_forward);
-    var c = 2,
+    var c = 4,
         d = function () {
             c--;
             $("#textCountDown").html(c);
