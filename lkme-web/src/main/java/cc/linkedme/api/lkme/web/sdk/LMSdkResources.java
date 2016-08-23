@@ -54,15 +54,21 @@ public class LMSdkResources {
     @Produces(MediaType.APPLICATION_JSON)
     public String webinit(@QueryParam("linkedme_key") String linkedmeKey,
                           @QueryParam("identity_id") String identityId,
+                          @QueryParam("type") String type,
                           @Context HttpServletRequest request) {
 
         if (Strings.isNullOrEmpty(linkedmeKey)) {
             throw new LMException(LMExceptionFactor.LM_MISSING_PARAM, linkedmeKey);
         }
 
+        if (Strings.isNullOrEmpty(type)) {
+            type = "live";
+        }
+
         WebInitParams webInitParams = new WebInitParams();
         webInitParams.setLinkedmeKey(Util.formatLinkedmeKey(linkedmeKey));
         webInitParams.setIdentityId(identityId);
+        webInitParams.setType(type);
 
         String clientIP = request.getHeader("x-forwarded-for");
         webInitParams.setClientIP(clientIP);
@@ -79,10 +85,15 @@ public class LMSdkResources {
                            @FormParam("session_id") String sessionId,
                            @FormParam("identity_id") String identityId,
                            @FormParam("timestamp") long timestamp,
+                           @FormParam("type") String type,
                            @Context HttpServletRequest request) {
 
         if (Strings.isNullOrEmpty(linkedmeKey)) {
             throw new LMException(LMExceptionFactor.LM_MISSING_PARAM, linkedmeKey);
+        }
+
+        if (Strings.isNullOrEmpty(type)) {
+            type = "live";
         }
 
         String clientIP = request.getHeader("x-forwarded-for");
@@ -92,6 +103,7 @@ public class LMSdkResources {
         webCloseParams.setIdentityId(identityId);
         webCloseParams.setTimestamp(timestamp);
         webCloseParams.setClientIP(clientIP);
+        webCloseParams.setType(type);
 
         lmSdkService.webClose(webCloseParams);
 

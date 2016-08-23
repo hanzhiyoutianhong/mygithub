@@ -51,14 +51,14 @@ public class User {
         JSONArray jsonArray = new JSONArray();
 
         if (Strings.isNullOrEmpty(userParams.email)) {
-            jsonArray.add(getErrorMsg("40000","email","未填写邮箱!"));
-        }else if(userService.validateEmail(userParams)){
-            jsonArray.add(getErrorMsg("40004","email","邮箱已被注册"));
-        }else{
+            jsonArray.add(getErrorMsg("40000", "email", "未填写邮箱!"));
+        } else if (userService.validateEmail(userParams)) {
+            jsonArray.add(getErrorMsg("40004", "email", "邮箱已被注册"));
+        } else {
             userParams.email = userParams.email.toLowerCase();
         }
 
-        if(jsonArray.size() > 0){
+        if (jsonArray.size() > 0) {
             return jsonArray.toString();
         }
 
@@ -80,21 +80,21 @@ public class User {
         boolean emailIsValid = false;
 
         if (Strings.isNullOrEmpty(userParams.email)) {
-            jsonArray.add(getErrorMsg("40000","email","未填写邮箱!"));
-        }else if(!userService.validateEmail(userParams)){
-            jsonArray.add(getErrorMsg("40005","email","邮箱不存在!"));
-        }else{
+            jsonArray.add(getErrorMsg("40000", "email", "未填写邮箱!"));
+        } else if (!userService.validateEmail(userParams)) {
+            jsonArray.add(getErrorMsg("40005", "email", "邮箱不存在!"));
+        } else {
             emailIsValid = true;
             userParams.email = userParams.email.toLowerCase();
         }
 
-        if(Strings.isNullOrEmpty(userParams.pwd)){
-            jsonArray.add(getErrorMsg("40006","pwd","密码为空!"));
-        }else if(emailIsValid && !userService.validatePassword(userParams.email,userParams.pwd)){
-            jsonArray.add(getErrorMsg("40006","pwd","密码错误!"));
+        if (Strings.isNullOrEmpty(userParams.pwd)) {
+            jsonArray.add(getErrorMsg("40006", "pwd", "密码为空!"));
+        } else if (emailIsValid && !userService.validatePassword(userParams.email, userParams.pwd)) {
+            jsonArray.add(getErrorMsg("40006", "pwd", "密码错误!"));
         }
 
-        if(jsonArray.size() > 0){
+        if (jsonArray.size() > 0) {
             return jsonArray.toString();
         }
 
@@ -135,7 +135,8 @@ public class User {
     @GET
     @Produces({MediaType.APPLICATION_JSON})
 
-    public String validate_email(@QueryParam("email") String email, @QueryParam("token") String token) {
+    public String validate_email(@QueryParam("email") String email,
+                                 @QueryParam("token") String token) {
         if (email != null)
             email = email.toLowerCase();
         else {
@@ -161,25 +162,25 @@ public class User {
         boolean emailIsValid = false;
 
         if (Strings.isNullOrEmpty(userParams.email)) {
-            jsonArray.add(getErrorMsg("40000","email","未填写邮箱!"));
-        }else if(!userService.validateEmail(userParams)){
-            jsonArray.add(getErrorMsg("40005","email","邮箱不存在!"));
-        }else{
+            jsonArray.add(getErrorMsg("40000", "email", "未填写邮箱!"));
+        } else if (!userService.validateEmail(userParams)) {
+            jsonArray.add(getErrorMsg("40005", "email", "邮箱不存在!"));
+        } else {
             emailIsValid = true;
             userParams.email = userParams.email.toLowerCase();
         }
 
-        if(Strings.isNullOrEmpty(userParams.old_pwd)){
-            jsonArray.add(getErrorMsg("40006","old_pwd","旧密码为空!"));
-        }else if(emailIsValid && !userService.validatePassword(userParams.email,userParams.old_pwd)){
-            jsonArray.add(getErrorMsg("40006","old_pwd","旧密码错误!"));
+        if (Strings.isNullOrEmpty(userParams.old_pwd)) {
+            jsonArray.add(getErrorMsg("40006", "old_pwd", "旧密码为空!"));
+        } else if (emailIsValid && !userService.validatePassword(userParams.email, userParams.old_pwd)) {
+            jsonArray.add(getErrorMsg("40006", "old_pwd", "旧密码错误!"));
         }
 
-        if(Strings.isNullOrEmpty(userParams.new_pwd)){
-            jsonArray.add(getErrorMsg("40006","new_pwd","新密码为空!"));
+        if (Strings.isNullOrEmpty(userParams.new_pwd)) {
+            jsonArray.add(getErrorMsg("40006", "new_pwd", "新密码为空!"));
         }
 
-        if(jsonArray.size() > 0){
+        if (jsonArray.size() > 0) {
             return jsonArray.toString();
         }
 
@@ -199,13 +200,13 @@ public class User {
 
         JSONArray jsonArray = new JSONArray();
         if (userParams.email == null) {
-            jsonArray.add(getErrorMsg("40000","email","未填写邮箱!"));
-        }else if(!userService.validateEmail(userParams)){
-            jsonArray.add(getErrorMsg("40005","email","邮箱不存在!"));
-        }else{
+            jsonArray.add(getErrorMsg("40000", "email", "未填写邮箱!"));
+        } else if (!userService.validateEmail(userParams)) {
+            jsonArray.add(getErrorMsg("40005", "email", "邮箱不存在!"));
+        } else {
             userParams.email = userParams.email.toLowerCase();
         }
-        if(jsonArray.size() > 0){
+        if (jsonArray.size() > 0) {
             return jsonArray.toString();
         }
 
@@ -224,9 +225,9 @@ public class User {
     public String set_password(UserParams userParams, @Context HttpServletRequest request) {
         JSONArray jsonArray = new JSONArray();
         if (Strings.isNullOrEmpty(userParams.new_pwd)) {
-            jsonArray.add(getErrorMsg("40006","new_pwd","新密码为空!"));
+            jsonArray.add(getErrorMsg("40006", "new_pwd", "新密码为空!"));
         }
-        if(jsonArray.size() > 0){
+        if (jsonArray.size() > 0) {
             return jsonArray.toString();
         }
         if (userService.resetForgottenPwd(userParams)) {
@@ -248,18 +249,20 @@ public class User {
         return resultJson.flip().toString();
     }
 
-    public JSONObject getErrorMsg(String errCode,String errParam,String errMsg){
+    public JSONObject getErrorMsg(String errCode, String errParam, String errMsg) {
         JSONObject jsonObject = new JSONObject();
-        jsonObject.put("err_code",errCode);
-        jsonObject.put("err_param",errParam);
-        jsonObject.put("err_msg",errMsg);
+        jsonObject.put("err_code", errCode);
+        jsonObject.put("err_param", errParam);
+        jsonObject.put("err_msg", errMsg);
         return jsonObject;
     }
 
     @Path("new_user_by_day")
     @POST
     @Produces({MediaType.APPLICATION_JSON})
-    public String newUserByDay(@FormParam("date") String date, @FormParam("interval") int interval, @Context HttpServletRequest request) {
+    public String newUserByDay(@FormParam("date") String date,
+                               @FormParam("interval") int interval,
+                               @Context HttpServletRequest request) {
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
         if (Strings.isNullOrEmpty(date)) {
             date = sdf.format(new Date());
