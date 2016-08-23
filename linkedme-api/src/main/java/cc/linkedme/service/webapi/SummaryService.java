@@ -3,10 +3,12 @@ package cc.linkedme.service.webapi;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.time.LocalDate;
 import java.util.*;
 
 import javax.annotation.Resource;
 
+import cc.linkedme.enums.RequestEnv;
 import org.apache.commons.collections.map.HashedMap;
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.lang3.time.DateUtils;
@@ -38,6 +40,7 @@ import cc.linkedme.data.model.params.SummaryButtonParams;
 import cc.linkedme.data.model.params.SummaryDeepLinkParams;
 import net.sf.json.JSONArray;
 import net.sf.json.JSONObject;
+import sun.java2d.pipe.SpanShapeRenderer;
 
 /**
  * Created by LinkedME01 on 16/3/20.
@@ -63,6 +66,100 @@ public class SummaryService {
 
     @Resource
     ShardingSupportHash<JedisPort> btnCountShardingSupport;
+
+
+    /**
+     * 获取某app在指定时间范围内的概览信息，具体如下：
+     *
+     *
+     * @param startDate 开始日期（yyyy-MM-dd）
+     * @param endDate 结束日期（yyyy-MM-dd）
+     * @param requestEnv test or live
+     *
+     */
+    public String getDeepLinkOverview(int appId, Date startDate, Date endDate, RequestEnv requestEnv){
+
+        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+        List<DeepLinkDateCount> deepLinkCounts = new ArrayList<>();
+
+        Calendar endCalendar = DateUtils.toCalendar(endDate);
+        String endDateStr = dateFormat.format(endDate);
+
+        Calendar durationBegin = DateUtils.toCalendar(startDate);
+        Calendar durationEnd = DateUtils.toCalendar(startDate);
+        durationEnd.set(Calendar.DAY_OF_MONTH, durationEnd.getActualMaximum(Calendar.DAY_OF_MONTH));
+
+        while(!durationBegin.after(endCalendar)){
+            String durationBeginStr = dateFormat.format(durationBegin.getTime());
+            if(durationEnd.before(endCalendar)){
+                String durationEndStr = dateFormat.format(durationEnd.getTime());
+                //TODO 添加live/test标记支持
+                deepLinkCounts.addAll(deepLinkDateCountDao.getDeepLinksDateCounts(appId, durationBeginStr, durationEndStr));
+            } else {
+                deepLinkCounts.addAll(deepLinkDateCountDao.getDeepLinksDateCounts(appId, durationBeginStr, endDateStr));
+            }
+
+            durationBegin = DateUtils.ceiling(durationBegin, Calendar.MONTH);
+            durationEnd = DateUtils.toCalendar(durationBegin.getTime());
+            durationEnd.set(Calendar.DAY_OF_MONTH, durationEnd.getActualMaximum(Calendar.DAY_OF_MONTH));
+        }
+
+        statisticOverview(deepLinkCounts);
+
+        return null;
+    }
+
+
+    private void statisticOverview(List<DeepLinkDateCount> deepLinkCounts) {
+        Map<String, Long> stat = getInitedHashMap("click", "open", "install", "scan");
+        Map<String, Long> iosStat = getInitedHashMap("click", "open", "install");
+        Map<String, Long> androidStat = getInitedHashMap("click", "open", "install");
+        Map<String, Long> pcStat = getInitedHashMap("click", "pc_ios_scan", "pc_ios_open", "pc_ios_install", "pc_adr_scan", "pc_adr_open", "pc_adr_install");
+
+        /** deeplink_id -- click计数 */
+        Map<String, Long> clickRank = new TreeMap<>();
+        Map<String, Long> openRank = new TreeMap<>();
+        Map<String, Long> installRank = new TreeMap<>();
+        Map<String, Long> scanRank = new TreeMap<>();
+
+        for(DeepLinkDateCount deepLinkDateCount : deepLinkCounts){
+            stat.put("click", stat.get("click") + deepLinkDateCount.getClick());
+            stat.put("open", stat.get("open") + deepLinkDateCount.getOpen());
+            stat.put("install", stat.get("install" + deepLinkDateCount.getInstall()));
+            stat.put("scan", stat.get("scan") + deepLinkDateCount.getPcAdrScan() + deepLinkDateCount.getPcIosScan());
+
+            iosStat.put("click", iosStat.get("click") + deepLinkDateCount.getIosClick());
+            iosStat.put("open", iosStat.get("open") + deepLinkDateCount.getIosOpen());
+            iosStat.put("install", iosStat.get("install") + deepLinkDateCount.getIosInstall());
+
+            androidStat.put("click", androidStat.get("click") + deepLinkDateCount.getAdrClick());
+            androidStat.put("open", androidStat.get("open") + deepLinkDateCount.getAdrOpen());
+            androidStat.put("install", androidStat.get("install") + deepLinkDateCount.getAdrInstall());
+
+            pcStat.put("click", pcStat.get("click") + deepLinkDateCount.getPcClick());
+            pcStat.put("pc_ios_scan", pcStat.get("pc_ios_scan") + deepLinkDateCount.getPcIosScan());
+            pcStat.put("pc_ios_open", pcStat.get("pc_ios_open") + deepLinkDateCount.getPcIosOpen());
+            pcStat.put("pc_ios_install", pcStat.get("pc_ios_install") + deepLinkDateCount.getPcIosInstall());
+            pcStat.put("pc_adr_scan", pcStat.get("pc_adr_scan") + deepLinkDateCount.getPcAdrScan());
+            pcStat.put("pc_adr_open", pcStat.get("pc_adr_open") + deepLinkDateCount.getPcAdrOpen());
+            pcStat.put("pc_adr_install", pcStat.get("pc_adr_install") + deepLinkDateCount.getPcAdrInstall());
+
+
+        }
+
+    }
+
+
+
+
+    private Map<String, Long> getInitedHashMap(String... initKeys){
+        Map<String, Long> map = new HashMap<>();
+        for(String key : initKeys){
+            map.put(key, 0L);
+        }
+        return map;
+    }
+
 
     public String getDeepLinksHistoryCounts(SummaryDeepLinkParams summaryDeepLinkParams) {
 

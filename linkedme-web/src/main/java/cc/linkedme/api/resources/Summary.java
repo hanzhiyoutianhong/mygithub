@@ -1,6 +1,7 @@
 package cc.linkedme.api.resources;
 
 import javax.annotation.Resource;
+import javax.ws.rs.DefaultValue;
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
@@ -13,6 +14,7 @@ import org.springframework.stereotype.Component;
 import cc.linkedme.data.model.params.SummaryButtonParams;
 import cc.linkedme.data.model.params.SummaryDeepLinkParams;
 import cc.linkedme.service.webapi.SummaryService;
+import retrofit.http.Query;
 
 /**
  * Created by LinkedME01 on 16/3/20.
@@ -28,6 +30,21 @@ public class Summary {
     private static long five_second_stamp = 1L;
     private static long sumOfDevices = 0L;
     private static long resOfDevices = 0L;
+
+    @Path("/overview")
+    @GET
+    @Produces(MediaType.APPLICATION_JSON)
+    public String getOverview(@QueryParam("app_id") int appId,
+                              @QueryParam("start_date") String startDate,
+                              @QueryParam("end_date") String endDate,
+                              @DefaultValue("live")@QueryParam("live_test_flag") String liveTestFlag,
+                              @QueryParam("token") String token){
+
+
+
+
+        return null;
+    }
 
     @Path("/counts")
     @GET
