@@ -9,7 +9,9 @@ import java.util.*;
 import javax.annotation.Resource;
 
 import cc.linkedme.enums.RequestEnv;
+import org.apache.commons.collections.OrderedMap;
 import org.apache.commons.collections.map.HashedMap;
+import org.apache.commons.collections.map.ListOrderedMap;
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.lang3.time.DateUtils;
 import org.springframework.stereotype.Service;
@@ -77,7 +79,7 @@ public class SummaryService {
      * @param requestEnv test or live
      *
      */
-    public String getDeepLinkOverview(int appId, Date startDate, Date endDate, RequestEnv requestEnv){
+    public String getLinkPageOverview(int appId, Date startDate, Date endDate, RequestEnv requestEnv){
 
         SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
         List<DeepLinkDateCount> deepLinkCounts = new ArrayList<>();
@@ -104,25 +106,108 @@ public class SummaryService {
             durationEnd.set(Calendar.DAY_OF_MONTH, durationEnd.getActualMaximum(Calendar.DAY_OF_MONTH));
         }
 
-        statisticOverview(deepLinkCounts);
+        JSONObject result = statisticSummaryData(deepLinkCounts);
+        JSONObject rank = getTop10Links(deepLinkCounts);
+        result.put("rank", rank);
+        result.put("trend", );
 
-        return null;
+        return result;
     }
 
 
-    private void statisticOverview(List<DeepLinkDateCount> deepLinkCounts) {
+
+    private JSONObject countActiveLinksByDate(List<DeepLinkDateCount> deepLinkCounts) {
+
+        Map<String, Set<Long>> linkCounter = new TreeMap<>();
+        for (DeepLinkDateCount deepLinkDateCount : deepLinkCounts) {
+            if(!linkCounter.containsKey(deepLinkDateCount.getDate())){
+                linkCounter.put(deepLinkDateCount.getDate(), new HashSet<Long>());
+            }
+
+            linkCounter.get(deepLinkDateCount.getDate()).add(deepLinkDateCount.getDeeplinkId());
+        }
+
+        JSONObject result = new JSONObject();
+        for(String key : linkCounter.keySet()) {
+            result.put(key, linkCounter.get(key).size());
+        }
+
+        return result;
+    }
+
+
+    private JSONObject getTop10Links(List<DeepLinkDateCount> deepLinkCounts){
+        /** deeplink_id -- click计数 */
+        Map<Long, Long> clickRank = new HashMap<>();
+        Map<Long, Long> openRank = new TreeMap<>();
+        Map<Long, Long> installRank = new TreeMap<>();
+        Map<Long, Long> scanRank = new TreeMap<>();
+
+        for(DeepLinkDateCount deepLinkDateCount : deepLinkCounts){
+            long deepLinkId = deepLinkDateCount.getDeeplinkId();
+
+            long currentClickCount = clickRank.containsKey(deepLinkId) ? clickRank.get(deepLinkId) : 0;
+            clickRank.put(deepLinkId, currentClickCount + deepLinkDateCount.getClick());
+
+            long currentOpenCount = openRank.containsKey(deepLinkId) ? openRank.get(deepLinkId) : 0;
+            openRank.put(deepLinkId, currentOpenCount + deepLinkDateCount.getOpen());
+
+            long currentInstallCount = installRank.containsKey(deepLinkId) ? installRank.get(deepLinkId) : 0;
+            installRank.put(deepLinkId, currentInstallCount + deepLinkDateCount.getInstall());
+
+            long currentScanCount = scanRank.containsKey(deepLinkId) ? scanRank.get(deepLinkId) : 0;
+            scanRank.put(deepLinkId, currentScanCount + deepLinkDateCount.getPcAdrScan() + deepLinkDateCount.getPcIosScan());
+        }
+
+        JSONObject topNLinks = new JSONObject();
+        topNLinks.put("click", getTopNMapEntry(clickRank, 10));
+        topNLinks.put("open", getTopNMapEntry(openRank, 10));
+        topNLinks.put("install", getTopNMapEntry(installRank, 10));
+        topNLinks.put("scan", getTopNMapEntry(scanRank, 10));
+
+        return topNLinks;
+    }
+
+
+    private JSONArray getTopNMapEntry(Map<Long, Long> map, int n){
+        PriorityQueue<Long> topN = new PriorityQueue<>(n, new Comparator<Long>(){
+            public int compare(Long a, Long b){
+                return (int)(map.get(a) - map.get(b));
+            }
+        });
+
+
+        for(Long key : map.keySet()){
+            if(topN.size() < n){
+                topN.add(key);
+            }else if(map.get(topN.peek()) < map.get(key)){
+                topN.poll();
+                topN.add(key);
+            }
+        }
+
+        JSONArray result = new JSONArray();
+        for(Long topKey : topN){
+            result.add(JSONArray.fromObject(new Long[]{map.get(topKey), topKey}));
+        }
+
+        return result;
+    }
+
+
+    private JSONObject statisticSummaryData(List<DeepLinkDateCount> deepLinkCounts) {
+
         Map<String, Long> stat = getInitedHashMap("click", "open", "install", "scan");
         Map<String, Long> iosStat = getInitedHashMap("click", "open", "install");
         Map<String, Long> androidStat = getInitedHashMap("click", "open", "install");
         Map<String, Long> pcStat = getInitedHashMap("click", "pc_ios_scan", "pc_ios_open", "pc_ios_install", "pc_adr_scan", "pc_adr_open", "pc_adr_install");
 
-        /** deeplink_id -- click计数 */
-        Map<String, Long> clickRank = new TreeMap<>();
-        Map<String, Long> openRank = new TreeMap<>();
-        Map<String, Long> installRank = new TreeMap<>();
-        Map<String, Long> scanRank = new TreeMap<>();
+        Set<Long> deepLinkIds = new HashSet<>();
 
         for(DeepLinkDateCount deepLinkDateCount : deepLinkCounts){
+
+            deepLinkIds.add(deepLinkDateCount.getDeeplinkId());
+
             stat.put("click", stat.get("click") + deepLinkDateCount.getClick());
             stat.put("open", stat.get("open") + deepLinkDateCount.getOpen());
             stat.put("install", stat.get("install" + deepLinkDateCount.getInstall()));
@@ -143,13 +228,17 @@ public class SummaryService {
             pcStat.put("pc_adr_scan", pcStat.get("pc_adr_scan") + deepLinkDateCount.getPcAdrScan());
             pcStat.put("pc_adr_open", pcStat.get("pc_adr_open") + deepLinkDateCount.getPcAdrOpen());
             pcStat.put("pc_adr_install", pcStat.get("pc_adr_install") + deepLinkDateCount.getPcAdrInstall());
-
-
         }
 
+        stat.put("link", (long)deepLinkIds.size());
+
+        JSONObject result = JSONObject.fromObject(stat);
+        result.put("ios", JSONObject.fromObject(iosStat));
+        result.put("android", JSONObject.fromObject(androidStat));
+        result.put("pc", JSONObject.fromObject(pcStat));
+
+        return result;
     }
-
-
 
 
     private Map<String, Long> getInitedHashMap(String... initKeys){
