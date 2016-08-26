@@ -90,7 +90,7 @@ public class DeepLinkDateCountDaoImpl extends BaseDao implements DeepLinkDateCou
         String sql = tableChannel.getSql();
         List<String> paramList = new ArrayList<>();
         paramList.add(String.valueOf(appId));
-        //paramList.add(testLiveFlag);
+        paramList.add(testLiveFlag);
 
         if (startDate != null) {
             sql += "and date >= ? ";
