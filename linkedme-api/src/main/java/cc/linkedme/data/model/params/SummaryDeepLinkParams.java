@@ -20,6 +20,7 @@ public class SummaryDeepLinkParams {
     public int returnNumber;
     public int skipNumber;
     public String orderby;
+    public String order;
     public String deepLinkUrl;
     public long deepLinkId;
     public String liveTestFlag;
@@ -41,7 +42,7 @@ public class SummaryDeepLinkParams {
     }
 
     public SummaryDeepLinkParams(int appid, String startDate, String endDate, String feature, String campaign, String stage, String channel,
-            String tags, String source, boolean unique, int returnNumber, int skipNumber, String orderby) {
+            String tags, String source, boolean unique, int returnNumber, int skipNumber, String orderby, String order) {
         this.appid = appid;
         this.startDate = startDate;
         this.endDate = endDate;
@@ -55,6 +56,7 @@ public class SummaryDeepLinkParams {
         this.returnNumber = returnNumber;
         this.skipNumber = skipNumber;
         this.orderby = orderby;
+        this.order = order;
     }
 
 

@@ -82,13 +82,16 @@ public class DeepLinkDateCountDaoImpl extends BaseDao implements DeepLinkDateCou
         return deepLinkDateCounts;
     }
 
+
     @Override
-    public List<DeepLinkDateCount> getDeepLinksDateCounts(int appId, String startDate, String endDate) {
+    public List<DeepLinkDateCount> getDeepLinksDateCounts(int appId, String startDate, String endDate, String testLiveFlag) {
         TableChannel tableChannel = tableContainer.getTableChannel("deepLinkDateCount", GET_DEEPLINKS_DATE_COUNTS_BY_APPID, (long) appId,
                 Util.timeStrToDate(startDate));
         String sql = tableChannel.getSql();
         List<String> paramList = new ArrayList<>();
         paramList.add(String.valueOf(appId));
+        //paramList.add(testLiveFlag);
+
         if (startDate != null) {
             sql += "and date >= ? ";
             paramList.add(startDate);
@@ -204,8 +207,8 @@ public class DeepLinkDateCountDaoImpl extends BaseDao implements DeepLinkDateCou
         String date = deepLinkDateCount.getDate().replace("-", "");
         String id = date + "_" + deepLinkDateCount.getDeeplinkId();
 
-        String sql = tableChannel.getSql() + " (id, app_id, deeplink_id, date, " + totalCountType + ", " + countType
-                + ") values(?, ?, ?, ?, ?, ?) ON DUPLICATE KEY UPDATE " + totalCountType + " = " + totalCountType + " + values("
+        String sql = tableChannel.getSql() + " (id, app_id, deeplink_id, date, type, " + totalCountType + ", " + countType
+                + ") values(?, ?, ?, ?, ?, ?, ?) ON DUPLICATE KEY UPDATE " + totalCountType + " = " + totalCountType + " + values("
                 + totalCountType + "), " + countType + " = " + countType + " + values(" + countType + ")";
         int result = 0;
         try {

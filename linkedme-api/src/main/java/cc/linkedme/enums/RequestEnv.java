@@ -13,4 +13,20 @@ public enum RequestEnv {
         this.value = value;
     }
 
+    public static RequestEnv enumOf(String value){
+
+        value = value.toLowerCase();
+
+        RequestEnv[] requestEnvs = RequestEnv.values();
+        for(RequestEnv requestEnv : requestEnvs){
+            if(requestEnv.value.equals(value)){
+                return requestEnv;
+            }
+        }
+        return null;
+    }
+
+    public String getValue(){
+        return value;
+    }
 }

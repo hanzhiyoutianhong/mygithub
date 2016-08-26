@@ -352,7 +352,7 @@ public class LMSdkServiceImpl implements LMSdkService {
             final String type = scanPrefix + DeepLinkCount.getCountTypeFromOs(clientInfo.getOs(), "install");
 
             String date = Util.getCurrDate();
-            deepLinkMsgPusher.addDeepLinkCount(deepLinkId, (int) appId, date, type);
+            deepLinkMsgPusher.addDeepLinkCount(deepLinkId, (int) appId, date, type, deepLink.getType());
 
             long countDeepLinkId = deepLinkId;
             deepLinkCountThreadPool.submit(new Callable<Void>() {
@@ -548,8 +548,9 @@ public class LMSdkServiceImpl implements LMSdkService {
                 final int countAppId = (int) appId;
 
                 String date = Util.getCurrDate();
-                deepLinkMsgPusher.addDeepLinkCount(deepLinkId, (int) appId, date, openType);
+                deepLinkMsgPusher.addDeepLinkCount(deepLinkId, (int) appId, date, openType, deepLink.getType());
 
+                final String deepLinkType = deepLink.getType();
                 deepLinkCountThreadPool.submit(new Callable<Void>() {
                     @Override
                     public Void call() throws Exception {
@@ -561,7 +562,7 @@ public class LMSdkServiceImpl implements LMSdkService {
                             if (isUpdateClickCount) {
                                 countClient.hincrBy(String.valueOf(dpId), clickType, 1);
 
-                                deepLinkMsgPusher.addDeepLinkCount(dpId, countAppId, date, clickType);
+                                deepLinkMsgPusher.addDeepLinkCount(dpId, countAppId, date, clickType, deepLinkType);
                             }
                         } catch (Exception e) {
                             ApiLogger.warn("LMSdkServiceImpl.open deepLinkCountThreadPool count failed", e);

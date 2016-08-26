@@ -10,7 +10,7 @@ import java.util.List;
 public interface DeepLinkDateCountDao {
     List<DeepLinkDateCount> getDeepLinkDateCount(int appId, long deepLinkId, String startDate, String endDate);
 
-    List<DeepLinkDateCount> getDeepLinksDateCounts(int appId, String startDate, String endDate);
+    List<DeepLinkDateCount> getDeepLinksDateCounts(int appId, String startDate, String endDate, String testLiveFlag);
 
     int addDeepLinksDateCounts(String date, DeepLinkDateCount[] deepLinksDateCounts);
 

@@ -11,6 +11,10 @@ public class DeepLinkCount implements Serializable{
 
     private long deepLinkId;
 
+    private int click;
+    private int open;
+    private int install;
+
     private int ios_click;
     private int ios_install;
     private int ios_open;
@@ -102,6 +106,30 @@ public class DeepLinkCount implements Serializable{
 
     public DeepLinkCount(long deepLinkId) {
         this.deepLinkId = deepLinkId;
+    }
+
+    public int getClick() {
+        return click;
+    }
+
+    public void setClick(int click) {
+        this.click = click;
+    }
+
+    public int getOpen() {
+        return open;
+    }
+
+    public void setOpen(int open) {
+        this.open = open;
+    }
+
+    public int getInstall() {
+        return install;
+    }
+
+    public void setInstall(int install) {
+        this.install = install;
     }
 
     public long getDeepLinkId() {

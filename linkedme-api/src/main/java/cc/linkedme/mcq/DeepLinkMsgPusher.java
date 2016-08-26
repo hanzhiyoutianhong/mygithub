@@ -19,7 +19,7 @@ public class DeepLinkMsgPusher {
         apiMcqWriter.writeMsg(deepLinkMsg);
     }
 
-    public void addDeepLinkCount(long deepLinkId, int appId, String date, String countType) {
+    public void addDeepLinkCount(long deepLinkId, int appId, String date, String countType, String deepLinkType) {
         JsonBuilder deepLinkCountJson = new JsonBuilder();
         deepLinkCountJson.append("type", 31);
 
@@ -27,6 +27,7 @@ public class DeepLinkMsgPusher {
         info.append("deeplink_id", deepLinkId);
         info.append("app_id", appId);
         info.append("date", date);
+        info.append("type", deepLinkType);
         info.append("count_type", countType);
         deepLinkCountJson.append("info", info.flip());
 

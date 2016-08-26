@@ -145,6 +145,7 @@ public class MsgMcqProcessor extends McqProcessor {
         deepLinkDateCount.setDeeplinkId(info.getLong("deeplink_id"));
         deepLinkDateCount.setAppId(info.getInt("app_id"));
         deepLinkDateCount.setDate(info.getString("date"));
+        deepLinkDateCount.setType(info.getString("type"));
 
         String countType = info.getString("count_type");
         if (type == 31) {
