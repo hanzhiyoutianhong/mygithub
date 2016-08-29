@@ -3,11 +3,9 @@ package cc.linkedme.service.webapi.impl;
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
-import java.io.OutputStream;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -22,7 +20,6 @@ import com.google.common.base.Strings;
 
 import org.apache.commons.codec.binary.Base64;
 import org.apache.commons.collections.CollectionUtils;
-import org.apache.commons.collections.MapUtils;
 import org.apache.commons.lang.ArrayUtils;
 
 import com.esotericsoftware.kryo.KryoException;
@@ -45,7 +42,6 @@ import cc.linkedme.data.model.params.AppParams;
 import cc.linkedme.service.webapi.AppService;
 import net.sf.json.JSONArray;
 import net.sf.json.JSONObject;
-import org.apache.commons.lang3.StringUtils;
 
 /**
  * Created by LinkedME01 on 16/3/18.
@@ -66,29 +62,29 @@ public class AppServiceImpl implements AppService {
     @Resource
     private ShardingSupportHash<JedisPort> linkedmeKeyShardingSupport;
 
-    
-    //一方面验证预留的(暂时不做处理，优先级低)，一方面验证库中已经注册的
-    public boolean isAndroidUriSchemeExsit(String androidUriScheme, long appId){
+
+    // 一方面验证预留的(暂时不做处理，优先级低)，一方面验证库中已经注册的
+    public boolean isAndroidUriSchemeExsit(String androidUriScheme, long appId) {
         return appDao.isAndroidUriSchemeExsit(androidUriScheme, appId);
     }
-    
 
-    public boolean isIosUriSchemeExsit(String iosUriScheme, long appId){
+
+    public boolean isIosUriSchemeExsit(String iosUriScheme, long appId) {
         return appDao.isIosUriSchemeExsit(iosUriScheme, appId);
     }
-    
-    public boolean isAndroidPackageNameExist(String androidPackageName, long appId){
+
+    public boolean isAndroidPackageNameExist(String androidPackageName, long appId) {
         return appDao.isAndroidPackageNameExist(androidPackageName, appId);
     }
-    
-    public boolean isIosBundleIdExist(String iosBundleId, long appId){
+
+    public boolean isIosBundleIdExist(String iosBundleId, long appId) {
         return appDao.isIosBundleIdExist(iosBundleId, appId);
     }
 
     public boolean isAppNameExist(AppParams appParams) {
         return !appDao.isAppNameValidate(appParams);
     }
-    
+
     private void updateAppleAssociationFile(String appIdentifier, String appID) {
         BufferedReader br = null;
         String fileName = "/data1/tomcat8080/webapps/ROOT/apple-app-site-association";
@@ -141,8 +137,8 @@ public class AppServiceImpl implements AppService {
     public long createApp(AppParams appParams) {
         AppInfo appInfo = new AppInfo();
         Random random = new Random(appParams.user_id);
-        String linkedmeKey = MD5Utils.md5(appParams.app_name + "live" + appParams.user_id + random.nextInt());
-        String secret = MD5Utils.md5(appParams.user_id + "live" + appParams.app_name + random.nextInt());
+        String linkedmeKey = MD5Utils.md5(appParams.app_name + "live" + appParams.user_id + System.currentTimeMillis());
+        String secret = MD5Utils.md5(appParams.user_id + "live" + appParams.app_name + System.currentTimeMillis());
 
         appInfo.setApp_key(linkedmeKey);
         appInfo.setApp_secret(secret);
