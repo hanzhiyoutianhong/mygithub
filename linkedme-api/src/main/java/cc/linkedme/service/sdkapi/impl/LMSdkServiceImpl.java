@@ -5,6 +5,8 @@ import javax.annotation.Resource;
 import cc.linkedme.commons.exception.LMException;
 import cc.linkedme.commons.exception.LMExceptionFactor;
 import cc.linkedme.commons.memcache.MemCacheTemplate;
+import cc.linkedme.commons.profile.ProfileType;
+import cc.linkedme.commons.profile.ProfileUtil;
 import cc.linkedme.service.webapi.impl.DeviceServiceImpl;
 import org.apache.commons.collections.MapUtils;
 import org.apache.commons.lang3.StringUtils;
@@ -467,6 +469,14 @@ public class LMSdkServiceImpl implements LMSdkService {
             deepLinkUrl = openParams.external_intent_uri;
             if ((!Strings.isNullOrEmpty(deepLinkUrl)) && deepLinkUrl.startsWith("http")) {
                 isDirectForward = true;
+
+                // 补记通过app links跳转的click计数
+                if (deepLinkUrl.contains("scan")) {
+                    ProfileUtil.accessStatistic(ProfileType.API.value(), "/click/adr_click", 0, 0);
+                } else {
+                    ProfileUtil.accessStatistic(ProfileType.API.value(), "/click/pc_adr_scan", 0, 0);
+                }
+
             }
         } else if ("iOS".equals(openParams.os)) {
             String[] osVersionArr = openParams.os_version.split("\\.");
@@ -475,6 +485,13 @@ public class LMSdkServiceImpl implements LMSdkService {
                 deepLinkUrl = openParams.universal_link_url;
                 if ((!Strings.isNullOrEmpty(deepLinkUrl)) && deepLinkUrl.startsWith("http") && (!deepLinkUrl.contains("visit_id"))) {
                     isDirectForward = true;
+
+                    // 补记通过universe link跳转的click计数
+                    if (deepLinkUrl.contains("scan")) {
+                        ProfileUtil.accessStatistic(ProfileType.API.value(), "/click/ios_click", 0, 0);
+                    } else {
+                        ProfileUtil.accessStatistic(ProfileType.API.value(), "/click/pc_ios_scan", 0, 0);
+                    }
                 }
             }
 

@@ -20,6 +20,7 @@ import java.util.TreeMap;
 import javax.annotation.Resource;
 
 import cc.linkedme.service.DeepLinkService;
+import net.sf.json.JSON;
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.lang3.time.DateUtils;
 import org.springframework.stereotype.Service;
@@ -117,40 +118,63 @@ public class SummaryService {
             durationEnd.set(Calendar.DAY_OF_MONTH, durationEnd.getActualMaximum(Calendar.DAY_OF_MONTH));
         }
 
-        deepLinkCounts = filterByRequestEnv(deepLinkCounts, requestEnv);
-
         JSONObject result = statisticSummaryData(deepLinkCounts);
         JSONObject top10Links = getTopNLinks(deepLinkCounts, 10);
         result.put("rank", top10Links);
 
-        JSONObject linkTrend = getTopNLinkTrend(deepLinkCounts, top10Links, startDate, endDate);
-        result.put("trend", linkTrend);
+        JSONObject top10linkTrend = getTopNLinkTrend(deepLinkCounts, top10Links, startDate, endDate);
+        result.put("linkTrend", top10linkTrend);
+
+        JSONObject appTrend = getAppTrend(deepLinkCounts, startDate, endDate);
+        result.put("appTrend", appTrend);
 
         return result.toString();
     }
 
-    private List<DeepLinkDateCount> filterByRequestEnv(List<DeepLinkDateCount> deepLinkCounts, RequestEnv requestEnv){
-        // deepLinkId -- requestEnv
-        Map<Long, String> deepLinkTypes = new HashMap<>();
-        for(DeepLinkDateCount deepLinkDateCount : deepLinkCounts){
-            if(!deepLinkTypes.containsKey(deepLinkDateCount.getDeeplinkId())){
-                DeepLink deepLink = deepLinkService.getDeepLinkInfo(deepLinkDateCount.getDeeplinkId(), deepLinkDateCount.getAppId());
-                if (deepLink != null && deepLink.getType() != null ) {
-                    deepLinkTypes.put(deepLinkDateCount.getDeeplinkId(), deepLink.getType());
-                }
-            }
+    private JSONObject getAppTrend(List<DeepLinkDateCount> deepLinkCounts, Date startDate, Date endDate) {
+        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+
+        /** date -- count */
+        Map<String, Long> linkClickTrend = new TreeMap<>();
+        Map<String, Long> linkOpenTrend = new TreeMap<>();
+        Map<String, Long> linkInstallTrend = new TreeMap<>();
+        Map<String, Long> linkScanTrend = new TreeMap<>();
+
+        Date currentDate = DateUtils.addDays(startDate, 0);
+        while (!currentDate.after(endDate)) {
+            String currentDateStr = dateFormat.format(currentDate);
+            linkClickTrend.put(currentDateStr, 0L);
+            linkOpenTrend.put(currentDateStr, 0L);
+            linkInstallTrend.put(currentDateStr, 0L);
+            linkScanTrend.put(currentDateStr, 0L);
+
+            currentDate = DateUtils.addDays(currentDate, 1);
         }
 
-        List<DeepLinkDateCount> result = new ArrayList<>();
-        for(DeepLinkDateCount deepLinkDateCount : deepLinkCounts){
-            if(requestEnv.getValue().equals(deepLinkTypes.get(deepLinkDateCount.getDeeplinkId()))){
-                result.add(deepLinkDateCount);
-            }
+        for (DeepLinkDateCount deepLinkDateCount : deepLinkCounts) {
+
+            long linkClickCount = linkClickTrend.get(deepLinkDateCount.getDate()) + deepLinkDateCount.getClick();
+            linkClickTrend.put(deepLinkDateCount.getDate(), linkClickCount);
+
+            long linkOpenCount = linkOpenTrend.get(deepLinkDateCount.getDate()) + deepLinkDateCount.getOpen();
+            linkOpenTrend.put(deepLinkDateCount.getDate(), linkOpenCount);
+
+            long linkInstallCount = linkInstallTrend.get(deepLinkDateCount.getDate()) + deepLinkDateCount.getInstall();
+            linkInstallTrend.put(deepLinkDateCount.getDate(), linkInstallCount);
+
+            long linkScanCount =
+                    linkScanTrend.get(deepLinkDateCount.getDate()) + deepLinkDateCount.getPcAdrScan() + deepLinkDateCount.getPcIosScan();
+            linkScanTrend.put(deepLinkDateCount.getDate(), linkScanCount);
         }
+
+        JSONObject result = new JSONObject();
+        result.put("click", JSONArray.fromObject(linkClickTrend.values()));
+        result.put("open", JSONArray.fromObject(linkOpenTrend.values()));
+        result.put("install", JSONArray.fromObject(linkInstallTrend.values()));
+        result.put("scan", JSONArray.fromObject(linkScanTrend.values()));
 
         return result;
     }
-
 
     private JSONObject getTopNLinkTrend(List<DeepLinkDateCount> deepLinkCounts, JSONObject rank, Date startDate, Date endDate){
         SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
@@ -200,10 +224,11 @@ public class SummaryService {
                 JSONArray linkTrendJson = new JSONArray();
                 Map<String, Long> map = topNLinkTrend.get(deepLinkId + "_"+ type);
                 for(String date : map.keySet()){
-                    linkTrendJson.add(JSONArray.fromObject(new Object[]{date, map.get(date)}));
+                    linkTrendJson.add(map.get(date));
                 }
                 JSONObject linkTrendInfo = new JSONObject();
                 linkTrendInfo.put("deepLinkId", deepLinkId);
+                linkTrendInfo.put("deepLinkName", Base62.encode(deepLinkId));
                 linkTrendInfo.put("trend", linkTrendJson);
                 topNLinkTrendJson.add(linkTrendInfo);
             }
@@ -234,7 +259,7 @@ public class SummaryService {
 
         JSONArray result = new JSONArray();
         for(String key : linkCounter.keySet()) {
-            result.add(JSONArray.fromObject(new Object[]{key, linkCounter.get(key).size()}));
+            result.add(linkCounter.get(key).size());
         }
 
         return result;
@@ -244,9 +269,9 @@ public class SummaryService {
     private JSONObject getTopNLinks(List<DeepLinkDateCount> deepLinkCounts, int n) {
         /** deeplink_id -- click计数 */
         Map<Long, Long> linkClickCounter = new HashMap<>();
-        Map<Long, Long> linkOpenCounter = new TreeMap<>();
-        Map<Long, Long> linkInstallCounter = new TreeMap<>();
-        Map<Long, Long> linkScanCounter = new TreeMap<>();
+        Map<Long, Long> linkOpenCounter = new HashMap<>();
+        Map<Long, Long> linkInstallCounter = new HashMap<>();
+        Map<Long, Long> linkScanCounter = new HashMap<>();
 
         for (DeepLinkDateCount deepLinkDateCount : deepLinkCounts) {
             long deepLinkId = deepLinkDateCount.getDeeplinkId();
@@ -282,7 +307,6 @@ public class SummaryService {
             }
         });
 
-
         for(Long key : map.keySet()){
             if(topN.size() < n){
                 topN.add(key);
@@ -295,8 +319,7 @@ public class SummaryService {
         JSONArray result = new JSONArray();
         while(topN.size() > 0){
             long topKey = topN.poll();
-            result.add(JSONArray.fromObject(new Long[]{map.get(topKey), topKey}));
-
+            result.add(JSONArray.fromObject(new Object[]{map.get(topKey), topKey, Base62.encode(topKey)}));
         }
 
         return result;
