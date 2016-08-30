@@ -100,7 +100,7 @@ function start() {
 
     var launchAppUrl = (Params.uri_scheme.indexOf("://") >= 0) ? Params.uri_scheme : (Params.uri_scheme + "://");
     if (Params.isWechat()) {
-        if(Params.app_id == 10235 && Params.isIOS() && Params.ios_major >= 9) {
+        if ((Params.app_id == 10235 || Params.app_id == 10248 ) && Params.isIOS() && Params.ios_major >= 9) {
             lkmeAction.recordId();
             window.location = "http://a.app.qq.com/o/simple.jsp?pkgname=" + Params.package_name;
         } else {
@@ -138,7 +138,7 @@ function start() {
                 });
                 var div_universal_link_open_btn = '<div style="height:100%;"><img id="baseImg" src="' + baseImgPathLang + 'ios9_open.png"/><div class="img-pos" style=" position:absolute; top:80%;left:50%;margin-left:-70px;">        <button id="btnGotoAppStore" style="font-size: 0.1em; background    -color:#FFFFFF; border: 3px solid #959595; color: #959595; padding: 5px 0%; -webkit-border-radius: 30px; -moz-border-radius: 30px; border-radius: 30px    ;width:140px">' + gotoAppStore + "</button></div></div>";
                 $("body").append(div_universal_link_open_btn);
-                baseImg.onload = function() {
+                baseImg.onload = function () {
                     var h = $('#baseImg').height() * 0.8;
                     $('.img-pos').css('top', h + 'px');
                 };
@@ -268,7 +268,7 @@ function iOSChromeLaunch(a, b) {
 function iOSSafariLaunch(a, b, c) {
     DEBUG_ALERT(a);
     lkmeAction.recordJSEvent(a);
-    if(a != null){
+    if (a != null) {
         window.location = a;
     }
     var d = setTimeout(function () {
@@ -318,7 +318,7 @@ function gotoCannotForwardPage() {
         });
     }
 
-    baseImg.onload = function() {
+    baseImg.onload = function () {
         var h = $('#baseImg').height() * 0.8;
         $('.img-pos').css('top', h + 'px');
     };
