@@ -349,6 +349,7 @@ public class DeepLink implements Serializable {
         jsonObject.put("unique", false);
         jsonObject.put("creation_time", createTime);
         jsonObject.put("source", source);
+        jsonObject.put("params", params);
         jsonObject.put("type", type);
 
         if (deepLinkCount != null) {

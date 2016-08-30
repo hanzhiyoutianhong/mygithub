@@ -9,6 +9,7 @@ public class DeepLinkDateCount {
     private int appId;
     private long deeplinkId;
     private String date;
+    private String type;
     private long click;
     private long open;
     private long install;
@@ -52,6 +53,14 @@ public class DeepLinkDateCount {
 
     public void setDate(String date) {
         this.date = date;
+    }
+
+    public String getType() {
+        return type;
+    }
+
+    public void setType(String type) {
+        this.type = type;
     }
 
     public long getClick() {

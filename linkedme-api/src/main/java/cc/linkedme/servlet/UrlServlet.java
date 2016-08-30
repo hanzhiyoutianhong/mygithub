@@ -203,7 +203,7 @@ public class UrlServlet extends HttpServlet {
             if (deepLink.getSource() != null && deepLink.getSource().trim().toLowerCase().equals("dashboard")
                     && !deepLink.isIos_use_default() && deepLink.getIos_custom_url() != null) {
                 if (!hasQQUrlManager) {
-                    clickCount(deepLinkId, appId, countType);
+                    clickCount(deepLinkId, appId, countType, deepLink.getType());
                 }
                 ApiLogger.biz(String.format("%s\t%s\t%s\t%s\t%s\t%s", clientIP, apiName, countType, appId, deepLinkId, userAgent));
                 response.sendRedirect(formatCustomUrl(deepLink.getIos_custom_url()));
@@ -233,7 +233,7 @@ public class UrlServlet extends HttpServlet {
                 if (StringUtils.isNotBlank(url)) {
                     ApiLogger.biz(String.format("%s\t%s\t%s\t%s\t%s\t%s", clientIP, apiName, countType, appId, deepLinkId, userAgent));
                     if (!hasQQUrlManager) {
-                        clickCount(deepLinkId, appId, countType);
+                        clickCount(deepLinkId, appId, countType, deepLink.getType());
                     }
                     response.sendRedirect(formatCustomUrl(url));
                     recordClickIntoProfile(start, countType);
@@ -255,7 +255,7 @@ public class UrlServlet extends HttpServlet {
             if (deepLink.getSource() != null && deepLink.getSource().trim().toLowerCase().equals("dashboard")
                     && !deepLink.isAndroid_use_default() && deepLink.getAndroid_custom_url() != null) {
                 if (!hasQQUrlManager) {
-                    clickCount(deepLinkId, appId, countType);
+                    clickCount(deepLinkId, appId, countType, deepLink.getType());
                 }
                 ApiLogger.biz(String.format("%s\t%s\t%s\t%s\t%s\t%s", clientIP, apiName, countType, appId, deepLinkId, userAgent));
                 response.sendRedirect(formatCustomUrl(deepLink.getAndroid_custom_url()));
@@ -279,7 +279,7 @@ public class UrlServlet extends HttpServlet {
                     ApiLogger.biz(String.format("%s\t%s\t%s\t%s\t%s\t%s", request.getHeader("x-forwarded-for"), apiName, countType, appId,
                             deepLinkId, userAgent));
                     if (!hasQQUrlManager) {
-                        clickCount(deepLinkId, appId, countType);
+                        clickCount(deepLinkId, appId, countType, deepLink.getType());
                     }
                     response.sendRedirect(formatCustomUrl(url));
                     recordClickIntoProfile(start, countType);
@@ -293,7 +293,7 @@ public class UrlServlet extends HttpServlet {
             if (deepLink.getSource() != null && deepLink.getSource().trim().toLowerCase().equals("dashboard")) {
                 if (!deepLink.isDesktop_use_default() && deepLink.getDesktop_custom_url() != null) {
                     if (!hasQQUrlManager) {
-                        clickCount(deepLinkId, appId, countType);
+                        clickCount(deepLinkId, appId, countType, deepLink.getType());
                     }
                     ApiLogger.biz(String.format("%s\t%s\t%s\t%s\t%s\t%s", clientIP, apiName, countType, appId, deepLinkId, userAgent));
 
@@ -301,7 +301,7 @@ public class UrlServlet extends HttpServlet {
                     return;
                 } else if (!appInfo.isUse_default_landing_page() && StringUtils.isNotBlank(appInfo.getCustom_landing_page())) {
                     if (!hasQQUrlManager) {
-                        clickCount(deepLinkId, appId, countType);
+                        clickCount(deepLinkId, appId, countType, deepLink.getType());
                     }
                     ApiLogger.biz(String.format("%s\t%s\t%s\t%s\t%s\t%s", clientIP, apiName, countType, appId, deepLinkId, userAgent));
 
@@ -315,7 +315,7 @@ public class UrlServlet extends HttpServlet {
             String codeUrl = Constants.DEEPLINK_HTTPS_PREFIX + request.getRequestURI() + "?scan=1";
 
             if (!hasQQUrlManager) {
-                clickCount(deepLinkId, appId, countType);
+                clickCount(deepLinkId, appId, countType, deepLink.getType());
             }
             ApiLogger.biz(String.format("%s\t%s\t%s\t%s\t%s\t%s", clientIP, apiName, countType, appId, deepLinkId, userAgent));
 
@@ -332,7 +332,7 @@ public class UrlServlet extends HttpServlet {
         if (visitId == null) {
             // 点击计数
             if (!hasQQUrlManager) {
-                clickCount(deepLinkId, appId, countType);
+                clickCount(deepLinkId, appId, countType, deepLink.getType());
             }
             // 记录日志
             ApiLogger.biz(String.format("%s\t%s\t%s\t%s\t%s\t%s", clientIP, apiName, countType, appId, deepLinkId, userAgent));
@@ -467,9 +467,9 @@ public class UrlServlet extends HttpServlet {
         doGet(request, response);
     }
 
-    private void clickCount(long deepLinkId, long appId, String countType) {
+    private void clickCount(long deepLinkId, long appId, String countType, String deepLinkType) {
         String date = Util.getCurrDate();
-        deepLinkMsgPusher.addDeepLinkCount(deepLinkId, (int) appId, date, countType);
+        deepLinkMsgPusher.addDeepLinkCount(deepLinkId, (int) appId, date, countType, deepLinkType);
 
         deepLinkCountThreadPool.submit(new Callable<Void>() {
             @Override

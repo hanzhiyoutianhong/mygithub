@@ -126,10 +126,11 @@ public class Link {
                              @QueryParam("live_test_flag") String liveTestFlag,
                              @QueryParam("return_number") int return_number,
                              @QueryParam("skip_number") int skip_number,
-                             @QueryParam("orderby") String orderby) {
+                             @QueryParam("orderby") String orderby,
+                             @QueryParam("order") String order) {
 
         SummaryDeepLinkParams summaryDeepLinkParams = new SummaryDeepLinkParams(appid, start_date, end_date, feature, campaign, stage,
-                channel, tag, source, unique, return_number, skip_number, orderby);
+                channel, tag, source, unique, return_number, skip_number, orderby, order);
         if (Strings.isNullOrEmpty(liveTestFlag)) {
             summaryDeepLinkParams.liveTestFlag = "live";
         } else {

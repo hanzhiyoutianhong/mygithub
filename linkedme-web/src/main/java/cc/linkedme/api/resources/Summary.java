@@ -1,17 +1,27 @@
 package cc.linkedme.api.resources;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+
 import javax.annotation.Resource;
+import javax.ws.rs.DefaultValue;
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
 import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.MediaType;
 
-import com.google.api.client.repackaged.com.google.common.base.Strings;
+import cc.linkedme.commons.exception.LMException;
+import cc.linkedme.commons.exception.LMExceptionFactor;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Component;
+
+import com.google.api.client.repackaged.com.google.common.base.Strings;
 
 import cc.linkedme.data.model.params.SummaryButtonParams;
 import cc.linkedme.data.model.params.SummaryDeepLinkParams;
+import cc.linkedme.enums.RequestEnv;
 import cc.linkedme.service.webapi.SummaryService;
 
 /**
@@ -28,6 +38,45 @@ public class Summary {
     private static long five_second_stamp = 1L;
     private static long sumOfDevices = 0L;
     private static long resOfDevices = 0L;
+
+    @Path("/overview")
+    @GET
+    @Produces(MediaType.APPLICATION_JSON)
+    public String getOverview(@QueryParam("app_id") int appId,
+                              @QueryParam("start_date") String startDate,
+                              @QueryParam("end_date") String endDate,
+                              @DefaultValue("live")@QueryParam("live_test_flag") String liveTestFlag,
+                              @QueryParam("token") String token){
+
+        if(StringUtils.isBlank(startDate)){
+            throw new LMException(LMExceptionFactor.LM_ILLEGAL_PARAM_VALUE, "start_date的值不能为空");
+        }
+        if(StringUtils.isBlank(endDate)) {
+            throw new LMException(LMExceptionFactor.LM_ILLEGAL_PARAM_VALUE, "end_date的值不能为空");
+        }
+
+        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+        Date parsedStartDate = null;
+        Date parsedEndDate=null;
+        try {
+            parsedStartDate = dateFormat.parse(startDate);
+        } catch (ParseException e) {
+            throw new LMException(LMExceptionFactor.LM_ILLEGAL_PARAM_VALUE, "start_date(" + startDate + ")格式应为：yyyy-MM-dd");
+        }
+
+        try {
+            parsedEndDate = dateFormat.parse(endDate);
+        } catch (ParseException e) {
+            throw new LMException(LMExceptionFactor.LM_ILLEGAL_PARAM_VALUE, "end_date(" + endDate + ")格式应为：yyyy-MM-dd");
+        }
+
+        if(parsedEndDate.before(parsedStartDate)){
+            throw new LMException(LMExceptionFactor.LM_ILLEGAL_PARAM_VALUE, "start_date应该在end_date之前");
+        }
+
+        return summaryService.getLinkPageOverview(appId, parsedStartDate, parsedEndDate, RequestEnv.enumOf(liveTestFlag));
+
+    }
 
     @Path("/counts")
     @GET

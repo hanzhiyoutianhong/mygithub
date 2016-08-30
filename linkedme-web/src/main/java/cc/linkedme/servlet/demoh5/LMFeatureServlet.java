@@ -4,8 +4,6 @@ import javax.servlet.RequestDispatcher;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import cc.linkedme.servlet.AbstractServlet;
-
 /**
  * Created by qipo on 15/10/8.
  */

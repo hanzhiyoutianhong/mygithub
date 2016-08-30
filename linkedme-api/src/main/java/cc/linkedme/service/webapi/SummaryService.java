@@ -3,11 +3,24 @@ package cc.linkedme.service.webapi;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Map;
+import java.util.PriorityQueue;
+import java.util.Set;
+import java.util.TreeMap;
 
 import javax.annotation.Resource;
 
-import org.apache.commons.collections.map.HashedMap;
+import cc.linkedme.service.DeepLinkService;
+import net.sf.json.JSON;
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.lang3.time.DateUtils;
 import org.springframework.stereotype.Service;
@@ -36,6 +49,7 @@ import cc.linkedme.data.model.DeepLinkCount;
 import cc.linkedme.data.model.DeepLinkDateCount;
 import cc.linkedme.data.model.params.SummaryButtonParams;
 import cc.linkedme.data.model.params.SummaryDeepLinkParams;
+import cc.linkedme.enums.RequestEnv;
 import net.sf.json.JSONArray;
 import net.sf.json.JSONObject;
 
@@ -48,6 +62,9 @@ public class SummaryService {
 
     @Resource
     DeepLinkDao deepLinkDao;
+
+    @Resource
+    DeepLinkService deepLinkService;
 
     @Resource
     DeepLinkDateCountDao deepLinkDateCountDao;
@@ -64,6 +81,306 @@ public class SummaryService {
     @Resource
     ShardingSupportHash<JedisPort> btnCountShardingSupport;
 
+
+    /**
+     * 获取某app在指定时间范围内的概览信息，具体如下：
+     *
+     *
+     * @param startDate 开始日期（yyyy-MM-dd）
+     * @param endDate 结束日期（yyyy-MM-dd）
+     * @param requestEnv test or live
+     * @author junfeng@linkedme.cc
+     *
+     */
+    public String getLinkPageOverview(int appId, Date startDate, Date endDate, RequestEnv requestEnv){
+
+        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+        List<DeepLinkDateCount> deepLinkCounts = new LinkedList<>();
+
+        Calendar endCalendar = DateUtils.toCalendar(endDate);
+        String endDateStr = dateFormat.format(endDate);
+
+        Calendar durationBegin = DateUtils.toCalendar(startDate);
+        Calendar durationEnd = DateUtils.toCalendar(startDate);
+        durationEnd.set(Calendar.DAY_OF_MONTH, durationEnd.getActualMaximum(Calendar.DAY_OF_MONTH));
+
+        while(!durationBegin.after(endCalendar)){
+            String durationBeginStr = dateFormat.format(durationBegin.getTime());
+            if(durationEnd.before(endCalendar)){
+                String durationEndStr = dateFormat.format(durationEnd.getTime());
+                deepLinkCounts.addAll(deepLinkDateCountDao.getDeepLinksDateCounts(appId, durationBeginStr, durationEndStr, requestEnv.getValue()));
+            } else {
+                deepLinkCounts.addAll(deepLinkDateCountDao.getDeepLinksDateCounts(appId, durationBeginStr, endDateStr, requestEnv.getValue()));
+            }
+
+            durationBegin = DateUtils.ceiling(durationBegin, Calendar.MONTH);
+            durationEnd = DateUtils.toCalendar(durationBegin.getTime());
+            durationEnd.set(Calendar.DAY_OF_MONTH, durationEnd.getActualMaximum(Calendar.DAY_OF_MONTH));
+        }
+
+        JSONObject result = statisticSummaryData(deepLinkCounts);
+        JSONObject top10Links = getTopNLinks(deepLinkCounts, 10);
+        result.put("rank", top10Links);
+
+        JSONObject top10linkTrend = getTopNLinkTrend(deepLinkCounts, top10Links, startDate, endDate);
+        result.put("linkTrend", top10linkTrend);
+
+        JSONObject appTrend = getAppTrend(deepLinkCounts, startDate, endDate);
+        result.put("appTrend", appTrend);
+
+        return result.toString();
+    }
+
+    private JSONObject getAppTrend(List<DeepLinkDateCount> deepLinkCounts, Date startDate, Date endDate) {
+        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+
+        /** date -- count */
+        Map<String, Long> linkClickTrend = new TreeMap<>();
+        Map<String, Long> linkOpenTrend = new TreeMap<>();
+        Map<String, Long> linkInstallTrend = new TreeMap<>();
+        Map<String, Long> linkScanTrend = new TreeMap<>();
+
+        Date currentDate = DateUtils.addDays(startDate, 0);
+        while (!currentDate.after(endDate)) {
+            String currentDateStr = dateFormat.format(currentDate);
+            linkClickTrend.put(currentDateStr, 0L);
+            linkOpenTrend.put(currentDateStr, 0L);
+            linkInstallTrend.put(currentDateStr, 0L);
+            linkScanTrend.put(currentDateStr, 0L);
+
+            currentDate = DateUtils.addDays(currentDate, 1);
+        }
+
+        for (DeepLinkDateCount deepLinkDateCount : deepLinkCounts) {
+
+            long linkClickCount = linkClickTrend.get(deepLinkDateCount.getDate()) + deepLinkDateCount.getClick();
+            linkClickTrend.put(deepLinkDateCount.getDate(), linkClickCount);
+
+            long linkOpenCount = linkOpenTrend.get(deepLinkDateCount.getDate()) + deepLinkDateCount.getOpen();
+            linkOpenTrend.put(deepLinkDateCount.getDate(), linkOpenCount);
+
+            long linkInstallCount = linkInstallTrend.get(deepLinkDateCount.getDate()) + deepLinkDateCount.getInstall();
+            linkInstallTrend.put(deepLinkDateCount.getDate(), linkInstallCount);
+
+            long linkScanCount =
+                    linkScanTrend.get(deepLinkDateCount.getDate()) + deepLinkDateCount.getPcAdrScan() + deepLinkDateCount.getPcIosScan();
+            linkScanTrend.put(deepLinkDateCount.getDate(), linkScanCount);
+        }
+
+        JSONObject result = new JSONObject();
+        result.put("click", JSONArray.fromObject(linkClickTrend.values()));
+        result.put("open", JSONArray.fromObject(linkOpenTrend.values()));
+        result.put("install", JSONArray.fromObject(linkInstallTrend.values()));
+        result.put("scan", JSONArray.fromObject(linkScanTrend.values()));
+
+        return result;
+    }
+
+    private JSONObject getTopNLinkTrend(List<DeepLinkDateCount> deepLinkCounts, JSONObject rank, Date startDate, Date endDate){
+        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+
+        String[] types = new String[]{"click", "open", "install", "scan"};
+        /** deepLinkId_type -- (date -- count) */
+        Map<String, Map<String, Long>> topNLinkTrend = new HashMap<>();
+        for(String type : types) {
+            JSONArray topNLinks = rank.getJSONArray(type);
+            for (int i = 0; i < topNLinks.size(); i++) {
+                Long deepLinkId = topNLinks.getJSONArray(i).getLong(1);
+
+                Map<String, Long> linkTrend = new TreeMap<>();
+                Date currentDate = DateUtils.addDays(startDate, 0);
+                while(!currentDate.after(endDate)){
+                    linkTrend.put(dateFormat.format(currentDate), 0L);
+                    currentDate = DateUtils.addDays(currentDate, 1);
+                }
+
+                topNLinkTrend.put(deepLinkId + "_" + type, linkTrend);
+            }
+        }
+
+        for (DeepLinkDateCount deepLinkDateCount : deepLinkCounts) {
+            for(String type : types) {
+                if (topNLinkTrend.containsKey(deepLinkDateCount.getDeeplinkId() + "_" + type)) {
+                    Map<String, Long> linkTrend = topNLinkTrend.get(deepLinkDateCount.getDeeplinkId() + "_" + type);
+                    if("click".equals(type)) {
+                        linkTrend.put(deepLinkDateCount.getDate(), deepLinkDateCount.getClick());
+                    }else if ("open".equals(type)){
+                        linkTrend.put(deepLinkDateCount.getDate(), deepLinkDateCount.getOpen());
+                    }else if ("install".equals(type)){
+                        linkTrend.put(deepLinkDateCount.getDate(), deepLinkDateCount.getInstall());
+                    }else if("scan".equals(type)){
+                        linkTrend.put(deepLinkDateCount.getDate(), deepLinkDateCount.getPcAdrScan() + deepLinkDateCount.getPcIosScan());
+                    }
+                }
+            }
+        }
+
+        JSONObject result = new JSONObject();
+        for(String type : types){
+            JSONArray topNLinkTrendJson = new JSONArray();
+            JSONArray topNLinks = rank.getJSONArray(type);
+            for (int i = 0; i < topNLinks.size(); i++) {
+                Long deepLinkId = topNLinks.getJSONArray(i).getLong(1);
+                JSONArray linkTrendJson = new JSONArray();
+                Map<String, Long> map = topNLinkTrend.get(deepLinkId + "_"+ type);
+                for(String date : map.keySet()){
+                    linkTrendJson.add(map.get(date));
+                }
+                JSONObject linkTrendInfo = new JSONObject();
+                linkTrendInfo.put("deepLinkId", deepLinkId);
+                linkTrendInfo.put("deepLinkName", Base62.encode(deepLinkId));
+                linkTrendInfo.put("trend", linkTrendJson);
+                topNLinkTrendJson.add(linkTrendInfo);
+            }
+            result.put(type, topNLinkTrendJson);
+        }
+
+        JSONArray activeLinkCount = countActiveLinksByDate(deepLinkCounts, startDate, endDate);
+        result.put("activeLinkCount", activeLinkCount);
+        return result;
+    }
+
+
+    private JSONArray countActiveLinksByDate(List<DeepLinkDateCount> deepLinkCounts, Date startDate, Date endDate) {
+
+        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+
+        /** date -- set of deepLinkId */
+        Map<String, Set<Long>> linkCounter = new TreeMap<>();
+        Date currentDate = DateUtils.addDays(startDate, 0);
+        while(!currentDate.after(endDate)){
+            linkCounter.put(dateFormat.format(currentDate), new HashSet<Long>());
+            currentDate = DateUtils.addDays(currentDate, 1);
+        }
+
+        for (DeepLinkDateCount deepLinkDateCount : deepLinkCounts) {
+            linkCounter.get(deepLinkDateCount.getDate()).add(deepLinkDateCount.getDeeplinkId());
+        }
+
+        JSONArray result = new JSONArray();
+        for(String key : linkCounter.keySet()) {
+            result.add(linkCounter.get(key).size());
+        }
+
+        return result;
+    }
+
+
+    private JSONObject getTopNLinks(List<DeepLinkDateCount> deepLinkCounts, int n) {
+        /** deeplink_id -- click计数 */
+        Map<Long, Long> linkClickCounter = new HashMap<>();
+        Map<Long, Long> linkOpenCounter = new HashMap<>();
+        Map<Long, Long> linkInstallCounter = new HashMap<>();
+        Map<Long, Long> linkScanCounter = new HashMap<>();
+
+        for (DeepLinkDateCount deepLinkDateCount : deepLinkCounts) {
+            long deepLinkId = deepLinkDateCount.getDeeplinkId();
+
+            long currentClickCount = linkClickCounter.containsKey(deepLinkId) ? linkClickCounter.get(deepLinkId) : 0;
+            linkClickCounter.put(deepLinkId, currentClickCount + deepLinkDateCount.getClick());
+
+            long currentOpenCount = linkOpenCounter.containsKey(deepLinkId) ? linkOpenCounter.get(deepLinkId) : 0;
+            linkOpenCounter.put(deepLinkId, currentOpenCount + deepLinkDateCount.getOpen());
+
+            long currentInstallCount = linkInstallCounter.containsKey(deepLinkId) ? linkInstallCounter.get(deepLinkId) : 0;
+            linkInstallCounter.put(deepLinkId, currentInstallCount + deepLinkDateCount.getInstall());
+
+            long currentScanCount = linkScanCounter.containsKey(deepLinkId) ? linkScanCounter.get(deepLinkId) : 0;
+            linkScanCounter.put(deepLinkId, currentScanCount + deepLinkDateCount.getPcAdrScan() + deepLinkDateCount.getPcIosScan());
+        }
+
+        JSONObject topNLinks = new JSONObject();
+        topNLinks.put("click", getTopNMapEntry(linkClickCounter, n));
+        topNLinks.put("open", getTopNMapEntry(linkOpenCounter, n));
+        topNLinks.put("install", getTopNMapEntry(linkInstallCounter, n));
+        topNLinks.put("scan", getTopNMapEntry(linkScanCounter, n));
+
+        return topNLinks;
+    }
+
+
+    private JSONArray getTopNMapEntry(Map<Long, Long> map, int n){
+
+        PriorityQueue<Long> topN = new PriorityQueue<>(n, new Comparator<Long>(){
+            public int compare(Long a, Long b){
+                return (int)(map.get(b) - map.get(a));
+            }
+        });
+
+        for(Long key : map.keySet()){
+            if(topN.size() < n){
+                topN.add(key);
+            }else if(map.get(topN.peek()) < map.get(key)){
+                topN.poll();
+                topN.add(key);
+            }
+        }
+
+        JSONArray result = new JSONArray();
+        while(topN.size() > 0){
+            long topKey = topN.poll();
+            result.add(JSONArray.fromObject(new Object[]{map.get(topKey), topKey, Base62.encode(topKey)}));
+        }
+
+        return result;
+    }
+
+
+    private JSONObject statisticSummaryData(List<DeepLinkDateCount> deepLinkCounts) {
+
+        Map<String, Long> stat = getInitedHashMap("click", "open", "install", "scan");
+        Map<String, Long> iosStat = getInitedHashMap("click", "open", "install");
+        Map<String, Long> androidStat = getInitedHashMap("click", "open", "install");
+        Map<String, Long> pcStat = getInitedHashMap("click", "pc_ios_scan", "pc_ios_open", "pc_ios_install", "pc_adr_scan", "pc_adr_open", "pc_adr_install");
+
+        Set<Long> deepLinkIds = new HashSet<>();
+
+        for(DeepLinkDateCount deepLinkDateCount : deepLinkCounts){
+
+            deepLinkIds.add(deepLinkDateCount.getDeeplinkId());
+
+            stat.put("click", stat.get("click") + deepLinkDateCount.getClick());
+            stat.put("open", stat.get("open") + deepLinkDateCount.getOpen());
+            stat.put("install", stat.get("install") + deepLinkDateCount.getInstall());
+            stat.put("scan", stat.get("scan") + deepLinkDateCount.getPcAdrScan() + deepLinkDateCount.getPcIosScan());
+
+            iosStat.put("click", iosStat.get("click") + deepLinkDateCount.getIosClick());
+            iosStat.put("open", iosStat.get("open") + deepLinkDateCount.getIosOpen());
+            iosStat.put("install", iosStat.get("install") + deepLinkDateCount.getIosInstall());
+
+            androidStat.put("click", androidStat.get("click") + deepLinkDateCount.getAdrClick());
+            androidStat.put("open", androidStat.get("open") + deepLinkDateCount.getAdrOpen());
+            androidStat.put("install", androidStat.get("install") + deepLinkDateCount.getAdrInstall());
+
+            pcStat.put("click", pcStat.get("click") + deepLinkDateCount.getPcClick());
+            pcStat.put("pc_ios_scan", pcStat.get("pc_ios_scan") + deepLinkDateCount.getPcIosScan());
+            pcStat.put("pc_ios_open", pcStat.get("pc_ios_open") + deepLinkDateCount.getPcIosOpen());
+            pcStat.put("pc_ios_install", pcStat.get("pc_ios_install") + deepLinkDateCount.getPcIosInstall());
+            pcStat.put("pc_adr_scan", pcStat.get("pc_adr_scan") + deepLinkDateCount.getPcAdrScan());
+            pcStat.put("pc_adr_open", pcStat.get("pc_adr_open") + deepLinkDateCount.getPcAdrOpen());
+            pcStat.put("pc_adr_install", pcStat.get("pc_adr_install") + deepLinkDateCount.getPcAdrInstall());
+        }
+
+        stat.put("link", (long)deepLinkIds.size());
+
+        JSONObject result = JSONObject.fromObject(stat);
+        result.put("ios", JSONObject.fromObject(iosStat));
+        result.put("android", JSONObject.fromObject(androidStat));
+        result.put("pc", JSONObject.fromObject(pcStat));
+
+        return result;
+    }
+
+
+    private Map<String, Long> getInitedHashMap(String... initKeys){
+        Map<String, Long> map = new HashMap<>();
+        for(String key : initKeys){
+            map.put(key, 0L);
+        }
+        return map;
+    }
+
+
     public String getDeepLinksHistoryCounts(SummaryDeepLinkParams summaryDeepLinkParams) {
 
         List<DeepLinkDateCount> deepLinkDateCountList = new ArrayList<>();
@@ -71,7 +388,7 @@ public class SummaryService {
 
         for (DateDuration d : durations) {
             deepLinkDateCountList
-                    .addAll(deepLinkDateCountDao.getDeepLinksDateCounts(summaryDeepLinkParams.appid, d.getMin_date(), d.getMax_date()));
+                    .addAll(deepLinkDateCountDao.getDeepLinksDateCounts(summaryDeepLinkParams.appid, d.getMin_date(), d.getMax_date(), summaryDeepLinkParams.liveTestFlag));
         }
 
         // 获取今天有计数的短链
@@ -415,12 +732,6 @@ public class SummaryService {
 
     public String getDeepLinksWithCount(SummaryDeepLinkParams summaryDeepLinkParams) {
         List<DeepLink> deepLinks = getDeepLinks(summaryDeepLinkParams);
-        Collections.sort(deepLinks, new Comparator<DeepLink>() {
-            @Override
-            public int compare(DeepLink o1, DeepLink o2) {
-                return o2.getCreateTime().compareTo(o1.getCreateTime());
-            }
-        });
         int deepLinkNum = deepLinks.size();
         int startIndex = summaryDeepLinkParams.skipNumber;
         if (startIndex < 0) {
@@ -429,22 +740,20 @@ public class SummaryService {
         int endIndex = (summaryDeepLinkParams.returnNumber + startIndex) > deepLinkNum
                 ? deepLinkNum
                 : (summaryDeepLinkParams.returnNumber + startIndex);
-        long[] tmpIds = new long[endIndex - startIndex];
+
+
         if (deepLinks.size() <= startIndex) {
             return null;
         }
-        for (int i = startIndex; i < endIndex; i++) {
-            tmpIds[i - startIndex] = deepLinks.get(i).getDeeplinkId();
-        }
 
+        long[] tmpIds = new long[deepLinkNum];
+        for (int i = 0; i < deepLinkNum; i++) {
+            tmpIds[i] = deepLinks.get(i).getDeeplinkId();
+        }
         Map<Long, Map<String, String>> counts = getCounts(tmpIds);
 
-        JSONObject resultJson = new JSONObject();
-        resultJson.put("total_count", deepLinkNum);
-        JSONArray deepLinkJsonArr = new JSONArray();
-
-        // 遍历deepLinks,对应给count赋值(只遍历startIndex和endIndex之间的元素)
-        for (int i = startIndex; i < endIndex; i++) {
+        // 遍历deepLinks,对应给count赋值
+        for (int i = 0; i < deepLinkNum; i++) {
             long deepLinkId = deepLinks.get(i).getDeeplinkId();
             DeepLinkCount deepLinkCountObject = new DeepLinkCount(deepLinkId);
             Map<String, String> countMap = counts.get(deepLinkId);
@@ -452,8 +761,65 @@ public class SummaryService {
                 setDeepLinkCount(deepLinkCountObject, countMap);
             }
             deepLinks.get(i).setDeepLinkCount(deepLinkCountObject);
+        }
+
+        Comparator<DeepLink> comparator;
+        if("click".equals(summaryDeepLinkParams.orderby)){
+            comparator = new Comparator<DeepLink>() {
+                @Override
+                public int compare(DeepLink o1, DeepLink o2) {
+                    if("desc".equals(summaryDeepLinkParams.order)){
+                        return o2.getDeepLinkCount().getClick() - o1.getDeepLinkCount().getClick();
+                    }else {
+                        return o1.getDeepLinkCount().getClick() - o2.getDeepLinkCount().getClick();
+                    }
+                }
+            };
+        }else if("open".equals(summaryDeepLinkParams.orderby)){
+            comparator = new Comparator<DeepLink>() {
+                @Override
+                public int compare(DeepLink o1, DeepLink o2) {
+                    if("desc".equals(summaryDeepLinkParams.order)){
+                        return o2.getDeepLinkCount().getOpen() - o1.getDeepLinkCount().getOpen();
+                    }else {
+                        return o1.getDeepLinkCount().getOpen() - o2.getDeepLinkCount().getOpen();
+                    }
+                }
+            };
+        }else if("install".equals(summaryDeepLinkParams.orderby)){
+            comparator = new Comparator<DeepLink>() {
+                @Override
+                public int compare(DeepLink o1, DeepLink o2) {
+                    if("desc".equals(summaryDeepLinkParams.order)){
+                        return o2.getDeepLinkCount().getInstall() - o1.getDeepLinkCount().getInstall();
+                    }else{
+                        return o1.getDeepLinkCount().getInstall() - o2.getDeepLinkCount().getInstall();
+                    }
+                }
+            };
+        }else {
+            comparator = new Comparator<DeepLink>() {
+                @Override
+                public int compare(DeepLink o1, DeepLink o2) {
+                    if("desc".equals(summaryDeepLinkParams.order)){
+                        return o2.getCreateTime().compareTo(o1.getCreateTime());
+                    }else{
+                        return o1.getCreateTime().compareTo(o2.getCreateTime());
+                    }
+                }
+            };
+        }
+
+        Collections.sort(deepLinks, comparator);
+
+
+        JSONObject resultJson = new JSONObject();
+        resultJson.put("total_count", deepLinkNum);
+        JSONArray deepLinkJsonArr = new JSONArray();
+        for(int i = startIndex; i < endIndex; i++){
             deepLinkJsonArr.add(i - startIndex, deepLinks.get(i).toJsonObject());
         }
+
         resultJson.put("ret", deepLinkJsonArr);
         return resultJson.toString();
     }
@@ -676,6 +1042,11 @@ public class SummaryService {
         if (dplCountMap.get(DeepLinkCount.CountType.pc_adr_install.toString()) != null) {
             dplc.setPc_adr_install(Integer.parseInt(dplCountMap.get(DeepLinkCount.CountType.pc_adr_install.toString())));
         }
+
+        dplc.setClick(dplc.getAdr_click() + dplc.getIos_click() + dplc.getPc_click());
+        dplc.setOpen(dplc.getAdr_open() + dplc.getIos_open() + dplc.getPc_adr_open() + dplc.getPc_ios_open());
+        dplc.setInstall(dplc.getAdr_install() + dplc.getIos_install() + dplc.getPc_adr_install() + dplc.getPc_ios_install());
+
     }
 
     public String getButtonsIncome(SummaryButtonParams summaryButtonParams) {
