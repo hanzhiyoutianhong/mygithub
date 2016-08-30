@@ -100,7 +100,12 @@ function start() {
 
     var launchAppUrl = (Params.uri_scheme.indexOf("://") >= 0) ? Params.uri_scheme : (Params.uri_scheme + "://");
     if (Params.isWechat()) {
-        gotoQQ("wechat");
+        if ((Params.app_id == 10235 || Params.app_id == 10248 ) && Params.isIOS() && Params.ios_major >= 9) {
+            lkmeAction.recordId();
+            window.location = "http://a.app.qq.com/o/simple.jsp?pkgname=" + Params.package_name;
+        } else {
+            gotoQQ("wechat");
+        }
     } else if (Params.isQQ()) {
         gotoPlatform("qq"); //qq不能通过yyb微下载唤起app
     } else if (Params.isWeibo()) {
@@ -133,7 +138,7 @@ function start() {
                 });
                 var div_universal_link_open_btn = '<div style="height:100%;"><img id="baseImg" src="' + baseImgPathLang + 'ios9_open.png"/><div class="img-pos" style=" position:absolute; top:80%;left:50%;margin-left:-70px;">        <button id="btnGotoAppStore" style="font-size: 0.1em; background    -color:#FFFFFF; border: 3px solid #959595; color: #959595; padding: 5px 0%; -webkit-border-radius: 30px; -moz-border-radius: 30px; border-radius: 30px    ;width:140px">' + gotoAppStore + "</button></div></div>";
                 $("body").append(div_universal_link_open_btn);
-                baseImg.onload = function() {
+                baseImg.onload = function () {
                     var h = $('#baseImg').height() * 0.8;
                     $('.img-pos').css('top', h + 'px');
                 };
@@ -263,7 +268,7 @@ function iOSChromeLaunch(a, b) {
 function iOSSafariLaunch(a, b, c) {
     DEBUG_ALERT(a);
     lkmeAction.recordJSEvent(a);
-    if(a != null){
+    if (a != null) {
         window.location = a;
     }
     var d = setTimeout(function () {
@@ -313,7 +318,7 @@ function gotoCannotForwardPage() {
         });
     }
 
-    baseImg.onload = function() {
+    baseImg.onload = function () {
         var h = $('#baseImg').height() * 0.8;
         $('.img-pos').css('top', h + 'px');
     };
@@ -334,7 +339,7 @@ function gotoAndroidMarket() {
 function gotoAndroidAppInstall() {
     lkmeAction.recordId();
     var destination;
-    var div_goto_landingpage = '<div style="background-image:url({Bg_Url});background-size: 100% 100%;width:100%;height:100%;">    <div style = "position:absolute; top:20%; width:100%; ">        <div style="text-align:center; width:100%; ">            <img id="appIcon" src={logo_url} style="width:22%;"/>        </div>        <div style="text-align:center; width:100%; margin-top:10px;">            <span id="appName" style="font-size: 1.5em; color: #959595; padding: 15px 10px;">                {app_name}            </span>        </div>    </div>    <div style="text-align:center; width:100%; position:absolute; top:56%;">        <span id="downloadTitle" style="font-size: 1em; color: #959595; padding: 15px 10px;">            {Download_title}        </span>    </div>    <div style="text-align:center; width:100%; position:absolute; top:59%;">    </div>    <div style="text-align:center; width:100%; position:absolute; top:70%;">        <{Element_type} id="btnGotoLandingPage" style="background-color:#FFFFFF; border: {Border_width}px solid #959595; color: #959595; padding: 6px 20px; -webkit-border-radius: 30px; -moz-border-radius: 30px; border-radius: 30px;">{Btn_landingpage_text}</{Element_type}>    </div></div>';
+    var div_goto_landingpage = '<div style="background-image:url({Bg_Url});background-size: 100% 100%;width:100%;height:100%;">    <div style = "position:absolute; top:20%; width:100%; ">        <div style="text-align:center; width:100%; ">            <img id="appIcon" src={logo_url} style="width:22%;"/>        </div>        <div style="text-align:center; width:100%; margin-top:10px;">            <span id="appName" style="font-size: 1.5em; color: #959595; padding: 15px 10px;">                {app_name}            </span>        </div>    </div>    <div style="text-align:center; width:100%; position:absolute; top:59%;">    </div>    <div style="text-align:center; width:100%; position:absolute; top:70%;">        <{Element_type} id="btnGotoLandingPage" style="background-color:#FFFFFF; border: {Border_width}px solid #959595; color: #959595; padding: 6px 20px; -webkit-border-radius: 30px; -moz-border-radius: 30px; border-radius: 30px;">{Btn_landingpage_text}</{Element_type}>    </div></div>';
     if (Params.isDownloadDirectly()) {
         destination = lkmeAction.destination.androidLoadLandingPage.replace(/{dest}/g, "download");
         DEBUG_ALERT(destination);
