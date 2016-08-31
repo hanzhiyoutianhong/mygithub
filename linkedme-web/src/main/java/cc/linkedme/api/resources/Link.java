@@ -3,37 +3,53 @@ package cc.linkedme.api.resources;
 import cc.linkedme.commons.exception.LMException;
 import cc.linkedme.commons.exception.LMExceptionFactor;
 import cc.linkedme.commons.util.Constants;
+import cc.linkedme.data.model.AppInfo;
 import cc.linkedme.data.model.params.DashboardUrlParams;
 import cc.linkedme.data.model.params.SummaryDeepLinkParams;
 import cc.linkedme.data.model.params.UrlParams;
 import cc.linkedme.service.DeepLinkService;
 import cc.linkedme.service.webapi.AppService;
 import cc.linkedme.service.webapi.SummaryService;
+import com.esotericsoftware.kryo.io.Input;
 import com.google.api.client.repackaged.com.google.common.base.Strings;
 import com.google.common.base.Joiner;
 import net.sf.json.JSONArray;
+import net.sf.json.JSONException;
 import net.sf.json.JSONObject;
+import org.apache.commons.collections.Buffer;
 import org.apache.http.NameValuePair;
 import org.apache.http.ParseException;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.entity.UrlEncodedFormEntity;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.impl.client.DefaultHttpClient;
+import org.apache.http.impl.client.SystemDefaultCredentialsProvider;
 import org.apache.http.message.BasicNameValuePair;
 import org.apache.http.protocol.HTTP;
 import org.apache.http.util.EntityUtils;
+import org.glassfish.jersey.media.multipart.FormDataContentDisposition;
+import org.glassfish.jersey.media.multipart.FormDataParam;
 import org.springframework.stereotype.Component;
+import retrofit.http.Query;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
+import javax.ws.rs.Consumes;
+import javax.ws.rs.FormParam;
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
+import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileReader;
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 import java.util.List;
@@ -67,8 +83,17 @@ public class Link {
             dashboardUrlParams.live_test_flag = "live";
         }
 
+        UrlParams urlParams = new UrlParams();
+        urlParams.app_id = dashboardUrlParams.app_id;
+        urlParams.promotion_name = dashboardUrlParams.promotion_name;
+
+        if(appService.validPromotionName(urlParams)) {
+            throw new LMException(LMExceptionFactor.LM_ILLEGAL_PARAM_VALUE, "Duplicated promotion name!");
+        }
+
         List<NameValuePair> params = new ArrayList<NameValuePair>();
         params.add(new BasicNameValuePair("app_id", String.valueOf(dashboardUrlParams.app_id)));
+        params.add(new BasicNameValuePair("promotion_name", String.valueOf(dashboardUrlParams.promotion_name)));
         params.add(new BasicNameValuePair("ios_use_default", String.valueOf(dashboardUrlParams.ios_use_default)));
         params.add(new BasicNameValuePair("ios_custom_url", dashboardUrlParams.ios_custom_url));
         params.add(new BasicNameValuePair("android_use_default", String.valueOf(dashboardUrlParams.android_use_default)));
@@ -196,11 +221,19 @@ public class Link {
             jsonArray.add(jsonObject);
         }
 
-        if(jsonArray.size() > 0) {
+        if (Strings.isNullOrEmpty(dashboardUrlParams.promotion_name)) {
+            JSONObject jsonObject = new JSONObject();
+            jsonObject.put("err_code", 40002);
+            jsonObject.put("err_param", "promotion_name");
+            jsonObject.put("err_msg", "推广名称不能为空!");
+            jsonArray.add(jsonObject);
+        }
+
+        if (jsonArray.size() > 0) {
             return jsonArray.toString();
         }
 
-        if(Strings.isNullOrEmpty(dashboardUrlParams.live_test_flag)) {
+        if (Strings.isNullOrEmpty(dashboardUrlParams.live_test_flag)) {
             dashboardUrlParams.live_test_flag = "live";
         }
 
@@ -257,5 +290,59 @@ public class Link {
         }
 
         return jsonArray;
+    }
+
+    // promotion_name, channel, tag, params
+    @POST
+    @Path("batch_create")
+    @Produces("application/json;charset=UTF-8")
+    @Consumes(MediaType.MULTIPART_FORM_DATA)
+    public String batchUrlCreation(@FormDataParam("file") InputStream csvData,
+                                   @FormDataParam("file") FormDataContentDisposition dataDetail
+                                   //@FormParam("app_id") long appId
+                                   ) {
+
+        List<DashboardUrlParams> urlDatas = new ArrayList<>();
+        List<String> resultDatas = new ArrayList<>();
+        String line;
+        long appId = 0;
+        JSONArray resultJson = new JSONArray();
+        AppInfo appInfo = appService.getAppById(appId);
+        try {
+            BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(csvData));
+            while ((line = bufferedReader.readLine()) != null) {
+                DashboardUrlParams urlData = new DashboardUrlParams();
+                String[] data = line.split(",");
+                urlData.app_id = appId;
+                urlData.promotion_name = data[0];
+                urlData.channel = Strings.isNullOrEmpty(data[1]) ? new String[0] : data[1].split(";");
+                urlData.tags = Strings.isNullOrEmpty(data[2]) ? new String[0] : data[2].split(";");
+                urlData.params = Strings.isNullOrEmpty(data[3]) ? JSONObject.fromObject((new String[0])) : JSONObject.fromObject(data[3]);
+                urlData.ios_use_default = true;
+                urlData.ios_custom_url = appInfo.getIos_custom_url();
+                urlData.android_use_default = true;
+                urlData.android_custom_url = appInfo.getAndroid_custom_url();
+                urlData.desktop_use_default = true;
+                urlData.desktop_custom_url = appInfo.getCustom_landing_page();
+                urlData.source = "Dashboard";
+                urlData.linkedme_key = appInfo.getApp_key();
+                String res = createUrl(urlData, null);
+                JSONObject jsonObject;
+                try {
+                    jsonObject = JSONObject.fromObject(res);
+                } catch (JSONException e) {
+                    jsonObject = null;
+                }
+                if (jsonObject == null) {
+                    jsonObject.put(urlData.promotion_name, "failed");
+                }
+                resultJson.add(jsonObject);
+                resultDatas.add(res);
+                urlDatas.add(urlData);
+            }
+        } catch (Exception e) {
+            new LMException(LMExceptionFactor.LM_ILLEGAL_PARAM_VALUE, "illegal csv params!");
+        }
+        return resultJson.toString();
     }
 }

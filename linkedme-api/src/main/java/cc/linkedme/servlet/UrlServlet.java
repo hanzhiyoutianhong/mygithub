@@ -187,7 +187,7 @@ public class UrlServlet extends HttpServlet {
         String scheme = "";
         boolean isIOS = false;
         boolean isAndroid = false;
-        boolean yybAvailable = false;
+        boolean yybAvailable = (appInfo.getIos_android_flag() & 16) == 1;
         String countType;
         String apiName = "click";
         if (osFamily.equals("iOS")) {

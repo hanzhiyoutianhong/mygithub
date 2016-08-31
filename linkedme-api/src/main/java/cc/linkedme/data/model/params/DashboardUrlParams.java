@@ -17,6 +17,7 @@ public class DashboardUrlParams {
     public long[] deeplink_ids;
     public long app_id;
     public int user_id;
+    public String promotion_name;
     public String alias;
     public String[] tags;
     public String[] channel;
@@ -45,6 +46,22 @@ public class DashboardUrlParams {
     public long timestamp;
     public String sign;
 
+    public long getDeeplink_id() {
+        return deeplink_id;
+    }
+
+    public void setDeeplink_id(long deeplink_id) {
+        this.deeplink_id = deeplink_id;
+    }
+
+    public long[] getDeeplink_ids() {
+        return deeplink_ids;
+    }
+
+    public void setDeeplink_ids(long[] deeplink_ids) {
+        this.deeplink_ids = deeplink_ids;
+    }
+
     public long getApp_id() {
         return app_id;
     }
@@ -53,12 +70,20 @@ public class DashboardUrlParams {
         this.app_id = app_id;
     }
 
-    public String[] getTags() {
-        return tags;
+    public int getUser_id() {
+        return user_id;
     }
 
-    public void setTags(String[] tags) {
-        this.tags = tags;
+    public void setUser_id(int user_id) {
+        this.user_id = user_id;
+    }
+
+    public String getPromotion_name() {
+        return promotion_name;
+    }
+
+    public void setPromotion_name(String promotion_name) {
+        this.promotion_name = promotion_name;
     }
 
     public String getAlias() {
@@ -67,6 +92,14 @@ public class DashboardUrlParams {
 
     public void setAlias(String alias) {
         this.alias = alias;
+    }
+
+    public String[] getTags() {
+        return tags;
+    }
+
+    public void setTags(String[] tags) {
+        this.tags = tags;
     }
 
     public String[] getChannel() {
@@ -99,6 +132,14 @@ public class DashboardUrlParams {
 
     public void setCampaign(String[] campaign) {
         this.campaign = campaign;
+    }
+
+    public JSONObject getParams() {
+        return params;
+    }
+
+    public void setParams(JSONObject params) {
+        this.params = params;
     }
 
     public String getSource() {
@@ -173,6 +214,14 @@ public class DashboardUrlParams {
         this.desktop_custom_url = desktop_custom_url;
     }
 
+    public String getLive_test_flag() {
+        return live_test_flag;
+    }
+
+    public void setLive_test_flag(String live_test_flag) {
+        this.live_test_flag = live_test_flag;
+    }
+
     public long getIdentity_id() {
         return identity_id;
     }
@@ -221,38 +270,6 @@ public class DashboardUrlParams {
         this.is_debug = is_debug;
     }
 
-    public JSONObject getParams() {
-        return params;
-    }
-
-    public void setParams(JSONObject params) {
-        this.params = params;
-    }
-
-    public long getDeeplink_id() {
-        return deeplink_id;
-    }
-
-    public void setDeeplink_id(long deeplink_id) {
-        this.deeplink_id = deeplink_id;
-    }
-
-    public long[] getDeeplink_ids() {
-        return deeplink_ids;
-    }
-
-    public void setDeeplink_ids(long[] deeplink_ids) {
-        this.deeplink_ids = deeplink_ids;
-    }
-
-    public String getSign() {
-        return sign;
-    }
-
-    public void setSign(String sign) {
-        this.sign = sign;
-    }
-
     public long getTimestamp() {
         return timestamp;
     }
@@ -261,19 +278,11 @@ public class DashboardUrlParams {
         this.timestamp = timestamp;
     }
 
-    public int getUser_id() {
-        return user_id;
+    public String getSign() {
+        return sign;
     }
 
-    public void setUser_id(int user_id) {
-        this.user_id = user_id;
-    }
-
-    public String getLive_test_flag() {
-        return live_test_flag;
-    }
-
-    public void setLive_test_flag(String live_test_flag) {
-        this.live_test_flag = live_test_flag;
+    public void setSign(String sign) {
+        this.sign = sign;
     }
 }

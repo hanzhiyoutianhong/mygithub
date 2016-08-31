@@ -722,7 +722,7 @@ public class LMSdkServiceImpl implements LMSdkService {
 
         long deepLinkId = uuidCreator.nextId(0); // 0表示发号器的deepLink业务
         String params = urlParams.params == null ? "" : urlParams.params.toString();
-        DeepLink link = new DeepLink(deepLinkId, deepLinkMd5, urlParams.app_id, urlParams.linkedme_key, urlParams.identity_id,
+        DeepLink link = new DeepLink(deepLinkId, deepLinkMd5, urlParams.app_id, urlParams.promotion_name, urlParams.linkedme_key, urlParams.identity_id,
                 ArrayUtil.strArrToString(urlParams.tags), urlParams.alias, ArrayUtil.strArrToString(urlParams.channel),
                 ArrayUtil.strArrToString(urlParams.feature), ArrayUtil.strArrToString(urlParams.stage),
                 ArrayUtil.strArrToString(urlParams.campaign), params, urlParams.source, urlParams.sdk_version);

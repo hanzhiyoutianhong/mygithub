@@ -8,7 +8,9 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+import cc.linkedme.data.dao.util.DateDuration;
 import cc.linkedme.data.model.params.DashboardUrlParams;
+import cc.linkedme.data.model.params.UrlParams;
 import org.springframework.dao.DataAccessException;
 import org.springframework.jdbc.core.RowMapper;
 
@@ -48,6 +50,7 @@ public class DeepLinkDaoImpl extends BaseDao implements DeepLinkDao {
         String deeplink_md5 = deepLink.getDeeplinkMd5();
         String linkedme_key = deepLink.getLinkedmeKey();
         long appid = deepLink.getAppId();
+        String promotion_name = deepLink.getPromotionName();
         long identity_id = deepLink.getIdentityId();
         String create_time = deepLink.getCreateTime();
         String tags = deepLink.getTags();
@@ -73,7 +76,7 @@ public class DeepLinkDaoImpl extends BaseDao implements DeepLinkDao {
 
         try {
             result += tableChannel.getJdbcTemplate().update(tableChannel.getSql(),
-                    new Object[] {deeplink_id, deeplink_md5, linkedme_key, identity_id, appid, create_time, tags, alias, channel, feature,
+                    new Object[] {deeplink_id, deeplink_md5, linkedme_key, identity_id, appid, promotion_name, create_time, tags, alias, channel, feature,
                             stage, campaign, params, source, sdk_version, link_label, ios_use_default, ios_custom_url, android_use_default,
                             android_custom_url, desktop_use_default, desktop_custom_url, type});
         } catch (DataAccessException e) {
@@ -148,6 +151,7 @@ public class DeepLinkDaoImpl extends BaseDao implements DeepLinkDao {
         tableChannel.getJdbcTemplate().query(tableChannel.getSql(), new Object[] {deepLinkId, appid}, new RowMapper() {
             public Object mapRow(ResultSet resultSet, int i) throws SQLException {
                 DeepLink dp = new DeepLink();
+                dp.setPromotionName(resultSet.getString("promotion_name"));
                 dp.setDeeplinkMd5(resultSet.getString("deeplink_md5"));
                 dp.setLink_label(resultSet.getString("link_label"));
                 dp.setIos_use_default(resultSet.getBoolean("ios_use_default"));
@@ -260,6 +264,7 @@ public class DeepLinkDaoImpl extends BaseDao implements DeepLinkDao {
     public boolean updateUrlInfo(DashboardUrlParams dashboardUrlParams) {
         long deepLinkId = dashboardUrlParams.deeplink_id;
         long appId = dashboardUrlParams.app_id;
+        String promotionName = dashboardUrlParams.promotion_name;
         Date date = UuidHelper.getDateFromId(deepLinkId);
         TableChannel tableChannel = tableContainer.getTableChannel("deeplink", UPDATE_URL_INFO, appId, date);
         JdbcTemplate jdbcTemplate = tableChannel.getJdbcTemplate();
@@ -286,7 +291,7 @@ public class DeepLinkDaoImpl extends BaseDao implements DeepLinkDao {
         String source = dashboardUrlParams.source;
         String params = dashboardUrlParams.params.toString();
 
-        Object[] values = new Object[] {appId, ios_use_default, ios_custom_url, android_use_default, android_custom_url,
+        Object[] values = new Object[] {appId, promotionName, ios_use_default, ios_custom_url, android_use_default, android_custom_url,
                 desktop_use_default, desktop_custom_url, feature, campaign, stage, channel, tags, source, params, deepLinkId, appId};
 
         try {

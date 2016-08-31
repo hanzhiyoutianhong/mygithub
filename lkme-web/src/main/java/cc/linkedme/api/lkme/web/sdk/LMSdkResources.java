@@ -285,6 +285,7 @@ public class LMSdkResources {
     @Produces({MediaType.APPLICATION_JSON})
     public String url_form(@FormParam("device_id") String device_id,
                            @FormParam("app_id") int app_id,
+                           @FormParam("promotion_name") String promotion_name,
                            @FormParam("ios_use_default") boolean ios_use_default,
                            @FormParam("ios_custom_url") String ios_custom_url,
                            @FormParam("android_use_default") boolean android_use_default,
@@ -314,6 +315,7 @@ public class LMSdkResources {
         UrlParams urlParams = new UrlParams();
         urlParams.device_id = device_id;
         urlParams.app_id = app_id;
+        urlParams.promotion_name = promotion_name;
         urlParams.ios_use_default = ios_use_default;
         urlParams.ios_custom_url = ios_custom_url;
         urlParams.android_use_default = android_use_default;

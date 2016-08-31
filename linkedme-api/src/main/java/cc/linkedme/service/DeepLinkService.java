@@ -26,6 +26,7 @@ import net.sf.json.JSONArray;
 import net.sf.json.JSONObject;
 
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -147,6 +148,7 @@ public class DeepLinkService {
 
         resultJson.put("userid", urlParams.user_id);
         resultJson.put("app_id", urlParams.app_id);
+        resultJson.put("promotion_name", deepLinkInfo.getPromotionName());
         resultJson.put("link_label", deepLinkInfo.getLink_label());
         resultJson.put("ios_use_default", String.valueOf(deepLinkInfo.isIos_use_default()));
         resultJson.put("ios_custom_url", deepLinkInfo.getIos_custom_url());
@@ -196,6 +198,10 @@ public class DeepLinkService {
     }
 
     public boolean updateUrl(DashboardUrlParams dashboardUrlParams) {
+        UrlParams urlParams = new UrlParams();
+        urlParams.promotion_name = dashboardUrlParams.promotion_name;
+        urlParams.app_id = dashboardUrlParams.app_id;
+
         boolean result = deepLinkDao.updateUrlInfo(dashboardUrlParams);
         if (result) {
             deepLinkMemCache.delete(String.valueOf(dashboardUrlParams.deeplink_id));

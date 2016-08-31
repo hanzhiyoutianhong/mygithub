@@ -286,7 +286,7 @@ public class UserDaoImpl extends BaseDao implements UserDao {
                         + " as appinfo on user.id = appinfo.user_id right join " + dbName + "." + bundleTbName
                         + " as bundle on bundle.app_id = appinfo.ios_bundle_id where bundle.online_date between " + "\'" + start_time + "\'"
                         + " and " + "\'" + end_time + "\'"
-                        + " and user.valid_status = 1 and appinfo.valid_status = 1 and bundle.valid_status = 1;";
+                        + " and user.valid_status = 1 and appinfo.valid_status = 1 and bundle.valid_status = 1 order by bundle.online_date;";
         jdbcTemplate.query(sql, new RowMapper() {
 
             public Object mapRow(ResultSet resultSet, int i) throws SQLException {
