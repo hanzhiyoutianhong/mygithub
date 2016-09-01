@@ -212,8 +212,8 @@ public class DeepLinkDateCountDaoImpl extends BaseDao implements DeepLinkDateCou
                 + totalCountType + "), " + countType + " = " + countType + " + values(" + countType + ")";
         int result = 0;
         try {
-            result = tableChannel.getJdbcTemplate().update(sql,
-                    new Object[] {id, deepLinkDateCount.getAppId(), deepLinkDateCount.getDeeplinkId(), deepLinkDateCount.getDate(), 1, 1});
+            result = tableChannel.getJdbcTemplate().update(sql, new Object[] {id, deepLinkDateCount.getAppId(),
+                    deepLinkDateCount.getDeeplinkId(), deepLinkDateCount.getDate(), deepLinkDateCount.getType(), 1, 1});
         } catch (Exception e) {
             ApiLogger.error("DeepLinkDateCountDaoImpl.addDeepLinkDateCount add count failed!", e);
         }
