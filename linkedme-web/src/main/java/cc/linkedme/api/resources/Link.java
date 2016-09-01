@@ -102,6 +102,11 @@ public class Link {
         params.add(new BasicNameValuePair("desktop_custom_url", dashboardUrlParams.desktop_custom_url));
 
         Joiner joiner = Joiner.on(",").skipNulls();
+        dashboardUrlParams.feature = dashboardUrlParams.feature == null ? new String[0] : dashboardUrlParams.feature;
+        dashboardUrlParams.campaign = dashboardUrlParams.campaign == null ? new String[0] : dashboardUrlParams.campaign;
+        dashboardUrlParams.stage = dashboardUrlParams.stage == null ? new String[0] : dashboardUrlParams.stage;
+        dashboardUrlParams.channel = dashboardUrlParams.channel == null ? new String[0] : dashboardUrlParams.channel;
+        dashboardUrlParams.tags = dashboardUrlParams.tags == null ? new String[0] : dashboardUrlParams.tags;
         params.add(new BasicNameValuePair("feature", joiner.join(dashboardUrlParams.feature)));
         params.add(new BasicNameValuePair("campaign", joiner.join(dashboardUrlParams.campaign)));
         params.add(new BasicNameValuePair("stage", joiner.join(dashboardUrlParams.stage)));
@@ -294,25 +299,27 @@ public class Link {
 
     // promotion_name, channel, tag, params
     @POST
-    @Path("batch_create")
+    @Path("/batch_create/{app_id}")
     @Produces("application/json;charset=UTF-8")
     @Consumes(MediaType.MULTIPART_FORM_DATA)
     public String batchUrlCreation(@FormDataParam("file") InputStream csvData,
-                                   @FormDataParam("file") FormDataContentDisposition dataDetail
-                                   //@FormParam("app_id") long appId
-                                   ) {
+                                   @FormDataParam("file") FormDataContentDisposition dataDetail,
+                                   @PathParam("app_id") long appId) {
 
         List<DashboardUrlParams> urlDatas = new ArrayList<>();
         List<String> resultDatas = new ArrayList<>();
-        String line;
-        long appId = 0;
         JSONArray resultJson = new JSONArray();
         AppInfo appInfo = appService.getAppById(appId);
         try {
             BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(csvData));
+            String line;
             while ((line = bufferedReader.readLine()) != null) {
+                System.out.println( line );
                 DashboardUrlParams urlData = new DashboardUrlParams();
                 String[] data = line.split(",");
+                if( data.length < 2 ) {
+                    continue;
+                }
                 urlData.app_id = appId;
                 urlData.promotion_name = data[0];
                 urlData.channel = Strings.isNullOrEmpty(data[1]) ? new String[0] : data[1].split(";");
