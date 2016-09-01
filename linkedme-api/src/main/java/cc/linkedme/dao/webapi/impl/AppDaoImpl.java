@@ -356,7 +356,7 @@ public class AppDaoImpl extends BaseDao implements AppDao {
     public boolean validPromotionName(UrlParams urlParams) {
         long appId = urlParams.app_id;
         String promotionName = urlParams.promotion_name;
-        String liveTestFlag = "live";
+        String liveTestFlag = urlParams.live_test_flag;
         final List<DeepLink> deepLinks = new ArrayList<>();
         TableChannel tableChannel = tableContainer.getTableChannel("urlTags", VALIDATE_PROMOTION_NAME, 0L, 0L);
         try {

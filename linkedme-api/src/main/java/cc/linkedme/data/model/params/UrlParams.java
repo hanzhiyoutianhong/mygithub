@@ -36,6 +36,7 @@ public class UrlParams extends BaseParams {
     public boolean desktop_use_default;
     public String desktop_custom_url;
     public String type;
+    public String live_test_flag;
 
     public String start_date;
     public String end_date;

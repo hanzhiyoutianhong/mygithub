@@ -53,6 +53,8 @@ import java.io.InputStreamReader;
 import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 /**
  * Created by LinkedME01 on 16/3/30.
@@ -86,7 +88,7 @@ public class Link {
         UrlParams urlParams = new UrlParams();
         urlParams.app_id = dashboardUrlParams.app_id;
         urlParams.promotion_name = dashboardUrlParams.promotion_name;
-
+        urlParams.live_test_flag = dashboardUrlParams.live_test_flag;
         if(appService.validPromotionName(urlParams)) {
             throw new LMException(LMExceptionFactor.LM_ILLEGAL_PARAM_VALUE, "Duplicated promotion name!");
         }
@@ -299,24 +301,26 @@ public class Link {
 
     // promotion_name, channel, tag, params
     @POST
-    @Path("/batch_create/{app_id}")
+    @Path("/batch_create/{app_id}/{live_test_flag}")
     @Produces("application/json;charset=UTF-8")
     @Consumes(MediaType.MULTIPART_FORM_DATA)
     public String batchUrlCreation(@FormDataParam("file") InputStream csvData,
                                    @FormDataParam("file") FormDataContentDisposition dataDetail,
-                                   @PathParam("app_id") long appId) {
+                                   @PathParam("app_id") long appId,
+                                   @PathParam("live_test_flag") String live_test_flag) {
 
         List<DashboardUrlParams> urlDatas = new ArrayList<>();
         List<String> resultDatas = new ArrayList<>();
         JSONArray resultJson = new JSONArray();
-        AppInfo appInfo = appService.getAppById(appId);
+        //AppInfo appInfo = appService.getAppById(appId);
+        AppInfo appInfo = new AppInfo();
         try {
             BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(csvData));
             String line;
             while ((line = bufferedReader.readLine()) != null) {
                 System.out.println( line );
                 DashboardUrlParams urlData = new DashboardUrlParams();
-                String[] data = line.split(",");
+                String[] data = line.split("\t", 4 );
                 if( data.length < 2 ) {
                     continue;
                 }
@@ -333,6 +337,7 @@ public class Link {
                 urlData.desktop_custom_url = appInfo.getCustom_landing_page();
                 urlData.source = "Dashboard";
                 urlData.linkedme_key = appInfo.getApp_key();
+                urlData.live_test_flag = live_test_flag;
                 String res = createUrl(urlData, null);
                 JSONObject jsonObject;
                 try {
