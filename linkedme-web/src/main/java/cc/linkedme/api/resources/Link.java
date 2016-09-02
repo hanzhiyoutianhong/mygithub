@@ -120,7 +120,7 @@ public class Link {
 
         HttpClient client = new DefaultHttpClient();
         String result = null;
-        HttpPost postMethod = new HttpPost("http://192.168.1.101:8080/i/sdk/url");
+        HttpPost postMethod = new HttpPost(Constants.CREATE_URL_API);
         try {
             postMethod.setEntity(new UrlEncodedFormEntity(params, HTTP.UTF_8));
             result = EntityUtils.toString(client.execute(postMethod).getEntity(), HTTP.UTF_8);
