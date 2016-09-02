@@ -365,6 +365,7 @@ public class AppDaoImpl extends BaseDao implements AppDao {
                     DeepLink deepLink = new DeepLink();
                     deepLink.setAppId(appId);
                     deepLink.setPromotionName(resultSet.getString("tag_content"));
+                    deepLinks.add(deepLink);
                     return null;
                 }
             });
