@@ -101,6 +101,7 @@ public class DeepLinkDaoImpl extends BaseDao implements DeepLinkDao {
                 public Object mapRow(ResultSet resultSet, int i) throws SQLException {
                     dp.setAppId(appid);
                     dp.setDeeplinkId(resultSet.getBigDecimal("deeplink_id").longValue());
+                    dp.setPromotionName(resultSet.getString("promotion_name"));
                     dp.setCreateTime(resultSet.getString("create_time"));
                     dp.setTags(resultSet.getString("tags"));
                     dp.setAlias(resultSet.getString("alias"));
@@ -234,6 +235,7 @@ public class DeepLinkDaoImpl extends BaseDao implements DeepLinkDao {
             public Object mapRow(ResultSet resultSet, int i) throws SQLException {
                 DeepLink dp = new DeepLink();
                 dp.setAppId(appid);
+                dp.setPromotionName(resultSet.getString("promotion_name"));
                 dp.setDeeplinkId(resultSet.getBigDecimal("deeplink_id").longValue());
                 dp.setCreateTime(resultSet.getString("create_time"));
                 dp.setTags(resultSet.getString("tags"));

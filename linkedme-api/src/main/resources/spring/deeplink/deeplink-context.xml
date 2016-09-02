@@ -41,7 +41,7 @@
                 <entry key="UPDATE_DEEPLINKS" value="update $db$.$tb$ set vflag = ?, mflag=? where status_id = ? and vflag in (0,6,7) and cmt_id = ?"/>
                 <entry key="GET_URL_INFO" value="select promotion_name, deeplink_md5, link_label, ios_use_default, ios_custom_url, android_use_default, android_custom_url, desktop_use_default, desktop_custom_url, feature, campaign, stage, channel, tags, source, params, type from $db$.$tb$ where deeplink_id = ? and appid = ? and valid_status = 1"/>
                 <entry key="DELETE_DEEPLINK" value="update $db$.$tb$ set valid_status = '0' where deeplink_id = ?"/>
-                <entry key="UPDATE_URL_INFO" value="update $db$.$tb$ set appid=?, ios_use_default=?, ios_custom_url=?, android_use_default=?, android_custom_url=?, desktop_use_default=?, desktop_custom_url=?, feature=?, campaign=?, stage=?, channel=?, tags=?, source=?, params=? where deeplink_id = ? and appid = ? and valid_status = '1' "/>
+                <entry key="UPDATE_URL_INFO" value="update $db$.$tb$ set appid=?, promotion_name = ?, ios_use_default=?, ios_custom_url=?, android_use_default=?, android_custom_url=?, desktop_use_default=?, desktop_custom_url=?, feature=?, campaign=?, stage=?, channel=?, tags=?, source=?, params=? where deeplink_id = ? and appid = ? and valid_status = '1' "/>
             </map>
         </property>
         <property name="jdbcTemplates">
