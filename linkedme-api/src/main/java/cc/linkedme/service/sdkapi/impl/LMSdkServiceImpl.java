@@ -338,7 +338,7 @@ public class LMSdkServiceImpl implements LMSdkService {
             }
         }
 
-        String params = getParamsFromDeepLink(deepLink);
+        String params = getParamsFromDeepLink(deepLink, true);
         long fromDeepLinkId = deepLinkId; // 用于统计一个deeplink带来的下载量
         if (Strings.isNullOrEmpty(params)) {
             fromDeepLinkId = 0;
@@ -388,6 +388,7 @@ public class LMSdkServiceImpl implements LMSdkService {
         resultJson.put("device_fingerprint_id", deviceFingerprintId);
         resultJson.put("browser_fingerprint_id", browserFingerprintId);
         resultJson.put("link", "");
+        resultJson.put("new_user", true);
         resultJson.put("deeplink_id", fromDeepLinkId);
         resultJson.put("params", params);
         resultJson.put("is_first_session", true);
@@ -526,7 +527,7 @@ public class LMSdkServiceImpl implements LMSdkService {
             }
 
             // yyb + deferred deep linking
-            if (deepLink == null && "Android".equals(openParams.os) && appId > 0) {
+            if (deepLink == null && appId > 0) {
                 String deviceModel = null;
                 if (!Strings.isNullOrEmpty(openParams.device_model)) {
                     deviceModel = openParams.device_model.trim().toLowerCase();
@@ -546,7 +547,7 @@ public class LMSdkServiceImpl implements LMSdkService {
             }
 
             if (deepLink != null) {
-                params = getParamsFromDeepLink(deepLink);
+                params = getParamsFromDeepLink(deepLink, false);
 
                 // count
                 // TODO 如果是pc扫描过来的,需要在openType前边加上 "pc_",eg: pc_ios_open
@@ -618,7 +619,7 @@ public class LMSdkServiceImpl implements LMSdkService {
         return resultJson.toString();
     }
 
-    private static String getParamsFromDeepLink(DeepLink deepLink) {
+    private static String getParamsFromDeepLink(DeepLink deepLink, boolean isNewUser) {
         if (deepLink == null) {
             return null;
         }
@@ -660,6 +661,8 @@ public class LMSdkServiceImpl implements LMSdkService {
         jsonObject.put("channel", channelJson);
         jsonObject.put("feature", featureJson);
         jsonObject.put("stage", stageJson);
+        jsonObject.put("lkme_link", Constants.DEEPLINK_HTTPS_PREFIX + "/" + Base62.encode(deepLink.getAppId()) + "/" + Base62.encode(deepLink.getDeeplinkId()));
+        jsonObject.put("lkme_new_user", isNewUser);
         return jsonObject.toString();
     }
 
