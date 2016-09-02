@@ -8,6 +8,34 @@
        http://www.springframework.org/schema/wfc
        http://www.springframework.org/schema/wfc.xsd ">
 
+    <bean id="propertyConfigurer"
+          class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">
+        <property name="locations">
+            <list>
+                <value>classpath:jdbc.properties</value>
+            </list>
+        </property>
+    </bean>
+
+    <bean id="dashboardDataSourceMaster" class="com.mchange.v2.c3p0.ComboPooledDataSource">
+        <property name="driverClass" value="com.mysql.jdbc.Driver"/>
+        <property name="jdbcUrl" value="${dashboard.datasource.master.jdbcUrl}"/>
+        <property name="user" value="${user}"/>
+        <property name="password" value="${pwd}"/>
+        <property name="minPoolSize" value="2"/>
+        <property name="maxPoolSize" value="50"/>
+        <property name="idleConnectionTestPeriod" value="25"/>
+        <property name="maxIdleTime" value="20"/>
+        <property name="breakAfterAcquireFailure" value="false"/>
+        <property name="acquireRetryAttempts" value="10"/>
+        <property name="acquireRetryDelay" value="1000"/>
+    </bean>
+
+    <bean name="jdbcTemelate" class="org.springframework.jdbc.core.JdbcTemplate">
+        <property name="dataSource" ref="dashboardDataSourceMaster"></property>
+    </bean>
+
+
     <bean id="dataSource" abstract="true">
         <property name="driverClass">
             <value>com.mysql.jdbc.Driver</value>

@@ -175,7 +175,7 @@ public class DeepLinkDaoImpl extends BaseDao implements DeepLinkDao {
     }
 
     public List<DeepLink> getDeepLinks(long appid, String start_date, String end_date, String feature, String campaign, String stage,
-            String channel, String tag, String source, boolean unique, String type) {
+            String channel, String tag, String promotionName, String source, boolean unique, String type) {
         Date date = Util.timeStrToDate(start_date);
         TableChannel tableChannel = tableContainer.getTableChannel("deeplink", GET_DEEPLINKS, appid, date);
         String sql = tableChannel.getSql();
@@ -213,6 +213,9 @@ public class DeepLinkDaoImpl extends BaseDao implements DeepLinkDao {
             condition += "and tags like '%' ? '%' ";
             paramList.add(tag);
         }
+        if(!Strings.isNullOrEmpty(promotionName)){
+            condition += "and promotion_name like '%' ? '%' ";
+        }
         if (!Strings.isNullOrEmpty(source)) {
             condition += "and source = ? ";
             paramList.add(source);
@@ -230,6 +233,7 @@ public class DeepLinkDaoImpl extends BaseDao implements DeepLinkDao {
                 dp.setDeeplinkId(resultSet.getBigDecimal("deeplink_id").longValue());
                 dp.setCreateTime(resultSet.getString("create_time"));
                 dp.setTags(resultSet.getString("tags"));
+                dp.setPromotionName(resultSet.getString("promotion_name"));
                 dp.setAlias(resultSet.getString("alias"));
                 dp.setChannel(resultSet.getString("channel"));
                 dp.setFeature(resultSet.getString("feature"));
@@ -237,6 +241,13 @@ public class DeepLinkDaoImpl extends BaseDao implements DeepLinkDao {
                 dp.setCampaign(resultSet.getString("campaign"));
                 dp.setSource(resultSet.getString("source"));
                 dp.setType(resultSet.getString("type"));
+                dp.setParams(resultSet.getString("params"));
+                dp.setIos_use_default(resultSet.getBoolean("ios_use_default"));
+                dp.setIos_custom_url(resultSet.getString("ios_custom_url"));
+                dp.setAndroid_use_default(resultSet.getBoolean("android_use_default"));
+                dp.setAndroid_custom_url(resultSet.getString("android_custom_url"));
+                dp.setDesktop_use_default(resultSet.getBoolean("desktop_use_default"));
+                dp.setDesktop_custom_url(resultSet.getString("desktop_custom_url"));
                 deepLinks.add(dp);
                 return null;
             }

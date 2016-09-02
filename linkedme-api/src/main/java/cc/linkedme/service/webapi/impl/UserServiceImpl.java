@@ -30,25 +30,26 @@ public class UserServiceImpl implements UserService {
     @Resource
     private UserDao userDao;
 
-    public boolean userRegister(UserParams userParams) {
-        userParams.pwd = MD5Utils.md5(userParams.pwd);
-        int res = userDao.updateUserInfo(userParams);
-        if (res > 0) {
-            new Thread() {
-                @Override
-                public void run() {
-                    MailSender.sendHtmlMail("support@linkedme.cc", "hello,LinkedME, 来新用户了!",
-                            String.format("新用户的邮箱:%s <br />新用户的电话:%s <br />请及时联系!", userParams.email, userParams.phone_number));
-                    MailSender.sendHtmlMail(userParams.email, "LinkedME 注册成功",
-                            String.format(
-                                    "<center><div style='width:500px;text-align:left'><div><a href='https://www.linkedme.cc/'><img src='https://www.linkedme.cc/images/linkedme_logo.png' style='margin-bottom:10px' width='150'/></a></div><div style='border:solid 1px #eeeeee;border-radius:5px;padding:15px;font-size:13px;line-height:20px;'><p>Hi，%s:</p><p>欢迎使用LinkedME！</p>我是LinkedME的创始人——齐坡，非常高兴能和您取得联系。您在使用LinkedME产品的过程中，遇到任何问题，都可以和我联系（齐坡：qipo@linkedme.cc），竭诚为您服务！</p>LinkedME是国内首家企业级深度链接服务平台，致力于通过深度链接技术帮助App解决用户增长和流量变问题。通过深度链接，可以从任何渠道（微信、微博、短信、邮件以及其他APP）直接跳转到APP内的详情页，大幅优化用户体验，提高APP活跃留存数据。而场景化推荐功能，可以为APP提供变现场景，从而解决流量变现问题。</p>欢迎访问：www.linkedme.cc</p>也可以通过以下方式联系我们：</p>Email：support@linkedme.cc</p>扫描二维码，关注我们的公共账号：</p><img src='https://www.linkedme.cc/images/qrcode.jpg' width='100' style='vertical-align:middle;padding-top:15px'/><p>深度链接，链接你我！</p></div><div id='figure'><a href='http://weibo.com/poqi1987'><img src='https://www.linkedme.cc/images/qipo_logo.png' width='50' style='vertical-align:middle;padding-top:15px'/></a> 齐坡，CEO</div></div></center>",
-                                    userParams.name));
-                }
-            }.start();
 
-            return true;
-        }
-        return false;
+    public void register(UserParams userParams) {
+        userParams.pwd = MD5Utils.md5(userParams.pwd);
+        userDao.addUser(userParams);
+        new Thread() {
+            @Override
+            public void run() {
+                MailSender.sendHtmlMail("support@linkedme.cc", "hello,LinkedME, 来新用户了!",
+                        String.format("新用户的邮箱:%s <br />新用户的电话:%s <br />请及时联系!", userParams.email, userParams.phone_number));
+                MailSender.sendHtmlMail(userParams.email, "LinkedME 注册成功",
+                        String.format(
+                                "<center><div style='width:500px;text-align:left'><div><a href='https://www.linkedme.cc/'><img src='https://www.linkedme.cc/images/linkedme_logo.png' style='margin-bottom:10px' width='150'/></a></div><div style='border:solid 1px #eeeeee;border-radius:5px;padding:15px;font-size:13px;line-height:20px;'><p>Hi，%s:</p><p>欢迎使用LinkedME！</p>我是LinkedME的创始人——齐坡，非常高兴能和您取得联系。您在使用LinkedME产品的过程中，遇到任何问题，都可以和我联系（齐坡：qipo@linkedme.cc），竭诚为您服务！</p>LinkedME是国内首家企业级深度链接服务平台，致力于通过深度链接技术帮助App解决用户增长和流量变问题。通过深度链接，可以从任何渠道（微信、微博、短信、邮件以及其他APP）直接跳转到APP内的详情页，大幅优化用户体验，提高APP活跃留存数据。而场景化推荐功能，可以为APP提供变现场景，从而解决流量变现问题。</p>欢迎访问：www.linkedme.cc</p>也可以通过以下方式联系我们：</p>Email：support@linkedme.cc</p>扫描二维码，关注我们的公共账号：</p><img src='https://www.linkedme.cc/images/qrcode.jpg' width='100' style='vertical-align:middle;padding-top:15px'/><p>深度链接，链接你我！</p></div><div id='figure'><a href='http://weibo.com/poqi1987'><img src='https://www.linkedme.cc/images/qipo_logo.png' width='50' style='vertical-align:middle;padding-top:15px'/></a> 齐坡，CEO</div></div></center>",
+                                userParams.name));
+            }
+        }.start();
+
+    }
+
+    public boolean isEmailRegistered(String email) {
+        return userDao.isEmailRegistered(email);
     }
 
     public UserInfo userLogin(UserParams userParams) {

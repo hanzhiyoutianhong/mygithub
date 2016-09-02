@@ -1,7 +1,6 @@
 package cc.linkedme.api.resources;
 
 import javax.annotation.Resource;
-import javax.print.attribute.standard.Media;
 import javax.servlet.http.HttpServletRequest;
 import javax.ws.rs.FormParam;
 import javax.ws.rs.GET;
@@ -13,8 +12,6 @@ import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 
 import cc.linkedme.commons.log.ApiLogger;
-import cc.linkedme.service.sdkapi.AppAnalysisService;
-import cc.linkedme.service.webapi.AppService;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import org.springframework.stereotype.Component;
@@ -30,7 +27,6 @@ import cc.linkedme.service.webapi.UserService;
 import com.google.api.client.repackaged.com.google.common.base.Strings;
 
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -39,7 +35,7 @@ import java.util.List;
  */
 @Path("user")
 @Component
-public class User {
+public class UserResource {
 
     @Resource
     private UserService userService;
@@ -47,7 +43,8 @@ public class User {
     @Path("/register")
     @POST
     @Produces({MediaType.APPLICATION_JSON})
-    public String register(UserParams userParams, @Context HttpServletRequest request) {
+    public String register(UserParams userParams) {
+
         JSONArray jsonArray = new JSONArray();
 
         if (Strings.isNullOrEmpty(userParams.email)) {
@@ -61,20 +58,17 @@ public class User {
         if (jsonArray.size() > 0) {
             return jsonArray.toString();
         }
+        userService.register(userParams);
 
-        if (userService.userRegister(userParams)) {
-            JsonBuilder resultJson = new JsonBuilder();
-            resultJson.append("ret", "true");
-            return resultJson.flip().toString();
-        } else {
-            throw new LMException(LMExceptionFactor.LM_ILLEGAL_PARAM_VALUE);
-        }
+        JsonBuilder resultJson = new JsonBuilder();
+        resultJson.append("ret", "true");
+        return resultJson.flip().toString();
+
     }
 
     @Path("/login")
     @POST
     @Produces({MediaType.APPLICATION_JSON})
-
     public String login(UserParams userParams, @Context HttpServletRequest request) {
         JSONArray jsonArray = new JSONArray();
         boolean emailIsValid = false;

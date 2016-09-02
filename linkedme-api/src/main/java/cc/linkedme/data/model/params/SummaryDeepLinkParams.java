@@ -14,6 +14,7 @@ public class SummaryDeepLinkParams {
     public String stage;
     public String channel;
     public String tags;
+    public String promotionName;
     public String source;
     public boolean unique;
     public int interval;
@@ -42,7 +43,7 @@ public class SummaryDeepLinkParams {
     }
 
     public SummaryDeepLinkParams(int appid, String startDate, String endDate, String feature, String campaign, String stage, String channel,
-            String tags, String source, boolean unique, int returnNumber, int skipNumber, String orderby, String order) {
+            String tags, String promotionName, String source, boolean unique, int returnNumber, int skipNumber, String orderby, String order) {
         this.appid = appid;
         this.startDate = startDate;
         this.endDate = endDate;
@@ -51,6 +52,7 @@ public class SummaryDeepLinkParams {
         this.stage = stage;
         this.channel = channel;
         this.tags = tags;
+        this.promotionName = promotionName;
         this.source = source;
         this.unique = unique;
         this.returnNumber = returnNumber;

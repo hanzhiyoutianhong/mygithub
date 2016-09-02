@@ -33,6 +33,7 @@ public class DeepLink implements Serializable {
     private String params;
     private String source;
     private String sdkVersion;
+    private String promotionName;
     private String type;
     private Timestamp updateTime;
     private int state;
@@ -114,6 +115,14 @@ public class DeepLink implements Serializable {
 
     public void setTags(String tags) {
         this.tags = tags;
+    }
+
+    public String getPromotionName() {
+        return promotionName;
+    }
+
+    public void setPromotionName(String promotionName) {
+        this.promotionName = promotionName;
     }
 
     public String getAlias() {
@@ -346,6 +355,14 @@ public class DeepLink implements Serializable {
             JSONArray tagsJson = JSONArray.fromObject(tags.split(","));
             jsonObject.put("tags", tagsJson);
         }
+
+        jsonObject.put("ios_use_default", ios_use_default);
+        jsonObject.put("ios_cumstom_url", ios_custom_url);
+        jsonObject.put("android_use_default", android_use_default);
+        jsonObject.put("android_custom_url", android_custom_url);
+        jsonObject.put("desktop_use_default", desktop_use_default);
+        jsonObject.put("desktop_custom_url", desktop_custom_url);
+        jsonObject.put("promotion_name", promotionName);
         jsonObject.put("unique", false);
         jsonObject.put("creation_time", createTime);
         jsonObject.put("source", source);

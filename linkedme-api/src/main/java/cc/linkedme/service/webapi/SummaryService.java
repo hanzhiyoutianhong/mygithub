@@ -725,7 +725,7 @@ public class SummaryService {
         for (DateDuration dd : dateDurations) {
             deepLinks.addAll(deepLinkDao.getDeepLinks(summaryDeepLinkParams.appid, dd.getMin_date(), dd.getMax_date(),
                     summaryDeepLinkParams.feature, summaryDeepLinkParams.campaign, summaryDeepLinkParams.stage,
-                    summaryDeepLinkParams.channel, summaryDeepLinkParams.tags, summaryDeepLinkParams.source, summaryDeepLinkParams.unique, summaryDeepLinkParams.liveTestFlag));
+                    summaryDeepLinkParams.channel, summaryDeepLinkParams.tags, summaryDeepLinkParams.promotionName, summaryDeepLinkParams.source, summaryDeepLinkParams.unique, summaryDeepLinkParams.liveTestFlag));
         }
         return deepLinks;
     }

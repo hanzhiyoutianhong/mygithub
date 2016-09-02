@@ -121,6 +121,7 @@ public class Link {
                              @QueryParam("stage") String stage,
                              @QueryParam("channel") String channel,
                              @QueryParam("tag") String tag,
+                             @QueryParam("promotion_name") String promotionName,
                              @QueryParam("source") String source,
                              @QueryParam("unique") boolean unique,
                              @QueryParam("live_test_flag") String liveTestFlag,
@@ -130,7 +131,7 @@ public class Link {
                              @QueryParam("order") String order) {
 
         SummaryDeepLinkParams summaryDeepLinkParams = new SummaryDeepLinkParams(appid, start_date, end_date, feature, campaign, stage,
-                channel, tag, source, unique, return_number, skip_number, orderby, order);
+                channel, tag, promotionName, source, unique, return_number, skip_number, orderby, order);
         if (Strings.isNullOrEmpty(liveTestFlag)) {
             summaryDeepLinkParams.liveTestFlag = "live";
         } else {
