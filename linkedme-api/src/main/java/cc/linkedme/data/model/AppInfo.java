@@ -39,7 +39,8 @@ public class AppInfo implements Serializable {
     private String android_search_option;
     private String android_package_name;
     private String android_sha256_fingerprints;
-    private int ios_android_flag;
+
+    private int ios_android_flag; //
 
     private boolean use_default_landing_page;
     private String custom_landing_page;

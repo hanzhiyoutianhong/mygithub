@@ -16,6 +16,7 @@ import javax.annotation.Resource;
 import cc.linkedme.commons.util.Constants;
 import cc.linkedme.data.model.params.DashboardUrlParams;
 
+import cc.linkedme.data.model.params.UrlParams;
 import com.google.common.base.Strings;
 
 import org.apache.commons.codec.binary.Base64;
@@ -355,6 +356,17 @@ public class AppServiceImpl implements AppService {
             appParams.type = "tag";
             configUrlTags(appParams);
         }
+
+        if (!Strings.isNullOrEmpty(urlParams.promotion_name)) {
+            appParams.value = new String[1];
+            appParams.value[0] = urlParams.promotion_name;
+            appParams.type = "promotion_name";
+            configUrlTags(appParams);
+        }
+    }
+
+    public boolean validPromotionName(UrlParams urlParams) {
+        return appDao.validPromotionName(urlParams);
     }
 
     @Override

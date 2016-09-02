@@ -1056,7 +1056,7 @@ public class Util {
     public static void main(String args[]) {
         String start_month = "2016-06-20";
         String end_month = "2016-08-20";
-        int duration = 3;
+        int duration = 1;
         List<String> months = getDays(start_month, end_month);
         List<String> interval_days = getIntervalDays(start_month, end_month, duration);
 

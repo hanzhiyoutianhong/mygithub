@@ -78,9 +78,7 @@
                 return 'true' == '${isForceUseScheme}';
             },
             isYYBAvailable: function () {
-                if (Params.app_id == 10230) {
-                    return false;
-                }
+                //'true' == '${isYYBAvailable}'
                 return "" !== Params.yyb_download_url && 0 !== Params.yyb_download_url && !Params.isIOS();
             }
         };

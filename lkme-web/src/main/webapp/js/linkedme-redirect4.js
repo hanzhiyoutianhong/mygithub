@@ -101,7 +101,8 @@ function start() {
     var launchAppUrl = (Params.uri_scheme.indexOf("://") >= 0) ? Params.uri_scheme : (Params.uri_scheme + "://");
     if (Params.isWechat()) {
         if ((Params.app_id == 10235 || Params.app_id == 10248 ) && Params.isIOS() && Params.ios_major >= 9) {
-            lkmeAction.recordId();
+            //lkmeAction.recordId();
+            lkmeAction.recordIdForYYB();
             window.location = "http://a.app.qq.com/o/simple.jsp?pkgname=" + Params.package_name;
         } else {
             gotoQQ("wechat");
