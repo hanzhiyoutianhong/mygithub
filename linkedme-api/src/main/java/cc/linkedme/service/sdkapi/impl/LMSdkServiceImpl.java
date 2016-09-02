@@ -120,7 +120,7 @@ public class LMSdkServiceImpl implements LMSdkService {
         String appId = linkedmeKeyClient.hget(webInitParams.getLinkedmeKey(), "appid");
 
         ApiLogger.biz(String.format("%s\t%s\t%s\t%s\t%s\t%s", webInitParams.getClientIP(), "webinit", appId, webInitParams.getLinkedmeKey(),
-                webInitParams.getIdentityId(),webInitParams.getType()));
+                webInitParams.getIdentityId(), webInitParams.getType()));
 
         return resultJson.toString();
 
@@ -133,7 +133,7 @@ public class LMSdkServiceImpl implements LMSdkService {
 
         ApiLogger.biz(String.format("%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s", webCloseParams.getClientIP(), "webclose", appId,
                 webCloseParams.getLinkedmeKey(), webCloseParams.getIdentityId(), webCloseParams.getSessionId(),
-                webCloseParams.getTimestamp(),webCloseParams.getType()));
+                webCloseParams.getTimestamp(), webCloseParams.getType()));
 
     }
 
@@ -722,10 +722,11 @@ public class LMSdkServiceImpl implements LMSdkService {
 
         long deepLinkId = uuidCreator.nextId(0); // 0表示发号器的deepLink业务
         String params = urlParams.params == null ? "" : urlParams.params.toString();
-        DeepLink link = new DeepLink(deepLinkId, deepLinkMd5, urlParams.app_id, urlParams.promotion_name, urlParams.linkedme_key, urlParams.identity_id,
-                ArrayUtil.strArrToString(urlParams.tags), urlParams.alias, ArrayUtil.strArrToString(urlParams.channel),
-                ArrayUtil.strArrToString(urlParams.feature), ArrayUtil.strArrToString(urlParams.stage),
-                ArrayUtil.strArrToString(urlParams.campaign), params, urlParams.source, urlParams.sdk_version);
+        DeepLink link = new DeepLink(deepLinkId, deepLinkMd5, urlParams.app_id, urlParams.promotion_name, urlParams.linkedme_key,
+                urlParams.identity_id, ArrayUtil.strArrToString(urlParams.tags), urlParams.alias,
+                ArrayUtil.strArrToString(urlParams.channel), ArrayUtil.strArrToString(urlParams.feature),
+                ArrayUtil.strArrToString(urlParams.stage), ArrayUtil.strArrToString(urlParams.campaign), params, urlParams.source,
+                urlParams.sdk_version);
         link.setLink_label(urlParams.link_label);
         link.setIos_use_default(urlParams.ios_use_default);
         link.setIos_custom_url(urlParams.ios_custom_url);

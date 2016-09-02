@@ -356,10 +356,12 @@ public class LMSdkResources {
         urlParams.sign = sign;
 
 
-        //        String apiName = "/i/sdk/url";
-//        if (!signAuthService.doAuth(apiName, urlParams.sign, String.valueOf(urlParams.identity_id), urlParams.linkedme_key, String.valueOf(urlParams.session_id), String.valueOf(urlParams.timestamp))) {
-//            throw new LMException(LMExceptionFactor.LM_AUTH_FAILED);
-//        }
+        // String apiName = "/i/sdk/url";
+        // if (!signAuthService.doAuth(apiName, urlParams.sign,
+        // String.valueOf(urlParams.identity_id), urlParams.linkedme_key,
+        // String.valueOf(urlParams.session_id), String.valueOf(urlParams.timestamp))) {
+        // throw new LMException(LMExceptionFactor.LM_AUTH_FAILED);
+        // }
 
         JSONObject requestJson = JSONObject.fromObject(urlParams);
 
@@ -372,7 +374,7 @@ public class LMSdkResources {
         JSONObject resultJson = new JSONObject();
         resultJson.put("url", url);
 
-        if(!Strings.isNullOrEmpty(channel) && channel.contains("spotlight")) {
+        if (!Strings.isNullOrEmpty(channel) && channel.contains("spotlight")) {
             resultJson.put("spotlight_identifier", Constants.SPOTLIGHT_PREFIX + urlArr[4]);
         }
 

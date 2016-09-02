@@ -10,32 +10,27 @@ import cc.linkedme.data.model.params.UrlParams;
 import cc.linkedme.service.DeepLinkService;
 import cc.linkedme.service.webapi.AppService;
 import cc.linkedme.service.webapi.SummaryService;
-import com.esotericsoftware.kryo.io.Input;
 import com.google.api.client.repackaged.com.google.common.base.Strings;
 import com.google.common.base.Joiner;
 import net.sf.json.JSONArray;
 import net.sf.json.JSONException;
 import net.sf.json.JSONObject;
-import org.apache.commons.collections.Buffer;
 import org.apache.http.NameValuePair;
 import org.apache.http.ParseException;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.entity.UrlEncodedFormEntity;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.impl.client.DefaultHttpClient;
-import org.apache.http.impl.client.SystemDefaultCredentialsProvider;
 import org.apache.http.message.BasicNameValuePair;
 import org.apache.http.protocol.HTTP;
 import org.apache.http.util.EntityUtils;
 import org.glassfish.jersey.media.multipart.FormDataContentDisposition;
 import org.glassfish.jersey.media.multipart.FormDataParam;
 import org.springframework.stereotype.Component;
-import retrofit.http.Query;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import javax.ws.rs.Consumes;
-import javax.ws.rs.FormParam;
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
@@ -45,16 +40,12 @@ import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 import java.io.BufferedReader;
-import java.io.File;
-import java.io.FileReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 /**
  * Created by LinkedME01 on 16/3/30.
@@ -77,11 +68,11 @@ public class Link {
     @Produces({MediaType.APPLICATION_JSON})
     public String createUrl(DashboardUrlParams dashboardUrlParams, @Context HttpServletRequest request) {
         JSONArray jsonArray = getCheckParamResult(dashboardUrlParams);
-        if(jsonArray.size() > 0) {
+        if (jsonArray.size() > 0) {
             return jsonArray.toString();
         }
 
-        if(Strings.isNullOrEmpty(dashboardUrlParams.live_test_flag)) {
+        if (Strings.isNullOrEmpty(dashboardUrlParams.live_test_flag)) {
             dashboardUrlParams.live_test_flag = "live";
         }
 
@@ -89,7 +80,7 @@ public class Link {
         urlParams.app_id = dashboardUrlParams.app_id;
         urlParams.promotion_name = dashboardUrlParams.promotion_name;
         urlParams.live_test_flag = dashboardUrlParams.live_test_flag;
-        if(appService.validPromotionName(urlParams)) {
+        if (appService.validPromotionName(urlParams)) {
             throw new LMException(LMExceptionFactor.LM_ILLEGAL_PARAM_VALUE, "Duplicated promotion name!");
         }
 

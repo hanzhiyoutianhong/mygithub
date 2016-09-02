@@ -357,7 +357,7 @@ public class AppServiceImpl implements AppService {
             configUrlTags(appParams);
         }
 
-        if(!Strings.isNullOrEmpty(urlParams.promotion_name)) {
+        if (!Strings.isNullOrEmpty(urlParams.promotion_name)) {
             appParams.value = new String[1];
             appParams.value[0] = urlParams.promotion_name;
             appParams.type = "promotion_name";
