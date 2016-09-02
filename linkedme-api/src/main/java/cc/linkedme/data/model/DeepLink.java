@@ -21,7 +21,6 @@ public class DeepLink implements Serializable {
     private long deeplinkId;
     private String deeplinkMd5;
     private long appId;
-    private String promotionName;
     private String linkedmeKey;
     private long identityId;
     private String createTime;
@@ -117,14 +116,6 @@ public class DeepLink implements Serializable {
 
     public void setTags(String tags) {
         this.tags = tags;
-    }
-
-    public String getPromotionName() {
-        return promotionName;
-    }
-
-    public void setPromotionName(String promotionName) {
-        this.promotionName = promotionName;
     }
 
     public String getAlias() {
