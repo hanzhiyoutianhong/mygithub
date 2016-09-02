@@ -366,7 +366,7 @@ public class AppServiceImpl implements AppService {
     }
 
     public boolean validPromotionName(UrlParams urlParams) {
-        return true;
+        return false;
         //return appDao.validPromotionName(urlParams);
     }
 
