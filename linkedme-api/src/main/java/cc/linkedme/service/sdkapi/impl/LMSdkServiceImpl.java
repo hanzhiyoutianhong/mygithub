@@ -527,7 +527,7 @@ public class LMSdkServiceImpl implements LMSdkService {
             }
 
             // yyb + deferred deep linking
-            if (deepLink == null && "Android".equals(openParams.os) && appId > 0) {
+            if (deepLink == null && appId > 0) {
                 String deviceModel = null;
                 if (!Strings.isNullOrEmpty(openParams.device_model)) {
                     deviceModel = openParams.device_model.trim().toLowerCase();
@@ -661,8 +661,8 @@ public class LMSdkServiceImpl implements LMSdkService {
         jsonObject.put("channel", channelJson);
         jsonObject.put("feature", featureJson);
         jsonObject.put("stage", stageJson);
-        jsonObject.put("link", Constants.DEEPLINK_HTTPS_PREFIX + "/" + Base62.encode(deepLink.getAppId()) + "/" + Base62.encode(deepLink.getDeeplinkId()));
-        jsonObject.put("new_user", isNewUser);
+        jsonObject.put("lkme_link", Constants.DEEPLINK_HTTPS_PREFIX + "/" + Base62.encode(deepLink.getAppId()) + "/" + Base62.encode(deepLink.getDeeplinkId()));
+        jsonObject.put("lkme_new_user", isNewUser);
         return jsonObject.toString();
     }
 
