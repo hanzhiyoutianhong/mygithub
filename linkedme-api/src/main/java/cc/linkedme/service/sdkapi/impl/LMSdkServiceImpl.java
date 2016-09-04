@@ -661,7 +661,8 @@ public class LMSdkServiceImpl implements LMSdkService {
         jsonObject.put("channel", channelJson);
         jsonObject.put("feature", featureJson);
         jsonObject.put("stage", stageJson);
-        jsonObject.put("lkme_link", Constants.DEEPLINK_HTTPS_PREFIX + "/" + Base62.encode(deepLink.getAppId()) + "/" + Base62.encode(deepLink.getDeeplinkId()));
+        jsonObject.put("lkme_link",
+                Constants.DEEPLINK_HTTPS_PREFIX + "/" + Base62.encode(deepLink.getAppId()) + "/" + Base62.encode(deepLink.getDeeplinkId()));
         jsonObject.put("lkme_new_user", isNewUser);
         return jsonObject.toString();
     }
@@ -725,11 +726,10 @@ public class LMSdkServiceImpl implements LMSdkService {
 
         long deepLinkId = uuidCreator.nextId(0); // 0表示发号器的deepLink业务
         String params = urlParams.params == null ? "" : urlParams.params.toString();
-        DeepLink link = new DeepLink(deepLinkId, deepLinkMd5, urlParams.app_id, urlParams.linkedme_key,
-                urlParams.identity_id, ArrayUtil.strArrToString(urlParams.tags), urlParams.alias,
-                ArrayUtil.strArrToString(urlParams.channel), ArrayUtil.strArrToString(urlParams.feature),
-                ArrayUtil.strArrToString(urlParams.stage), ArrayUtil.strArrToString(urlParams.campaign), params, urlParams.source,
-                urlParams.sdk_version);
+        DeepLink link = new DeepLink(deepLinkId, deepLinkMd5, urlParams.app_id, urlParams.linkedme_key, urlParams.identity_id,
+                ArrayUtil.strArrToString(urlParams.tags), urlParams.alias, ArrayUtil.strArrToString(urlParams.channel),
+                ArrayUtil.strArrToString(urlParams.feature), ArrayUtil.strArrToString(urlParams.stage),
+                ArrayUtil.strArrToString(urlParams.campaign), params, urlParams.source, urlParams.sdk_version);
         link.setPromotionName(urlParams.promotion_name);
         link.setLink_label(urlParams.link_label);
         link.setIos_use_default(urlParams.ios_use_default);

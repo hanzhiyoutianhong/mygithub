@@ -11,14 +11,14 @@
        http://www.springframework.org/schema/wfc
        http://www.springframework.org/schema/wfc.xsd ">
 
-    <bean id="deepLinkMsgPusher" class="cc.linkedme.mcq.DeepLinkMsgPusher" />
+    <bean id="deepLinkMsgPusher" class="cc.linkedme.mcq.DeepLinkMsgPusher"/>
 
     <bean id="deepLinkDao" class="cc.linkedme.dao.sdkapi.impl.DeepLinkDaoImpl">
         <property name="tableContainer">
             <bean class="cc.linkedme.data.dao.strategy.TableContainer">
                 <property name="tablesItems">
                     <map>
-                        <entry key="deeplink" value-ref="deeplink" />
+                        <entry key="deeplink" value-ref="deeplink"/>
                     </map>
                 </property>
             </bean>
@@ -27,21 +27,27 @@
 
     <bean id="deeplink" class="cc.linkedme.data.dao.strategy.TableItem">
         <property name="itemName" value="deeplink"/>
-        <property name="dbNamePrefix"  value="deeplink"/>
-        <property name="dbCount"  value="16"/>
+        <property name="dbNamePrefix" value="deeplink"/>
+        <property name="dbCount" value="16"/>
 
-        <property name="tableNamePrefix" value="deeplink_info" />
-        <property name="tableNamePostFix" value="yymm" />  <!-- 默认是索引 -->
-        <property name="tableCount" value="1" />           <!-- 这个参数和tableNamePostFix有关系，如果是日期就不用了。 -->
+        <property name="tableNamePrefix" value="deeplink_info"/>
+        <property name="tableNamePostFix" value="yymm"/>  <!-- 默认是索引 -->
+        <property name="tableCount" value="1"/>           <!-- 这个参数和tableNamePostFix有关系，如果是日期就不用了。 -->
         <property name="sqls">
             <map>
-                <entry key="ADD_DEEPLINK" value="insert into $db$.$tb$ (deeplink_id, deeplink_md5, linkedme_key, identity_id, appid, promotion_name, create_time, tags, alias, channel, feature, stage, campaign, params, source, sdk_version, link_label, ios_use_default, ios_custom_url, android_use_default, android_custom_url, desktop_use_default, desktop_custom_url, type, update_time) values(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, now())"/>
-                <entry key="GET_DEEPLINKS" value="select deeplink_id, create_time, params, tags, promotion_name, alias, channel, feature, stage, campaign, source, ios_use_default, ios_custom_url, android_use_default, android_custom_url, desktop_use_default, desktop_custom_url, type from $db$.$tb$ where appid = ? and type = ? and valid_status = '1' " />
-                <entry key="GET_DEEPLINK_INFO" value="select deeplink_id, create_time, tags, alias, channel, feature, stage, campaign, params, source, ios_use_default, ios_custom_url, android_use_default, android_custom_url, desktop_use_default, desktop_custom_url, type from $db$.$tb$ where deeplink_id = ? and appid = ? and valid_status = '1' " />
-                <entry key="UPDATE_DEEPLINKS" value="update $db$.$tb$ set vflag = ?, mflag=? where status_id = ? and vflag in (0,6,7) and cmt_id = ?"/>
-                <entry key="GET_URL_INFO" value="select promotion_name, deeplink_md5, link_label, ios_use_default, ios_custom_url, android_use_default, android_custom_url, desktop_use_default, desktop_custom_url, feature, campaign, stage, channel, tags, source, params, type from $db$.$tb$ where deeplink_id = ? and appid = ? and valid_status = 1"/>
+                <entry key="ADD_DEEPLINK"
+                       value="insert into $db$.$tb$ (deeplink_id, deeplink_md5, linkedme_key, identity_id, appid, promotion_name, create_time, tags, alias, channel, feature, stage, campaign, params, source, sdk_version, link_label, ios_use_default, ios_custom_url, android_use_default, android_custom_url, desktop_use_default, desktop_custom_url, type, update_time) values(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, now())"/>
+                <entry key="GET_DEEPLINKS"
+                       value="select deeplink_id, create_time, params, tags, promotion_name, alias, channel, feature, stage, campaign, source, ios_use_default, ios_custom_url, android_use_default, android_custom_url, desktop_use_default, desktop_custom_url, type from $db$.$tb$ where appid = ? and type = ? and valid_status = '1' "/>
+                <entry key="GET_DEEPLINK_INFO"
+                       value="select deeplink_id, create_time, tags, alias, channel, feature, stage, campaign, params, source, ios_use_default, ios_custom_url, android_use_default, android_custom_url, desktop_use_default, desktop_custom_url, type from $db$.$tb$ where deeplink_id = ? and appid = ? and valid_status = '1' "/>
+                <entry key="UPDATE_DEEPLINKS"
+                       value="update $db$.$tb$ set vflag = ?, mflag=? where status_id = ? and vflag in (0,6,7) and cmt_id = ?"/>
+                <entry key="GET_URL_INFO"
+                       value="select promotion_name, deeplink_md5, link_label, ios_use_default, ios_custom_url, android_use_default, android_custom_url, desktop_use_default, desktop_custom_url, feature, campaign, stage, channel, tags, source, params, type from $db$.$tb$ where deeplink_id = ? and appid = ? and valid_status = 1"/>
                 <entry key="DELETE_DEEPLINK" value="update $db$.$tb$ set valid_status = '0' where deeplink_id = ?"/>
-                <entry key="UPDATE_URL_INFO" value="update $db$.$tb$ set appid=?, promotion_name = ?, ios_use_default=?, ios_custom_url=?, android_use_default=?, android_custom_url=?, desktop_use_default=?, desktop_custom_url=?, feature=?, campaign=?, stage=?, channel=?, tags=?, source=?, params=? where deeplink_id = ? and appid = ? and valid_status = '1' "/>
+                <entry key="UPDATE_URL_INFO"
+                       value="update $db$.$tb$ set appid=?, promotion_name = ?, ios_use_default=?, ios_custom_url=?, android_use_default=?, android_custom_url=?, desktop_use_default=?, desktop_custom_url=?, feature=?, campaign=?, stage=?, channel=?, tags=?, source=?, params=? where deeplink_id = ? and appid = ? and valid_status = '1' "/>
             </map>
         </property>
         <property name="jdbcTemplates">
@@ -54,10 +60,10 @@
 
     <bean id="deepLinkCountComponent"
           class="cc.linkedme.commons.counter.component.impl.CountComponentSimple">
-        <property name="daoEnable" value="true" />
-        <property name="countDao" ref="deepLinkCountDao" />
+        <property name="daoEnable" value="true"/>
+        <property name="countDao" ref="deepLinkCountDao"/>
     </bean>
 
-    <bean id="lmSdkService" class="cc.linkedme.service.sdkapi.impl.LMSdkServiceImpl" />
+    <bean id="lmSdkService" class="cc.linkedme.service.sdkapi.impl.LMSdkServiceImpl"/>
 
 </beans>
