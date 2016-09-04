@@ -123,6 +123,7 @@ public class DeepLinkDaoImpl extends BaseDao implements DeepLinkDao {
             });
         } catch (Exception e) {
             ApiLogger.error("db error", e);
+            ApiLogger.error("deeplink_id = " + deepLinkId + "--" + "app_id = " + appid);
         }
         if (dp.getDeeplinkId() == 0) {
             return null;
