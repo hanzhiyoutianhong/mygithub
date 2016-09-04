@@ -50,13 +50,12 @@ public class DeepLink implements Serializable {
 
     public DeepLink() {}
 
-    public DeepLink(long deeplinkId, String deeplinkMd5, long appId, String promotionName, String linkedmeKey, long identityId, String tags, String alias,
+    public DeepLink(long deeplinkId, String deeplinkMd5, long appId, String linkedmeKey, long identityId, String tags, String alias,
             String channel, String feature, String stage, String campaign, String params, String source, String sdkVersion) {
         this.deeplinkId = deeplinkId;
         this.deeplinkMd5 = deeplinkMd5;
         this.identityId = identityId;
         this.appId = appId;
-        this.promotionName = promotionName;
         this.linkedmeKey = linkedmeKey;
         this.tags = tags;
         this.alias = alias;
@@ -421,6 +420,7 @@ public class DeepLink implements Serializable {
         deepLink.stage = "adf,adf";
         deepLink.params = "adsfadsfasdfasdfa;sldfkasdjfal;skdfjals;dkfjasd;lfkasdjf;lasdfas";
         deepLink.source = "ios";
+        deepLink.promotionName = "promotionName_001";
         deepLink.sdkVersion = "1.0.1";
         deepLink.state = 12;
         deepLink.link_label = "asdfasdf";

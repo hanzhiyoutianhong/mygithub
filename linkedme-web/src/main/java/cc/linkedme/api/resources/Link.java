@@ -4,6 +4,7 @@ import cc.linkedme.commons.exception.LMException;
 import cc.linkedme.commons.exception.LMExceptionFactor;
 import cc.linkedme.commons.util.Constants;
 import cc.linkedme.data.model.AppInfo;
+import cc.linkedme.data.model.DeepLink;
 import cc.linkedme.data.model.params.DashboardUrlParams;
 import cc.linkedme.data.model.params.SummaryDeepLinkParams;
 import cc.linkedme.data.model.params.UrlParams;
@@ -111,7 +112,7 @@ public class Link {
 
         HttpClient client = new DefaultHttpClient();
         String result = null;
-        HttpPost postMethod = new HttpPost(Constants.CREATE_URL_API);
+        HttpPost postMethod = new HttpPost("http://localhost:8080/i/sdk/url");
         try {
             postMethod.setEntity(new UrlEncodedFormEntity(params, HTTP.UTF_8));
             result = EntityUtils.toString(client.execute(postMethod).getEntity(), HTTP.UTF_8);
@@ -234,6 +235,19 @@ public class Link {
 
         if (Strings.isNullOrEmpty(dashboardUrlParams.live_test_flag)) {
             dashboardUrlParams.live_test_flag = "live";
+        }
+
+        UrlParams urlParams = new UrlParams();
+        urlParams.promotion_name = dashboardUrlParams.promotion_name;
+        urlParams.app_id = dashboardUrlParams.app_id;
+        urlParams.deeplink_id = dashboardUrlParams.deeplink_id;
+        urlParams.live_test_flag = dashboardUrlParams.live_test_flag;
+
+        if( appService.validPromotionName(urlParams)) {
+            DeepLink deepLink = deepLinkService.getDeepLinkInfo(urlParams.deeplink_id, urlParams.app_id);
+            if(deepLink.getPromotionName() != urlParams.promotion_name) {
+                throw new LMException(LMExceptionFactor.LM_ILLEGAL_PARAM_VALUE, "Duplicated promotion_name!");
+            }
         }
 
         boolean res = deepLinkService.updateUrl(dashboardUrlParams);

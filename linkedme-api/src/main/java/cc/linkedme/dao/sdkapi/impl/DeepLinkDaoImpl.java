@@ -218,8 +218,9 @@ public class DeepLinkDaoImpl extends BaseDao implements DeepLinkDao {
             condition += "and tags like '%' ? '%' ";
             paramList.add(tag);
         }
-        if(!Strings.isNullOrEmpty(promotionName)){
+        if (!Strings.isNullOrEmpty(promotionName)) {
             condition += "and promotion_name like '%' ? '%' ";
+            paramList.add(promotionName);
         }
         if (!Strings.isNullOrEmpty(source)) {
             condition += "and source = ? ";
