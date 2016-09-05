@@ -14,6 +14,7 @@
                 </property>
             </bean>
         </property>
+        <property name="jdbcTemplate" ref="jdbcTemelate"/>
     </bean>
 
     <bean id="userInfo" class="cc.linkedme.data.dao.strategy.TableItem">

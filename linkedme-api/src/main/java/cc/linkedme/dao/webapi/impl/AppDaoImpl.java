@@ -14,6 +14,8 @@ import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import cc.linkedme.data.model.DeepLink;
+import cc.linkedme.data.model.params.UrlParams;
 import org.apache.commons.collections.map.HashedMap;
 import org.apache.commons.io.IOUtils;
 import org.springframework.dao.DataAccessException;
@@ -49,6 +51,7 @@ public class AppDaoImpl extends BaseDao implements AppDao {
     private static final String GET_URL_TAGS_BY_APPID = "GET_URL_TAGS_BY_APPID";
     private static final String GET_URL_TAGS_BY_APPID_AND_TYPE = "GET_URL_TAGS_BY_APPID_AND_TYPE";
     private static final String SET_URL_TAGS_BY_APPID_AND_TYPE = "SET_URL_TAGS_BY_APPID_AND_TYPE";
+    private static final String VALIDATE_PROMOTION_NAME = "VALIDATE_PROMOTION_NAME";
     private static final String UPLOAD_IMG = "UPLOAD_IMG";
     private static final String GET_IMG = "GET_IMG";
 
@@ -348,6 +351,29 @@ public class AppDaoImpl extends BaseDao implements AppDao {
         if (result > 0) return true;
         if (result == 0 && flag == values.length) return true;
         return false;
+    }
+
+    public boolean validPromotionName(UrlParams urlParams) {
+        long appId = urlParams.app_id;
+        String promotionName = urlParams.promotion_name;
+        String liveTestFlag = urlParams.live_test_flag;
+        final List<DeepLink> deepLinks = new ArrayList<>();
+        TableChannel tableChannel = tableContainer.getTableChannel("urlTags", VALIDATE_PROMOTION_NAME, 0L, 0L);
+        try {
+            tableChannel.getJdbcTemplate().query(tableChannel.getSql(), new Object[] {appId, promotionName, liveTestFlag}, new RowMapper() {
+                public Object mapRow(ResultSet resultSet, int i) throws SQLException {
+                    DeepLink deepLink = new DeepLink();
+                    deepLink.setAppId(appId);
+                    deepLink.setPromotionName(resultSet.getString("tag_content"));
+                    deepLinks.add(deepLink);
+                    return null;
+                }
+            });
+        } catch (Exception e) {
+            ApiLogger.error("db error", e);
+        }
+
+        return deepLinks.size() > 0;
     }
 
     @Override

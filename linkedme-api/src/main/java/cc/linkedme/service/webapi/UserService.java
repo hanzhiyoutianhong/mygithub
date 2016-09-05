@@ -15,7 +15,18 @@ public interface UserService {
 
     UserInfo userLogin(UserParams userParams);
 
-    boolean userRegister(UserParams userParams);
+    /**
+     * 注册用户
+     * @param userParams
+     */
+    void register(UserParams userParams);
+
+
+    /**
+     * 检查邮箱是否已经被注册
+     * @return 如果邮箱已经被注册,返回true;否则返回false
+     */
+    boolean isEmailRegistered(String email);
 
     boolean validateEmail(UserParams userParams);
 

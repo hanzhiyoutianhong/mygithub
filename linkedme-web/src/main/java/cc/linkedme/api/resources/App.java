@@ -163,7 +163,7 @@ public class App {
 
         appParams.use_default_landing_page = desktopJson.getBoolean("use_default_landing_page");
         appParams.custom_landing_page = desktopJson.getString("custom_landing_page");
-
+        appParams.is_yyb_available = desktopJson.getBoolean("is_yyb_available");
 
         int ios_android_flag = ((appParams.is_yyb_available ? 1 : 0) << 4) + ((appParams.has_ios ? 1 : 0) << 3)
                 + ((appParams.ios_enable_ulink ? 1 : 0) << 2) + ((appParams.has_android ? 1 : 0) << 1)
@@ -219,10 +219,12 @@ public class App {
             errors.add(getErrorJson("ios_custom_url", "请配置您的iOS App的自定义下载链接"));
         }
 
-        if (appParams.has_android && appParams.android_search_option.equals("google_play")
-                && StringUtils.isBlank(appParams.getGoogle_play_url())) {
-            errors.add(getErrorJson("google_play_url", "请配置您的App在Android应用商店的下载链接"));
-        } else if (appParams.has_android && appParams.android_search_option.equals("custom_url")
+//        if (appParams.has_android && appParams.android_search_option.equals("google_play")
+//                && StringUtils.isBlank(appParams.getGoogle_play_url())) {
+//            errors.add(getErrorJson("google_play_url", "请配置您的App在Android应用商店的下载链接"));
+//        } else
+
+        if (appParams.has_android && appParams.android_search_option.equals("custom_url")
                 && StringUtils.isBlank(appParams.getAndroid_custom_url())) {
             errors.add(getErrorJson("android_custom_url", "请配置您的Android App的自定义下载链接"));
         }

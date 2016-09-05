@@ -19,6 +19,7 @@ public class MsgUtils {
         info.append("deeplink_id", deepLink.getDeeplinkId());
         info.append("identity_id", deepLink.getIdentityId());
         info.append("appid", deepLink.getAppId());
+        info.append("promotion_name", deepLink.getPromotionName());
         info.append("linkedme_key", deepLink.getLinkedmeKey());
         info.append("deeplink_md5", deepLink.getDeeplinkMd5());
         info.append("create_time", deepLink.getCreateTime());
@@ -85,6 +86,7 @@ public class MsgUtils {
         deepLink.setDeeplinkId(deepLinkMsg.getLong("deeplink_id"));
         deepLink.setIdentityId(deepLinkMsg.getLong("identity_id"));
         deepLink.setAppId(deepLinkMsg.getLong("appid"));
+        deepLink.setPromotionName(deepLinkMsg.getString("promotion_name"));
         deepLink.setLinkedmeKey(deepLinkMsg.getString("linkedme_key"));
         deepLink.setDeeplinkMd5(deepLinkMsg.getString("deeplink_md5"));
         deepLink.setCreateTime(deepLinkMsg.getString("create_time"));

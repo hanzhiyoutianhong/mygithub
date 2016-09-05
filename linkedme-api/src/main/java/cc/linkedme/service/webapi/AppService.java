@@ -1,6 +1,7 @@
 package cc.linkedme.service.webapi;
 
 import cc.linkedme.data.model.AppInfo;
+import cc.linkedme.data.model.DeepLink;
 import cc.linkedme.data.model.UrlTagsInfo;
 import cc.linkedme.data.model.params.AppParams;
 import cc.linkedme.data.model.params.DashboardUrlParams;
@@ -62,6 +63,12 @@ public interface AppService {
      * 校验ios bundle id是否被注册过
      * @return　如果被注册过，返回true；否则，返回false
      */
-    public boolean isIosBundleIdExist(String iosBundleId, long appId);    
+    public boolean isIosBundleIdExist(String iosBundleId, long appId);
+
+    /**
+     *校验推广名称是否已经存在
+     * @return 如果已经存在，返回true；否则返回false
+     */
+    public boolean validPromotionName(UrlParams urlParams);
 
 }

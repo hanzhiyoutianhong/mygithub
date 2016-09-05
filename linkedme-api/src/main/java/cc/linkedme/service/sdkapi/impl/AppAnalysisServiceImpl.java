@@ -2,6 +2,7 @@ package cc.linkedme.service.sdkapi.impl;
 
 import cc.linkedme.commons.util.Util;
 import cc.linkedme.dao.sdkapi.AppAnalysisDao;
+import cc.linkedme.data.model.UserInfo;
 import cc.linkedme.data.model.params.AppAnalysisParams;
 import cc.linkedme.service.sdkapi.AppAnalysisService;
 import com.google.api.client.repackaged.com.google.common.base.Strings;
@@ -92,8 +93,8 @@ public class AppAnalysisServiceImpl implements AppAnalysisService {
     }
 
     public String getChangedApps(String company, String date) {
-        List incApps = appAnalysisDao.getAppIds(new Object[] {company, date}, GET_INC_APPS);
-        List desApps = appAnalysisDao.getAppIds(new Object[] {company, date}, GET_DES_APPS);
+        List incApps = appAnalysisDao.getBundleIdAndUserInfo(new Object[] {company, date}, GET_INC_APPS);
+        List desApps = appAnalysisDao.getBundleIdAndUserInfo(new Object[] {company, date}, GET_DES_APPS);
         Map<String, List<String>> changedApps = new HashMap<>();
 
         if (incApps.size() > 0) {
@@ -218,4 +219,8 @@ public class AppAnalysisServiceImpl implements AppAnalysisService {
         return jsonObject.toString();
     }
 
+    public static void main( String[] args ) {
+        UserInfo userInfo = new UserInfo();
+        userInfo.setCompany("");
+    }
 }

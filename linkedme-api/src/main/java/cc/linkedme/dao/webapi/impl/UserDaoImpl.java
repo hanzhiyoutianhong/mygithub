@@ -28,7 +28,13 @@ import cc.linkedme.data.model.params.UserParams;
  * Created by Vontroy on 16/3/19.
  */
 public class UserDaoImpl extends BaseDao implements UserDao {
-    public static final String REGISTER = "REGISTER";
+
+    private org.springframework.jdbc.core.JdbcTemplate jdbcTemplate;
+
+    //public static final String REGISTER = "REGISTER";
+    private static final String REGISTER = "insert into dashboard_0.user_info_0 (email, pwd, name, phone_number, company, role_id, register_time, last_login_time) values(?, ?, ?, ?, ?, ?, ?, ?)";
+    private static final String IS_EMAIL_REGISTERED = "SELECT EXISTS (SELECT * FROM dashboard_0.user_info_0 WHERE email = ?)";
+
     public static final String USER_INFO_QUERY = "USER_INFO_QUERY";
     public static final String EMAIL_EXISTENCE_QUERY = "EMAIL_EXISTENCE_QUERY";
     public static final String PWD_RESET = "PWD_RESET";
@@ -42,23 +48,22 @@ public class UserDaoImpl extends BaseDao implements UserDao {
 
     public static final String REQUEST_DEMO = "REQUEST_DEMO";
 
-    public int updateUserInfo(UserParams userParams) {
-        int res = 0;
-        TableChannel tableChannel = tableContainer.getTableChannel("userInfo", REGISTER, 0L, 0L);
-        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-        String register_time = sdf.format(new Date());
-        String last_login_time = register_time;
+    public void addUser(UserParams userParams) {
 
         try {
-            res += tableChannel.getJdbcTemplate().update(tableChannel.getSql(), new Object[] {userParams.email, userParams.pwd,
-                    userParams.name, userParams.phone_number, userParams.company, userParams.role_id, register_time, last_login_time});
+            Date now = new Date();
+            jdbcTemplate.update(REGISTER, new Object[] {userParams.email, userParams.pwd,
+                    userParams.name, userParams.phone_number, userParams.company, userParams.role_id, now, now});
         } catch (DataAccessException e) {
             if (DaoUtil.isDuplicateInsert(e)) {
                 ApiLogger.warn(new StringBuilder(128).append("Duplicate insert user, userEmail=").append(userParams.email), e);
             }
             throw new LMException(LMExceptionFactor.LM_FAILURE_DB_OP, "Failed to update user info");
         }
-        return res;
+    }
+
+    public boolean isEmailRegistered(String email){
+        return jdbcTemplate.queryForInt(IS_EMAIL_REGISTERED, email) == 1;
     }
 
     public int changeUserPwd(UserParams userParams) {
@@ -286,7 +291,7 @@ public class UserDaoImpl extends BaseDao implements UserDao {
                         + " as appinfo on user.id = appinfo.user_id right join " + dbName + "." + bundleTbName
                         + " as bundle on bundle.app_id = appinfo.ios_bundle_id where bundle.online_date between " + "\'" + start_time + "\'"
                         + " and " + "\'" + end_time + "\'"
-                        + " and user.valid_status = 1 and appinfo.valid_status = 1 and bundle.valid_status = 1;";
+                        + " and user.valid_status = 1 and appinfo.valid_status = 1 and bundle.valid_status = 1 order by bundle.online_date;";
         jdbcTemplate.query(sql, new RowMapper() {
 
             public Object mapRow(ResultSet resultSet, int i) throws SQLException {
@@ -306,6 +311,13 @@ public class UserDaoImpl extends BaseDao implements UserDao {
 
         return userInfos;
     }
-    
+
+    public org.springframework.jdbc.core.JdbcTemplate getJdbcTemplate() {
+        return jdbcTemplate;
+    }
+
+    public void setJdbcTemplate(org.springframework.jdbc.core.JdbcTemplate jdbcTemplate) {
+        this.jdbcTemplate = jdbcTemplate;
+    }
 }
 

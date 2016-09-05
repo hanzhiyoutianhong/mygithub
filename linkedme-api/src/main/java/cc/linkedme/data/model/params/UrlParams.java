@@ -15,6 +15,7 @@ public class UrlParams extends BaseParams {
     public long deeplink_id;
     public long[] deeplink_ids;
     public long app_id;
+    public String promotion_name;
     public int user_id;
     public String alias;
     public String[] tags;
@@ -35,6 +36,10 @@ public class UrlParams extends BaseParams {
     public boolean desktop_use_default;
     public String desktop_custom_url;
     public String type;
+    public String live_test_flag;
+
+    public String start_date;
+    public String end_date;
 
     public String getDevice_id() {
         return device_id;
@@ -50,6 +55,14 @@ public class UrlParams extends BaseParams {
 
     public void setApp_id(long app_id) {
         this.app_id = app_id;
+    }
+
+    public String getPromotion_name() {
+        return promotion_name;
+    }
+
+    public void setPromotion_name(String promotion_name) {
+        this.promotion_name = promotion_name;
     }
 
     public String[] getTags() {
@@ -218,5 +231,21 @@ public class UrlParams extends BaseParams {
 
     public void setType(String type) {
         this.type = type;
+    }
+
+    public String getStart_date() {
+        return start_date;
+    }
+
+    public void setStart_date(String start_date) {
+        this.start_date = start_date;
+    }
+
+    public String getEnd_date() {
+        return end_date;
+    }
+
+    public void setEnd_date(String end_date) {
+        this.end_date = end_date;
     }
 }

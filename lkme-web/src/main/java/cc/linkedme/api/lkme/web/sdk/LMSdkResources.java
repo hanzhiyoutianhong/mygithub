@@ -285,6 +285,7 @@ public class LMSdkResources {
     @Produces({MediaType.APPLICATION_JSON})
     public String url_form(@FormParam("device_id") String device_id,
                            @FormParam("app_id") int app_id,
+                           @FormParam("promotion_name") String promotion_name,
                            @FormParam("ios_use_default") boolean ios_use_default,
                            @FormParam("ios_custom_url") String ios_custom_url,
                            @FormParam("android_use_default") boolean android_use_default,
@@ -314,6 +315,7 @@ public class LMSdkResources {
         UrlParams urlParams = new UrlParams();
         urlParams.device_id = device_id;
         urlParams.app_id = app_id;
+        urlParams.promotion_name = promotion_name;
         urlParams.ios_use_default = ios_use_default;
         urlParams.ios_custom_url = ios_custom_url;
         urlParams.android_use_default = android_use_default;
@@ -354,10 +356,12 @@ public class LMSdkResources {
         urlParams.sign = sign;
 
 
-        //        String apiName = "/i/sdk/url";
-//        if (!signAuthService.doAuth(apiName, urlParams.sign, String.valueOf(urlParams.identity_id), urlParams.linkedme_key, String.valueOf(urlParams.session_id), String.valueOf(urlParams.timestamp))) {
-//            throw new LMException(LMExceptionFactor.LM_AUTH_FAILED);
-//        }
+        // String apiName = "/i/sdk/url";
+        // if (!signAuthService.doAuth(apiName, urlParams.sign,
+        // String.valueOf(urlParams.identity_id), urlParams.linkedme_key,
+        // String.valueOf(urlParams.session_id), String.valueOf(urlParams.timestamp))) {
+        // throw new LMException(LMExceptionFactor.LM_AUTH_FAILED);
+        // }
 
         JSONObject requestJson = JSONObject.fromObject(urlParams);
 
@@ -370,7 +374,7 @@ public class LMSdkResources {
         JSONObject resultJson = new JSONObject();
         resultJson.put("url", url);
 
-        if(!Strings.isNullOrEmpty(channel) && channel.contains("spotlight")) {
+        if (!Strings.isNullOrEmpty(channel) && channel.contains("spotlight")) {
             resultJson.put("spotlight_identifier", Constants.SPOTLIGHT_PREFIX + urlArr[4]);
         }
 

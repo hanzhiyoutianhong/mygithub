@@ -10,6 +10,7 @@
                 <property name="tablesItems">
                     <map>
                         <entry key="appInfo" value-ref="appInfo"/>
+                        <entry key="urlTags" value-ref="urlTags"/>
                     </map>
                 </property>
             </bean>
@@ -83,6 +84,7 @@
                 <entry key="GET_URL_TAGS_BY_APPID" value="select tag_content, tag_type from $db$.$tb$ where app_id = ? and live_test_flag = ?"/>
                 <entry key="GET_URL_TAGS_BY_APPID_AND_TYPE" value="select tag_content from $db$.$tb$ where app_id = ? and tag_type = ? and live_test_flag = ?"/>
                 <entry key="SET_URL_TAGS_BY_APPID_AND_TYPE" value="insert into $db$.$tb$ (app_id, tag_content, tag_type, live_test_flag) values(?, ?, ?, ?)"/>
+                <entry key="VALIDATE_PROMOTION_NAME" value="select tag_content from $db$.$tb$ where app_id = ? and tag_type = 'promotion_name' and tag_content = ? and live_test_flag = ? and valid_status = 1"/>
             </map>
         </property>
         <property name="jdbcTemplates">

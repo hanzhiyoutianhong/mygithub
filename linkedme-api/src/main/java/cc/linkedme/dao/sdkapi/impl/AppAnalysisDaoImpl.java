@@ -6,6 +6,8 @@ import cc.linkedme.dao.sdkapi.AppAnalysisDao;
 import cc.linkedme.data.dao.strategy.TableChannel;
 import cc.linkedme.data.dao.util.DaoUtil;
 import cc.linkedme.data.dao.util.JdbcTemplate;
+import cc.linkedme.data.model.User;
+import cc.linkedme.data.model.UserInfo;
 import cc.linkedme.data.model.params.AppAnalysisParams;
 import org.springframework.dao.DataAccessException;
 import org.springframework.jdbc.core.RowMapper;
@@ -60,6 +62,40 @@ public class AppAnalysisDaoImpl extends BaseDao implements AppAnalysisDao {
             }
         });
         return oldApps;
+    }
+
+    public List<UserInfo> getBundleIdAndUserInfo(Object[] params, String type) {
+
+        TableChannel tableChannel = tableContainer.getTableChannel("app_analysis", type, 0L, 0L);
+        JdbcTemplate jdbcTemplate = tableChannel.getJdbcTemplate();
+        final List<UserInfo> userInfos = new ArrayList<>();
+
+        String dbName = "dashboard_0";
+        String userTbName = "user_info_0";
+        String appInfoTbName = "app_info_0";
+        String bundleTbName = "app_bundles_0";
+        String sql =
+                "select bundle.app_id, bundle.online_date, user.email, user.name, user.phone_number, user.company, user.register_time from "
+                        + dbName + "." + userTbName + " as user inner join " + dbName + "." + appInfoTbName
+                        + " as appinfo on user.id = appinfo.user_id right join " + dbName + "." + bundleTbName
+                        + " as bundle on bundle.app_id = appinfo.ios_bundle_id where bundle.company = ? and date_format(bundle.online_date,'%Y-%m-%d') = ? and user.valid_status = 1 and appinfo.valid_status = 1 and bundle.valid_status = 1 order by bundle.online_date;";
+
+        jdbcTemplate.query(sql, params, new RowMapper() {
+            public Object mapRow(ResultSet resultSet, int i) throws SQLException {
+                UserInfo userInfo = new UserInfo();
+                userInfo.setIos_bundle_id(resultSet.getString("app_id"));
+                userInfo.setBundle_id_online_date(resultSet.getString("online_date"));
+                userInfo.setEmail(resultSet.getString("email"));
+                userInfo.setName(resultSet.getString("name"));
+                userInfo.setPhone_number(resultSet.getString("phone_number"));
+                userInfo.setCompany(resultSet.getString("company"));
+                userInfo.setRegister_time(resultSet.getString("register_time"));
+
+                userInfos.add(userInfo);
+                return null;
+            }
+        });
+        return userInfos;
     }
 
     public List<AppAnalysisParams> getApps(String company) {
