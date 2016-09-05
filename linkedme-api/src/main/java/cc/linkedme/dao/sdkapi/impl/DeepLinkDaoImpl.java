@@ -76,9 +76,9 @@ public class DeepLinkDaoImpl extends BaseDao implements DeepLinkDao {
 
         try {
             result += tableChannel.getJdbcTemplate().update(tableChannel.getSql(),
-                    new Object[] {deeplink_id, deeplink_md5, linkedme_key, identity_id, appid, promotion_name, create_time, tags, alias, channel, feature,
-                            stage, campaign, params, source, sdk_version, link_label, ios_use_default, ios_custom_url, android_use_default,
-                            android_custom_url, desktop_use_default, desktop_custom_url, type});
+                    new Object[] {deeplink_id, deeplink_md5, linkedme_key, identity_id, appid, promotion_name, create_time, tags, alias,
+                            channel, feature, stage, campaign, params, source, sdk_version, link_label, ios_use_default, ios_custom_url,
+                            android_use_default, android_custom_url, desktop_use_default, desktop_custom_url, type});
         } catch (DataAccessException e) {
             if (DaoUtil.isDuplicateInsert(e)) {
                 ApiLogger.warn(new StringBuilder(128).append("Duplicate insert deepLink, id=").append(deeplink_id));
@@ -101,6 +101,7 @@ public class DeepLinkDaoImpl extends BaseDao implements DeepLinkDao {
                 public Object mapRow(ResultSet resultSet, int i) throws SQLException {
                     dp.setAppId(appid);
                     dp.setDeeplinkId(resultSet.getBigDecimal("deeplink_id").longValue());
+                    dp.setPromotionName(resultSet.getString("promotion_name"));
                     dp.setCreateTime(resultSet.getString("create_time"));
                     dp.setTags(resultSet.getString("tags"));
                     dp.setAlias(resultSet.getString("alias"));
@@ -122,6 +123,7 @@ public class DeepLinkDaoImpl extends BaseDao implements DeepLinkDao {
             });
         } catch (Exception e) {
             ApiLogger.error("db error", e);
+            ApiLogger.error("deeplink_id = " + deepLinkId + "--" + "app_id = " + appid);
         }
         if (dp.getDeeplinkId() == 0) {
             return null;
@@ -217,8 +219,9 @@ public class DeepLinkDaoImpl extends BaseDao implements DeepLinkDao {
             condition += "and tags like '%' ? '%' ";
             paramList.add(tag);
         }
-        if(!Strings.isNullOrEmpty(promotionName)){
+        if (!Strings.isNullOrEmpty(promotionName)) {
             condition += "and promotion_name like '%' ? '%' ";
+            paramList.add(promotionName);
         }
         if (!Strings.isNullOrEmpty(source)) {
             condition += "and source = ? ";
@@ -234,6 +237,7 @@ public class DeepLinkDaoImpl extends BaseDao implements DeepLinkDao {
             public Object mapRow(ResultSet resultSet, int i) throws SQLException {
                 DeepLink dp = new DeepLink();
                 dp.setAppId(appid);
+                dp.setPromotionName(resultSet.getString("promotion_name"));
                 dp.setDeeplinkId(resultSet.getBigDecimal("deeplink_id").longValue());
                 dp.setCreateTime(resultSet.getString("create_time"));
                 dp.setTags(resultSet.getString("tags"));

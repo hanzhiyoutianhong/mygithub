@@ -67,7 +67,7 @@ public interface AppService {
 
     /**
      *校验推广名称是否已经存在
-     * @return 如果已经存在，返回true；否则返回false
+     * @return 如果已经存在，返回true；否则返回false; 推广名称为空返回false
      */
     public boolean validPromotionName(UrlParams urlParams);
 
