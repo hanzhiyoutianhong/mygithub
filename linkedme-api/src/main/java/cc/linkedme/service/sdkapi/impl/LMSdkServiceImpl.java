@@ -507,7 +507,7 @@ public class LMSdkServiceImpl implements LMSdkService {
         String openTypeForLog = "other";
         long appId = 0;
         if (!Strings.isNullOrEmpty(deepLinkUrl) || !Strings.isNullOrEmpty(openParams.spotlight_identifier)
-                || "Android".equals(openParams.os)) {
+                || "Android".equals(openParams.os) || "iOS".equals(openParams.os)) {
             // 根据linkedme_key获取appid
             JedisPort linkedmeKeyClient = linkedmeKeyShardingSupport.getClient(openParams.linkedme_key);
             String appIdStr = linkedmeKeyClient.hget(openParams.linkedme_key, "appid");
