@@ -473,9 +473,9 @@ public class LMSdkServiceImpl implements LMSdkService {
 
                 // 补记通过app links跳转的click计数
                 if (deepLinkUrl.contains("scan")) {
-                    ProfileUtil.accessStatistic(ProfileType.API.value(), "/click/adr_click", 0, 0);
-                } else {
                     ProfileUtil.accessStatistic(ProfileType.API.value(), "/click/pc_adr_scan", 0, 0);
+                } else {
+                    ProfileUtil.accessStatistic(ProfileType.API.value(), "/click/adr_click", 0, 0);
                 }
 
             }
@@ -489,9 +489,9 @@ public class LMSdkServiceImpl implements LMSdkService {
 
                     // 补记通过universe link跳转的click计数
                     if (deepLinkUrl.contains("scan")) {
-                        ProfileUtil.accessStatistic(ProfileType.API.value(), "/click/ios_click", 0, 0);
-                    } else {
                         ProfileUtil.accessStatistic(ProfileType.API.value(), "/click/pc_ios_scan", 0, 0);
+                    } else {
+                        ProfileUtil.accessStatistic(ProfileType.API.value(), "/click/ios_click", 0, 0);
                     }
                 }
             }
