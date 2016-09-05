@@ -366,8 +366,7 @@ public class AppServiceImpl implements AppService {
     }
 
     public boolean validPromotionName(UrlParams urlParams) {
-        return false;
-        // return appDao.validPromotionName(urlParams);
+        return Strings.isNullOrEmpty(urlParams.promotion_name) && appDao.validPromotionName(urlParams);
     }
 
     @Override

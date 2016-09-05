@@ -141,7 +141,11 @@ public class App {
         JSONObject adrJson = linkSettingJson.getJSONObject("android");
         JSONObject desktopJson = linkSettingJson.getJSONObject("desktop");
 
-        appParams.has_ios = iosJson.getBoolean("has_ios");
+        try {
+            appParams.has_ios = iosJson.getBoolean("has_ios");
+        } catch (Exception e) {
+            appParams.has_ios = false;
+        }
         appParams.ios_not_url = iosJson.getString("ios_not_url");
         appParams.ios_uri_scheme = iosJson.getString("ios_uri_scheme");
         appParams.ios_search_option = iosJson.getString("ios_search_option");
@@ -151,7 +155,11 @@ public class App {
         appParams.ios_bundle_id = iosJson.getString("ios_bundle_id");
         appParams.ios_app_prefix = iosJson.getString("ios_app_prefix");
 
-        appParams.has_android = adrJson.getBoolean("has_android");
+        try {
+            appParams.has_android = adrJson.getBoolean("has_android");
+        } catch (Exception e) {
+            appParams.has_android = false;
+        }
         appParams.android_not_url = adrJson.getString("android_not_url");
         appParams.android_uri_scheme = adrJson.getString("android_uri_scheme");
         appParams.android_search_option = adrJson.getString("android_search_option");
@@ -160,10 +168,19 @@ public class App {
         appParams.android_package_name = adrJson.getString("android_package_name");
         appParams.android_enable_applinks = true;
         appParams.android_sha256_fingerprints = adrJson.getString("android_sha256_fingerprints");
-
-        appParams.use_default_landing_page = desktopJson.getBoolean("use_default_landing_page");
         appParams.custom_landing_page = desktopJson.getString("custom_landing_page");
-        appParams.is_yyb_available = desktopJson.getBoolean("is_yyb_available");
+
+        try {
+            appParams.use_default_landing_page = desktopJson.getBoolean("use_default_landing_page");
+        } catch (Exception e) {
+            appParams.use_default_landing_page = false;
+        }
+
+        try {
+            appParams.is_yyb_available = desktopJson.getBoolean("is_yyb_available");
+        } catch (Exception e) {
+            appParams.is_yyb_available = false;
+        }
 
         int ios_android_flag = ((appParams.is_yyb_available ? 1 : 0) << 4) + ((appParams.has_ios ? 1 : 0) << 3)
                 + ((appParams.ios_enable_ulink ? 1 : 0) << 2) + ((appParams.has_android ? 1 : 0) << 1)
