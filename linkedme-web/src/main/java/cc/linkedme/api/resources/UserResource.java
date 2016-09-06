@@ -2,6 +2,7 @@ package cc.linkedme.api.resources;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
+import javax.ws.rs.Consumes;
 import javax.ws.rs.FormParam;
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
@@ -12,8 +13,10 @@ import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 
 import cc.linkedme.commons.log.ApiLogger;
+import cc.linkedme.data.model.User;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Component;
 
 import cc.linkedme.commons.exception.LMException;
@@ -29,6 +32,8 @@ import com.google.api.client.repackaged.com.google.common.base.Strings;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 /**
  * Created by Vontroy on 16/3/19.
@@ -40,63 +45,76 @@ public class UserResource {
     @Resource
     private UserService userService;
 
+    private String emailRE = "^\\w+([-+.]\\w+)*@\\w+([-.]\\w+)*\\.\\w+([-.]\\w+)*$";
+    private String telephoneRE = "(^(13[0-9]|14[5|7]|15[0|1|2|3|5|6|7|8|9]|18[0|1|2|3|5|6|7|8|9])\\d{8}$)|(\\d{3}-\\d{8}|\\d{4}-\\d{7})";
+
+    private Pattern emailPattern = Pattern.compile(emailRE);
+    private Pattern telephonePattern = Pattern.compile(telephoneRE);
+
     @Path("/register")
     @POST
-    @Produces({MediaType.APPLICATION_JSON})
-    public String register(UserParams userParams) {
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Produces(MediaType.APPLICATION_JSON)
+    public String register(User user) {
 
-        JSONArray jsonArray = new JSONArray();
-
-        if (Strings.isNullOrEmpty(userParams.email)) {
-            jsonArray.add(getErrorMsg("40000", "email", "未填写邮箱!"));
-        } else if (userService.validateEmail(userParams)) {
-            jsonArray.add(getErrorMsg("40004", "email", "邮箱已被注册"));
-        } else {
-            userParams.email = userParams.email.toLowerCase();
+        JSONArray errorMsgs = new JSONArray();
+        if (StringUtils.isBlank(user.getPwd())) {
+            errorMsgs.add(getErrorMsg("40000", "pwd", "密码不能为空"));
+        }
+        if (StringUtils.isBlank(user.getEmail())) {
+            errorMsgs.add(getErrorMsg("40000", "email", "邮箱不能为空"));
+        } else if (!emailPattern.matcher(user.getEmail()).matches()) {
+            errorMsgs.add(getErrorMsg("40000", "email", "邮箱格式非法"));
+        } else if (userService.isEmailRegistered(user.getEmail())) {
+            errorMsgs.add(getErrorMsg("40004", "email", "邮箱已被注册"));
+        }
+        if (!telephonePattern.matcher(user.getPhoneNumber()).matches()) {
+            errorMsgs.add(getErrorMsg("40000", "phone_number", "电话号码有误, 如果是座机请用\"-\"区分区号"));
         }
 
-        if (jsonArray.size() > 0) {
-            return jsonArray.toString();
+        if (errorMsgs.size() > 0) {
+            return errorMsgs.toString();
         }
-        userService.register(userParams);
 
-        JsonBuilder resultJson = new JsonBuilder();
-        resultJson.append("ret", "true");
-        return resultJson.flip().toString();
+        user.setEmail(user.getEmail().toLowerCase());
+        userService.register(user);
 
+        return "{\"ret\": \"true\"}";
     }
+
 
     @Path("/login")
     @POST
-    @Produces({MediaType.APPLICATION_JSON})
-    public String login(UserParams userParams, @Context HttpServletRequest request) {
-        JSONArray jsonArray = new JSONArray();
-        boolean emailIsValid = false;
+    @Produces(MediaType.APPLICATION_JSON)
+    public String login(UserParams user) {
 
-        if (Strings.isNullOrEmpty(userParams.email)) {
-            jsonArray.add(getErrorMsg("40000", "email", "未填写邮箱!"));
-        } else if (!userService.validateEmail(userParams)) {
-            jsonArray.add(getErrorMsg("40005", "email", "邮箱不存在!"));
+        boolean emailIsRegistered = false;
+
+        JSONArray errorMsgs = new JSONArray();
+        if(StringUtils.isBlank(user.getEmail())){
+            errorMsgs.add(getErrorMsg("40000", "email", "邮箱不能为空"));
+        } else if(!userService.isEmailRegistered(user.getEmail())){
+            errorMsgs.add(getErrorMsg("40005", "email", "邮箱未注册"));
         } else {
-            emailIsValid = true;
-            userParams.email = userParams.email.toLowerCase();
+            emailIsRegistered = true;
         }
 
-        if (Strings.isNullOrEmpty(userParams.pwd)) {
-            jsonArray.add(getErrorMsg("40006", "pwd", "密码为空!"));
-        } else if (emailIsValid && !userService.validatePassword(userParams.email, userParams.pwd)) {
-            jsonArray.add(getErrorMsg("40006", "pwd", "密码错误!"));
+        if(StringUtils.isBlank(user.getPwd())){
+            errorMsgs.add(getErrorMsg("40006", "pwd", "密码不能为空"));
+        } else if(emailIsRegistered && userService.validatePassword(user.getEmail(), user.getPwd())){
+            errorMsgs.add(getErrorMsg("40006", "pwd", "密码有误"));
         }
 
-        if (jsonArray.size() > 0) {
-            return jsonArray.toString();
+        if (errorMsgs.size() > 0) {
+            return errorMsgs.toString();
         }
 
-        String email = userParams.email;
-        UserInfo userInfo = userService.userLogin(userParams);
+        user.setEmail(user.getEmail().toLowerCase());
+
+        UserInfo userInfo = userService.userLogin(user);
         JsonBuilder resultJson = new JsonBuilder();
         resultJson.append("user_id", userInfo.getId());
-        resultJson.append("email", email);
+        resultJson.append("email", user.getEmail());
         resultJson.append("name", userInfo.getName());
         resultJson.append("company", userInfo.getCompany());
         resultJson.append("role_id", userInfo.getRole_id());

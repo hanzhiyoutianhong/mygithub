@@ -1,5 +1,6 @@
 package cc.linkedme.service.webapi;
 
+import cc.linkedme.data.model.User;
 import cc.linkedme.data.model.UserInfo;
 import cc.linkedme.data.model.params.DemoRequestParams;
 import cc.linkedme.data.model.params.UserParams;
@@ -17,9 +18,9 @@ public interface UserService {
 
     /**
      * 注册用户
-     * @param userParams
+     * @param user
      */
-    void register(UserParams userParams);
+    void register(User user);
 
 
     /**

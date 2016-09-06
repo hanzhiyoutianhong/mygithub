@@ -7,6 +7,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+import cc.linkedme.data.model.User;
 import org.springframework.dao.DataAccessException;
 import org.springframework.jdbc.core.RowMapper;
 
@@ -32,8 +33,8 @@ public class UserDaoImpl extends BaseDao implements UserDao {
     private org.springframework.jdbc.core.JdbcTemplate jdbcTemplate;
 
     //public static final String REGISTER = "REGISTER";
-    private static final String REGISTER = "insert into dashboard_0.user_info_0 (email, pwd, name, phone_number, company, role_id, register_time, last_login_time) values(?, ?, ?, ?, ?, ?, ?, ?)";
-    private static final String IS_EMAIL_REGISTERED = "SELECT EXISTS (SELECT * FROM dashboard_0.user_info_0 WHERE email = ?)";
+    private static final String REGISTER = "insert into dashboard_0.user_info_0 (email, pwd, name, phone_number, company, register_time, last_login_time) values(?, ?, ?, ?, ?, ?, ?)";
+    private static final String IS_EMAIL_REGISTERED = "select exists(select * from dashboard_0.user_info_0 where email = ?)";
 
     public static final String USER_INFO_QUERY = "USER_INFO_QUERY";
     public static final String EMAIL_EXISTENCE_QUERY = "EMAIL_EXISTENCE_QUERY";
@@ -48,19 +49,23 @@ public class UserDaoImpl extends BaseDao implements UserDao {
 
     public static final String REQUEST_DEMO = "REQUEST_DEMO";
 
-    public void addUser(UserParams userParams) {
-
+    @Override
+    public void addUser(User user) {
         try {
             Date now = new Date();
-            jdbcTemplate.update(REGISTER, new Object[] {userParams.email, userParams.pwd,
-                    userParams.name, userParams.phone_number, userParams.company, userParams.role_id, now, now});
+            jdbcTemplate.update(REGISTER,
+                    new Object[] {user.getEmail(), user.getPwd(), user.getName(), user.getPhoneNumber(), user.getCompany(), now, now});
         } catch (DataAccessException e) {
             if (DaoUtil.isDuplicateInsert(e)) {
-                ApiLogger.warn(new StringBuilder(128).append("Duplicate insert user, userEmail=").append(userParams.email), e);
+                ApiLogger.warn(new StringBuilder(128).append("Duplicate insert user, userEmail=").append(user.getEmail()), e);
+                throw new LMException(LMExceptionFactor.LM_ILLEGAL_PARAM_VALUE, "邮箱已经被注册");
+            } else {
+                ApiLogger.error("execute sql error: " + REGISTER, e);
+                throw new LMException(LMExceptionFactor.LM_SYS_ERROR, "系统错误,请稍后重试");
             }
-            throw new LMException(LMExceptionFactor.LM_FAILURE_DB_OP, "Failed to update user info");
         }
     }
+
 
     public boolean isEmailRegistered(String email){
         return jdbcTemplate.queryForInt(IS_EMAIL_REGISTERED, email) == 1;

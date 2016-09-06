@@ -1,5 +1,6 @@
 package cc.linkedme.dao.webapi;
 
+import cc.linkedme.data.model.User;
 import cc.linkedme.data.model.UserInfo;
 import cc.linkedme.data.model.params.DemoRequestParams;
 import cc.linkedme.data.model.params.UserParams;
@@ -13,9 +14,9 @@ public interface UserDao {
     /**
      * 向数据库中增加一条用户记录
      * 
-     * @param userParams
+     * @param user
      */
-    void addUser(UserParams userParams);
+    void addUser(User user);
 
     boolean isEmailRegistered(String email);
 
